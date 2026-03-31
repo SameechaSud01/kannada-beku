@@ -1,32 +1,41 @@
 export const Colors = {
-  // Primary — forest green (Karnataka flag)
-  primary: '#2E7D32',
-  primaryLight: '#E8F5E9',
-  primaryDark: '#1B5E20',
 
-  // Accent — turmeric gold (Karnataka flag)
-  accent: '#F9A825',
-  // NOTE: Gold is ONLY for graphic elements. Never use as text color.
+  // ── Primary — deep Karnataka crimson ───────────────────
+  primary:        '#BE0027',  // deep crimson red — CTA buttons, active states, headings
+  primaryDark:    '#8D0020',  // pressed/dark variant
+  primaryLight:   '#FFEBEE',  // light red surface — selected card bg, error bg
 
-  // Backgrounds
-  pageBg: '#FFFDF5',
-  cardBg: '#FFFFFF',
-  cultureBg: '#F9F3E3',
+  // ── Secondary — warm amber gold ────────────────────────
+  accent:         '#FFC107',  // amber gold — progress rings, badges, highlights
+  accentDark:     '#E8A000',  // darker gold for text on light bg
+  accentLight:    '#FFF8E1',  // gold tint surface — culture cards, XP cards
 
-  // Borders
-  border: '#D7B98E',
+  // ── Backgrounds — warm parchment ───────────────────────
+  pageBg:         '#F5F5DC',  // warm cream/parchment — ALL screen backgrounds
+  cardBg:         '#FFFFFF',  // pure white — lesson cards, phrase cards
+  cardAlt:        '#F0EFE0',  // slightly warm — secondary card bg, module cards
+  cultureBg:      '#FFF8E1',  // warm gold tint — cultural insight cards
 
-  // Semantic
-  error: '#8D2B2B',
-  errorLight: '#FFEBEE',
+  // ── Borders ─────────────────────────────────────────────
+  border:         '#E0DDD0',  // warm grey-beige — all card borders
+  borderStrong:   '#C8C4B0',  // stronger border for emphasis
 
-  // Text — ALWAYS black family, no exceptions
-  textPrimary: '#000000',
-  textBody: '#1A1A1A',
-  textSecondary: '#444444',
-  textTertiary: '#777777',
-  textOnGreen: '#FFFFFF',
-  textOnCulture: '#3E2723',
+  // ── Text — always dark, warm-toned ──────────────────────
+  textPrimary:    '#1A1008',  // near-black warm — all headings
+  textBody:       '#2C2416',  // warm dark brown — body copy
+  textSecondary:  '#6B5E4A',  // warm mid-brown — subtitles, meta
+  textTertiary:   '#9C8E7A',  // warm light — captions, hints, inactive tabs
+  textOnRed:      '#FFFFFF',  // white text on crimson bg
+  textOnGold:     '#5D4000',  // dark brown text on gold bg
 
-  // NEVER USE: blue, purple, orange, terracotta, bright red (#FF0000)
+  // ── Semantic ─────────────────────────────────────────────
+  success:        '#BE0027',  // use primary red for correct — no green
+  error:          '#BE0027',  // same red, differentiate via shake animation
+  locked:         '#C8C4B0',  // greyed out for locked content
+
+  // ── NEVER USE ────────────────────────────────────────────
+  // No green (#2E7D32) anywhere in the UI
+  // No blue anywhere
+  // No pure white (#FFFFFF) for backgrounds — always use pageBg
+  // No cold grey borders — always warm-toned
 };

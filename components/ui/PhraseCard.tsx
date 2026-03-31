@@ -42,9 +42,11 @@ export function PhraseCard({
         <Text
           style={{
             fontFamily: Fonts.notoSerifKannada.regular,
-            fontSize: 32,
-            color: Colors.textPrimary,
+            fontSize: 34,
+            color: Colors.primary,
             textAlign: 'center',
+            lineHeight: 54,
+            paddingTop: 8,
             marginBottom: Spacing.md,
           }}
         >
@@ -56,7 +58,7 @@ export function PhraseCard({
         style={{
           fontFamily: Fonts.lora.italic,
           fontSize: showScript ? 15 : 22,
-          color: '#8D6E63',
+          color: Colors.textSecondary,
           textAlign: 'center',
           marginBottom: Spacing.sm,
         }}

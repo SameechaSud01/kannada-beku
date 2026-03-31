@@ -1,21 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { createMMKV } from 'react-native-mmkv';
-
-const storage = createMMKV({ id: 'kannada-baa' });
-
-const mmkvStorage = {
-  getItem: (name: string): string | null => {
-    const value = storage.getString(name);
-    return value ?? null;
-  },
-  setItem: (name: string, value: string): void => {
-    storage.set(name, value);
-  },
-  removeItem: (name: string): void => {
-    storage.remove(name);
-  },
-};
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type ScriptMode = 'script' | 'roman';
 
@@ -100,7 +85,7 @@ export const useProgressStore = create<ProgressState>()(
     }),
     {
       name: 'kannada-baa-progress',
-      storage: createJSONStorage(() => mmkvStorage),
+      storage: createJSONStorage(() => AsyncStorage),
     }
   )
 );

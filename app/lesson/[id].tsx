@@ -109,11 +109,11 @@ export default function LessonScreen() {
         transform: [{ translateY: slideAnim }],
       }}
     >
-      {/* App Bar */}
+      {/* App Bar — cream with red Kannada logo */}
       <View
         style={{
           paddingTop: insets.top + Spacing.sm,
-          backgroundColor: Colors.primary,
+          backgroundColor: Colors.pageBg,
           paddingHorizontal: Spacing.lg,
           paddingBottom: Spacing.md,
         }}
@@ -129,7 +129,7 @@ export default function LessonScreen() {
             <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
               <Path
                 d="M19 12H5M12 19l-7-7 7-7"
-                stroke={Colors.textOnGreen}
+                stroke={Colors.textPrimary}
                 strokeWidth={2}
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -139,12 +139,14 @@ export default function LessonScreen() {
 
           <Text
             style={{
-              fontFamily: Fonts.lora.italic,
+              fontFamily: Fonts.notoSerifKannada.medium,
               fontSize: 17,
-              color: Colors.textOnGreen,
+              color: Colors.primary,
+              lineHeight: 30,
+              paddingTop: 4,
             }}
           >
-            Kannada Baa
+            ಕನ್ನಡ ಬಾ
           </Text>
 
           <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
@@ -231,7 +233,9 @@ export default function LessonScreen() {
             style={{
               fontFamily: Fonts.notoSerifKannada.medium,
               fontSize: 15,
-              color: Colors.textOnGreen,
+              lineHeight: 26,
+              paddingTop: 2,
+              color: Colors.textOnRed,
             }}
           >
             {currentIndex < lesson.phrases.length - 1 ? 'ಮುಂದುವರಿಸಿ →' : 'ಪೂರ್ಣಗೊಂಡಿದೆ ✓'}

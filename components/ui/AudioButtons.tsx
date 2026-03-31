@@ -52,7 +52,7 @@ export function AudioButtons({
         marginTop: Spacing.lg,
       }}
     >
-      {/* Mic Button */}
+      {/* Mic Button — gold tint bg, gold border, gold icon */}
       <Animated.View style={{ transform: [{ scale: isRecording ? pulseAnim : 1 }] }}>
         <Pressable
           onPress={onRecord}
@@ -60,7 +60,9 @@ export function AudioButtons({
             width: 48,
             height: 48,
             borderRadius: Radius.full,
-            backgroundColor: isRecording ? Colors.errorLight : Colors.primaryLight,
+            backgroundColor: Colors.accentLight,
+            borderWidth: 1,
+            borderColor: Colors.accent,
             alignItems: 'center',
             justifyContent: 'center',
             transform: [{ scale: pressed ? 0.96 : 1 }],
@@ -69,11 +71,11 @@ export function AudioButtons({
           <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
             <Path
               d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3Z"
-              fill={isRecording ? Colors.error : Colors.primary}
+              fill={isRecording ? Colors.primary : Colors.accentDark}
             />
             <Path
               d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"
-              stroke={isRecording ? Colors.error : Colors.primary}
+              stroke={isRecording ? Colors.primary : Colors.accentDark}
               strokeWidth={2}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -82,7 +84,7 @@ export function AudioButtons({
         </Pressable>
       </Animated.View>
 
-      {/* Play Button */}
+      {/* Play Button — crimson circle */}
       <Pressable
         onPress={onPlay}
         style={({ pressed }) => ({
@@ -92,43 +94,40 @@ export function AudioButtons({
           backgroundColor: isPlaying ? Colors.primaryDark : Colors.primary,
           alignItems: 'center',
           justifyContent: 'center',
-          shadowColor: Colors.primary,
-          shadowOffset: { width: 0, height: 3 },
-          shadowOpacity: 0.3,
-          shadowRadius: 6,
-          elevation: 4,
           transform: [{ scale: pressed ? 0.96 : 1 }],
         })}
       >
         {isPlaying ? (
           <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
-            <Path d="M6 4h4v16H6zM14 4h4v16h-4z" fill={Colors.textOnGreen} />
+            <Path d="M6 4h4v16H6zM14 4h4v16h-4z" fill={Colors.textOnRed} />
           </Svg>
         ) : (
           <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
-            <Path d="M8 5v14l11-7L8 5z" fill={Colors.textOnGreen} />
+            <Path d="M8 5v14l11-7L8 5z" fill={Colors.textOnRed} />
           </Svg>
         )}
       </Pressable>
 
-      {/* Check Button */}
+      {/* Check Button — gold tint bg, gold border, gold icon */}
       <Pressable
         onPress={onCheck}
         style={({ pressed }) => ({
           width: 48,
           height: 48,
           borderRadius: Radius.full,
-          backgroundColor: Colors.primaryLight,
+          backgroundColor: Colors.accentLight,
+          borderWidth: 1,
+          borderColor: Colors.accent,
           alignItems: 'center',
           justifyContent: 'center',
           transform: [{ scale: pressed ? 0.96 : 1 }],
         })}
       >
         <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
-          <Circle cx={12} cy={12} r={10} stroke={Colors.primary} strokeWidth={2} />
+          <Circle cx={12} cy={12} r={10} stroke={Colors.accentDark} strokeWidth={2} />
           <Path
             d="M8 12l3 3 5-5"
-            stroke={Colors.primary}
+            stroke={Colors.accentDark}
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"

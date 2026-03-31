@@ -36,16 +36,16 @@ export function StreakRing({ days, maxDays = 7, size = 120 }: StreakRingProps) {
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', width: size, height: size }}>
       <Svg width={size} height={size} style={{ transform: [{ rotate: '-90deg' }] }}>
-        {/* Track */}
+        {/* Track — warm border */}
         <Circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={Colors.primaryLight}
+          stroke={Colors.border}
           strokeWidth={strokeWidth}
           fill="transparent"
         />
-        {/* Fill */}
+        {/* Fill — gold */}
         <AnimatedCircle
           cx={size / 2}
           cy={size / 2}
@@ -63,7 +63,7 @@ export function StreakRing({ days, maxDays = 7, size = 120 }: StreakRingProps) {
       <View style={{ position: 'absolute', alignItems: 'center' }}>
         <Text
           style={{
-            fontFamily: Fonts.dmSans.medium,
+            fontFamily: Fonts.dmSans.bold,
             fontSize: 28,
             color: Colors.primary,
           }}

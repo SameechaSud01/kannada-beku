@@ -12,9 +12,9 @@ export function CultureCard({ label, text }: CultureCardProps) {
   return (
     <View
       style={{
-        backgroundColor: Colors.cultureBg,
-        borderWidth: 0.5,
-        borderColor: '#D4C4A0',
+        backgroundColor: Colors.accentLight,
+        borderWidth: 1,
+        borderColor: Colors.accent,
         borderRadius: Radius.lg,
         padding: Spacing.lg,
       }}
@@ -24,18 +24,19 @@ export function CultureCard({ label, text }: CultureCardProps) {
           fontFamily: Fonts.dmSans.bold,
           fontSize: 9,
           letterSpacing: 1.2,
-          color: '#5D4037',
+          color: '#8D6000',
           textTransform: 'uppercase',
           marginBottom: Spacing.sm,
         }}
       >
-        {label}
+        KARNATAKA CULTURE
       </Text>
       <Text
         style={{
           fontFamily: Fonts.dmSans.regular,
           fontSize: 12,
-          color: Colors.textOnCulture,
+          fontStyle: 'italic',
+          color: Colors.textBody,
           lineHeight: 12 * 1.6,
         }}
       >

@@ -24,7 +24,7 @@ export function ProgressBar({ progress, height = 5 }: ProgressBarProps) {
     <View
       style={{
         height,
-        backgroundColor: '#E8E0D0',
+        backgroundColor: Colors.border,
         borderRadius: Radius.full,
         overflow: 'hidden',
       }}

@@ -93,9 +93,9 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
     <View
       style={{
         flexDirection: 'row',
-        backgroundColor: Colors.cardBg,
+        backgroundColor: Colors.pageBg,
         borderTopWidth: 0.5,
-        borderTopColor: Colors.border,
+        borderTopColor: '#D4CDB8',
         paddingBottom: Spacing.xl,
         paddingTop: Spacing.md,
       }}
@@ -134,12 +134,12 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
                 width: 36,
                 height: 36,
                 borderRadius: Radius.sm,
-                backgroundColor: isFocused ? Colors.primaryLight : 'transparent',
+                backgroundColor: isFocused ? Colors.primary : 'transparent',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              {tabInfo.active(color)}
+              {tabInfo.active(isFocused ? '#FFFFFF' : color)}
             </View>
             <Text
               style={{

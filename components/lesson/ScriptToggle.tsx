@@ -13,7 +13,7 @@ export function ScriptToggle({ activeMode, onToggle }: ScriptToggleProps) {
     <View
       style={{
         flexDirection: 'row',
-        backgroundColor: Colors.primaryLight,
+        backgroundColor: Colors.cardAlt,
         borderRadius: Radius.sm,
         padding: 3,
       }}
@@ -43,7 +43,7 @@ export function ScriptToggle({ activeMode, onToggle }: ScriptToggleProps) {
               style={{
                 fontFamily: Fonts.dmSans.bold,
                 fontSize: 12,
-                color: Colors.primary,
+                color: isActive ? Colors.primary : Colors.textSecondary,
               }}
             >
               {mode === 'script' ? 'Script' : 'Roman'}

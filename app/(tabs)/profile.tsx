@@ -1,26 +1,27 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef } from 'react';
 import { View, Text, ScrollView, Pressable, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path, Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
-import { StreakRing } from '../../components/ui/StreakRing';
 import { useProgressStore } from '../../stores/progressStore';
 import { useAuthStore } from '../../stores/authStore';
 import { supabase } from '../../services/api/supabase';
 import lessonsData from '../../data/lessons.json';
 
-const DAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+function parseFirstName(raw: string): string {
+  const segment = raw.split(/[\s_.\-]/)[0] || raw;
+  return segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase();
+}
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const {
     streak,
     totalPhrasesLearned,
-    totalMinutesPracticed,
-    weeklyActivity,
     completedLessons,
+    lessonProgress,
   } = useProgressStore();
   const user = useAuthStore((s) => s.user);
 
@@ -34,321 +35,376 @@ export default function ProfileScreen() {
     ]).start();
   }, []);
 
-  const hours = Math.floor(totalMinutesPracticed / 60);
-  const mins = totalMinutesPracticed % 60;
-  const practiceLabel = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+  const rawName = user?.user_metadata?.full_name
+    || user?.user_metadata?.name
+    || user?.email?.split('@')[0]
+    || 'Learner';
+  const firstSegment = rawName.split(/[\s_.\-]+/)[0] || rawName;
+  const userName = firstSegment.charAt(0).toUpperCase() + firstSegment.slice(1).toLowerCase();
 
-  // Weekly heatmap — last 7 days
-  const weekDates = useMemo(() => {
-    const dates: string[] = [];
-    const today = new Date();
-    // Start from Monday of current week
-    const dayOfWeek = today.getDay();
-    const monday = new Date(today);
-    monday.setDate(today.getDate() - ((dayOfWeek + 6) % 7));
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(monday);
-      d.setDate(monday.getDate() + i);
-      dates.push(d.toISOString().split('T')[0]);
-    }
-    return dates;
-  }, []);
+  const totalXP = totalPhrasesLearned * 10;
+  const xpGoal = 500;
+  const xpPercent = Math.min(totalXP / xpGoal, 1);
+  const xpSize = 64;
+  const xpStroke = 6;
+  const xpR = (xpSize - xpStroke) / 2;
+  const xpCirc = 2 * Math.PI * xpR;
+  const xpOffset = xpCirc * (1 - xpPercent);
 
-  const completedLessonData = lessonsData.lessons.filter((l) =>
-    completedLessons.includes(l.id)
-  );
-
-  const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Learner';
+  const level = Math.max(1, Math.floor(completedLessons.length / 2) + 1);
+  const journeyLessons = lessonsData.lessons.slice(0, 3);
 
   return (
     <Animated.View
       style={{
         flex: 1,
-        backgroundColor: Colors.pageBg,
+        backgroundColor: '#FBFBE2',
         opacity: fadeAnim,
         transform: [{ translateY: slideAnim }],
       }}
     >
-      {/* App Bar */}
+      {/* ── GLASS HEADER ── */}
       <View
         style={{
-          paddingTop: insets.top + Spacing.sm,
-          backgroundColor: Colors.primary,
-          paddingHorizontal: Spacing.lg,
-          paddingBottom: Spacing.md,
+          paddingTop: insets.top + 8,
+          paddingBottom: 12,
+          paddingHorizontal: 24,
+          backgroundColor: 'rgba(251,251,226,0.85)',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
+        <Pressable>
+          <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
+            <Path d="M3 6h18M3 12h18M3 18h18" stroke="#91001B" strokeWidth={2.2} strokeLinecap="round" />
+          </Svg>
+        </Pressable>
+        <Text style={{ fontFamily: Fonts.notoSerifKannada.bold, fontSize: 22, color: '#91001B', letterSpacing: -0.3, lineHeight: 36, paddingTop: 4 }}>
+          ಕನ್ನಡ ಬಾ
+        </Text>
         <View
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            width: 40, height: 40, borderRadius: 20,
+            backgroundColor: Colors.primary, borderWidth: 2, borderColor: 'rgba(145,0,27,0.15)',
+            alignItems: 'center', justifyContent: 'center',
           }}
         >
-          <View style={{ width: 20 }} />
-          <Text
-            style={{
-              fontFamily: Fonts.lora.italic,
-              fontSize: 17,
-              color: Colors.textOnGreen,
-            }}
-          >
-            Kannada Baa
-          </Text>
-          <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
-            <Path
-              d="M12 2c.5 3.5 4 6 4 10a4 4 0 0 1-8 0c0-4 3.5-6.5 4-10z"
-              fill={Colors.accent}
-              stroke={Colors.accent}
-              strokeWidth={1.5}
-            />
+          <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
+            <Path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#FFF" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+            <Circle cx={12} cy={7} r={4} stroke="#FFF" strokeWidth={2} />
           </Svg>
         </View>
       </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ padding: Spacing.lg }}
-      >
-        {/* Streak Ring */}
-        <View style={{ alignItems: 'center', marginVertical: Spacing.xxl }}>
-          <StreakRing days={streak} />
-        </View>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
 
-        {/* Stat Cards */}
-        <View style={{ flexDirection: 'row', gap: Spacing.md, marginBottom: Spacing.xxl }}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: Colors.primaryLight,
-              borderRadius: Radius.lg,
-              padding: Spacing.lg,
-              alignItems: 'center',
-            }}
-          >
-            <Text
+        {/* ── USER PROFILE HEADER ── */}
+        <View style={{ alignItems: 'center', paddingTop: 28, marginBottom: 36 }}>
+          {/* Gradient ring avatar */}
+          <View style={{ marginBottom: 8, position: 'relative' }}>
+            {/* Outer gradient ring (simulated with two half-circles) */}
+            <View
               style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: 20,
-                color: Colors.primary,
+                width: 128, height: 128, borderRadius: 64,
+                padding: 4,
+                backgroundColor: '#FDC003',
+                overflow: 'hidden',
               }}
             >
-              {totalPhrasesLearned}
-            </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: 9,
-                letterSpacing: 1.4,
-                color: Colors.textTertiary,
-                marginTop: Spacing.xs,
-              }}
-            >
-              PHRASES
-            </Text>
-          </View>
-
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: Colors.primaryLight,
-              borderRadius: Radius.lg,
-              padding: Spacing.lg,
-              alignItems: 'center',
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: 20,
-                color: Colors.primary,
-              }}
-            >
-              {practiceLabel}
-            </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: 9,
-                letterSpacing: 1.4,
-                color: Colors.textTertiary,
-                marginTop: Spacing.xs,
-              }}
-            >
-              PRACTICE
-            </Text>
-          </View>
-        </View>
-
-        {/* Weekly Activity */}
-        <Text
-          style={{
-            fontFamily: Fonts.dmSans.bold,
-            fontSize: 10,
-            letterSpacing: 1.4,
-            color: Colors.textTertiary,
-            marginBottom: Spacing.md,
-          }}
-        >
-          WEEKLY ACTIVITY
-        </Text>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: Spacing.xxl,
-          }}
-        >
-          {weekDates.map((date, i) => {
-            const isActive = weeklyActivity[date];
-            return (
-              <View key={date} style={{ alignItems: 'center', gap: Spacing.xs }}>
-                <View
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: Radius.sm,
-                    backgroundColor: isActive ? Colors.primary : Colors.primaryLight,
-                    opacity: isActive ? 1 : 0.5,
-                  }}
-                />
-                <Text
-                  style={{
-                    fontFamily: Fonts.dmSans.regular,
-                    fontSize: 10,
-                    color: Colors.textTertiary,
-                  }}
-                >
-                  {DAY_LABELS[i]}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-
-        {/* Completed Lessons */}
-        {completedLessonData.length > 0 && (
-          <>
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: 10,
-                letterSpacing: 1.4,
-                color: Colors.textTertiary,
-                marginBottom: Spacing.md,
-              }}
-            >
-              COMPLETED LESSONS
-            </Text>
-
-            {completedLessonData.map((lesson) => (
+              {/* Gradient overlay — red to gold */}
+              <View style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '100%', backgroundColor: '#91001B' }} />
+              {/* Inner white border + avatar */}
               <View
-                key={lesson.id}
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: Colors.cardBg,
-                  borderWidth: 0.5,
-                  borderColor: Colors.border,
-                  borderRadius: Radius.lg,
-                  padding: Spacing.md,
-                  marginBottom: Spacing.sm,
+                  width: '100%', height: '100%', borderRadius: 60,
+                  borderWidth: 4, borderColor: '#FBFBE2',
+                  backgroundColor: '#91001B',
+                  alignItems: 'center', justifyContent: 'center',
+                  overflow: 'hidden',
                 }}
               >
-                {/* Kannada thumbnail */}
-                <View
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: Radius.sm,
-                    backgroundColor: Colors.primaryLight,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginRight: Spacing.md,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: Fonts.notoSerifKannada.medium,
-                      fontSize: 18,
-                      color: Colors.primary,
-                    }}
-                  >
-                    {lesson.thumbnailChar}
-                  </Text>
-                </View>
-
-                {/* Text */}
-                <View style={{ flex: 1 }}>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.dmSans.medium,
-                      fontSize: 14,
-                      color: Colors.textBody,
-                    }}
-                  >
-                    {lesson.title}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.dmSans.regular,
-                      fontSize: 12,
-                      color: Colors.textTertiary,
-                    }}
-                  >
-                    {lesson.subtitle}
-                  </Text>
-                </View>
-
-                {/* Green check */}
-                <View
-                  style={{
-                    width: 24,
-                    height: 24,
-                    borderRadius: Radius.full,
-                    backgroundColor: Colors.primary,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Svg width={12} height={12} viewBox="0 0 24 24" fill="none">
-                    <Path
-                      d="M5 12l5 5L20 7"
-                      stroke={Colors.textOnGreen}
-                      strokeWidth={3}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </Svg>
-                </View>
+                <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 28, color: '#FFFFFF' }}>
+                  {userName[0]?.toUpperCase()}
+                </Text>
               </View>
-            ))}
-          </>
-        )}
+            </View>
+            {/* Level badge */}
+            <View
+              style={{
+                position: 'absolute', bottom: -4, right: -4,
+                backgroundColor: '#FDC003', borderRadius: 20,
+                paddingHorizontal: 12, paddingVertical: 4,
+                shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 8, elevation: 4,
+              }}
+            >
+              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 11, color: '#6C5000' }}>
+                LEVEL {level}
+              </Text>
+            </View>
+          </View>
+          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 28, color: '#1B1D0E', letterSpacing: -0.5, marginTop: 8 }}>
+            {userName}
+          </Text>
+          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 14, color: '#464646' }}>
+            Linguistic Enthusiast
+          </Text>
+        </View>
 
-        {/* Sign Out */}
-        <Pressable
-          onPress={() => supabase.auth.signOut()}
-          style={({ pressed }) => ({
-            marginTop: Spacing.xxl,
-            paddingVertical: Spacing.md,
-            alignItems: 'center',
-            transform: [{ scale: pressed ? 0.96 : 1 }],
-          })}
-        >
-          <Text
+        {/* ── STATS BENTO GRID ── */}
+        <View style={{ paddingHorizontal: 24, marginBottom: 36 }}>
+          {/* Top row: 2 cards */}
+          <View style={{ flexDirection: 'row', gap: 14, marginBottom: 14 }}>
+            {/* Streak */}
+            <View
+              style={{
+                flex: 1, backgroundColor: '#F5F5DC', borderRadius: 16,
+                padding: 24,
+              }}
+            >
+              <Svg width={28} height={28} viewBox="0 0 24 24" fill="none" style={{ marginBottom: 12 }}>
+                <Path d="M12 2c.5 3.5 4 6 4 10a4 4 0 0 1-8 0c0-4 3.5-6.5 4-10z" fill="#91001B" stroke="#91001B" strokeWidth={1} />
+              </Svg>
+              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 36, color: '#1B1D0E', lineHeight: 40 }}>
+                {streak}
+              </Text>
+              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 10, letterSpacing: 2, color: '#464646', textTransform: 'uppercase', marginTop: 4 }}>
+                Day Streak
+              </Text>
+            </View>
+            {/* Words */}
+            <View
+              style={{
+                flex: 1, backgroundColor: '#E4E4CC', borderRadius: 16,
+                padding: 24,
+              }}
+            >
+              <Svg width={28} height={28} viewBox="0 0 24 24" fill="none" style={{ marginBottom: 12 }}>
+                <Path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="#785900" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                <Path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" fill="#785900" stroke="#785900" strokeWidth={1} />
+              </Svg>
+              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 36, color: '#1B1D0E', lineHeight: 40 }}>
+                {totalPhrasesLearned}
+              </Text>
+              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 10, letterSpacing: 2, color: '#464646', textTransform: 'uppercase', marginTop: 4 }}>
+                Words Learned
+              </Text>
+            </View>
+          </View>
+
+          {/* Total XP — full width */}
+          <View
             style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: 13,
-              color: Colors.textTertiary,
+              backgroundColor: 'rgba(253,192,3,0.15)', borderRadius: 16,
+              padding: 24, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
             }}
           >
-            Sign out
-          </Text>
-        </Pressable>
+            <View>
+              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 10, letterSpacing: 2, color: '#785900', textTransform: 'uppercase', marginBottom: 4 }}>
+                Total XP
+              </Text>
+              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 30, color: '#1B1D0E', lineHeight: 34 }}>
+                {totalXP.toLocaleString()}
+              </Text>
+            </View>
+            <View style={{ width: xpSize, height: xpSize, alignItems: 'center', justifyContent: 'center' }}>
+              <Svg width={xpSize} height={xpSize} style={{ transform: [{ rotate: '-90deg' }] }}>
+                <Circle cx={xpSize / 2} cy={xpSize / 2} r={xpR} stroke="#EAEAD1" strokeWidth={xpStroke} fill="transparent" />
+                <Circle cx={xpSize / 2} cy={xpSize / 2} r={xpR} stroke="#785900" strokeWidth={xpStroke} fill="transparent" strokeDasharray={xpCirc} strokeDashoffset={xpOffset} strokeLinecap="round" />
+              </Svg>
+              <Text style={{ position: 'absolute', fontFamily: Fonts.dmSans.bold, fontSize: 10, color: '#785900' }}>
+                {Math.round(xpPercent * 100)}%
+              </Text>
+            </View>
+          </View>
+        </View>
 
-        <View style={{ height: Spacing.xxl }} />
+        {/* ── LANGUAGE JOURNEY MAP ── */}
+        <View style={{ paddingHorizontal: 24, marginBottom: 36 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+            <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 20, color: '#1B1D0E' }}>
+              Language Journey
+            </Text>
+            <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 11, letterSpacing: 2, color: '#91001B', textTransform: 'uppercase' }}>
+              View Path
+            </Text>
+          </View>
+
+          <View
+            style={{
+              backgroundColor: '#F5F5DC', borderRadius: 24, padding: 28, overflow: 'hidden',
+              minHeight: 320, position: 'relative',
+            }}
+          >
+            {/* Decorative temple silhouette */}
+            <View style={{ position: 'absolute', top: 20, right: -10, opacity: 0.06 }}>
+              <Text style={{ fontFamily: Fonts.notoSerifKannada.bold, fontSize: 160, color: '#464646', lineHeight: 240 }}>ಕ</Text>
+            </View>
+
+            {/* Dotted path line */}
+            <View
+              style={{
+                position: 'absolute', left: 51, top: 56, bottom: 56, width: 2,
+                borderLeftWidth: 2, borderLeftColor: 'rgba(145,0,27,0.15)', borderStyle: 'dotted',
+              }}
+            />
+
+            {/* Journey stops */}
+            <View style={{ gap: 32, position: 'relative', zIndex: 10 }}>
+              {journeyLessons.map((lesson, idx) => {
+                const isCompleted = completedLessons.includes(lesson.id);
+                const isActive = !isCompleted && idx === (completedLessons.length > 0 ? completedLessons.length : 0);
+                const isLocked = !isCompleted && !isActive;
+                const phrasesDone = lessonProgress[lesson.id] ?? 0;
+
+                return (
+                  <View key={lesson.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 18, opacity: isLocked ? 0.4 : 1 }}>
+                    {/* Status circle */}
+                    <View
+                      style={{
+                        width: isActive ? 56 : 48,
+                        height: isActive ? 56 : 48,
+                        borderRadius: 28,
+                        backgroundColor: isCompleted ? '#91001B' : isActive ? '#BE0027' : '#DBDCC3',
+                        alignItems: 'center', justifyContent: 'center',
+                        borderWidth: isActive ? 4 : 0,
+                        borderColor: '#FBFBE2',
+                        shadowColor: isActive || isCompleted ? '#91001B' : 'transparent',
+                        shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.25, shadowRadius: 12, elevation: isActive ? 6 : 2,
+                      }}
+                    >
+                      {isCompleted ? (
+                        <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
+                          <Path d="M5 12l5 5L20 7" stroke="#FFFFFF" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+                        </Svg>
+                      ) : isActive ? (
+                        <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+                          <Path d="M8 5v14l11-7L8 5z" fill="#FFFFFF" />
+                        </Svg>
+                      ) : (
+                        <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
+                          <Path d="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zM7 11V7a5 5 0 0 1 10 0v4" stroke="#464646" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                        </Svg>
+                      )}
+                    </View>
+
+                    {/* Card */}
+                    <View
+                      style={{
+                        flex: 1,
+                        backgroundColor: isActive ? '#E4E4CC' : 'rgba(255,255,255,0.7)',
+                        borderRadius: 20, padding: 16,
+                        borderWidth: isActive ? 2 : 0,
+                        borderColor: isActive ? 'rgba(145,0,27,0.15)' : 'transparent',
+                        shadowColor: '#1B1D0E', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.04, shadowRadius: 8, elevation: 1,
+                      }}
+                    >
+                      <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 14, color: '#1B1D0E', marginBottom: 3 }}>
+                        {lesson.title}
+                      </Text>
+                      <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: 12, color: isActive ? '#5C3F3F' : '#464646' }}>
+                        {isCompleted
+                          ? `Completed`
+                          : isActive
+                          ? `${phrasesDone}/${lesson.totalPhrases} Lessons Finished`
+                          : 'Locked'}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          </View>
+        </View>
+
+        {/* ── EARNED BADGES — Horizontal scroll ── */}
+        <View style={{ marginBottom: 36 }}>
+          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 20, color: '#1B1D0E', paddingHorizontal: 24, marginBottom: 18 }}>
+            Earned Badges
+          </Text>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 24, gap: 16 }}
+          >
+            {/* Badge 1: Early Bird — gold gradient */}
+            <View style={{ width: 100, alignItems: 'center' }}>
+              <View
+                style={{
+                  width: 88, height: 88, borderRadius: 44,
+                  backgroundColor: '#785900', alignItems: 'center', justifyContent: 'center',
+                  shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 12, elevation: 4,
+                  overflow: 'hidden',
+                }}
+              >
+                <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '60%', backgroundColor: '#FDC003' }} />
+                <Svg width={36} height={36} viewBox="0 0 24 24" fill="none" style={{ zIndex: 1 }}>
+                  <Path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 7 7M18 9h1.5a2.5 2.5 0 0 0 0-5C17 4 17 7 17 7M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22M18 2H6v7a6 6 0 0 0 12 0V2Z" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={1} />
+                </Svg>
+              </View>
+              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 9, letterSpacing: 1.2, color: '#464646', textTransform: 'uppercase', marginTop: 10, textAlign: 'center' }}>
+                Early Bird
+              </Text>
+            </View>
+
+            {/* Badge 2: Quiz Master — red gradient */}
+            <View style={{ width: 100, alignItems: 'center' }}>
+              <View
+                style={{
+                  width: 88, height: 88, borderRadius: 44,
+                  backgroundColor: '#BE0027', alignItems: 'center', justifyContent: 'center',
+                  shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 12, elevation: 4,
+                  overflow: 'hidden',
+                }}
+              >
+                <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '60%', backgroundColor: '#91001B' }} />
+                <Svg width={36} height={36} viewBox="0 0 24 24" fill="none" style={{ zIndex: 1 }}>
+                  <Path d="M12 15l-3.5 2 1-4L6 10l4-.5L12 6l2 3.5 4 .5-3.5 3 1 4z" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={1} />
+                </Svg>
+              </View>
+              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 9, letterSpacing: 1.2, color: '#464646', textTransform: 'uppercase', marginTop: 10, textAlign: 'center' }}>
+                Quiz Master
+              </Text>
+            </View>
+
+            {/* Badge 3: Polyglot — locked */}
+            <View style={{ width: 100, alignItems: 'center' }}>
+              <View
+                style={{
+                  width: 88, height: 88, borderRadius: 44,
+                  backgroundColor: '#EAEAD1', alignItems: 'center', justifyContent: 'center',
+                  borderWidth: 2, borderStyle: 'dashed', borderColor: 'rgba(70,70,70,0.15)',
+                }}
+              >
+                <Svg width={36} height={36} viewBox="0 0 24 24" fill="none">
+                  <Path d="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zM7 11V7a5 5 0 0 1 10 0v4" stroke="rgba(70,70,70,0.25)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                </Svg>
+              </View>
+              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 9, letterSpacing: 1.2, color: '#464646', textTransform: 'uppercase', marginTop: 10, textAlign: 'center' }}>
+                Polyglot
+              </Text>
+            </View>
+          </ScrollView>
+        </View>
+
+        {/* Sign out */}
+        <View style={{ paddingHorizontal: 24 }}>
+          <View style={{ height: 0.5, backgroundColor: '#E5BDBB', opacity: 0.3, marginBottom: 4 }} />
+          <Pressable
+            onPress={() => supabase.auth.signOut()}
+            style={({ pressed }) => ({
+              paddingVertical: 18, alignItems: 'center',
+              transform: [{ scale: pressed ? 0.96 : 1 }],
+            })}
+          >
+            <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: 14, color: '#91001B' }}>
+              Sign out
+            </Text>
+          </Pressable>
+        </View>
+
+        <View style={{ height: 24 }} />
       </ScrollView>
     </Animated.View>
   );

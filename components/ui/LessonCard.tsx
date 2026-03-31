@@ -81,7 +81,7 @@ export function LessonCard({
           style={{
             fontFamily: Fonts.dmSans.bold,
             fontSize: 12,
-            color: Colors.textOnGreen,
+            color: Colors.textOnRed,
             letterSpacing: 0.5,
           }}
         >

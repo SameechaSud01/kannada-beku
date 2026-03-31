@@ -47,6 +47,8 @@ export default function LoginScreen() {
               fontFamily: Fonts.notoSerifKannada.bold,
               fontSize: 48,
               color: Colors.primary,
+              lineHeight: 72,
+              paddingTop: 8,
               marginBottom: Spacing.sm,
             }}
           >
@@ -132,7 +134,7 @@ export default function LoginScreen() {
             style={{
               fontFamily: Fonts.dmSans.bold,
               fontSize: 14,
-              color: Colors.textOnGreen,
+              color: Colors.textOnRed,
               letterSpacing: 0.5,
             }}
           >
