@@ -2,24 +2,29 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type ScriptMode = 'script' | 'roman';
-
 interface ProgressState {
   streak: number;
   lastActiveDate: string;
   completedLessons: string[];
   lessonProgress: Record<string, number>;
+  xp: number;
   totalPhrasesLearned: number;
+  // TODO: tracked via completeLesson but not yet surfaced in UI.
   totalMinutesPracticed: number;
+  // TODO: tracked via recordActivity but not yet surfaced in UI.
   weeklyActivity: Record<string, boolean>;
-  scriptModeDefault: ScriptMode;
+  isHydrated: boolean;
 
-  // Actions
-  setScriptMode: (mode: ScriptMode) => void;
   updateLessonProgress: (lessonId: string, phraseIndex: number) => void;
-  completeLesson: (lessonId: string, phrasesLearned: number, minutesPracticed: number) => void;
+  completeLesson: (
+    lessonId: string,
+    score: number,
+    phrasesLearned: number,
+    minutesPracticed: number
+  ) => void;
   updateStreak: () => void;
   recordActivity: () => void;
+  setHydrated: (hydrated: boolean) => void;
 }
 
 const getTodayISO = () => new Date().toISOString().split('T')[0];
@@ -31,12 +36,11 @@ export const useProgressStore = create<ProgressState>()(
       lastActiveDate: '',
       completedLessons: [],
       lessonProgress: {},
+      xp: 0,
       totalPhrasesLearned: 0,
       totalMinutesPracticed: 0,
       weeklyActivity: {},
-      scriptModeDefault: 'script',
-
-      setScriptMode: (mode) => set({ scriptModeDefault: mode }),
+      isHydrated: false,
 
       updateLessonProgress: (lessonId, phraseIndex) =>
         set((state) => ({
@@ -46,13 +50,18 @@ export const useProgressStore = create<ProgressState>()(
           },
         })),
 
-      completeLesson: (lessonId, phrasesLearned, minutesPracticed) =>
+      completeLesson: (lessonId, score, phrasesLearned, minutesPracticed) =>
         set((state) => {
+          // Streak and lastActiveDate are intentionally not updated here.
+          // Call updateStreak() separately at the call site — keeping
+          // streak logic in one place under one rule.
           const completed = state.completedLessons.includes(lessonId)
             ? state.completedLessons
             : [...state.completedLessons, lessonId];
+          const xpAward = score >= 80 ? 20 : 10;
           return {
             completedLessons: completed,
+            xp: state.xp + xpAward,
             totalPhrasesLearned: state.totalPhrasesLearned + phrasesLearned,
             totalMinutesPracticed: state.totalMinutesPracticed + minutesPracticed,
           };
@@ -82,10 +91,15 @@ export const useProgressStore = create<ProgressState>()(
           },
         }));
       },
+
+      setHydrated: (isHydrated) => set({ isHydrated }),
     }),
     {
       name: 'kannada-baa-progress',
       storage: createJSONStorage(() => AsyncStorage),
+      onRehydrateStorage: () => (state) => {
+        state?.setHydrated(true);
+      },
     }
   )
 );

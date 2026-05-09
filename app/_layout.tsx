@@ -9,7 +9,9 @@ import {
   NotoSerifKannada_700Bold,
 } from '@expo-google-fonts/noto-serif-kannada';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useAuthStore } from '../stores/authStore';
+import { useAuthStore } from '../stores/useAuthStore';
+import { useUserStore } from '../stores/useUserStore';
+import { useProgressStore } from '../stores/progressStore';
 import { supabase } from '../services/api/supabase';
 
 import '../global.css';
@@ -18,10 +20,13 @@ SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
-function AuthGate() {
+function AppGate() {
   const router = useRouter();
   const segments = useSegments();
-  const { session, isLoading, setSession, setLoading } = useAuthStore();
+  const { session, isLoading: authLoading, setSession, setLoading } = useAuthStore();
+  const hasCompletedOnboarding = useUserStore((s) => s.hasCompletedOnboarding);
+  const userHydrated = useUserStore((s) => s.isHydrated);
+  const progressHydrated = useProgressStore((s) => s.isHydrated);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -33,16 +38,25 @@ function AuthGate() {
   }, []);
 
   useEffect(() => {
-    if (isLoading) return;
+    if (authLoading || !userHydrated || !progressHydrated) return;
 
     const inAuthGroup = segments[0] === '(auth)';
+    const inOnboarding = segments[0] === 'onboarding';
 
     if (!session && !inAuthGroup) {
       router.replace('/(auth)/login');
     } else if (session && inAuthGroup) {
+      if (!hasCompletedOnboarding) {
+        router.replace('/onboarding/welcome');
+      } else {
+        router.replace('/(tabs)');
+      }
+    } else if (session && !hasCompletedOnboarding && !inOnboarding) {
+      router.replace('/onboarding/welcome');
+    } else if (session && hasCompletedOnboarding && inOnboarding) {
       router.replace('/(tabs)');
     }
-  }, [session, isLoading, segments]);
+  }, [session, authLoading, segments, hasCompletedOnboarding, userHydrated, progressHydrated]);
 
   return <Slot />;
 }
@@ -69,7 +83,7 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthGate />
+      <AppGate />
     </QueryClientProvider>
   );
 }

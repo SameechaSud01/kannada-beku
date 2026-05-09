@@ -7,8 +7,10 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { useProgressStore } from '../../stores/progressStore';
-import { useAuthStore } from '../../stores/authStore';
-import lessonsData from '../../data/lessons.json';
+import { useAuthStore } from '../../stores/useAuthStore';
+import { useCopy } from '../../hooks/useCopy';
+import { ALL_LESSONS } from '../../constants/lessons';
+import { useUserStore } from '../../stores/useUserStore';
 
 function parseFirstName(raw: string): string {
   const segment = raw.split(/[\s_.\-]/)[0] || raw;
@@ -21,6 +23,8 @@ export default function HomeScreen() {
   const { width: screenWidth } = useWindowDimensions();
   const { streak, lessonProgress, completedLessons } = useProgressStore();
   const user = useAuthStore((s) => s.user);
+  const copy = useCopy();
+  const learningMode = useUserStore((s) => s.learningMode) ?? 'both';
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(4)).current;
@@ -32,10 +36,12 @@ export default function HomeScreen() {
     ]).start();
   }, []);
 
-  const lessons = lessonsData.lessons;
+  const lessons = ALL_LESSONS;
   const currentLessonIndex = lessons.findIndex((l) => !completedLessons.includes(l.id));
   const activeLessonIdx = currentLessonIndex >= 0 ? currentLessonIndex : 0;
   const activeLesson = lessons[activeLessonIdx];
+  const showScript = learningMode !== 'spoken';
+  const showTransliteration = learningMode !== 'written';
 
   const rawName = user?.user_metadata?.full_name
     || user?.user_metadata?.name
@@ -45,7 +51,7 @@ export default function HomeScreen() {
   const userName = firstSegment.charAt(0).toUpperCase() + firstSegment.slice(1).toLowerCase();
 
   // Word of the day
-  const wordOfDay = activeLesson.phrases[0];
+  const wordOfDay = activeLesson.words[0];
 
   // Daily goal
   const dailyGoalTarget = 3;
@@ -146,9 +152,9 @@ export default function HomeScreen() {
               marginBottom: 28,
             }}
           >
-            Ready to learn{'\n'}
+            {copy('homeGreeting').split('Kannada')[0]}
             <Text style={{ color: '#91001B', fontStyle: 'italic' }}>
-              Kannada?
+              Kannada{copy('homeGreeting').split('Kannada')[1] || '?'}
             </Text>
           </Text>
         </View>
@@ -206,7 +212,7 @@ export default function HomeScreen() {
                   marginBottom: 4,
                 }}
               >
-                {wordOfDay.script.charAt(0)}
+                {wordOfDay.kannadaScript.charAt(0)}
               </Text>
               <Text
                 style={{
@@ -217,7 +223,7 @@ export default function HomeScreen() {
                 }}
                 numberOfLines={1}
               >
-                {wordOfDay.roman.split(/[\s·]/)[0]}
+                {wordOfDay.transliteration.split(/[\s·]/)[0]}
               </Text>
               <Text
                 style={{
@@ -330,7 +336,7 @@ export default function HomeScreen() {
                   </Svg>
                 </View>
                 <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 18, color: '#FFFFFF', marginBottom: 4 }}>
-                  Next Lesson
+                  {copy('nextLesson')}
                 </Text>
                 <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: 12, color: '#FFFFFF', opacity: 0.8, marginBottom: 12 }}>
                   {activeLesson.title}
@@ -349,7 +355,7 @@ export default function HomeScreen() {
         <View style={{ marginBottom: 40 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingHorizontal: 24, marginBottom: 16 }}>
             <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 22, color: '#1B1D0E' }}>
-              Continue Practice
+              {copy('continuePractice')}
             </Text>
             <Pressable onPress={() => router.push('/(tabs)/practice')}>
               <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 12, letterSpacing: 1.5, color: '#91001B', textTransform: 'uppercase' }}>

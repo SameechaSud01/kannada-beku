@@ -6,22 +6,22 @@ import Svg, { Path } from 'react-native-svg';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
-import { PhraseCard } from '../../components/ui/PhraseCard';
+import { WordCard } from '../../components/lesson/WordCard';
+import { QuizCard } from '../../components/lesson/QuizCard';
 import { CultureCard } from '../../components/ui/CultureCard';
-import { ScriptToggle } from '../../components/lesson/ScriptToggle';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { useProgressStore } from '../../stores/progressStore';
+import { useCopy } from '../../hooks/useCopy';
 import { playAudio, startRecording, stopRecording } from '../../services/audio/audioService';
-import lessonsData from '../../data/lessons.json';
+import { ALL_LESSONS } from '../../constants/lessons';
 
 export default function LessonScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const copy = useCopy();
 
   const {
-    scriptModeDefault,
-    setScriptMode,
     updateLessonProgress,
     completeLesson,
     updateStreak,
@@ -29,14 +29,16 @@ export default function LessonScreen() {
     lessonProgress,
   } = useProgressStore();
 
-  const lesson = lessonsData.lessons.find((l) => l.id === id);
+  const lesson = ALL_LESSONS.find((l) => l.id === id);
   if (!lesson) return null;
 
+  const totalSteps = lesson.words.length + lesson.quiz.length;
   const savedIndex = lessonProgress[lesson.id] ?? 0;
   const [currentIndex, setCurrentIndex] = useState(savedIndex);
-  const [showScript, setShowScript] = useState(scriptModeDefault === 'script');
   const [isPlaying, setIsPlaying] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [quizAnswered, setQuizAnswered] = useState(0);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(4)).current;
@@ -48,15 +50,19 @@ export default function LessonScreen() {
     ]).start();
   }, []);
 
-  const phrase = lesson.phrases[currentIndex];
-  const progress = (currentIndex + 1) / lesson.totalPhrases;
+  const isInWordPhase = currentIndex < lesson.words.length;
+  const quizIndex = currentIndex - lesson.words.length;
+  const progress = (currentIndex + 1) / totalSteps;
+
+  const word = isInWordPhase ? lesson.words[currentIndex] : null;
+  const quiz = !isInWordPhase && quizIndex < lesson.quiz.length ? lesson.quiz[quizIndex] : null;
 
   const handlePlay = useCallback(async () => {
+    if (!word) return;
     setIsPlaying(true);
-    await playAudio(phrase.audioFile);
-    // Auto-reset after a reasonable duration
+    await playAudio(word.audioUrl);
     setTimeout(() => setIsPlaying(false), 2000);
-  }, [phrase.audioFile]);
+  }, [word?.audioUrl]);
 
   const handleRecord = useCallback(async () => {
     if (isRecording) {
@@ -65,7 +71,6 @@ export default function LessonScreen() {
     } else {
       await startRecording();
       setIsRecording(true);
-      // Auto-reset after 3 seconds
       setTimeout(async () => {
         await stopRecording();
         setIsRecording(false);
@@ -73,32 +78,31 @@ export default function LessonScreen() {
     }
   }, [isRecording]);
 
-  const handleCheck = useCallback(() => {
-    // For MVP, just advance to the next phrase
-    handleNext();
-  }, [currentIndex]);
-
   const handleNext = useCallback(() => {
-    if (currentIndex < lesson.phrases.length - 1) {
+    if (currentIndex < totalSteps - 1) {
       const nextIndex = currentIndex + 1;
       setCurrentIndex(nextIndex);
       updateLessonProgress(lesson.id, nextIndex);
     } else {
-      // Lesson complete
-      completeLesson(lesson.id, lesson.totalPhrases, lesson.estimatedMinutes);
+      const scorePercent = lesson.quiz.length > 0 ? (quizScore / lesson.quiz.length) * 100 : 100;
+      completeLesson(lesson.id, scorePercent, lesson.words.length, lesson.estimatedMinutes);
       updateStreak();
       recordActivity();
       router.back();
     }
-  }, [currentIndex, lesson]);
+  }, [currentIndex, totalSteps, lesson, quizScore]);
 
-  const handleToggle = useCallback(
-    (mode: 'script' | 'roman') => {
-      setShowScript(mode === 'script');
-      setScriptMode(mode);
+  const handleQuizAnswer = useCallback(
+    (isCorrect: boolean) => {
+      if (isCorrect) setQuizScore((s) => s + 1);
+      setQuizAnswered((s) => s + 1);
+      // Auto-advance after a short delay
+      setTimeout(() => handleNext(), 800);
     },
-    []
+    [handleNext]
   );
+
+  const isLastStep = currentIndex >= totalSteps - 1;
 
   return (
     <Animated.View
@@ -109,7 +113,7 @@ export default function LessonScreen() {
         transform: [{ translateY: slideAnim }],
       }}
     >
-      {/* App Bar — cream with red Kannada logo */}
+      {/* App Bar */}
       <View
         style={{
           paddingTop: insets.top + Spacing.sm,
@@ -160,7 +164,7 @@ export default function LessonScreen() {
         </View>
       </View>
 
-      {/* Gold progress strip */}
+      {/* Progress strip */}
       <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.md }}>
         <View
           style={{
@@ -180,41 +184,45 @@ export default function LessonScreen() {
               color: Colors.textSecondary,
             }}
           >
-            {currentIndex + 1} / {lesson.totalPhrases}
+            {currentIndex + 1} / {totalSteps}
           </Text>
         </View>
       </View>
 
-      {/* Script Toggle */}
-      <View style={{ paddingHorizontal: Spacing.lg, marginBottom: Spacing.lg }}>
-        <ScriptToggle
-          activeMode={showScript ? 'script' : 'roman'}
-          onToggle={handleToggle}
-        />
-      </View>
-
       {/* Content */}
-      <View style={{ flex: 1, paddingHorizontal: Spacing.lg }}>
-        {/* Phrase Card */}
-        <PhraseCard
-          script={phrase.script}
-          roman={phrase.roman}
-          meaning={phrase.meaning}
-          showScript={showScript}
-          onPlay={handlePlay}
-          onRecord={handleRecord}
-          onCheck={handleCheck}
-          isPlaying={isPlaying}
-          isRecording={isRecording}
-        />
+      <View style={{ flex: 1, paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg }}>
+        {word && (
+          <>
+            <WordCard
+              kannadaScript={word.kannadaScript}
+              transliteration={word.transliteration}
+              meaning={word.meaning}
+              onPlay={handlePlay}
+              onRecord={handleRecord}
+              onCheck={handleNext}
+              isPlaying={isPlaying}
+              isRecording={isRecording}
+            />
 
-        {/* Culture card */}
-        <View style={{ marginTop: Spacing.xl }}>
-          <CultureCard
-            label={lesson.culturalNote.label}
-            text={lesson.culturalNote.text}
+            {lesson.culturalNote && (
+              <View style={{ marginTop: Spacing.xl }}>
+                <CultureCard
+                  label="Cultural Note"
+                  text={lesson.culturalNote}
+                />
+              </View>
+            )}
+          </>
+        )}
+
+        {quiz && (
+          <QuizCard
+            question={quiz.question}
+            options={quiz.options}
+            correctIndex={quiz.options.indexOf(quiz.correctAnswer)}
+            onAnswer={handleQuizAnswer}
           />
-        </View>
+        )}
       </View>
 
       {/* Bottom CTA */}
@@ -238,7 +246,7 @@ export default function LessonScreen() {
               color: Colors.textOnRed,
             }}
           >
-            {currentIndex < lesson.phrases.length - 1 ? 'ಮುಂದುವರಿಸಿ →' : 'ಪೂರ್ಣಗೊಂಡಿದೆ ✓'}
+            {isLastStep ? copy('lessonDone') : copy('nextPhrase')}
           </Text>
         </Pressable>
       </View>
