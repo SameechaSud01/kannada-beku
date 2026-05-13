@@ -13,6 +13,8 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { useUserStore } from '../stores/useUserStore';
 import { useProgressStore } from '../stores/progressStore';
 import { supabase } from '../services/api/supabase';
+import { Audio } from 'expo-av';
+import { isKannadaVoiceAvailable } from '../services/audio/deviceTtsAudioService';
 
 import '../global.css';
 
@@ -78,6 +80,22 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
+
+  useEffect(() => {
+    Audio.setAudioModeAsync({
+      playsInSilentModeIOS: true,
+      allowsRecordingIOS: false,
+      staysActiveInBackground: false,
+    }).catch((err) => {
+      console.warn('[audio] setAudioModeAsync failed', err);
+    });
+
+    isKannadaVoiceAvailable().then((available) => {
+      if (!available) {
+        console.warn('[audio] Kannada TTS voice not available on this device.');
+      }
+    });
+  }, []);
 
   if (!fontsLoaded) return null;
 
