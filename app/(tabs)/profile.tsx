@@ -9,7 +9,7 @@ import { useAuthStore } from '../../stores/useAuthStore';
 import { useUserStore } from '../../stores/useUserStore';
 import { useCopy } from '../../hooks/useCopy';
 import { supabase } from '../../services/api/supabase';
-import { ALL_LESSONS } from '../../constants/lessons';
+import { ALL_LESSONS } from '../../constants/lessons/legacy';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
@@ -97,7 +97,7 @@ export default function ProfileScreen() {
         <View
           style={{
             width: 40, height: 40, borderRadius: 20,
-            backgroundColor: Colors.primary, borderWidth: 2, borderColor: 'rgba(145,0,27,0.15)',
+            backgroundColor: Colors.primaryContainer, borderWidth: 2, borderColor: 'rgba(145,0,27,0.15)',
             alignItems: 'center', justifyContent: 'center',
           }}
         >
@@ -324,7 +324,7 @@ export default function ProfileScreen() {
                 flex: 1,
                 backgroundColor: '#FFFFFF',
                 borderWidth: 2,
-                borderColor: appMode === 'classic' ? Colors.primary : '#E0DDD0',
+                borderColor: appMode === 'classic' ? Colors.primaryContainer : '#E0DDD0',
                 borderRadius: 16,
                 padding: 18,
                 alignItems: 'center',
@@ -342,7 +342,7 @@ export default function ProfileScreen() {
                 Structured and encouraging
               </Text>
               {appMode === 'classic' && (
-                <View style={{ position: 'absolute', top: 10, right: 10, width: 20, height: 20, borderRadius: 10, backgroundColor: Colors.primary, alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ position: 'absolute', top: 10, right: 10, width: 20, height: 20, borderRadius: 10, backgroundColor: Colors.primaryContainer, alignItems: 'center', justifyContent: 'center' }}>
                   <Svg width={12} height={12} viewBox="0 0 24 24" fill="none">
                     <Path d="M5 12l5 5L20 7" stroke="#FFF" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
                   </Svg>
@@ -356,7 +356,7 @@ export default function ProfileScreen() {
                 flex: 1,
                 backgroundColor: '#FFFFFF',
                 borderWidth: 2,
-                borderColor: appMode === 'rowdy' ? Colors.primary : '#E0DDD0',
+                borderColor: appMode === 'rowdy' ? Colors.primaryContainer : '#E0DDD0',
                 borderRadius: 16,
                 padding: 18,
                 alignItems: 'center',
@@ -373,7 +373,7 @@ export default function ProfileScreen() {
                 Slang, humour, zero filter
               </Text>
               {appMode === 'rowdy' && (
-                <View style={{ position: 'absolute', top: 10, right: 10, width: 20, height: 20, borderRadius: 10, backgroundColor: Colors.primary, alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ position: 'absolute', top: 10, right: 10, width: 20, height: 20, borderRadius: 10, backgroundColor: Colors.primaryContainer, alignItems: 'center', justifyContent: 'center' }}>
                   <Svg width={12} height={12} viewBox="0 0 24 24" fill="none">
                     <Path d="M5 12l5 5L20 7" stroke="#FFF" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
                   </Svg>
@@ -417,7 +417,7 @@ export default function ProfileScreen() {
                   style={{
                     fontFamily: learningMode === mode ? Fonts.dmSans.bold : Fonts.dmSans.medium,
                     fontSize: 13,
-                    color: learningMode === mode ? Colors.primary : '#464646',
+                    color: learningMode === mode ? Colors.primaryContainer : '#464646',
                     textTransform: 'capitalize',
                   }}
                 >

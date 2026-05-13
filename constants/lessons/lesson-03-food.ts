@@ -1,4 +1,4 @@
-import type { Lesson } from './index';
+import type { Lesson } from './legacy';
 
 export const lesson03Food: Lesson = {
   id: 'lesson-03-food',

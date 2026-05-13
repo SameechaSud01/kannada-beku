@@ -9,7 +9,7 @@ import { Spacing, Radius } from '../../constants/spacing';
 import { useProgressStore } from '../../stores/progressStore';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useCopy } from '../../hooks/useCopy';
-import { ALL_LESSONS } from '../../constants/lessons';
+import { ALL_LESSONS } from '../../constants/lessons/legacy';
 import { useUserStore } from '../../stores/useUserStore';
 
 function parseFirstName(raw: string): string {
@@ -115,7 +115,7 @@ export default function HomeScreen() {
             width: 40,
             height: 40,
             borderRadius: 20,
-            backgroundColor: Colors.primary,
+            backgroundColor: Colors.primaryContainer,
             borderWidth: 2,
             borderColor: 'rgba(145,0,27,0.15)',
             alignItems: 'center',
