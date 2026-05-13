@@ -17,7 +17,7 @@ export function OptionCard({ label, subtitle, selected, onPress }: OptionCardPro
       style={({ pressed }) => ({
         backgroundColor: selected ? '#FFF5F5' : '#FFFFFF',
         borderWidth: 2,
-        borderColor: selected ? Colors.primary : '#E0DDD0',
+        borderColor: selected ? Colors.primaryContainer : '#E0DDD0',
         borderRadius: 16,
         padding: 18,
         flexDirection: 'row',
@@ -31,7 +31,7 @@ export function OptionCard({ label, subtitle, selected, onPress }: OptionCardPro
           style={{
             fontFamily: Fonts.dmSans.bold,
             fontSize: 16,
-            color: Colors.textPrimary,
+            color: Colors.onSurface,
             marginBottom: subtitle ? 4 : 0,
           }}
         >
@@ -42,7 +42,7 @@ export function OptionCard({ label, subtitle, selected, onPress }: OptionCardPro
             style={{
               fontFamily: Fonts.dmSans.regular,
               fontSize: 13,
-              color: Colors.textSecondary,
+              color: Colors.tertiary,
             }}
           >
             {subtitle}
@@ -55,7 +55,7 @@ export function OptionCard({ label, subtitle, selected, onPress }: OptionCardPro
             width: 24,
             height: 24,
             borderRadius: 12,
-            backgroundColor: Colors.primary,
+            backgroundColor: Colors.primaryContainer,
             alignItems: 'center',
             justifyContent: 'center',
           }}

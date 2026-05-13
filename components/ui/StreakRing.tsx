@@ -41,7 +41,7 @@ export function StreakRing({ days, maxDays = 7, size = 120 }: StreakRingProps) {
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={Colors.border}
+          stroke={Colors.outlineVariant}
           strokeWidth={strokeWidth}
           fill="transparent"
         />
@@ -50,7 +50,7 @@ export function StreakRing({ days, maxDays = 7, size = 120 }: StreakRingProps) {
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={Colors.accent}
+          stroke={Colors.secondaryContainer}
           strokeWidth={strokeWidth}
           fill="transparent"
           strokeDasharray={circumference}
@@ -65,7 +65,7 @@ export function StreakRing({ days, maxDays = 7, size = 120 }: StreakRingProps) {
           style={{
             fontFamily: Fonts.dmSans.bold,
             fontSize: 28,
-            color: Colors.primary,
+            color: Colors.primaryContainer,
           }}
         >
           {days}
@@ -74,7 +74,7 @@ export function StreakRing({ days, maxDays = 7, size = 120 }: StreakRingProps) {
           style={{
             fontFamily: Fonts.dmSans.bold,
             fontSize: 9,
-            color: Colors.textTertiary,
+            color: Colors.tertiary,
             letterSpacing: 1.5,
           }}
         >

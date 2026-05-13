@@ -119,7 +119,7 @@ export default function MotivationScreen() {
           }}
           style={({ pressed }) => ({
             flex: 2,
-            backgroundColor: selected.length > 0 ? (pressed ? '#8D0020' : Colors.primary) : '#C8C4B0',
+            backgroundColor: selected.length > 0 ? (pressed ? '#8D0020' : Colors.primaryContainer) : '#C8C4B0',
             borderRadius: 16,
             paddingVertical: 18,
             alignItems: 'center',

@@ -60,9 +60,9 @@ export function AudioButtons({
             width: 48,
             height: 48,
             borderRadius: Radius.full,
-            backgroundColor: Colors.accentLight,
+            backgroundColor: Colors.secondaryFixed,
             borderWidth: 1,
-            borderColor: Colors.accent,
+            borderColor: Colors.secondaryContainer,
             alignItems: 'center',
             justifyContent: 'center',
             transform: [{ scale: pressed ? 0.96 : 1 }],
@@ -71,11 +71,11 @@ export function AudioButtons({
           <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
             <Path
               d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3Z"
-              fill={isRecording ? Colors.primary : Colors.accentDark}
+              fill={isRecording ? Colors.primaryContainer : Colors.secondary}
             />
             <Path
               d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"
-              stroke={isRecording ? Colors.primary : Colors.accentDark}
+              stroke={isRecording ? Colors.primaryContainer : Colors.secondary}
               strokeWidth={2}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -91,7 +91,7 @@ export function AudioButtons({
           width: 56,
           height: 56,
           borderRadius: Radius.full,
-          backgroundColor: isPlaying ? Colors.primaryDark : Colors.primary,
+          backgroundColor: isPlaying ? Colors.primary : Colors.primaryContainer,
           alignItems: 'center',
           justifyContent: 'center',
           transform: [{ scale: pressed ? 0.96 : 1 }],
@@ -99,11 +99,11 @@ export function AudioButtons({
       >
         {isPlaying ? (
           <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
-            <Path d="M6 4h4v16H6zM14 4h4v16h-4z" fill={Colors.textOnRed} />
+            <Path d="M6 4h4v16H6zM14 4h4v16h-4z" fill={Colors.onPrimary} />
           </Svg>
         ) : (
           <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
-            <Path d="M8 5v14l11-7L8 5z" fill={Colors.textOnRed} />
+            <Path d="M8 5v14l11-7L8 5z" fill={Colors.onPrimary} />
           </Svg>
         )}
       </Pressable>
@@ -115,19 +115,19 @@ export function AudioButtons({
           width: 48,
           height: 48,
           borderRadius: Radius.full,
-          backgroundColor: Colors.accentLight,
+          backgroundColor: Colors.secondaryFixed,
           borderWidth: 1,
-          borderColor: Colors.accent,
+          borderColor: Colors.secondaryContainer,
           alignItems: 'center',
           justifyContent: 'center',
           transform: [{ scale: pressed ? 0.96 : 1 }],
         })}
       >
         <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
-          <Circle cx={12} cy={12} r={10} stroke={Colors.accentDark} strokeWidth={2} />
+          <Circle cx={12} cy={12} r={10} stroke={Colors.secondary} strokeWidth={2} />
           <Path
             d="M8 12l3 3 5-5"
-            stroke={Colors.accentDark}
+            stroke={Colors.secondary}
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"

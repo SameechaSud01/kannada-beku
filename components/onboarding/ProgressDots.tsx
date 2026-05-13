@@ -16,7 +16,7 @@ export function ProgressDots({ total, current }: ProgressDotsProps) {
             width: i === current ? 28 : 8,
             height: 8,
             borderRadius: 4,
-            backgroundColor: i === current ? Colors.primary : '#E0DDD0',
+            backgroundColor: i === current ? Colors.primaryContainer : '#E0DDD0',
           }}
         />
       ))}

@@ -12,9 +12,9 @@ export function CultureCard({ label, text }: CultureCardProps) {
   return (
     <View
       style={{
-        backgroundColor: Colors.accentLight,
+        backgroundColor: Colors.secondaryFixed,
         borderWidth: 1,
-        borderColor: Colors.accent,
+        borderColor: Colors.secondaryContainer,
         borderRadius: Radius.lg,
         padding: Spacing.lg,
       }}
@@ -36,7 +36,7 @@ export function CultureCard({ label, text }: CultureCardProps) {
           fontFamily: Fonts.dmSans.regular,
           fontSize: 12,
           fontStyle: 'italic',
-          color: Colors.textBody,
+          color: Colors.onSurface,
           lineHeight: 12 * 1.6,
         }}
       >

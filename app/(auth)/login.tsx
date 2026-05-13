@@ -37,7 +37,7 @@ export default function LoginScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, backgroundColor: Colors.pageBg }}
+      style={{ flex: 1, backgroundColor: Colors.surface }}
     >
       <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: Spacing.xxl }}>
         {/* Hero */}
@@ -46,7 +46,7 @@ export default function LoginScreen() {
             style={{
               fontFamily: Fonts.notoSerifKannada.bold,
               fontSize: 48,
-              color: Colors.primary,
+              color: Colors.primaryContainer,
               lineHeight: 72,
               paddingTop: 8,
               marginBottom: Spacing.sm,
@@ -58,7 +58,7 @@ export default function LoginScreen() {
             style={{
               fontFamily: Fonts.lora.italic,
               fontSize: 20,
-              color: Colors.primary,
+              color: Colors.primaryContainer,
             }}
           >
             Kannada Baa
@@ -67,7 +67,7 @@ export default function LoginScreen() {
             style={{
               fontFamily: Fonts.dmSans.regular,
               fontSize: 14,
-              color: Colors.textTertiary,
+              color: Colors.tertiary,
               marginTop: Spacing.sm,
             }}
           >
@@ -85,16 +85,16 @@ export default function LoginScreen() {
           style={{
             fontFamily: Fonts.dmSans.regular,
             fontSize: 15,
-            backgroundColor: Colors.cardBg,
+            backgroundColor: Colors.surfaceContainerHighest,
             borderWidth: 0.5,
-            borderColor: Colors.border,
+            borderColor: Colors.outlineVariant,
             borderRadius: Radius.md,
             paddingHorizontal: Spacing.lg,
             paddingVertical: Spacing.md,
             marginBottom: Spacing.md,
-            color: Colors.textBody,
+            color: Colors.onSurface,
           }}
-          placeholderTextColor={Colors.textTertiary}
+          placeholderTextColor={Colors.tertiary}
         />
 
         <TextInput
@@ -105,16 +105,16 @@ export default function LoginScreen() {
           style={{
             fontFamily: Fonts.dmSans.regular,
             fontSize: 15,
-            backgroundColor: Colors.cardBg,
+            backgroundColor: Colors.surfaceContainerHighest,
             borderWidth: 0.5,
-            borderColor: Colors.border,
+            borderColor: Colors.outlineVariant,
             borderRadius: Radius.md,
             paddingHorizontal: Spacing.lg,
             paddingVertical: Spacing.md,
             marginBottom: Spacing.xl,
-            color: Colors.textBody,
+            color: Colors.onSurface,
           }}
-          placeholderTextColor={Colors.textTertiary}
+          placeholderTextColor={Colors.tertiary}
         />
 
         {/* Submit */}
@@ -122,7 +122,7 @@ export default function LoginScreen() {
           onPress={handleAuth}
           disabled={loading}
           style={({ pressed }) => ({
-            backgroundColor: pressed ? Colors.primaryDark : Colors.primary,
+            backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
             borderRadius: Radius.md,
             paddingVertical: Spacing.md + 2,
             alignItems: 'center',
@@ -134,7 +134,7 @@ export default function LoginScreen() {
             style={{
               fontFamily: Fonts.dmSans.bold,
               fontSize: 14,
-              color: Colors.textOnRed,
+              color: Colors.onPrimary,
               letterSpacing: 0.5,
             }}
           >
@@ -151,7 +151,7 @@ export default function LoginScreen() {
             style={{
               fontFamily: Fonts.dmSans.regular,
               fontSize: 13,
-              color: Colors.textSecondary,
+              color: Colors.tertiary,
             }}
           >
             {isSignUp ? 'Already have an account? Log in' : "Don't have an account? Sign up"}

@@ -13,7 +13,7 @@ export function ScriptToggle({ activeMode, onToggle }: ScriptToggleProps) {
     <View
       style={{
         flexDirection: 'row',
-        backgroundColor: Colors.cardAlt,
+        backgroundColor: Colors.surfaceContainerHigh,
         borderRadius: Radius.sm,
         padding: 3,
       }}
@@ -28,9 +28,9 @@ export function ScriptToggle({ activeMode, onToggle }: ScriptToggleProps) {
               flex: 1,
               paddingVertical: Spacing.sm,
               borderRadius: Radius.sm - 2,
-              backgroundColor: isActive ? Colors.cardBg : 'transparent',
+              backgroundColor: isActive ? Colors.surfaceContainerHighest : 'transparent',
               borderWidth: isActive ? 0.5 : 0,
-              borderColor: Colors.border,
+              borderColor: Colors.outlineVariant,
               alignItems: 'center',
               shadowColor: isActive ? '#000' : 'transparent',
               shadowOffset: { width: 0, height: 1 },
@@ -43,7 +43,7 @@ export function ScriptToggle({ activeMode, onToggle }: ScriptToggleProps) {
               style={{
                 fontFamily: Fonts.dmSans.bold,
                 fontSize: 12,
-                color: isActive ? Colors.primary : Colors.textSecondary,
+                color: isActive ? Colors.primaryContainer : Colors.tertiary,
               }}
             >
               {mode === 'script' ? 'Script' : 'Roman'}

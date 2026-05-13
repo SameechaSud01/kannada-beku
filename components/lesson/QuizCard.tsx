@@ -45,7 +45,7 @@ export function QuizCard({ question, options, correctIndex, onAnswer }: QuizCard
 
   const bgColor = flashAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [Colors.cardBg, Colors.primaryLight],
+    outputRange: [Colors.surfaceContainerHighest, Colors.secondaryFixed],
   });
 
   return (
@@ -54,7 +54,7 @@ export function QuizCard({ question, options, correctIndex, onAnswer }: QuizCard
         backgroundColor: bgColor,
         borderRadius: Radius.xl,
         borderWidth: 0.5,
-        borderColor: Colors.border,
+        borderColor: Colors.outlineVariant,
         padding: Spacing.xxl,
         transform: [{ translateX: shakeAnim }],
       }}
@@ -63,7 +63,7 @@ export function QuizCard({ question, options, correctIndex, onAnswer }: QuizCard
         style={{
           fontFamily: Fonts.dmSans.medium,
           fontSize: 16,
-          color: Colors.textBody,
+          color: Colors.onSurface,
           textAlign: 'center',
           marginBottom: Spacing.xl,
         }}
@@ -76,9 +76,9 @@ export function QuizCard({ question, options, correctIndex, onAnswer }: QuizCard
           key={index}
           onPress={() => handlePress(index)}
           style={({ pressed }) => ({
-            backgroundColor: pressed ? Colors.primaryLight : Colors.cardBg,
+            backgroundColor: pressed ? Colors.secondaryFixed : Colors.surfaceContainerHighest,
             borderWidth: 0.5,
-            borderColor: Colors.border,
+            borderColor: Colors.outlineVariant,
             borderRadius: Radius.md,
             padding: Spacing.md,
             marginBottom: Spacing.sm,
@@ -89,7 +89,7 @@ export function QuizCard({ question, options, correctIndex, onAnswer }: QuizCard
             style={{
               fontFamily: Fonts.dmSans.medium,
               fontSize: 14,
-              color: Colors.textBody,
+              color: Colors.onSurface,
               textAlign: 'center',
             }}
           >

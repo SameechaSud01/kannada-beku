@@ -24,9 +24,9 @@ export function LessonCard({
   return (
     <View
       style={{
-        backgroundColor: Colors.cardBg,
+        backgroundColor: Colors.surfaceContainerHighest,
         borderWidth: 0.5,
-        borderColor: Colors.border,
+        borderColor: Colors.outlineVariant,
         borderRadius: Radius.lg,
         padding: Spacing.lg,
       }}
@@ -35,7 +35,7 @@ export function LessonCard({
         style={{
           fontFamily: Fonts.dmSans.medium,
           fontSize: 15,
-          color: Colors.textBody,
+          color: Colors.onSurface,
           marginBottom: Spacing.xs,
         }}
       >
@@ -46,7 +46,7 @@ export function LessonCard({
         style={{
           fontFamily: Fonts.dmSans.regular,
           fontSize: 12,
-          color: Colors.textSecondary,
+          color: Colors.tertiary,
           marginBottom: Spacing.md,
         }}
       >
@@ -59,7 +59,7 @@ export function LessonCard({
         style={{
           fontFamily: Fonts.dmSans.regular,
           fontSize: 11,
-          color: Colors.textTertiary,
+          color: Colors.tertiary,
           marginTop: Spacing.sm,
           marginBottom: Spacing.md,
         }}
@@ -70,7 +70,7 @@ export function LessonCard({
       <Pressable
         onPress={onPress}
         style={({ pressed }) => ({
-          backgroundColor: pressed ? Colors.primaryDark : Colors.primary,
+          backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
           borderRadius: Radius.md,
           paddingVertical: Spacing.md,
           alignItems: 'center',
@@ -81,7 +81,7 @@ export function LessonCard({
           style={{
             fontFamily: Fonts.dmSans.bold,
             fontSize: 12,
-            color: Colors.textOnRed,
+            color: Colors.onPrimary,
             letterSpacing: 0.5,
           }}
         >

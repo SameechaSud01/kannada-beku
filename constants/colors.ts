@@ -1,41 +1,34 @@
+/**
+ * Living Manuscript token palette (Material 3 tonal naming).
+ * Source of truth: DESIGN.md.
+ *
+ * Surface stack flows light → dark: surface → low → high → highest → dim.
+ * Use surface shifts (not borders) to section content (§2 No-Line Rule).
+ */
 export const Colors = {
+  // ── Surface tonal stack (§2, §4) ───────────────────────
+  surface:                 '#fbfbe2', // root page background
+  surfaceContainerLowest:  '#ffffff', // glassmorphism only (70% opacity + blur)
+  surfaceContainerLow:     '#f5f5dc', // secondary content zones, tab bar
+  surfaceContainerHigh:    '#eaead1', // selection chips bg, badge containers
+  surfaceContainerHighest: '#e4e4cc', // interactive cards
+  surfaceDim:              '#dbdcc3', // backdrop for lifted cards, locked state
 
-  // ── Primary — deep Karnataka crimson ───────────────────
-  primary:        '#BE0027',  // deep crimson red — CTA buttons, active states, headings
-  primaryDark:    '#8D0020',  // pressed/dark variant
-  primaryLight:   '#FFEBEE',  // light red surface — selected card bg, error bg
+  // ── Primary — Mysore Red (§2, §5) ──────────────────────
+  primary:           '#91001b', // CTA gradient start, active states, focus underline
+  primaryContainer:  '#be0027', // CTA gradient end
+  onPrimary:         '#ffffff', // text on primary
 
-  // ── Secondary — warm amber gold ────────────────────────
-  accent:         '#FFC107',  // amber gold — progress rings, badges, highlights
-  accentDark:     '#E8A000',  // darker gold for text on light bg
-  accentLight:    '#FFF8E1',  // gold tint surface — culture cards, XP cards
+  // ── Secondary — Turmeric Gold (§5, §6) ─────────────────
+  secondary:            '#785900', // mandala fill, dark gold for text on light
+  secondaryContainer:   '#fdc003', // secondary actions, success/encouragement
+  onSecondaryContainer: '#6c5000', // text on secondary_container
+  secondaryFixed:       '#ffdf9e', // selected chip bg, sun-drenched accent surfaces
 
-  // ── Backgrounds — warm parchment ───────────────────────
-  pageBg:         '#F5F5DC',  // warm cream/parchment — ALL screen backgrounds
-  cardBg:         '#FFFFFF',  // pure white — lesson cards, phrase cards
-  cardAlt:        '#F0EFE0',  // slightly warm — secondary card bg, module cards
-  cultureBg:      '#FFF8E1',  // warm gold tint — cultural insight cards
+  // ── Text — warm sandstone (§6) ─────────────────────────
+  onSurface: '#1b1d0e', // primary text on light surfaces
+  tertiary:  '#464646', // captions, labels, inactive tabs (never pure grey)
 
-  // ── Borders ─────────────────────────────────────────────
-  border:         '#E0DDD0',  // warm grey-beige — all card borders
-  borderStrong:   '#C8C4B0',  // stronger border for emphasis
-
-  // ── Text — always dark, warm-toned ──────────────────────
-  textPrimary:    '#1A1008',  // near-black warm — all headings
-  textBody:       '#2C2416',  // warm dark brown — body copy
-  textSecondary:  '#6B5E4A',  // warm mid-brown — subtitles, meta
-  textTertiary:   '#9C8E7A',  // warm light — captions, hints, inactive tabs
-  textOnRed:      '#FFFFFF',  // white text on crimson bg
-  textOnGold:     '#5D4000',  // dark brown text on gold bg
-
-  // ── Semantic ─────────────────────────────────────────────
-  success:        '#BE0027',  // use primary red for correct — no green
-  error:          '#BE0027',  // same red, differentiate via shake animation
-  locked:         '#C8C4B0',  // greyed out for locked content
-
-  // ── NEVER USE ────────────────────────────────────────────
-  // No green (#2E7D32) anywhere in the UI
-  // No blue anywhere
-  // No pure white (#FFFFFF) for backgrounds — always use pageBg
-  // No cold grey borders — always warm-toned
+  // ── Outline / Ghost Border (§4) ────────────────────────
+  outlineVariant: '#e5bdbb', // use at 15% opacity only — felt, not seen
 };

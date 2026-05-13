@@ -13,7 +13,7 @@ const TAB_ICONS: Record<string, { active: (color: string) => React.ReactElement;
       <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
         <Path
           d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"
-          fill={color === Colors.primary ? Colors.primary : 'none'}
+          fill={color === Colors.primaryContainer ? Colors.primaryContainer : 'none'}
           stroke={color}
           strokeWidth={2}
           strokeLinecap="round"
@@ -35,7 +35,7 @@ const TAB_ICONS: Record<string, { active: (color: string) => React.ReactElement;
         />
         <Path
           d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
-          fill={color === Colors.primary ? Colors.primary : 'none'}
+          fill={color === Colors.primaryContainer ? Colors.primaryContainer : 'none'}
           stroke={color}
           strokeWidth={2}
           strokeLinecap="round"
@@ -50,7 +50,7 @@ const TAB_ICONS: Record<string, { active: (color: string) => React.ReactElement;
       <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
         <Path
           d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3Z"
-          fill={color === Colors.primary ? Colors.primary : 'none'}
+          fill={color === Colors.primaryContainer ? Colors.primaryContainer : 'none'}
           stroke={color}
           strokeWidth={2}
         />
@@ -79,7 +79,7 @@ const TAB_ICONS: Record<string, { active: (color: string) => React.ReactElement;
           cx={12}
           cy={7}
           r={4}
-          fill={color === Colors.primary ? Colors.primary : 'none'}
+          fill={color === Colors.primaryContainer ? Colors.primaryContainer : 'none'}
           stroke={color}
           strokeWidth={2}
         />
@@ -93,7 +93,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
     <View
       style={{
         flexDirection: 'row',
-        backgroundColor: Colors.pageBg,
+        backgroundColor: Colors.surface,
         borderTopWidth: 0.5,
         borderTopColor: '#D4CDB8',
         paddingBottom: Spacing.xl,
@@ -105,7 +105,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
         const tabInfo = TAB_ICONS[route.name];
         if (!tabInfo) return null;
 
-        const color = isFocused ? Colors.primary : Colors.textTertiary;
+        const color = isFocused ? Colors.primaryContainer : Colors.tertiary;
 
         const onPress = () => {
           const event = navigation.emit({
@@ -134,7 +134,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
                 width: 36,
                 height: 36,
                 borderRadius: Radius.sm,
-                backgroundColor: isFocused ? Colors.primary : 'transparent',
+                backgroundColor: isFocused ? Colors.primaryContainer : 'transparent',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}

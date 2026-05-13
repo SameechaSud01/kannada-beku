@@ -34,10 +34,10 @@ export function WordCard({
   return (
     <View
       style={{
-        backgroundColor: Colors.cardBg,
+        backgroundColor: Colors.surfaceContainerHighest,
         borderRadius: Radius.xl,
         borderWidth: 0.5,
-        borderColor: Colors.border,
+        borderColor: Colors.outlineVariant,
         padding: Spacing.xxl,
         alignItems: 'center',
       }}
@@ -47,7 +47,7 @@ export function WordCard({
           style={{
             fontFamily: Fonts.notoSerifKannada.regular,
             fontSize: 34,
-            color: Colors.primary,
+            color: Colors.primaryContainer,
             textAlign: 'center',
             lineHeight: 54,
             paddingTop: 8,
@@ -63,7 +63,7 @@ export function WordCard({
           style={{
             fontFamily: Fonts.lora.italic,
             fontSize: showScript ? 15 : 22,
-            color: Colors.textSecondary,
+            color: Colors.tertiary,
             textAlign: 'center',
             marginBottom: Spacing.sm,
           }}
@@ -76,7 +76,7 @@ export function WordCard({
         style={{
           fontFamily: Fonts.dmSans.medium,
           fontSize: 14,
-          color: Colors.textBody,
+          color: Colors.onSurface,
           textAlign: 'center',
         }}
       >

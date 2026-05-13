@@ -29,7 +29,7 @@ export default function WelcomeScreen() {
           style={{
             fontFamily: Fonts.notoSerifKannada.bold,
             fontSize: 72,
-            color: Colors.primary,
+            color: Colors.primaryContainer,
             lineHeight: 110,
             paddingTop: 10,
             textAlign: 'center',
@@ -66,12 +66,12 @@ export default function WelcomeScreen() {
       <Pressable
         onPress={() => router.push('/onboarding/goal')}
         style={({ pressed }) => ({
-          backgroundColor: pressed ? '#8D0020' : Colors.primary,
+          backgroundColor: pressed ? '#8D0020' : Colors.primaryContainer,
           borderRadius: 16,
           paddingVertical: 18,
           alignItems: 'center',
           transform: [{ scale: pressed ? 0.97 : 1 }],
-          shadowColor: Colors.primary,
+          shadowColor: Colors.primaryContainer,
           shadowOffset: { width: 0, height: 8 },
           shadowOpacity: 0.25,
           shadowRadius: 16,

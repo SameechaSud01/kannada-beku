@@ -126,7 +126,7 @@ export default function CommitmentScreen() {
           onPress={handleFinish}
           style={({ pressed }) => ({
             flex: 2,
-            backgroundColor: selected ? (pressed ? '#8D0020' : Colors.primary) : '#C8C4B0',
+            backgroundColor: selected ? (pressed ? '#8D0020' : Colors.primaryContainer) : '#C8C4B0',
             borderRadius: 16,
             paddingVertical: 18,
             alignItems: 'center',

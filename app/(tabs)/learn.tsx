@@ -8,6 +8,7 @@ import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { useProgressStore } from '../../stores/progressStore';
 import lessonsData from '../../data/lessons.json';
+import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 
 export default function LearnScreen() {
   const router = useRouter();
@@ -86,7 +87,7 @@ export default function LearnScreen() {
             width: 40,
             height: 40,
             borderRadius: 20,
-            backgroundColor: Colors.primary,
+            backgroundColor: Colors.primaryContainer,
             borderWidth: 2,
             borderColor: 'rgba(145,0,27,0.15)',
             alignItems: 'center',
@@ -273,7 +274,11 @@ export default function LearnScreen() {
             <View style={{ flexDirection: 'row', gap: 14, width: '100%' }}>
               {/* Pronounce button */}
               <Pressable
-                onPress={() => {}}
+                onPress={() => {
+                  deviceTtsAudioService
+                    .play(activeChar)
+                    .catch((err) => console.warn('[audio] learn-tab pronounce failed', err));
+                }}
                 style={({ pressed }) => ({
                   flex: 1,
                   backgroundColor: pressed ? '#8D0020' : '#91001B',
@@ -302,7 +307,11 @@ export default function LearnScreen() {
 
               {/* Replay button */}
               <Pressable
-                onPress={() => {}}
+                onPress={() => {
+                  deviceTtsAudioService
+                    .play(activeChar)
+                    .catch((err) => console.warn('[audio] learn-tab replay failed', err));
+                }}
                 style={({ pressed }) => ({
                   width: 56,
                   height: 56,

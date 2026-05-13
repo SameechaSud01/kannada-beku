@@ -24,7 +24,7 @@ export function ProgressBar({ progress, height = 5 }: ProgressBarProps) {
     <View
       style={{
         height,
-        backgroundColor: Colors.border,
+        backgroundColor: Colors.outlineVariant,
         borderRadius: Radius.full,
         overflow: 'hidden',
       }}
@@ -32,7 +32,7 @@ export function ProgressBar({ progress, height = 5 }: ProgressBarProps) {
       <Animated.View
         style={{
           height: '100%',
-          backgroundColor: Colors.accent,
+          backgroundColor: Colors.secondaryContainer,
           borderRadius: Radius.full,
           width: widthAnim.interpolate({
             inputRange: [0, 1],
