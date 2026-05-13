@@ -10,17 +10,16 @@ import { useUserStore } from '../../stores/useUserStore';
 import { useCopy } from '../../hooks/useCopy';
 import { supabase } from '../../services/api/supabase';
 import { ALL_LESSONS } from '../../constants/lessons/legacy';
+import { useStreak, useWordsLearned, useCompletedLessons } from '../../hooks/progress';
+import { formatFirstName } from '../../utils/formatName';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const copy = useCopy();
-  const {
-    streak,
-    xp,
-    totalPhrasesLearned,
-    completedLessons,
-    lessonProgress,
-  } = useProgressStore();
+  const streak = useStreak();
+  const totalPhrasesLearned = useWordsLearned();
+  const completedLessons = useCompletedLessons();
+  const lessonProgress = useProgressStore((s) => s.lessonProgress);
   const user = useAuthStore((s) => s.user);
   const learningMode = useUserStore((s) => s.learningMode);
   const appMode = useUserStore((s) => s.mode);
@@ -41,18 +40,8 @@ export default function ProfileScreen() {
     || user?.user_metadata?.name
     || user?.email?.split('@')[0]
     || 'Learner';
-  const firstSegment = rawName.split(/[\s_.\-]+/)[0] || rawName;
-  const userName = firstSegment.charAt(0).toUpperCase() + firstSegment.slice(1).toLowerCase();
+  const userName = formatFirstName(rawName, 'Learner');
 
-  const xpGoal = 500;
-  const xpPercent = Math.min(xp / xpGoal, 1);
-  const xpSize = 64;
-  const xpStroke = 6;
-  const xpR = (xpSize - xpStroke) / 2;
-  const xpCirc = 2 * Math.PI * xpR;
-  const xpOffset = xpCirc * (1 - xpPercent);
-
-  const level = Math.max(1, Math.floor(completedLessons.length / 2) + 1);
   const journeyLessons = ALL_LESSONS.slice(0, 3);
 
   const handleLearningModeChange = (mode: 'spoken' | 'written' | 'both') => {
@@ -112,42 +101,17 @@ export default function ProfileScreen() {
 
         {/* USER PROFILE HEADER */}
         <View style={{ alignItems: 'center', paddingTop: 28, marginBottom: 36 }}>
-          <View style={{ marginBottom: 8, position: 'relative' }}>
-            <View
-              style={{
-                width: 128, height: 128, borderRadius: 64,
-                padding: 4,
-                backgroundColor: '#FDC003',
-                overflow: 'hidden',
-              }}
-            >
-              <View style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '100%', backgroundColor: '#91001B' }} />
-              <View
-                style={{
-                  width: '100%', height: '100%', borderRadius: 60,
-                  borderWidth: 4, borderColor: '#FBFBE2',
-                  backgroundColor: '#91001B',
-                  alignItems: 'center', justifyContent: 'center',
-                  overflow: 'hidden',
-                }}
-              >
-                <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 28, color: '#FFFFFF' }}>
-                  {userName[0]?.toUpperCase()}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                position: 'absolute', bottom: -4, right: -4,
-                backgroundColor: '#FDC003', borderRadius: 20,
-                paddingHorizontal: 12, paddingVertical: 4,
-                shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 8, elevation: 4,
-              }}
-            >
-              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 11, color: '#6C5000' }}>
-                LEVEL {level}
-              </Text>
-            </View>
+          <View
+            style={{
+              width: 128, height: 128, borderRadius: 64,
+              backgroundColor: '#91001B',
+              alignItems: 'center', justifyContent: 'center',
+              marginBottom: 8,
+            }}
+          >
+            <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 40, color: '#FFFFFF' }}>
+              {userName[0]?.toUpperCase()}
+            </Text>
           </View>
           <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 28, color: '#1B1D0E', letterSpacing: -0.5, marginTop: 8 }}>
             {userName}
@@ -159,7 +123,7 @@ export default function ProfileScreen() {
 
         {/* STATS BENTO GRID */}
         <View style={{ paddingHorizontal: 24, marginBottom: 36 }}>
-          <View style={{ flexDirection: 'row', gap: 14, marginBottom: 14 }}>
+          <View style={{ flexDirection: 'row', gap: 14 }}>
             {/* Streak */}
             <View style={{ flex: 1, backgroundColor: '#F5F5DC', borderRadius: 16, padding: 24 }}>
               <Svg width={28} height={28} viewBox="0 0 24 24" fill="none" style={{ marginBottom: 12 }}>
@@ -187,34 +151,10 @@ export default function ProfileScreen() {
             </View>
           </View>
 
-          {/* Total XP */}
-          <View
-            style={{
-              backgroundColor: 'rgba(253,192,3,0.15)', borderRadius: 16,
-              padding: 24, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-            }}
-          >
-            <View>
-              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 10, letterSpacing: 2, color: '#785900', textTransform: 'uppercase', marginBottom: 4 }}>
-                Total XP
-              </Text>
-              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 30, color: '#1B1D0E', lineHeight: 34 }}>
-                {xp.toLocaleString()}
-              </Text>
-            </View>
-            <View style={{ width: xpSize, height: xpSize, alignItems: 'center', justifyContent: 'center' }}>
-              <Svg width={xpSize} height={xpSize} style={{ transform: [{ rotate: '-90deg' }] }}>
-                <Circle cx={xpSize / 2} cy={xpSize / 2} r={xpR} stroke="#EAEAD1" strokeWidth={xpStroke} fill="transparent" />
-                <Circle cx={xpSize / 2} cy={xpSize / 2} r={xpR} stroke="#785900" strokeWidth={xpStroke} fill="transparent" strokeDasharray={xpCirc} strokeDashoffset={xpOffset} strokeLinecap="round" />
-              </Svg>
-              <Text style={{ position: 'absolute', fontFamily: Fonts.dmSans.bold, fontSize: 10, color: '#785900' }}>
-                {Math.round(xpPercent * 100)}%
-              </Text>
-            </View>
-          </View>
         </View>
 
         {/* LANGUAGE JOURNEY MAP */}
+        {/* TODO: replace with completed-lessons list OR weekly activity heatmap — pending design call */}
         <View style={{ paddingHorizontal: 24, marginBottom: 36 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
             <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 20, color: '#1B1D0E' }}>
