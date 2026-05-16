@@ -88,6 +88,9 @@ export function PhraseDisplay({ phrase, hintRevealed, onRevealHint }: PhraseDisp
           textAlign: 'center',
           marginBottom: Spacing.lg,
         }}
+        numberOfLines={2}
+        adjustsFontSizeToFit
+        minimumFontScale={0.75}
       >
         {phrase.transliteration}
       </Text>

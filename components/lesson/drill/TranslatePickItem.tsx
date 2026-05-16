@@ -170,6 +170,9 @@ export function TranslatePickItem({ target, distractors, onResolve }: TranslateP
                         color: showWrong ? Colors.tertiary : Colors.tertiary,
                         marginTop: 2,
                       }}
+                      numberOfLines={2}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.75}
                     >
                       {opt.transliteration}
                     </Text>

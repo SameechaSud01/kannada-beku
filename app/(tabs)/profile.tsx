@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { View, Text, ScrollView, Pressable, Animated, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { Colors } from '../../constants/colors';
@@ -14,6 +15,7 @@ import { useStreak, useWordsLearned, useCompletedLessons } from '../../hooks/pro
 import { formatFirstName } from '../../utils/formatName';
 
 export default function ProfileScreen() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const copy = useCopy();
   const streak = useStreak();
@@ -75,7 +77,12 @@ export default function ProfileScreen() {
           justifyContent: 'space-between',
         }}
       >
-        <Pressable>
+        <Pressable
+          onPress={() => router.push('/')}
+          accessibilityRole="button"
+          accessibilityLabel="Back to home"
+          hitSlop={8}
+        >
           <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
             <Path d="M3 6h18M3 12h18M3 18h18" stroke="#91001B" strokeWidth={2.2} strokeLinecap="round" />
           </Svg>
@@ -160,9 +167,17 @@ export default function ProfileScreen() {
             <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 20, color: '#1B1D0E' }}>
               Language Journey
             </Text>
-            <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 11, letterSpacing: 2, color: '#91001B', textTransform: 'uppercase' }}>
-              View Path
-            </Text>
+            <Pressable
+              onPress={() => router.push('/learn')}
+              accessibilityRole="link"
+              accessibilityLabel="View full learning path"
+              hitSlop={8}
+              style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
+            >
+              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 11, letterSpacing: 2, color: '#91001B', textTransform: 'uppercase' }}>
+                View Path
+              </Text>
+            </Pressable>
           </View>
 
           <View
@@ -379,63 +394,62 @@ export default function ProfileScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 24, gap: 16 }}
           >
-            {/* Badge 1: Early Bird */}
-            <View style={{ width: 100, alignItems: 'center' }}>
-              <View
-                style={{
-                  width: 88, height: 88, borderRadius: 44,
-                  backgroundColor: '#785900', alignItems: 'center', justifyContent: 'center',
-                  shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 12, elevation: 4,
-                  overflow: 'hidden',
-                }}
-              >
-                <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '60%', backgroundColor: '#FDC003' }} />
-                <Svg width={36} height={36} viewBox="0 0 24 24" fill="none" style={{ zIndex: 1 }}>
-                  <Path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 7 7M18 9h1.5a2.5 2.5 0 0 0 0-5C17 4 17 7 17 7M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22M18 2H6v7a6 6 0 0 0 12 0V2Z" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={1} />
-                </Svg>
-              </View>
-              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 9, letterSpacing: 1.2, color: '#464646', textTransform: 'uppercase', marginTop: 10, textAlign: 'center' }}>
-                Early Bird
-              </Text>
-            </View>
-
-            {/* Badge 2: Quiz Master */}
-            <View style={{ width: 100, alignItems: 'center' }}>
-              <View
-                style={{
-                  width: 88, height: 88, borderRadius: 44,
-                  backgroundColor: '#BE0027', alignItems: 'center', justifyContent: 'center',
-                  shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 12, elevation: 4,
-                  overflow: 'hidden',
-                }}
-              >
-                <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '60%', backgroundColor: '#91001B' }} />
-                <Svg width={36} height={36} viewBox="0 0 24 24" fill="none" style={{ zIndex: 1 }}>
-                  <Path d="M12 15l-3.5 2 1-4L6 10l4-.5L12 6l2 3.5 4 .5-3.5 3 1 4z" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={1} />
-                </Svg>
-              </View>
-              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 9, letterSpacing: 1.2, color: '#464646', textTransform: 'uppercase', marginTop: 10, textAlign: 'center' }}>
-                Quiz Master
-              </Text>
-            </View>
-
-            {/* Badge 3: Polyglot — locked */}
-            <View style={{ width: 100, alignItems: 'center' }}>
-              <View
-                style={{
-                  width: 88, height: 88, borderRadius: 44,
-                  backgroundColor: '#EAEAD1', alignItems: 'center', justifyContent: 'center',
-                  borderWidth: 2, borderStyle: 'dashed', borderColor: 'rgba(70,70,70,0.15)',
-                }}
-              >
-                <Svg width={36} height={36} viewBox="0 0 24 24" fill="none">
-                  <Path d="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zM7 11V7a5 5 0 0 1 10 0v4" stroke="rgba(70,70,70,0.25)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                </Svg>
-              </View>
-              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 9, letterSpacing: 1.2, color: '#464646', textTransform: 'uppercase', marginTop: 10, textAlign: 'center' }}>
-                Polyglot
-              </Text>
-            </View>
+            {BADGES.map((badge) => {
+              const earned = badge.isEarned({
+                streak,
+                completedCount: completedLessons.length,
+                totalPhrasesLearned,
+              });
+              return (
+                <Pressable
+                  key={badge.id}
+                  onPress={() =>
+                    Alert.alert(
+                      badge.title,
+                      earned ? `${badge.description}\n\nEarned ✓` : `${badge.description}\n\nHow to earn: ${badge.howToEarn}`
+                    )
+                  }
+                  accessibilityRole="button"
+                  accessibilityLabel={`${badge.title}, ${earned ? 'earned' : 'locked'}`}
+                  style={({ pressed }) => ({
+                    width: 100,
+                    alignItems: 'center',
+                    transform: [{ scale: pressed ? 0.96 : 1 }],
+                  })}
+                >
+                  {earned ? (
+                    <View
+                      style={{
+                        width: 88, height: 88, borderRadius: 44,
+                        backgroundColor: badge.bottomColor, alignItems: 'center', justifyContent: 'center',
+                        shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 12, elevation: 4,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '60%', backgroundColor: badge.topColor }} />
+                      <Svg width={36} height={36} viewBox="0 0 24 24" fill="none" style={{ zIndex: 1 }}>
+                        <Path d={badge.iconPath} fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={1} />
+                      </Svg>
+                    </View>
+                  ) : (
+                    <View
+                      style={{
+                        width: 88, height: 88, borderRadius: 44,
+                        backgroundColor: '#EAEAD1', alignItems: 'center', justifyContent: 'center',
+                        borderWidth: 2, borderStyle: 'dashed', borderColor: 'rgba(70,70,70,0.15)',
+                      }}
+                    >
+                      <Svg width={36} height={36} viewBox="0 0 24 24" fill="none">
+                        <Path d="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zM7 11V7a5 5 0 0 1 10 0v4" stroke="rgba(70,70,70,0.25)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                      </Svg>
+                    </View>
+                  )}
+                  <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 9, letterSpacing: 1.2, color: '#464646', textTransform: 'uppercase', marginTop: 10, textAlign: 'center' }}>
+                    {badge.title}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </ScrollView>
         </View>
 
@@ -460,3 +474,48 @@ export default function ProfileScreen() {
     </Animated.View>
   );
 }
+
+type BadgeContext = { streak: number; completedCount: number; totalPhrasesLearned: number };
+type BadgeDef = {
+  id: string;
+  title: string;
+  description: string;
+  howToEarn: string;
+  topColor: string;
+  bottomColor: string;
+  iconPath: string;
+  isEarned: (ctx: BadgeContext) => boolean;
+};
+
+const BADGES: BadgeDef[] = [
+  {
+    id: 'early-bird',
+    title: 'Early Bird',
+    description: 'Started learning Kannada and built your first day-streak.',
+    howToEarn: 'Reach a 1-day streak by completing any lesson.',
+    topColor: '#FDC003',
+    bottomColor: '#785900',
+    iconPath: 'M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 7 7M18 9h1.5a2.5 2.5 0 0 0 0-5C17 4 17 7 17 7M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22M18 2H6v7a6 6 0 0 0 12 0V2Z',
+    isEarned: ({ streak, completedCount }) => streak >= 1 || completedCount >= 1,
+  },
+  {
+    id: 'quiz-master',
+    title: 'Quiz Master',
+    description: 'Cleared three full lessons end-to-end. The drills don\'t scare you.',
+    howToEarn: 'Complete 3 lessons.',
+    topColor: '#91001B',
+    bottomColor: '#BE0027',
+    iconPath: 'M12 15l-3.5 2 1-4L6 10l4-.5L12 6l2 3.5 4 .5-3.5 3 1 4z',
+    isEarned: ({ completedCount }) => completedCount >= 3,
+  },
+  {
+    id: 'polyglot',
+    title: 'Polyglot',
+    description: 'Learned 50+ Kannada phrases. Real conversations are within reach.',
+    howToEarn: 'Learn 50 phrases across all lessons.',
+    topColor: '#6C5000',
+    bottomColor: '#785900',
+    iconPath: 'M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z',
+    isEarned: ({ totalPhrasesLearned }) => totalPhrasesLearned >= 50,
+  },
+];

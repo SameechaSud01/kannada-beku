@@ -67,6 +67,9 @@ export function WordCard({
             textAlign: 'center',
             marginBottom: Spacing.sm,
           }}
+          numberOfLines={2}
+          adjustsFontSizeToFit
+          minimumFontScale={0.75}
         >
           {transliteration}
         </Text>

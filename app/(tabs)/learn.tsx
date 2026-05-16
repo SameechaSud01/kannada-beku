@@ -7,8 +7,14 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { useProgressStore } from '../../stores/progressStore';
-import lessonsData from '../../data/lessons.json';
+import { LESSONS, LESSON_ORDER } from '../../constants/lessons';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
+
+const ESTIMATED_MIN_PER_LESSON = 5;
+
+function speakableText(text: string): string {
+  return text.replace(/\[name\]/g, '').trim();
+}
 
 export default function LearnScreen() {
   const router = useRouter();
@@ -25,7 +31,9 @@ export default function LearnScreen() {
     ]).start();
   }, []);
 
-  const lessons = lessonsData.lessons;
+  const lessons = LESSON_ORDER
+    .map((id) => LESSONS[id])
+    .filter((l): l is NonNullable<typeof l> => Boolean(l));
   const totalLessons = lessons.length;
   const completedCount = completedLessons.length;
 
@@ -33,8 +41,10 @@ export default function LearnScreen() {
   const currentIdx = lessons.findIndex((l) => !completedLessons.includes(l.id));
   const activeIdx = currentIdx >= 0 ? currentIdx : 0;
   const activeLesson = lessons[activeIdx];
-  const activeChar = activeLesson.thumbnailChar;
-  const activePhrase = activeLesson.phrases[0];
+  const activeIntake = activeLesson?.intake[0];
+  const activeChar = activeIntake ? speakableText(activeIntake.kannada).charAt(0) : '';
+  const activePhraseKannada = activeIntake ? speakableText(activeIntake.kannada) : '';
+  const activePhraseRoman = activeIntake?.transliteration ?? '';
 
   // Progress ring
   const ringSize = 56;
@@ -66,9 +76,16 @@ export default function LearnScreen() {
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-          <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
-            <Path d="M3 6h18M3 12h18M3 18h18" stroke="#91001B" strokeWidth={2.2} strokeLinecap="round" />
-          </Svg>
+          <Pressable
+            onPress={() => router.push('/profile')}
+            accessibilityRole="button"
+            accessibilityLabel="Open profile and settings"
+            hitSlop={8}
+          >
+            <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
+              <Path d="M3 6h18M3 12h18M3 18h18" stroke="#91001B" strokeWidth={2.2} strokeLinecap="round" />
+            </Svg>
+          </Pressable>
           <Text
             style={{
               fontFamily: Fonts.notoSerifKannada.bold,
@@ -82,8 +99,11 @@ export default function LearnScreen() {
             ಕನ್ನಡ ಬಾ
           </Text>
         </View>
-        <View
-          style={{
+        <Pressable
+          onPress={() => router.push('/profile')}
+          accessibilityRole="button"
+          accessibilityLabel="Open profile"
+          style={({ pressed }) => ({
             width: 40,
             height: 40,
             borderRadius: 20,
@@ -92,13 +112,14 @@ export default function LearnScreen() {
             borderColor: 'rgba(145,0,27,0.15)',
             alignItems: 'center',
             justifyContent: 'center',
-          }}
+            transform: [{ scale: pressed ? 0.94 : 1 }],
+          })}
         >
           <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
             <Path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#FFF" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
             <Circle cx={12} cy={7} r={4} stroke="#FFF" strokeWidth={2} />
           </Svg>
-        </View>
+        </Pressable>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
@@ -134,7 +155,7 @@ export default function LearnScreen() {
                 letterSpacing: -0.5,
               }}
             >
-              {activeLesson.title}
+              {activeLesson?.situation.title ?? 'No lessons yet'}
             </Text>
           </View>
           {/* Progress mandala */}
@@ -211,7 +232,7 @@ export default function LearnScreen() {
                 marginBottom: 20,
               }}
             >
-              Sound: "{activePhrase.roman.split(/[\s·]/)[0]}"
+              Sound: "{activePhraseRoman.split(/[\s·]/)[0]}"
             </Text>
 
             {/* Main character display */}
@@ -408,7 +429,7 @@ export default function LearnScreen() {
                   Syllable
                 </Text>
                 <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 24, color: '#91001B' }}>
-                  {activePhrase.roman.split(/[\s·]/)[0]}
+                  {activePhraseRoman.split(/[\s·]/)[0]}
                 </Text>
               </View>
               <View
@@ -433,7 +454,7 @@ export default function LearnScreen() {
                   Example
                 </Text>
                 <Text style={{ fontFamily: Fonts.notoSerifKannada.bold, fontSize: 24, color: '#91001B', lineHeight: 38, paddingTop: 4 }}>
-                  {activePhrase.script.split(/\s/)[0]}
+                  {activePhraseKannada.split(/\s/)[0]}
                 </Text>
               </View>
             </View>
@@ -487,7 +508,8 @@ export default function LearnScreen() {
                 </Text>
               </View>
               <Pressable
-                onPress={() => router.push(`/lesson/${activeLesson.id}`)}
+                onPress={() => activeLesson && router.push(`/lesson/${activeLesson.id}`)}
+                disabled={!activeLesson}
                 style={({ pressed }) => ({
                   backgroundColor: pressed ? '#303221' : '#1B1D0E',
                   borderRadius: 14,
@@ -523,9 +545,11 @@ export default function LearnScreen() {
             const isCompleted = completedLessons.includes(lesson.id);
             const isActive = index === activeIdx;
             const isLocked = index > activeIdx && !isCompleted;
+            const totalPhrases = lesson.intake.length;
+            const lessonChar = speakableText(lesson.intake[0]?.kannada ?? '').charAt(0);
             const progress = isCompleted
               ? 1
-              : (lessonProgress[lesson.id] ?? 0) / lesson.totalPhrases;
+              : (lessonProgress[lesson.id] ?? 0) / Math.max(totalPhrases, 1);
 
             return (
               <Pressable
@@ -583,7 +607,7 @@ export default function LearnScreen() {
                         paddingTop: 2,
                       }}
                     >
-                      {lesson.thumbnailChar}
+                      {lessonChar}
                     </Text>
                   )}
                 </View>
@@ -598,7 +622,7 @@ export default function LearnScreen() {
                       marginBottom: 3,
                     }}
                   >
-                    {lesson.title}
+                    {lesson.situation.title}
                   </Text>
                   <Text
                     style={{
@@ -611,7 +635,7 @@ export default function LearnScreen() {
                       ? 'Completed'
                       : isLocked
                       ? 'Locked'
-                      : `${lesson.totalPhrases} phrases · ${lesson.estimatedMinutes} min`}
+                      : `${totalPhrases} phrases · ${ESTIMATED_MIN_PER_LESSON} min`}
                   </Text>
                   {/* Progress bar for active lesson */}
                   {isActive && progress > 0 && (

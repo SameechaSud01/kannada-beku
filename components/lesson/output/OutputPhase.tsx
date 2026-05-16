@@ -175,6 +175,9 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
               color: Colors.tertiary,
               marginTop: Spacing.xs,
             }}
+            numberOfLines={2}
+            adjustsFontSizeToFit
+            minimumFontScale={0.75}
           >
             {driver.transliteration}
           </Text>
@@ -325,6 +328,9 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
                 color: Colors.onSecondaryContainer,
                 marginTop: Spacing.xs,
               }}
+              numberOfLines={2}
+              adjustsFontSizeToFit
+              minimumFontScale={0.75}
             >
               {expected.transliteration}
             </Text>

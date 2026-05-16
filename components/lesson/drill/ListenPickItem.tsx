@@ -165,6 +165,9 @@ export function ListenPickItem({ target, distractors, onResolve }: ListenPickIte
                       color: showWrong ? Colors.tertiary : Colors.onSurface,
                       flexShrink: 1,
                     }}
+                    numberOfLines={2}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.75}
                   >
                     {opt.transliteration}
                   </Text>

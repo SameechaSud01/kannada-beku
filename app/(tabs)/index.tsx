@@ -126,7 +126,12 @@ export default function HomeScreen() {
       >
         {/* Hamburger + Title */}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-          <Pressable>
+          <Pressable
+            onPress={() => router.push('/profile')}
+            accessibilityRole="button"
+            accessibilityLabel="Open profile and settings"
+            hitSlop={8}
+          >
             <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
               <Path d="M3 6h18M3 12h18M3 18h18" stroke="#91001B" strokeWidth={2.2} strokeLinecap="round" />
             </Svg>
@@ -146,8 +151,11 @@ export default function HomeScreen() {
         </View>
 
         {/* Profile avatar */}
-        <View
-          style={{
+        <Pressable
+          onPress={() => router.push('/profile')}
+          accessibilityRole="button"
+          accessibilityLabel="Open profile"
+          style={({ pressed }) => ({
             width: 40,
             height: 40,
             borderRadius: 20,
@@ -156,12 +164,13 @@ export default function HomeScreen() {
             borderColor: 'rgba(145,0,27,0.15)',
             alignItems: 'center',
             justifyContent: 'center',
-          }}
+            transform: [{ scale: pressed ? 0.94 : 1 }],
+          })}
         >
           <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 15, color: '#FFFFFF' }}>
             {userName[0]?.toUpperCase()}
           </Text>
-        </View>
+        </Pressable>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
@@ -261,7 +270,9 @@ export default function HomeScreen() {
                   textAlign: 'center',
                   marginBottom: 4,
                 }}
-                numberOfLines={1}
+                numberOfLines={2}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
               >
                 {wordOfDay.transliteration}
               </Text>
@@ -520,13 +531,17 @@ export default function HomeScreen() {
 
         {/* ── KARNATAKA HERITAGE — Full-width photo card ── */}
         <View style={{ paddingHorizontal: 24, marginBottom: 24 }}>
-          <View
-            style={{
+          <Pressable
+            onPress={() => router.push('/heritage/hampi')}
+            accessibilityRole="button"
+            accessibilityLabel="Read about The Stones of Hampi"
+            style={({ pressed }) => ({
               height: 200,
               borderRadius: 40,
               overflow: 'hidden',
               backgroundColor: '#5C1A1A',
-            }}
+              transform: [{ scale: pressed ? 0.98 : 1 }],
+            })}
           >
             <View
               style={{
@@ -605,7 +620,7 @@ export default function HomeScreen() {
                 The Stones of Hampi
               </Text>
             </View>
-          </View>
+          </Pressable>
         </View>
       </ScrollView>
     </Animated.View>

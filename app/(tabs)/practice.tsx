@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { View, Text, ScrollView, Pressable, Animated } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { Fonts } from '../../constants/fonts';
@@ -15,6 +16,7 @@ const MATCH_DATA = [
 ];
 
 export default function PracticeScreen() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const { completedLessons } = useProgressStore();
 
@@ -27,6 +29,8 @@ export default function PracticeScreen() {
   const [matched, setMatched] = useState<Set<string>>(new Set());
   const shakeAnim = useRef(new Animated.Value(0)).current;
   const [shaking, setShaking] = useState(false);
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const allMatched = matched.size === MATCH_DATA.length;
 
   // Shuffle right column deterministically
   const shuffledRight = [...MATCH_DATA].sort((a, b) => a.kannada.localeCompare(b.kannada));
@@ -37,6 +41,25 @@ export default function PracticeScreen() {
       Animated.timing(slideAnim, { toValue: 0, duration: 220, useNativeDriver: true }),
     ]).start();
   }, []);
+
+  useEffect(() => {
+    if (allMatched) return;
+    const handle = setInterval(() => setElapsedSec((s) => s + 1), 1000);
+    return () => clearInterval(handle);
+  }, [allMatched]);
+
+  const formatTime = (sec: number) => {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  };
+
+  const handleReset = () => {
+    setMatched(new Set());
+    setSelectedLeft(null);
+    setSelectedRight(null);
+    setElapsedSec(0);
+  };
 
   // Daily goal
   const goalTarget = 20;
@@ -109,25 +132,36 @@ export default function PracticeScreen() {
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-          <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
-            <Path d="M3 6h18M3 12h18M3 18h18" stroke="#91001B" strokeWidth={2.2} strokeLinecap="round" />
-          </Svg>
+          <Pressable
+            onPress={() => router.push('/profile')}
+            accessibilityRole="button"
+            accessibilityLabel="Open profile and settings"
+            hitSlop={8}
+          >
+            <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
+              <Path d="M3 6h18M3 12h18M3 18h18" stroke="#91001B" strokeWidth={2.2} strokeLinecap="round" />
+            </Svg>
+          </Pressable>
           <Text style={{ fontFamily: Fonts.notoSerifKannada.bold, fontSize: 22, color: '#91001B', letterSpacing: -0.3, lineHeight: 36, paddingTop: 4 }}>
             ಕನ್ನಡ ಬಾ
           </Text>
         </View>
-        <View
-          style={{
+        <Pressable
+          onPress={() => router.push('/profile')}
+          accessibilityRole="button"
+          accessibilityLabel="Open profile"
+          style={({ pressed }) => ({
             width: 40, height: 40, borderRadius: 20,
             backgroundColor: '#E4E4CC', borderWidth: 2, borderColor: 'rgba(145,0,27,0.15)',
             alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
-          }}
+            transform: [{ scale: pressed ? 0.94 : 1 }],
+          })}
         >
           <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
             <Path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#5C3F3F" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
             <Circle cx={12} cy={7} r={4} stroke="#5C3F3F" strokeWidth={2} />
           </Svg>
-        </View>
+        </Pressable>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
@@ -173,21 +207,42 @@ export default function PracticeScreen() {
             <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 18, letterSpacing: 2, color: '#91001B', textTransform: 'uppercase' }}>
               Match the pairs
             </Text>
-            <View
-              style={{
-                backgroundColor: '#FDC003', borderRadius: 20,
-                paddingHorizontal: 14, paddingVertical: 5,
-                flexDirection: 'row', alignItems: 'center', gap: 5,
-              }}
-            >
-              <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
-                <Circle cx={12} cy={12} r={10} stroke="#6C5000" strokeWidth={2} />
-                <Path d="M12 6v6l4 2" stroke="#6C5000" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-              </Svg>
-              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 13, color: '#6C5000' }}>
-                01:45
-              </Text>
-            </View>
+            {allMatched ? (
+              <Pressable
+                onPress={handleReset}
+                accessibilityRole="button"
+                accessibilityLabel="Play again"
+                style={({ pressed }) => ({
+                  backgroundColor: '#91001B', borderRadius: 20,
+                  paddingHorizontal: 14, paddingVertical: 6,
+                  flexDirection: 'row', alignItems: 'center', gap: 6,
+                  transform: [{ scale: pressed ? 0.96 : 1 }],
+                })}
+              >
+                <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
+                  <Path d="M1 4v6h6M23 20v-6h-6M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="#FFFFFF" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
+                </Svg>
+                <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 13, color: '#FFFFFF' }}>
+                  {formatTime(elapsedSec)} · Replay
+                </Text>
+              </Pressable>
+            ) : (
+              <View
+                style={{
+                  backgroundColor: '#FDC003', borderRadius: 20,
+                  paddingHorizontal: 14, paddingVertical: 5,
+                  flexDirection: 'row', alignItems: 'center', gap: 5,
+                }}
+              >
+                <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
+                  <Circle cx={12} cy={12} r={10} stroke="#6C5000" strokeWidth={2} />
+                  <Path d="M12 6v6l4 2" stroke="#6C5000" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                </Svg>
+                <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 13, color: '#6C5000' }}>
+                  {formatTime(elapsedSec)}
+                </Text>
+              </View>
+            )}
           </View>
 
           {/* Two-column grid */}
@@ -312,6 +367,9 @@ export default function PracticeScreen() {
                         textTransform: 'uppercase',
                         marginTop: 4,
                       }}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.7}
                     >
                       {item.roman}
                     </Text>

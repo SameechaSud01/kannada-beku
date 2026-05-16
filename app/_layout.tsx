@@ -36,6 +36,14 @@ function AppGate() {
       setLoading(false);
     });
 
+    supabase.auth.getSession().catch(async (err) => {
+      if (err?.message?.toLowerCase().includes('refresh token')) {
+        await supabase.auth.signOut().catch(() => {});
+        setSession(null);
+        setLoading(false);
+      }
+    });
+
     return () => subscription.unsubscribe();
   }, []);
 
