@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, DMSans_400Regular, DMSans_500Medium, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
+import { NotoSansKannada_400Regular, NotoSansKannada_700Bold } from '@expo-google-fonts/noto-sans-kannada';
 import { Lora_400Regular_Italic, Lora_500Medium_Italic } from '@expo-google-fonts/lora';
 import {
   NotoSerifKannada_400Regular,
@@ -81,6 +82,8 @@ export default function RootLayout() {
     NotoSerifKannada_400Regular,
     NotoSerifKannada_500Medium,
     NotoSerifKannada_700Bold,
+    NotoSansKannada_400Regular,
+    NotoSansKannada_700Bold,
   });
 
   useEffect(() => {

@@ -85,10 +85,14 @@ export default function GameDetailScreen() {
 
   const handleStart = () => {
     if (selected.size === 0) return;
-    // Game runners are out of scope for Spec 01 — this is the entrypoint only.
+    if (id === 'opposites') {
+      router.push('/opposites');
+      return;
+    }
+    // Other game runners not yet implemented.
     Alert.alert(
       'Round queued',
-      `Starting ${game.title} with ${selected.size} lesson${selected.size === 1 ? '' : 's'} loaded.\n\nGame runner UI is not implemented in this spec.`
+      `Starting ${game.title} with ${selected.size} lesson${selected.size === 1 ? '' : 's'} loaded.\n\nGame runner UI is not implemented yet.`
     );
   };
 
