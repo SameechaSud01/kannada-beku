@@ -27,8 +27,9 @@ export default function LoginScreen() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       }
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+      Alert.alert('Error', message);
     } finally {
       setLoading(false);
     }

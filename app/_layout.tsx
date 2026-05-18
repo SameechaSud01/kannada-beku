@@ -10,6 +10,7 @@ import {
   NotoSerifKannada_700Bold,
 } from '@expo-google-fonts/noto-serif-kannada';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useUserStore } from '../stores/useUserStore';
 import { useProgressStore } from '../stores/progressStore';
@@ -111,8 +112,10 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppGate />
-    </QueryClientProvider>
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <AppGate />
+      </QueryClientProvider>
+    </SafeAreaProvider>
   );
 }
