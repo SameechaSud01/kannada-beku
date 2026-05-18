@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing } from '../../constants/spacing';
@@ -71,7 +72,7 @@ function LessonNotFound({ onBack }: { onBack: () => void }) {
       <Text
         style={{
           fontFamily: Fonts.dmSans.bold,
-          fontSize: 20,
+          fontSize: moderateScale(20),
           color: Colors.onSurface,
           marginBottom: Spacing.sm,
         }}
@@ -82,7 +83,7 @@ function LessonNotFound({ onBack }: { onBack: () => void }) {
         onPress={onBack}
         style={{
           fontFamily: Fonts.dmSans.medium,
-          fontSize: 14,
+          fontSize: moderateScale(14),
           color: Colors.primaryContainer,
           marginTop: Spacing.lg,
         }}

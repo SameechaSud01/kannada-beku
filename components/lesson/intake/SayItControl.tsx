@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Audio } from 'expo-av';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
@@ -96,7 +97,7 @@ export function SayItControl({ phrase, onComplete }: SayItControlProps) {
         <Text
           style={{
             fontFamily: Fonts.dmSans.medium,
-            fontSize: 13,
+            fontSize: moderateScale(13),
             color: Colors.tertiary,
             marginBottom: Spacing.md,
           }}
@@ -115,8 +116,8 @@ export function SayItControl({ phrase, onComplete }: SayItControlProps) {
                 borderRadius: Radius.lg,
                 paddingVertical: Spacing.md,
                 paddingHorizontal: Spacing.lg,
-                minWidth: 64,
-                minHeight: 64,
+                minWidth: moderateScale(64),
+                minHeight: moderateScale(64),
                 alignItems: 'center',
                 justifyContent: 'center',
               })}
@@ -125,7 +126,7 @@ export function SayItControl({ phrase, onComplete }: SayItControlProps) {
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.regular,
-                  fontSize: 11,
+                  fontSize: moderateScale(11),
                   color: Colors.tertiary,
                   marginTop: Spacing.xs,
                 }}
@@ -177,8 +178,8 @@ export function SayItControl({ phrase, onComplete }: SayItControlProps) {
           borderRadius: Radius.md,
           paddingVertical: Spacing.md,
           paddingHorizontal: Spacing.xl,
-          minHeight: 44,
-          minWidth: 44,
+          minHeight: moderateScale(44),
+          minWidth: moderateScale(44),
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
@@ -189,7 +190,7 @@ export function SayItControl({ phrase, onComplete }: SayItControlProps) {
         <Text
           style={{
             fontFamily: Fonts.dmSans.medium,
-            fontSize: 14,
+            fontSize: moderateScale(14),
             color: state === 'recording' ? Colors.onPrimary : Colors.primaryContainer,
           }}
         >

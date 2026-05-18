@@ -1,5 +1,6 @@
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
@@ -38,13 +39,13 @@ export function ScenarioPhase({ lesson, onContinue }: ScenarioPhaseProps) {
             marginBottom: Spacing.xxl,
             alignItems: 'center',
             justifyContent: 'center',
-            minHeight: 180,
+            minHeight: moderateScale(180),
           }}
         >
           <Text
             style={{
               fontFamily: Fonts.dmSans.medium,
-              fontSize: 13,
+              fontSize: moderateScale(13),
               color: Colors.tertiary,
               letterSpacing: 1,
               textTransform: 'uppercase',
@@ -56,10 +57,10 @@ export function ScenarioPhase({ lesson, onContinue }: ScenarioPhaseProps) {
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 18,
+              fontSize: moderateScale(18),
               color: Colors.onSecondaryContainer,
               textAlign: 'center',
-              lineHeight: 26,
+              lineHeight: moderateScale(26),
             }}
           >
             {title}
@@ -69,9 +70,9 @@ export function ScenarioPhase({ lesson, onContinue }: ScenarioPhaseProps) {
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: 24,
+            fontSize: moderateScale(24),
             color: Colors.onSurface,
-            lineHeight: 32,
+            lineHeight: moderateScale(32),
             marginBottom: Spacing.md,
           }}
         >
@@ -81,9 +82,9 @@ export function ScenarioPhase({ lesson, onContinue }: ScenarioPhaseProps) {
         <Text
           style={{
             fontFamily: Fonts.dmSans.regular,
-            fontSize: 16,
+            fontSize: moderateScale(16),
             color: Colors.onSurface,
-            lineHeight: 24,
+            lineHeight: moderateScale(24),
           }}
         >
           {setup}
@@ -98,17 +99,17 @@ export function ScenarioPhase({ lesson, onContinue }: ScenarioPhaseProps) {
           style={({ pressed }) => ({
             backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
             borderRadius: Radius.md,
-            paddingVertical: Spacing.md + 2,
+            paddingVertical: Spacing.md + moderateScale(2),
             alignItems: 'center',
             transform: [{ scale: pressed ? 0.96 : 1 }],
-            minHeight: 44,
+            minHeight: moderateScale(44),
             justifyContent: 'center',
           })}
         >
           <Text
             style={{
               fontFamily: Fonts.dmSans.medium,
-              fontSize: 15,
+              fontSize: moderateScale(15),
               color: Colors.onPrimary,
             }}
           >

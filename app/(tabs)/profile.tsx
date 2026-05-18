@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { View, Text, ScrollView, Pressable, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
-import { Radius } from '../../constants/spacing';
+import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import type { Icon as TablerIcon } from '@tabler/icons-react-native';
 import { useAuthStore } from '../../stores/useAuthStore';
@@ -79,23 +80,23 @@ export default function ProfileScreen() {
       {/* APP BAR — centred wordmark, streak right (no hamburger) */}
       <View
         style={{
-          paddingTop: insets.top + 8,
-          paddingBottom: 12,
-          paddingHorizontal: 24,
+          paddingTop: insets.top + Spacing.sm,
+          paddingBottom: Spacing.md,
+          paddingHorizontal: Spacing.xxl,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
-        <View style={{ width: 56 }} />
+        <View style={{ width: moderateScale(56) }} />
         <Text
           style={{
             fontFamily: Fonts.notoSerifKannada.bold,
-            fontSize: 22,
+            fontSize: moderateScale(22),
             color: Colors.primary,
             letterSpacing: -0.3,
-            lineHeight: 36,
-            paddingTop: 4,
+            lineHeight: moderateScale(36),
+            paddingTop: Spacing.xs,
           }}
           maxFontSizeMultiplier={1.2}
         >
@@ -105,8 +106,8 @@ export default function ProfileScreen() {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            gap: 6,
-            minWidth: 56,
+            gap: moderateScale(6),
+            minWidth: moderateScale(56),
             justifyContent: 'flex-end',
           }}
           accessibilityRole="text"
@@ -116,7 +117,7 @@ export default function ProfileScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 16,
+              fontSize: moderateScale(16),
               color: Colors.onSurface,
             }}
             maxFontSizeMultiplier={1.3}
@@ -128,25 +129,25 @@ export default function ProfileScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 40 + insets.bottom }}
+        contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
       >
         {/* Avatar + name */}
-        <View style={{ alignItems: 'center', paddingTop: 16, marginBottom: 28 }}>
+        <View style={{ alignItems: 'center', paddingTop: Spacing.lg, marginBottom: moderateScale(28) }}>
           <View
             style={{
-              width: 96,
-              height: 96,
+              width: moderateScale(96),
+              height: moderateScale(96),
               borderRadius: Radius.full,
               backgroundColor: Colors.primary,
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: 12,
+              marginBottom: Spacing.md,
             }}
           >
             <Text
               style={{
                 fontFamily: Fonts.dmSans.bold,
-                fontSize: 36,
+                fontSize: moderateScale(36),
                 color: Colors.onPrimary,
               }}
               maxFontSizeMultiplier={1.2}
@@ -157,10 +158,10 @@ export default function ProfileScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 22,
+              fontSize: moderateScale(22),
               color: Colors.onSurface,
               letterSpacing: -0.3,
-              marginBottom: 2,
+              marginBottom: moderateScale(2),
             }}
             maxFontSizeMultiplier={1.3}
           >
@@ -169,7 +170,7 @@ export default function ProfileScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.regular,
-              fontSize: 13,
+              fontSize: moderateScale(13),
               color: Colors.tertiary,
             }}
             maxFontSizeMultiplier={1.4}
@@ -179,22 +180,22 @@ export default function ProfileScreen() {
         </View>
 
         {/* Two stat cards — container-low */}
-        <View style={{ paddingHorizontal: 24, marginBottom: 28 }}>
-          <View style={{ flexDirection: 'row', gap: 12 }}>
+        <View style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(28) }}>
+          <View style={{ flexDirection: 'row', gap: Spacing.md }}>
             <View
               style={{
                 flex: 1,
                 backgroundColor: Colors.surfaceContainerLow,
                 borderRadius: Radius.lg,
-                padding: 18,
+                padding: moderateScale(18),
               }}
             >
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  gap: 8,
-                  marginBottom: 12,
+                  gap: Spacing.sm,
+                  marginBottom: Spacing.md,
                 }}
               >
                 <Icons.streak size={20} color={Colors.primary} />
@@ -202,9 +203,9 @@ export default function ProfileScreen() {
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.bold,
-                  fontSize: 28,
+                  fontSize: moderateScale(28),
                   color: Colors.onSurface,
-                  lineHeight: 32,
+                  lineHeight: moderateScale(32),
                 }}
                 maxFontSizeMultiplier={1.3}
               >
@@ -213,11 +214,11 @@ export default function ProfileScreen() {
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.bold,
-                  fontSize: 10,
+                  fontSize: moderateScale(10),
                   letterSpacing: 1.8,
                   color: Colors.tertiary,
                   textTransform: 'uppercase',
-                  marginTop: 4,
+                  marginTop: Spacing.xs,
                 }}
                 maxFontSizeMultiplier={1.4}
               >
@@ -229,15 +230,15 @@ export default function ProfileScreen() {
                 flex: 1,
                 backgroundColor: Colors.surfaceContainerLow,
                 borderRadius: Radius.lg,
-                padding: 18,
+                padding: moderateScale(18),
               }}
             >
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  gap: 8,
-                  marginBottom: 12,
+                  gap: Spacing.sm,
+                  marginBottom: Spacing.md,
                 }}
               >
                 <Icons.tabLearn size={20} color={Colors.secondary} />
@@ -245,9 +246,9 @@ export default function ProfileScreen() {
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.bold,
-                  fontSize: 28,
+                  fontSize: moderateScale(28),
                   color: Colors.onSurface,
-                  lineHeight: 32,
+                  lineHeight: moderateScale(32),
                 }}
                 maxFontSizeMultiplier={1.3}
               >
@@ -256,11 +257,11 @@ export default function ProfileScreen() {
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.bold,
-                  fontSize: 10,
+                  fontSize: moderateScale(10),
                   letterSpacing: 1.8,
                   color: Colors.tertiary,
                   textTransform: 'uppercase',
-                  marginTop: 4,
+                  marginTop: Spacing.xs,
                 }}
                 maxFontSizeMultiplier={1.4}
               >
@@ -271,21 +272,21 @@ export default function ProfileScreen() {
         </View>
 
         {/* Learning goal — 2 options */}
-        <View style={{ paddingHorizontal: 24, marginBottom: 28 }}>
+        <View style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(28) }}>
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 11,
+              fontSize: moderateScale(11),
               letterSpacing: 2.5,
               color: Colors.tertiary,
               textTransform: 'uppercase',
-              marginBottom: 12,
+              marginBottom: Spacing.md,
             }}
             maxFontSizeMultiplier={1.4}
           >
             Learning goal
           </Text>
-          <View style={{ gap: 10 }}>
+          <View style={{ gap: moderateScale(10) }}>
             <GoalOption
               label="Spoken only"
               description="Conversation first — skip the script."
@@ -302,10 +303,10 @@ export default function ProfileScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.regular,
-              fontSize: 12,
+              fontSize: moderateScale(12),
               color: Colors.tertiary,
-              lineHeight: 18,
-              marginTop: 12,
+              lineHeight: moderateScale(18),
+              marginTop: Spacing.md,
             }}
             maxFontSizeMultiplier={1.4}
           >
@@ -314,15 +315,15 @@ export default function ProfileScreen() {
         </View>
 
         {/* Settings list — ghost-border inset shadow separates rows (§2 No-Line) */}
-        <View style={{ paddingHorizontal: 24, marginBottom: 28 }}>
+        <View style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(28) }}>
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 11,
+              fontSize: moderateScale(11),
               letterSpacing: 2.5,
               color: Colors.tertiary,
               textTransform: 'uppercase',
-              marginBottom: 12,
+              marginBottom: Spacing.md,
             }}
             maxFontSizeMultiplier={1.4}
           >
@@ -344,10 +345,10 @@ export default function ProfileScreen() {
                 style={({ pressed }) => ({
                   flexDirection: 'row',
                   alignItems: 'center',
-                  paddingVertical: 14,
-                  paddingHorizontal: 16,
-                  gap: 14,
-                  minHeight: 56,
+                  paddingVertical: moderateScale(14),
+                  paddingHorizontal: Spacing.lg,
+                  gap: moderateScale(14),
+                  minHeight: moderateScale(56),
                   // Tonal step on every other row substitutes for borders.
                   backgroundColor:
                     idx % 2 === 0
@@ -361,7 +362,7 @@ export default function ProfileScreen() {
                   style={{
                     flex: 1,
                     fontFamily: Fonts.dmSans.medium,
-                    fontSize: 14,
+                    fontSize: moderateScale(14),
                     color: Colors.onSurface,
                   }}
                   maxFontSizeMultiplier={1.3}
@@ -375,22 +376,22 @@ export default function ProfileScreen() {
         </View>
 
         {/* Sign out */}
-        <View style={{ paddingHorizontal: 24 }}>
+        <View style={{ paddingHorizontal: Spacing.xxl }}>
           <Pressable
             onPress={() => supabase.auth.signOut()}
             accessibilityRole="button"
             accessibilityLabel="Sign out"
             style={({ pressed }) => ({
-              paddingVertical: 14,
+              paddingVertical: moderateScale(14),
               alignItems: 'center',
-              minHeight: 44,
+              minHeight: moderateScale(44),
               opacity: pressed ? 0.6 : 1,
             })}
           >
             <Text
               style={{
                 fontFamily: Fonts.dmSans.medium,
-                fontSize: 14,
+                fontSize: moderateScale(14),
                 color: Colors.primary,
               }}
               maxFontSizeMultiplier={1.3}
@@ -428,8 +429,8 @@ function GoalOption({
           ? Colors.secondaryContainer
           : Colors.surfaceContainerHighest,
         borderRadius: Radius.lg,
-        padding: 16,
-        minHeight: 56,
+        padding: Spacing.lg,
+        minHeight: moderateScale(56),
         // Selected affordance via inset shadow (No-Line rule). We use a same-tone
         // ghost shadow rather than a border edge on the unselected card.
         ...(selected
@@ -448,9 +449,9 @@ function GoalOption({
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: 15,
+            fontSize: moderateScale(15),
             color: selected ? Colors.onSecondaryContainer : Colors.onSurface,
-            marginBottom: 2,
+            marginBottom: moderateScale(2),
           }}
           maxFontSizeMultiplier={1.3}
         >
@@ -459,9 +460,9 @@ function GoalOption({
         <Text
           style={{
             fontFamily: Fonts.dmSans.regular,
-            fontSize: 12,
+            fontSize: moderateScale(12),
             color: selected ? Colors.onSecondaryContainer : Colors.tertiary,
-            lineHeight: 16,
+            lineHeight: moderateScale(16),
             opacity: selected ? 0.85 : 1,
           }}
           maxFontSizeMultiplier={1.4}

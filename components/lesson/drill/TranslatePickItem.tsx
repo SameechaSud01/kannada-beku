@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, Pressable, Animated, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
@@ -89,10 +90,10 @@ export function TranslatePickItem({ target, distractors, onResolve }: TranslateP
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: 22,
+            fontSize: moderateScale(22),
             color: Colors.onSurface,
             textAlign: 'center',
-            lineHeight: 30,
+            lineHeight: moderateScale(30),
             marginBottom: Spacing.sm,
           }}
         >
@@ -102,7 +103,7 @@ export function TranslatePickItem({ target, distractors, onResolve }: TranslateP
         <Text
           style={{
             fontFamily: Fonts.dmSans.medium,
-            fontSize: 13,
+            fontSize: moderateScale(13),
             color: Colors.tertiary,
             textAlign: 'center',
             marginBottom: Spacing.xl,
@@ -139,13 +140,13 @@ export function TranslatePickItem({ target, distractors, onResolve }: TranslateP
                           : pressed
                             ? Colors.surfaceContainerHigh
                             : Colors.surfaceContainerHighest,
-                    borderWidth: showRight || showWrong || isSelected ? 2 : 1,
+                    borderWidth: showRight || showWrong || isSelected ? moderateScale(2) : moderateScale(1),
                     borderColor:
                       showRight || showWrong || isSelected ? Colors.primaryContainer : Colors.outlineVariant,
                     borderRadius: Radius.lg,
                     paddingVertical: Spacing.md,
                     paddingHorizontal: Spacing.lg,
-                    minHeight: 64,
+                    minHeight: moderateScale(64),
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
@@ -156,10 +157,10 @@ export function TranslatePickItem({ target, distractors, onResolve }: TranslateP
                     <Text
                       style={{
                         fontFamily: Fonts.notoSerifKannada.regular,
-                        fontSize: 20,
+                        fontSize: moderateScale(20),
                         color: showWrong ? Colors.tertiary : Colors.primaryContainer,
-                        lineHeight: 32,
-                        paddingTop: 4,
+                        lineHeight: moderateScale(32),
+                        paddingTop: Spacing.xs,
                       }}
                     >
                       {opt.kannada}
@@ -167,9 +168,9 @@ export function TranslatePickItem({ target, distractors, onResolve }: TranslateP
                     <Text
                       style={{
                         fontFamily: Fonts.lora.italic,
-                        fontSize: 13,
+                        fontSize: moderateScale(13),
                         color: showWrong ? Colors.tertiary : Colors.tertiary,
-                        marginTop: 2,
+                        marginTop: moderateScale(2),
                       }}
                       numberOfLines={2}
                       adjustsFontSizeToFit
@@ -197,8 +198,8 @@ export function TranslatePickItem({ target, distractors, onResolve }: TranslateP
                       style={({ pressed }) => ({
                         backgroundColor: pressed ? Colors.surfaceContainerHigh : Colors.secondaryFixed,
                         borderRadius: Radius.full,
-                        width: 38,
-                        height: 38,
+                        width: moderateScale(38),
+                        height: moderateScale(38),
                         alignItems: 'center',
                         justifyContent: 'center',
                       })}
@@ -226,7 +227,7 @@ export function TranslatePickItem({ target, distractors, onResolve }: TranslateP
             <Text
               style={{
                 fontFamily: Fonts.dmSans.medium,
-                fontSize: 13,
+                fontSize: moderateScale(13),
                 color: Colors.primaryContainer,
               }}
             >
@@ -250,14 +251,14 @@ export function TranslatePickItem({ target, distractors, onResolve }: TranslateP
                   ? Colors.primary
                   : Colors.primaryContainer,
               borderRadius: Radius.md,
-              paddingVertical: Spacing.md + 2,
-              minHeight: 44,
+              paddingVertical: Spacing.md + moderateScale(2),
+              minHeight: moderateScale(44),
               alignItems: 'center',
               justifyContent: 'center',
               transform: [{ scale: pressed && selectedId ? 0.96 : 1 }],
             })}
           >
-            <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 15, color: Colors.onPrimary }}>
+            <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(15), color: Colors.onPrimary }}>
               Confirm
             </Text>
           </Pressable>

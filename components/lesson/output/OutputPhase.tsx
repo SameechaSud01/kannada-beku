@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View, Text, Pressable, ScrollView, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
@@ -76,7 +77,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
         <Text
           style={{
             fontFamily: Fonts.dmSans.medium,
-            fontSize: 13,
+            fontSize: moderateScale(13),
             color: Colors.tertiary,
             letterSpacing: 0.5,
             textAlign: 'center',
@@ -91,7 +92,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
             source={scenarioImage}
             style={{
               width: '100%',
-              height: 120,
+              height: moderateScale(120),
               borderRadius: Radius.lg,
               marginBottom: Spacing.lg,
             }}
@@ -102,7 +103,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
           <View
             style={{
               width: '100%',
-              height: 100,
+              height: moderateScale(100),
               borderRadius: Radius.lg,
               backgroundColor: Colors.secondaryFixed,
               alignItems: 'center',
@@ -114,7 +115,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
             <Text
               style={{
                 fontFamily: Fonts.dmSans.medium,
-                fontSize: 12,
+                fontSize: moderateScale(12),
                 color: Colors.tertiary,
                 letterSpacing: 1,
                 textTransform: 'uppercase',
@@ -126,7 +127,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
             <Text
               style={{
                 fontFamily: Fonts.dmSans.bold,
-                fontSize: 14,
+                fontSize: moderateScale(14),
                 color: Colors.onSecondaryContainer,
                 textAlign: 'center',
               }}
@@ -157,7 +158,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
             <Text
               style={{
                 fontFamily: Fonts.dmSans.medium,
-                fontSize: 12,
+                fontSize: moderateScale(12),
                 color: Colors.tertiary,
                 letterSpacing: 0.5,
               }}
@@ -168,10 +169,10 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
           <Text
             style={{
               fontFamily: Fonts.notoSerifKannada.regular,
-              fontSize: 22,
+              fontSize: moderateScale(22),
               color: Colors.primaryContainer,
-              lineHeight: 36,
-              paddingTop: 4,
+              lineHeight: moderateScale(36),
+              paddingTop: Spacing.xs,
             }}
           >
             {driver.kannada}
@@ -179,7 +180,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
           <Text
             style={{
               fontFamily: Fonts.lora.italic,
-              fontSize: 14,
+              fontSize: moderateScale(14),
               color: Colors.tertiary,
               marginTop: Spacing.xs,
             }}
@@ -192,7 +193,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
           <Text
             style={{
               fontFamily: Fonts.dmSans.regular,
-              fontSize: 13,
+              fontSize: moderateScale(13),
               color: Colors.onSurface,
               marginTop: Spacing.sm,
             }}
@@ -211,14 +212,14 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
               borderRadius: Radius.md,
               paddingVertical: Spacing.sm,
               paddingHorizontal: Spacing.md,
-              minHeight: 44,
+              minHeight: moderateScale(44),
               flexDirection: 'row',
               alignItems: 'center',
               gap: Spacing.sm,
             })}
           >
             <Icons.audio size={16} color={Colors.onSecondaryContainer} />
-            <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 13, color: Colors.onSecondaryContainer }}>
+            <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(13), color: Colors.onSecondaryContainer }}>
               Hear again
             </Text>
           </Pressable>
@@ -228,7 +229,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: 15,
+            fontSize: moderateScale(15),
             color: Colors.onSurface,
             marginBottom: Spacing.sm,
           }}
@@ -242,7 +243,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
             flexDirection: 'row',
             backgroundColor: Colors.surfaceContainerHigh,
             borderRadius: Radius.md,
-            padding: 4,
+            padding: Spacing.xs,
             marginTop: Spacing.sm,
             marginBottom: Spacing.sm,
           }}
@@ -261,7 +262,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
                   backgroundColor: active ? Colors.surfaceContainerHighest : 'transparent',
                   borderRadius: Radius.sm,
                   paddingVertical: Spacing.sm,
-                  minHeight: 36,
+                  minHeight: moderateScale(36),
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
@@ -269,7 +270,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
                 <Text
                   style={{
                     fontFamily: Fonts.dmSans.medium,
-                    fontSize: 13,
+                    fontSize: moderateScale(13),
                     color: active ? Colors.onSurface : Colors.tertiary,
                   }}
                 >
@@ -298,12 +299,12 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
           onPress={() => setRevealed((r) => !r)}
           accessibilityRole="button"
           accessibilityLabel={revealed ? 'Hide answer' : 'Reveal answer'}
-          style={{ marginTop: Spacing.lg, alignSelf: 'center', minHeight: 44, justifyContent: 'center', paddingHorizontal: Spacing.md }}
+          style={{ marginTop: Spacing.lg, alignSelf: 'center', minHeight: moderateScale(44), justifyContent: 'center', paddingHorizontal: Spacing.md }}
         >
           <Text
             style={{
               fontFamily: Fonts.dmSans.medium,
-              fontSize: 13,
+              fontSize: moderateScale(13),
               color: Colors.primaryContainer,
               textDecorationLine: 'underline',
             }}
@@ -324,10 +325,10 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
             <Text
               style={{
                 fontFamily: Fonts.notoSerifKannada.regular,
-                fontSize: 22,
+                fontSize: moderateScale(22),
                 color: Colors.primaryContainer,
-                lineHeight: 36,
-                paddingTop: 4,
+                lineHeight: moderateScale(36),
+                paddingTop: Spacing.xs,
               }}
             >
               {expected.kannada}
@@ -335,7 +336,7 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
             <Text
               style={{
                 fontFamily: Fonts.lora.italic,
-                fontSize: 14,
+                fontSize: moderateScale(14),
                 color: Colors.onSecondaryContainer,
                 marginTop: Spacing.xs,
               }}
@@ -362,14 +363,14 @@ export function OutputPhase({ lesson, onAdvance }: OutputPhaseProps) {
                 ? Colors.primary
                 : Colors.primaryContainer,
             borderRadius: Radius.md,
-            paddingVertical: Spacing.md + 2,
-            minHeight: 44,
+            paddingVertical: Spacing.md + moderateScale(2),
+            minHeight: moderateScale(44),
             alignItems: 'center',
             justifyContent: 'center',
             transform: [{ scale: pressed && canAdvance ? 0.96 : 1 }],
           })}
         >
-          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 15, color: Colors.onPrimary }}>
+          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(15), color: Colors.onPrimary }}>
             I'm done →
           </Text>
         </Pressable>

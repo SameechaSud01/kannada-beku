@@ -2,9 +2,10 @@ import { useMemo, useState } from 'react';
 import { View, Text, ScrollView, Pressable, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
-import { Radius } from '../../constants/spacing';
+import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { useCompletedLessons } from '../../hooks/progress';
 import { LESSONS } from '../../constants/lessons';
@@ -52,17 +53,17 @@ export default function GameDetailScreen() {
         style={{
           flex: 1,
           backgroundColor: Colors.surface,
-          paddingTop: insets.top + 32,
-          paddingHorizontal: 24,
+          paddingTop: insets.top + Spacing.xxxl,
+          paddingHorizontal: Spacing.xxl,
           alignItems: 'center',
         }}
       >
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: 18,
+            fontSize: moderateScale(18),
             color: Colors.onSurface,
-            marginBottom: 8,
+            marginBottom: Spacing.sm,
           }}
         >
           Game not found
@@ -71,9 +72,9 @@ export default function GameDetailScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.medium,
-              fontSize: 14,
+              fontSize: moderateScale(14),
               color: Colors.primary,
-              paddingVertical: 12,
+              paddingVertical: Spacing.md,
             }}
           >
             ← Back
@@ -105,12 +106,12 @@ export default function GameDetailScreen() {
       {/* Header */}
       <View
         style={{
-          paddingTop: insets.top + 8,
-          paddingBottom: 12,
-          paddingHorizontal: 24,
+          paddingTop: insets.top + Spacing.sm,
+          paddingBottom: Spacing.md,
+          paddingHorizontal: Spacing.xxl,
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 14,
+          gap: moderateScale(14),
         }}
       >
         <Pressable
@@ -119,8 +120,8 @@ export default function GameDetailScreen() {
           accessibilityLabel="Back"
           hitSlop={12}
           style={({ pressed }) => ({
-            width: 40,
-            height: 40,
+            width: moderateScale(40),
+            height: moderateScale(40),
             borderRadius: Radius.full,
             backgroundColor: Colors.surfaceContainerHighest,
             alignItems: 'center',
@@ -133,7 +134,7 @@ export default function GameDetailScreen() {
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: 20,
+            fontSize: moderateScale(20),
             color: Colors.onSurface,
             letterSpacing: -0.3,
           }}
@@ -145,16 +146,16 @@ export default function GameDetailScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 120 + insets.bottom }}
+        contentContainerStyle={{ paddingBottom: moderateScale(120) + insets.bottom }}
       >
-        <View style={{ paddingHorizontal: 24, paddingTop: 12 }}>
+        <View style={{ paddingHorizontal: Spacing.xxl, paddingTop: Spacing.md }}>
           <Text
             style={{
               fontFamily: Fonts.dmSans.regular,
-              fontSize: 14,
+              fontSize: moderateScale(14),
               color: Colors.tertiary,
-              lineHeight: 20,
-              marginBottom: 28,
+              lineHeight: moderateScale(20),
+              marginBottom: moderateScale(28),
             }}
             maxFontSizeMultiplier={1.4}
           >
@@ -166,15 +167,15 @@ export default function GameDetailScreen() {
               style={{
                 backgroundColor: Colors.surfaceContainerHighest,
                 borderRadius: Radius.lg,
-                padding: 20,
+                padding: Spacing.xl,
               }}
             >
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.medium,
-                  fontSize: 14,
+                  fontSize: moderateScale(14),
                   color: Colors.onSurface,
-                  marginBottom: 6,
+                  marginBottom: moderateScale(6),
                 }}
               >
                 No lessons completed yet
@@ -182,16 +183,16 @@ export default function GameDetailScreen() {
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.regular,
-                  fontSize: 13,
+                  fontSize: moderateScale(13),
                   color: Colors.tertiary,
-                  lineHeight: 18,
+                  lineHeight: moderateScale(18),
                 }}
               >
                 Finish Lesson 1 to start practicing here.
               </Text>
             </View>
           ) : (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: moderateScale(10) }}>
               {completedSlots.map((slot) => {
                 const isSelected = selected.has(slot.lessonId);
                 return (
@@ -204,11 +205,11 @@ export default function GameDetailScreen() {
                     style={({ pressed }) => ({
                       flexDirection: 'row',
                       alignItems: 'center',
-                      gap: 8,
-                      paddingVertical: 10,
-                      paddingHorizontal: 14,
+                      gap: Spacing.sm,
+                      paddingVertical: moderateScale(10),
+                      paddingHorizontal: moderateScale(14),
                       borderRadius: Radius.full,
-                      minHeight: 44,
+                      minHeight: moderateScale(44),
                       backgroundColor: isSelected
                         ? Colors.secondaryFixed
                         : Colors.surfaceContainerHigh,
@@ -218,9 +219,9 @@ export default function GameDetailScreen() {
                     <Text
                       style={{
                         fontFamily: Fonts.notoSerifKannada.bold,
-                        fontSize: 18,
-                        lineHeight: 26,
-                        paddingTop: 2,
+                        fontSize: moderateScale(18),
+                        lineHeight: moderateScale(26),
+                        paddingTop: moderateScale(2),
                         color: isSelected
                           ? Colors.onSecondaryContainer
                           : Colors.primary,
@@ -232,7 +233,7 @@ export default function GameDetailScreen() {
                     <Text
                       style={{
                         fontFamily: Fonts.dmSans.bold,
-                        fontSize: 13,
+                        fontSize: moderateScale(13),
                         color: isSelected
                           ? Colors.onSecondaryContainer
                           : Colors.onSurface,
@@ -257,9 +258,9 @@ export default function GameDetailScreen() {
             left: 0,
             right: 0,
             bottom: 0,
-            paddingHorizontal: 24,
-            paddingTop: 12,
-            paddingBottom: 12 + insets.bottom,
+            paddingHorizontal: Spacing.xxl,
+            paddingTop: Spacing.md,
+            paddingBottom: Spacing.md + insets.bottom,
             backgroundColor: Colors.surface,
             elevation: 8,
             zIndex: 10,
@@ -278,7 +279,7 @@ export default function GameDetailScreen() {
               backgroundColor:
                 selected.size === 0 ? Colors.surfaceDim : Colors.primary,
               borderRadius: Radius.lg,
-              paddingVertical: 16,
+              paddingVertical: Spacing.lg,
               alignItems: 'center',
               transform: [{ scale: pressed && selected.size > 0 ? 0.98 : 1 }],
             })}
@@ -286,7 +287,7 @@ export default function GameDetailScreen() {
             <Text
               style={{
                 fontFamily: Fonts.dmSans.bold,
-                fontSize: 16,
+                fontSize: moderateScale(16),
                 color: selected.size === 0 ? Colors.tertiary : Colors.onPrimary,
                 letterSpacing: 0.2,
               }}

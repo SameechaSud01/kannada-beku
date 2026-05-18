@@ -1,5 +1,6 @@
 import { View, Text, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
@@ -27,9 +28,9 @@ export function IntakeFooter({ canAdvance, onAdvance, isLastPhrase }: IntakeFoot
               ? Colors.primary
               : Colors.primaryContainer,
           borderRadius: Radius.md,
-          paddingVertical: Spacing.md + 2,
+          paddingVertical: Spacing.md + moderateScale(2),
           alignItems: 'center',
-          minHeight: 44,
+          minHeight: moderateScale(44),
           justifyContent: 'center',
           transform: [{ scale: pressed && canAdvance ? 0.96 : 1 }],
         })}
@@ -37,7 +38,7 @@ export function IntakeFooter({ canAdvance, onAdvance, isLastPhrase }: IntakeFoot
         <Text
           style={{
             fontFamily: Fonts.dmSans.medium,
-            fontSize: 15,
+            fontSize: moderateScale(15),
             color: Colors.onPrimary,
           }}
         >

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing } from '../../../constants/spacing';
@@ -130,7 +131,7 @@ function DrillDataError({ reason }: { reason: string }) {
       <Text
         style={{
           fontFamily: Fonts.dmSans.bold,
-          fontSize: 18,
+          fontSize: moderateScale(18),
           color: Colors.onSurface,
           marginBottom: Spacing.sm,
         }}
@@ -140,7 +141,7 @@ function DrillDataError({ reason }: { reason: string }) {
       <Text
         style={{
           fontFamily: Fonts.dmSans.regular,
-          fontSize: 13,
+          fontSize: moderateScale(13),
           color: Colors.tertiary,
           textAlign: 'center',
         }}

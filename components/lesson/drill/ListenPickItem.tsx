@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, Pressable, Animated, ScrollView } from 'react-native';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
@@ -91,8 +92,8 @@ export function ListenPickItem({ target, distractors, onResolve }: ListenPickIte
             alignSelf: 'center',
             backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
             borderRadius: Radius.full,
-            width: 84,
-            height: 84,
+            width: moderateScale(84),
+            height: moderateScale(84),
             alignItems: 'center',
             justifyContent: 'center',
             marginBottom: Spacing.lg,
@@ -105,7 +106,7 @@ export function ListenPickItem({ target, distractors, onResolve }: ListenPickIte
         <Text
           style={{
             fontFamily: Fonts.dmSans.medium,
-            fontSize: 14,
+            fontSize: moderateScale(14),
             color: Colors.tertiary,
             textAlign: 'center',
             marginBottom: Spacing.xl,
@@ -143,12 +144,12 @@ export function ListenPickItem({ target, distractors, onResolve }: ListenPickIte
                         : pressed
                           ? Colors.surfaceContainerHigh
                           : Colors.surfaceContainerHighest,
-                    borderWidth: showRight || showWrong ? 2 : 1,
+                    borderWidth: showRight || showWrong ? moderateScale(2) : moderateScale(1),
                     borderColor: showRight || showWrong ? Colors.primaryContainer : Colors.outlineVariant,
                     borderRadius: Radius.lg,
-                    paddingVertical: Spacing.md + 2,
+                    paddingVertical: Spacing.md + moderateScale(2),
                     paddingHorizontal: Spacing.lg,
-                    minHeight: 56,
+                    minHeight: moderateScale(56),
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
@@ -157,7 +158,7 @@ export function ListenPickItem({ target, distractors, onResolve }: ListenPickIte
                   <Text
                     style={{
                       fontFamily: Fonts.lora.italic,
-                      fontSize: 17,
+                      fontSize: moderateScale(17),
                       color: showWrong ? Colors.tertiary : Colors.onSurface,
                       flexShrink: 1,
                     }}
@@ -193,7 +194,7 @@ export function ListenPickItem({ target, distractors, onResolve }: ListenPickIte
             <Text
               style={{
                 fontFamily: Fonts.dmSans.medium,
-                fontSize: 13,
+                fontSize: moderateScale(13),
                 color: Colors.primaryContainer,
               }}
             >

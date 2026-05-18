@@ -1,4 +1,5 @@
 import { View, Text, Pressable } from 'react-native';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
@@ -32,8 +33,8 @@ export function AudioControls({ phrase }: AudioControlsProps) {
           borderRadius: Radius.md,
           paddingVertical: Spacing.md,
           paddingHorizontal: Spacing.xl,
-          minHeight: 44,
-          minWidth: 44,
+          minHeight: moderateScale(44),
+          minWidth: moderateScale(44),
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
@@ -41,7 +42,7 @@ export function AudioControls({ phrase }: AudioControlsProps) {
         })}
       >
         <Icons.audio size={18} color={Colors.onSecondaryContainer} />
-        <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 14, color: Colors.onSecondaryContainer }}>
+        <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(14), color: Colors.onSecondaryContainer }}>
           Hear again
         </Text>
       </Pressable>

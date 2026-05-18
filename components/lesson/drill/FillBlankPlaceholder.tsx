@@ -1,5 +1,6 @@
 import { View, Text, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
@@ -24,7 +25,7 @@ export function FillBlankPlaceholder({ onSkip }: FillBlankPlaceholderProps) {
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: 18,
+            fontSize: moderateScale(18),
             color: Colors.onSurface,
             marginBottom: Spacing.sm,
             textAlign: 'center',
@@ -35,7 +36,7 @@ export function FillBlankPlaceholder({ onSkip }: FillBlankPlaceholderProps) {
         <Text
           style={{
             fontFamily: Fonts.dmSans.regular,
-            fontSize: 13,
+            fontSize: moderateScale(13),
             color: Colors.tertiary,
             textAlign: 'center',
           }}
@@ -52,14 +53,14 @@ export function FillBlankPlaceholder({ onSkip }: FillBlankPlaceholderProps) {
           style={({ pressed }) => ({
             backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
             borderRadius: Radius.md,
-            paddingVertical: Spacing.md + 2,
-            minHeight: 44,
+            paddingVertical: Spacing.md + moderateScale(2),
+            minHeight: moderateScale(44),
             alignItems: 'center',
             justifyContent: 'center',
             transform: [{ scale: pressed ? 0.96 : 1 }],
           })}
         >
-          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 15, color: Colors.onPrimary }}>
+          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(15), color: Colors.onPrimary }}>
             Skip this question →
           </Text>
         </Pressable>

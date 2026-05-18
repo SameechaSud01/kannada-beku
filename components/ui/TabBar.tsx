@@ -1,4 +1,5 @@
 import { View, Text, Pressable } from 'react-native';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
@@ -63,8 +64,8 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
           >
             <View
               style={{
-                width: 36,
-                height: 36,
+                width: moderateScale(36),
+                height: moderateScale(36),
                 borderRadius: Radius.sm,
                 backgroundColor: isFocused ? Colors.primaryContainer : 'transparent',
                 alignItems: 'center',
@@ -76,7 +77,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
             <Text
               style={{
                 fontFamily: isFocused ? Fonts.dmSans.bold : Fonts.dmSans.regular,
-                fontSize: 10,
+                fontSize: moderateScale(10),
                 color,
               }}
             >

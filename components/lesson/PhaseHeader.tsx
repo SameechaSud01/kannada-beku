@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing } from '../../constants/spacing';
@@ -41,7 +42,7 @@ export function PhaseHeader({ phase, intakeProgress, drillProgress }: PhaseHeade
         <Text
           style={{
             fontFamily: Fonts.dmSans.medium,
-            fontSize: 12,
+            fontSize: moderateScale(12),
             color: Colors.tertiary,
             textAlign: 'center',
             marginTop: Spacing.md,

@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
+import { Spacing } from '../../constants/spacing';
 import { ProgressDots } from '../../components/onboarding/ProgressDots';
 import { OptionCard } from '../../components/onboarding/OptionCard';
 import { useUserStore } from '../../stores/useUserStore';
@@ -41,9 +43,9 @@ export default function MotivationScreen() {
       style={{
         flex: 1,
         backgroundColor: '#FBFBE2',
-        paddingTop: insets.top + 20,
-        paddingBottom: insets.bottom + 20,
-        paddingHorizontal: 24,
+        paddingTop: insets.top + Spacing.xl,
+        paddingBottom: insets.bottom + Spacing.xl,
+        paddingHorizontal: Spacing.xxl,
       }}
     >
       <ProgressDots total={4} current={2} />
@@ -52,11 +54,11 @@ export default function MotivationScreen() {
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: 11,
+            fontSize: moderateScale(11),
             letterSpacing: 2,
             color: '#464646',
             textTransform: 'uppercase',
-            marginBottom: 8,
+            marginBottom: Spacing.sm,
           }}
         >
           Step 2 of 3
@@ -64,9 +66,9 @@ export default function MotivationScreen() {
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: 28,
+            fontSize: moderateScale(28),
             color: '#1B1D0E',
-            marginBottom: 8,
+            marginBottom: Spacing.sm,
           }}
         >
           Why are you learning{'\n'}Kannada?
@@ -74,15 +76,15 @@ export default function MotivationScreen() {
         <Text
           style={{
             fontFamily: Fonts.dmSans.regular,
-            fontSize: 15,
+            fontSize: moderateScale(15),
             color: '#464646',
-            marginBottom: 24,
+            marginBottom: Spacing.xxl,
           }}
         >
           Pick up to {MAX_SELECTIONS} ({selected.length}/{MAX_SELECTIONS} selected)
         </Text>
 
-        <View style={{ gap: 10 }}>
+        <View style={{ gap: moderateScale(10) }}>
           {MOTIVATIONS.map((motivation) => (
             <OptionCard
               key={motivation}
@@ -94,19 +96,19 @@ export default function MotivationScreen() {
         </View>
       </View>
 
-      <View style={{ flexDirection: 'row', gap: 12, marginTop: 20 }}>
+      <View style={{ flexDirection: 'row', gap: Spacing.md, marginTop: Spacing.xl }}>
         <Pressable
           onPress={() => router.back()}
           style={({ pressed }) => ({
             flex: 1,
             backgroundColor: '#E4E4CC',
-            borderRadius: 16,
-            paddingVertical: 18,
+            borderRadius: moderateScale(16),
+            paddingVertical: moderateScale(18),
             alignItems: 'center',
             transform: [{ scale: pressed ? 0.97 : 1 }],
           })}
         >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 16, color: '#1B1D0E' }}>
+          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: '#1B1D0E' }}>
             Back
           </Text>
         </Pressable>
@@ -120,13 +122,13 @@ export default function MotivationScreen() {
           style={({ pressed }) => ({
             flex: 2,
             backgroundColor: selected.length > 0 ? (pressed ? '#8D0020' : Colors.primaryContainer) : '#C8C4B0',
-            borderRadius: 16,
-            paddingVertical: 18,
+            borderRadius: moderateScale(16),
+            paddingVertical: moderateScale(18),
             alignItems: 'center',
             transform: [{ scale: pressed && selected.length > 0 ? 0.97 : 1 }],
           })}
         >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 16, color: '#FFFFFF' }}>
+          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: '#FFFFFF' }}>
             Continue
           </Text>
         </Pressable>

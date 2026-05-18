@@ -1,9 +1,10 @@
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../constants/colors';
 import { Fonts } from '../constants/fonts';
-import { Radius } from '../constants/spacing';
+import { Spacing, Radius } from '../constants/spacing';
 import { Icons } from '../constants/icons';
 import { deviceTtsAudioService } from '../services/audio/deviceTtsAudioService';
 import emergencyData from '../data/emergency.json';
@@ -50,12 +51,12 @@ export default function EmergencyScreen() {
       {/* Header — back arrow + title, no hamburger, no tab bar change */}
       <View
         style={{
-          paddingTop: insets.top + 8,
-          paddingBottom: 12,
-          paddingHorizontal: 24,
+          paddingTop: insets.top + Spacing.sm,
+          paddingBottom: Spacing.md,
+          paddingHorizontal: Spacing.xxl,
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 14,
+          gap: moderateScale(14),
         }}
       >
         <Pressable
@@ -64,8 +65,8 @@ export default function EmergencyScreen() {
           accessibilityLabel="Back"
           hitSlop={12}
           style={({ pressed }) => ({
-            width: 40,
-            height: 40,
+            width: moderateScale(40),
+            height: moderateScale(40),
             borderRadius: Radius.full,
             backgroundColor: Colors.surfaceContainerHighest,
             alignItems: 'center',
@@ -78,7 +79,7 @@ export default function EmergencyScreen() {
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: 20,
+            fontSize: moderateScale(20),
             color: Colors.onSurface,
             letterSpacing: -0.3,
           }}
@@ -89,20 +90,20 @@ export default function EmergencyScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 40 + insets.bottom }}
+        contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
       >
-        <View style={{ paddingHorizontal: 24, paddingTop: 12 }}>
+        <View style={{ paddingHorizontal: Spacing.xxl, paddingTop: Spacing.md }}>
           <Text
             style={{
               fontFamily: Fonts.dmSans.regular,
-              fontSize: 14,
+              fontSize: moderateScale(14),
               color: Colors.tertiary,
-              lineHeight: 20,
-              marginBottom: 28,
+              lineHeight: moderateScale(20),
+              marginBottom: moderateScale(28),
             }}
           >
             Survival phrases for the auto, shop & street. Works offline.{'\n'}
-            <Text style={{ fontFamily: Fonts.lora.italic, fontSize: 12 }}>
+            <Text style={{ fontFamily: Fonts.lora.italic, fontSize: moderateScale(12) }}>
               [Unverified — pending Kannada-speaker review]
             </Text>
           </Text>
@@ -111,7 +112,7 @@ export default function EmergencyScreen() {
             <View
               key={group.id}
               style={{
-                marginBottom: gi === GROUPS.length - 1 ? 0 : 28,
+                marginBottom: gi === GROUPS.length - 1 ? 0 : moderateScale(28),
               }}
             >
               {/* Group label */}
@@ -119,15 +120,15 @@ export default function EmergencyScreen() {
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  gap: 10,
-                  marginBottom: 14,
-                  paddingHorizontal: 4,
+                  gap: moderateScale(10),
+                  marginBottom: moderateScale(14),
+                  paddingHorizontal: Spacing.xs,
                 }}
               >
                 <View
                   style={{
-                    width: 28,
-                    height: 28,
+                    width: moderateScale(28),
+                    height: moderateScale(28),
                     borderRadius: Radius.sm,
                     backgroundColor: Colors.surfaceContainerHigh,
                     alignItems: 'center',
@@ -139,7 +140,7 @@ export default function EmergencyScreen() {
                 <Text
                   style={{
                     fontFamily: Fonts.dmSans.bold,
-                    fontSize: 12,
+                    fontSize: moderateScale(12),
                     letterSpacing: 2,
                     color: Colors.tertiary,
                     textTransform: 'uppercase',
@@ -163,8 +164,8 @@ export default function EmergencyScreen() {
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
-                      paddingVertical: 14,
-                      paddingHorizontal: 16,
+                      paddingVertical: moderateScale(14),
+                      paddingHorizontal: Spacing.lg,
                       // surface shift acts as separator (§2 No-Line)
                       backgroundColor:
                         idx % 2 === 0
@@ -172,14 +173,14 @@ export default function EmergencyScreen() {
                           : Colors.surfaceContainerHigh,
                     }}
                   >
-                    <View style={{ flex: 1, paddingRight: 14 }}>
+                    <View style={{ flex: 1, paddingRight: moderateScale(14) }}>
                       <Text
                         style={{
                           fontFamily: Fonts.notoSerifKannada.bold,
-                          fontSize: 22,
-                          lineHeight: 34,
+                          fontSize: moderateScale(22),
+                          lineHeight: moderateScale(34),
                           color: Colors.primary,
-                          marginBottom: 2,
+                          marginBottom: moderateScale(2),
                         }}
                         maxFontSizeMultiplier={1.4}
                       >
@@ -188,9 +189,9 @@ export default function EmergencyScreen() {
                       <Text
                         style={{
                           fontFamily: Fonts.lora.italic,
-                          fontSize: 13,
+                          fontSize: moderateScale(13),
                           color: Colors.tertiary,
-                          lineHeight: 18,
+                          lineHeight: moderateScale(18),
                         }}
                         maxFontSizeMultiplier={1.4}
                       >
@@ -203,8 +204,8 @@ export default function EmergencyScreen() {
                       accessibilityLabel={`Listen: ${item.en}`}
                       hitSlop={8}
                       style={({ pressed }) => ({
-                        width: 44,
-                        height: 44,
+                        width: moderateScale(44),
+                        height: moderateScale(44),
                         borderRadius: Radius.full,
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -222,10 +223,10 @@ export default function EmergencyScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.regular,
-              fontSize: 12,
+              fontSize: moderateScale(12),
               color: Colors.tertiary,
               textAlign: 'center',
-              marginTop: 28,
+              marginTop: moderateScale(28),
             }}
           >
             Works offline. Audio uses your device&apos;s voice.
