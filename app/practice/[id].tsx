@@ -89,6 +89,10 @@ export default function GameDetailScreen() {
       router.push('/opposites');
       return;
     }
+    if (id === 'dictation') {
+      router.push('/dictation');
+      return;
+    }
     // Other game runners not yet implemented.
     Alert.alert(
       'Round queued',
@@ -257,6 +261,10 @@ export default function GameDetailScreen() {
             paddingTop: 12,
             paddingBottom: 12 + insets.bottom,
             backgroundColor: Colors.surface,
+            elevation: 8,
+            zIndex: 10,
+            borderTopWidth: 1,
+            borderTopColor: Colors.surfaceContainerHigh,
           }}
         >
           <Pressable
@@ -279,14 +287,14 @@ export default function GameDetailScreen() {
               style={{
                 fontFamily: Fonts.dmSans.bold,
                 fontSize: 16,
-                color: selected.size === 0 ? Colors.tertiary : Colors.surface,
+                color: selected.size === 0 ? Colors.tertiary : Colors.onPrimary,
                 letterSpacing: 0.2,
               }}
               maxFontSizeMultiplier={1.2}
             >
               {selected.size === 0
                 ? 'Select at least one lesson'
-                : `Start round · ${selected.size} lesson${selected.size === 1 ? '' : 's'}`}
+                : 'Start Game'}
             </Text>
           </Pressable>
         </View>
