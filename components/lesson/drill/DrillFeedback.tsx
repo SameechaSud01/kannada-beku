@@ -1,5 +1,6 @@
 import { View, Text, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
@@ -53,8 +54,8 @@ export function DrillFeedback({ result, correctPhrase, onContinue }: DrillFeedba
           borderRadius: Radius.md,
           paddingVertical: Spacing.md,
           paddingHorizontal: Spacing.lg,
-          minHeight: 44,
-          minWidth: 44,
+          minHeight: moderateScale(44),
+          minWidth: moderateScale(44),
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
@@ -62,7 +63,7 @@ export function DrillFeedback({ result, correctPhrase, onContinue }: DrillFeedba
         })}
       >
         <Icons.audio size={16} color={Colors.onSecondaryContainer} />
-        <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 13, color: Colors.onSecondaryContainer }}>
+        <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(13), color: Colors.onSecondaryContainer }}>
           Hear again
         </Text>
       </Pressable>
@@ -75,14 +76,14 @@ export function DrillFeedback({ result, correctPhrase, onContinue }: DrillFeedba
           flex: 1,
           backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
           borderRadius: Radius.md,
-          paddingVertical: Spacing.md + 2,
-          minHeight: 44,
+          paddingVertical: Spacing.md + moderateScale(2),
+          minHeight: moderateScale(44),
           alignItems: 'center',
           justifyContent: 'center',
           transform: [{ scale: pressed ? 0.96 : 1 }],
         })}
       >
-        <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 15, color: Colors.onPrimary }}>
+        <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(15), color: Colors.onPrimary }}>
           Continue →
         </Text>
       </Pressable>

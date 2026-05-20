@@ -1,4 +1,5 @@
 import { View, Text, Pressable, Image } from 'react-native';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
@@ -29,7 +30,7 @@ export function PhraseDisplay({ phrase, hintRevealed, onRevealHint }: PhraseDisp
           source={imageSource}
           style={{
             width: '100%',
-            height: 140,
+            height: moderateScale(140),
             borderRadius: Radius.lg,
             marginBottom: Spacing.lg,
           }}
@@ -40,7 +41,7 @@ export function PhraseDisplay({ phrase, hintRevealed, onRevealHint }: PhraseDisp
         <View
           style={{
             width: '100%',
-            height: 140,
+            height: moderateScale(140),
             borderRadius: Radius.lg,
             backgroundColor: Colors.secondaryFixed,
             alignItems: 'center',
@@ -52,10 +53,10 @@ export function PhraseDisplay({ phrase, hintRevealed, onRevealHint }: PhraseDisp
           <Text
             style={{
               fontFamily: Fonts.notoSerifKannada.regular,
-              fontSize: 28,
+              fontSize: moderateScale(28),
               color: Colors.onSecondaryContainer,
               textAlign: 'center',
-              lineHeight: 44,
+              lineHeight: moderateScale(44),
             }}
           >
             {phrase.kannada}
@@ -66,11 +67,11 @@ export function PhraseDisplay({ phrase, hintRevealed, onRevealHint }: PhraseDisp
       <Text
         style={{
           fontFamily: Fonts.notoSerifKannada.regular,
-          fontSize: 34,
+          fontSize: moderateScale(34),
           color: Colors.primaryContainer,
           textAlign: 'center',
-          lineHeight: 54,
-          paddingTop: 8,
+          lineHeight: moderateScale(54),
+          paddingTop: Spacing.sm,
           marginBottom: Spacing.md,
         }}
         accessibilityLabel={`Kannada: ${phrase.kannada}`}
@@ -81,7 +82,7 @@ export function PhraseDisplay({ phrase, hintRevealed, onRevealHint }: PhraseDisp
       <Text
         style={{
           fontFamily: Fonts.lora.italic,
-          fontSize: 15,
+          fontSize: moderateScale(15),
           color: Colors.tertiary,
           textAlign: 'center',
           marginBottom: Spacing.lg,
@@ -97,7 +98,7 @@ export function PhraseDisplay({ phrase, hintRevealed, onRevealHint }: PhraseDisp
         <Text
           style={{
             fontFamily: Fonts.dmSans.regular,
-            fontSize: 14,
+            fontSize: moderateScale(14),
             color: Colors.onSurface,
             textAlign: 'center',
             paddingVertical: Spacing.sm,
@@ -113,14 +114,14 @@ export function PhraseDisplay({ phrase, hintRevealed, onRevealHint }: PhraseDisp
           style={{
             paddingVertical: Spacing.sm,
             paddingHorizontal: Spacing.md,
-            minHeight: 44,
+            minHeight: moderateScale(44),
             justifyContent: 'center',
           }}
         >
           <Text
             style={{
               fontFamily: Fonts.dmSans.medium,
-              fontSize: 14,
+              fontSize: moderateScale(14),
               color: Colors.tertiary,
               textAlign: 'center',
             }}

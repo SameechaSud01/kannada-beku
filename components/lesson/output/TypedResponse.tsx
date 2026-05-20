@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { View, Text, TextInput } from 'react-native';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
@@ -33,12 +34,12 @@ export function TypedResponse({
           flexDirection: 'row',
           alignItems: 'center',
           backgroundColor: Colors.surfaceContainerHighest,
-          borderWidth: matched ? 2 : 1,
+          borderWidth: matched ? moderateScale(2) : moderateScale(1),
           borderColor: matched ? Colors.primaryContainer : Colors.outlineVariant,
           borderRadius: Radius.md,
           paddingHorizontal: Spacing.md,
           paddingVertical: Spacing.sm,
-          minHeight: 52,
+          minHeight: moderateScale(52),
         }}
       >
         <TextInput
@@ -52,7 +53,7 @@ export function TypedResponse({
           style={{
             flex: 1,
             fontFamily: Fonts.lora.italic,
-            fontSize: 16,
+            fontSize: moderateScale(16),
             color: Colors.onSurface,
             paddingVertical: Spacing.sm,
           }}

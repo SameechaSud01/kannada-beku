@@ -2,9 +2,10 @@ import { useEffect, useRef } from 'react';
 import { View, Text, ScrollView, Pressable, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
-import { Radius } from '../../constants/spacing';
+import { Spacing, Radius } from '../../constants/spacing';
 import { useCompletedLessons, useStreak } from '../../hooks/progress';
 import { Icons } from '../../constants/icons';
 import type { Icon as TablerIcon } from '@tabler/icons-react-native';
@@ -61,23 +62,23 @@ export default function PracticeScreen() {
       {/* APP BAR — centred wordmark, streak right (no hamburger) */}
       <View
         style={{
-          paddingTop: insets.top + 8,
-          paddingBottom: 12,
-          paddingHorizontal: 24,
+          paddingTop: insets.top + Spacing.sm,
+          paddingBottom: Spacing.md,
+          paddingHorizontal: Spacing.xxl,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
-        <View style={{ width: 56 }} />
+        <View style={{ width: moderateScale(56) }} />
         <Text
           style={{
             fontFamily: Fonts.notoSerifKannada.bold,
-            fontSize: 22,
+            fontSize: moderateScale(22),
             color: Colors.primary,
             letterSpacing: -0.3,
-            lineHeight: 36,
-            paddingTop: 4,
+            lineHeight: moderateScale(36),
+            paddingTop: Spacing.xs,
           }}
           maxFontSizeMultiplier={1.2}
         >
@@ -87,8 +88,8 @@ export default function PracticeScreen() {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            gap: 6,
-            minWidth: 56,
+            gap: moderateScale(6),
+            minWidth: moderateScale(56),
             justifyContent: 'flex-end',
           }}
           accessibilityRole="text"
@@ -98,7 +99,7 @@ export default function PracticeScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 16,
+              fontSize: moderateScale(16),
               color: Colors.onSurface,
             }}
             maxFontSizeMultiplier={1.3}
@@ -110,24 +111,24 @@ export default function PracticeScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 40 + insets.bottom }}
+        contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
       >
         {/* Phrase-pool banner (no border, surface-highest) */}
-        <View style={{ paddingHorizontal: 24, paddingTop: 12, marginBottom: 20 }}>
+        <View style={{ paddingHorizontal: Spacing.xxl, paddingTop: Spacing.md, marginBottom: Spacing.xl }}>
           <View
             style={{
               backgroundColor: Colors.surfaceContainerHighest,
               borderRadius: Radius.lg,
-              padding: 16,
+              padding: Spacing.lg,
               flexDirection: 'row',
               alignItems: 'center',
-              gap: 12,
+              gap: Spacing.md,
             }}
           >
             <View
               style={{
-                width: 36,
-                height: 36,
+                width: moderateScale(36),
+                height: moderateScale(36),
                 borderRadius: Radius.sm,
                 backgroundColor: Colors.surfaceContainerHigh,
                 alignItems: 'center',
@@ -140,8 +141,8 @@ export default function PracticeScreen() {
               style={{
                 flex: 1,
                 fontFamily: Fonts.dmSans.regular,
-                fontSize: 13,
-                lineHeight: 18,
+                fontSize: moderateScale(13),
+                lineHeight: moderateScale(18),
                 color: Colors.onSurface,
               }}
               maxFontSizeMultiplier={1.4}
@@ -152,11 +153,11 @@ export default function PracticeScreen() {
         </View>
 
         {/* Section label */}
-        <View style={{ paddingHorizontal: 24, marginBottom: 14 }}>
+        <View style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(14) }}>
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 11,
+              fontSize: moderateScale(11),
               letterSpacing: 2.5,
               color: Colors.tertiary,
               textTransform: 'uppercase',
@@ -170,8 +171,8 @@ export default function PracticeScreen() {
         {/* Game rows — entire list dimmed if completed == 0 */}
         <View
           style={{
-            paddingHorizontal: 24,
-            gap: 10,
+            paddingHorizontal: Spacing.xxl,
+            gap: moderateScale(10),
             opacity: hasUnlocked ? 1 : 0.5,
           }}
         >
@@ -189,12 +190,12 @@ export default function PracticeScreen() {
         {hasUnlocked && (
           <Text
             style={{
-              paddingHorizontal: 24,
-              marginTop: 18,
+              paddingHorizontal: Spacing.xxl,
+              marginTop: moderateScale(18),
               fontFamily: Fonts.dmSans.regular,
-              fontSize: 12,
+              fontSize: moderateScale(12),
               color: Colors.tertiary,
-              lineHeight: 18,
+              lineHeight: moderateScale(18),
             }}
             maxFontSizeMultiplier={1.4}
           >
@@ -232,16 +233,16 @@ function GameRow({
         alignItems: 'center',
         backgroundColor: Colors.surfaceContainerHighest,
         borderRadius: Radius.lg,
-        padding: 16,
-        gap: 14,
+        padding: Spacing.lg,
+        gap: moderateScale(14),
         transform: [{ scale: pressed && hasUnlocked ? 0.98 : 1 }],
       })}
     >
       {/* Icon chip */}
       <View
         style={{
-          width: 48,
-          height: 48,
+          width: moderateScale(48),
+          height: moderateScale(48),
           borderRadius: Radius.md,
           backgroundColor: Colors.surfaceContainerHigh,
           alignItems: 'center',
@@ -255,9 +256,9 @@ function GameRow({
         <Text
           style={{
             fontFamily: Fonts.dmSans.medium,
-            fontSize: 15,
+            fontSize: moderateScale(15),
             color: Colors.onSurface,
-            marginBottom: 2,
+            marginBottom: moderateScale(2),
           }}
           maxFontSizeMultiplier={1.3}
           numberOfLines={1}
@@ -267,9 +268,9 @@ function GameRow({
         <Text
           style={{
             fontFamily: Fonts.dmSans.regular,
-            fontSize: 12,
+            fontSize: moderateScale(12),
             color: Colors.tertiary,
-            lineHeight: 16,
+            lineHeight: moderateScale(16),
           }}
           numberOfLines={2}
           maxFontSizeMultiplier={1.4}
@@ -283,7 +284,7 @@ function GameRow({
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: 11,
+            fontSize: moderateScale(11),
             letterSpacing: 1.4,
             color: Colors.primary,
             textTransform: 'uppercase',

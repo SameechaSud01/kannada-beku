@@ -2,9 +2,10 @@ import { useEffect, useRef } from 'react';
 import { View, Text, ScrollView, Pressable, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
-import { Radius } from '../../constants/spacing';
+import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { useCompletedLessons, useStreak } from '../../hooks/progress';
 import { LESSONS, LESSON_ORDER } from '../../constants/lessons';
@@ -93,23 +94,23 @@ export default function LearnScreen() {
       {/* APP BAR — centred wordmark, streak right (no hamburger) */}
       <View
         style={{
-          paddingTop: insets.top + 8,
-          paddingBottom: 12,
-          paddingHorizontal: 24,
+          paddingTop: insets.top + Spacing.sm,
+          paddingBottom: Spacing.md,
+          paddingHorizontal: Spacing.xxl,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
-        <View style={{ width: 56 }} />
+        <View style={{ width: moderateScale(56) }} />
         <Text
           style={{
             fontFamily: Fonts.notoSerifKannada.bold,
-            fontSize: 22,
+            fontSize: moderateScale(22),
             color: Colors.primary,
             letterSpacing: -0.3,
-            lineHeight: 36,
-            paddingTop: 4,
+            lineHeight: moderateScale(36),
+            paddingTop: Spacing.xs,
           }}
           maxFontSizeMultiplier={1.2}
         >
@@ -119,8 +120,8 @@ export default function LearnScreen() {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            gap: 6,
-            minWidth: 56,
+            gap: moderateScale(6),
+            minWidth: moderateScale(56),
             justifyContent: 'flex-end',
           }}
           accessibilityRole="text"
@@ -130,7 +131,7 @@ export default function LearnScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 16,
+              fontSize: moderateScale(16),
               color: Colors.onSurface,
             }}
             maxFontSizeMultiplier={1.3}
@@ -142,18 +143,18 @@ export default function LearnScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 40 + insets.bottom }}
+        contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
       >
         {/* Section label + helper */}
-        <View style={{ paddingHorizontal: 24, paddingTop: 12, marginBottom: 20 }}>
+        <View style={{ paddingHorizontal: Spacing.xxl, paddingTop: Spacing.md, marginBottom: Spacing.xl }}>
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 11,
+              fontSize: moderateScale(11),
               letterSpacing: 2.5,
               color: Colors.tertiary,
               textTransform: 'uppercase',
-              marginBottom: 6,
+              marginBottom: moderateScale(6),
             }}
             maxFontSizeMultiplier={1.4}
           >
@@ -162,9 +163,9 @@ export default function LearnScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.regular,
-              fontSize: 13,
+              fontSize: moderateScale(13),
               color: Colors.tertiary,
-              lineHeight: 18,
+              lineHeight: moderateScale(18),
             }}
             maxFontSizeMultiplier={1.4}
           >
@@ -173,7 +174,7 @@ export default function LearnScreen() {
         </View>
 
         {/* 8 lesson rows */}
-        <View style={{ paddingHorizontal: 24, gap: 10 }}>
+        <View style={{ paddingHorizontal: Spacing.xxl, gap: moderateScale(10) }}>
           {rows.map((row) => (
             <LessonRowView
               key={`slot-${row.slot}`}
@@ -209,7 +210,7 @@ function LessonRowView({ row, onPress }: { row: LessonRow; onPress: () => void }
         alignItems: 'center',
         backgroundColor: cardBg,
         borderRadius: Radius.lg,
-        padding: 14,
+        padding: moderateScale(14),
         opacity: isLocked ? 0.5 : 1,
         transform: [{ scale: pressed && !isLocked ? 0.98 : 1 }],
         // Active ghost-border glow via inset shadow (No-Line rule).
@@ -230,21 +231,21 @@ function LessonRowView({ row, onPress }: { row: LessonRow; onPress: () => void }
       {/* Left tile — 46px, surface bg, Kannada char */}
       <View
         style={{
-          width: 46,
-          height: 46,
+          width: moderateScale(46),
+          height: moderateScale(46),
           borderRadius: Radius.md,
           backgroundColor: Colors.surface,
           alignItems: 'center',
           justifyContent: 'center',
-          marginRight: 14,
+          marginRight: moderateScale(14),
         }}
       >
         <Text
           style={{
             fontFamily: Fonts.notoSerifKannada.bold,
-            fontSize: 24,
-            lineHeight: 36,
-            paddingTop: 2,
+            fontSize: moderateScale(24),
+            lineHeight: moderateScale(36),
+            paddingTop: moderateScale(2),
             color: isDone ? Colors.primary : Colors.onSurface,
           }}
           maxFontSizeMultiplier={1.2}
@@ -258,9 +259,9 @@ function LessonRowView({ row, onPress }: { row: LessonRow; onPress: () => void }
         <Text
           style={{
             fontFamily: Fonts.dmSans.medium,
-            fontSize: 15,
+            fontSize: moderateScale(15),
             color: Colors.onSurface,
-            marginBottom: 3,
+            marginBottom: moderateScale(3),
           }}
           maxFontSizeMultiplier={1.3}
           numberOfLines={1}
@@ -270,9 +271,9 @@ function LessonRowView({ row, onPress }: { row: LessonRow; onPress: () => void }
         <Text
           style={{
             fontFamily: Fonts.dmSans.regular,
-            fontSize: 12,
+            fontSize: moderateScale(12),
             color: Colors.tertiary,
-            lineHeight: 16,
+            lineHeight: moderateScale(16),
           }}
           numberOfLines={2}
           maxFontSizeMultiplier={1.4}
@@ -284,21 +285,21 @@ function LessonRowView({ row, onPress }: { row: LessonRow; onPress: () => void }
       </View>
 
       {/* Right — check / Start pill / lock */}
-      <View style={{ marginLeft: 10 }}>
+      <View style={{ marginLeft: moderateScale(10) }}>
         {isDone && <Icons.lessonDone size={18} color={Colors.primary} />}
         {isActive && (
           <View
             style={{
               backgroundColor: Colors.primary,
               borderRadius: Radius.full,
-              paddingVertical: 8,
-              paddingHorizontal: 16,
+              paddingVertical: Spacing.sm,
+              paddingHorizontal: Spacing.lg,
             }}
           >
             <Text
               style={{
                 fontFamily: Fonts.dmSans.bold,
-                fontSize: 12,
+                fontSize: moderateScale(12),
                 letterSpacing: 0.5,
                 color: Colors.surface,
               }}

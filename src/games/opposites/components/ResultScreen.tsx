@@ -1,5 +1,11 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
+import { moderateScale } from 'react-native-size-matters';
+import { Colors } from '@/constants/colors';
+import { Spacing, Radius } from '@/constants/spacing';
+import { Fonts } from '@/constants/fonts';
+import { Icons } from '@/constants/icons';
 
 type Props = {
   score: number;
@@ -7,12 +13,12 @@ type Props = {
   onReplay: () => void;
 };
 
-function getEmoji(score: number, total: number): string {
+function getResultIcon(score: number, total: number) {
   const ratio = score / total;
-  if (ratio === 1) return '🎉';
-  if (ratio >= 0.7) return '😊';
-  if (ratio >= 0.4) return '😅';
-  return '📚';
+  if (ratio === 1) return Icons.lessonDone;
+  if (ratio >= 0.7) return Icons.ratingEasy;
+  if (ratio >= 0.4) return Icons.ratingOk;
+  return Icons.tabLearn;
 }
 
 function getTitle(score: number, total: number): string {
@@ -23,19 +29,114 @@ function getTitle(score: number, total: number): string {
   return 'Keep learning!';
 }
 
-const ResultScreen: React.FC<Props> = ({ score, total, onReplay }) => (
-  <View className='flex-1 items-center justify-center px-6 gap-y-4'>
-    <Text className='text-5xl'>{getEmoji(score, total)}</Text>
-    <Text className='text-xl font-bold text-gray-900'>{getTitle(score, total)}</Text>
-    <Text className='text-5xl font-bold text-emerald-600'>{score}</Text>
-    <Text className='text-sm text-gray-500'>out of {total} correct</Text>
+const ResultScreen: React.FC<Props> = ({ score, total, onReplay }) => {
+  const router = useRouter();
+  const ResultIcon = getResultIcon(score, total);
+  return (
+  <View
+    style={{
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: Spacing.xxl,
+      gap: Spacing.lg,
+    }}
+  >
+    <ResultIcon size={moderateScale(24)} color={Colors.primary} />
+    <Text
+      style={{
+        fontSize: moderateScale(20),
+        fontFamily: Fonts.dmSans.bold,
+        color: Colors.onSurface,
+      }}
+    >
+      {getTitle(score, total)}
+    </Text>
+    <Text
+      style={{
+        fontSize: moderateScale(48),
+        fontFamily: Fonts.dmSans.bold,
+        color: Colors.primary,
+      }}
+    >
+      {score}
+    </Text>
+    <Text
+      style={{
+        fontSize: moderateScale(14),
+        color: Colors.tertiary,
+        fontFamily: Fonts.dmSans.regular,
+      }}
+    >
+      out of {total} correct
+    </Text>
     <Pressable
-      className='w-full bg-emerald-600 rounded-2xl py-3.5 items-center mt-4'
+      style={{
+        width: '100%',
+        backgroundColor: Colors.primary,
+        borderRadius: Radius.xl,
+        paddingVertical: moderateScale(14),
+        alignItems: 'center',
+        marginTop: Spacing.lg,
+      }}
       onPress={onReplay}
     >
-      <Text className='text-white font-bold text-base'>Play again ▸</Text>
+      <Text
+        style={{
+          color: Colors.onPrimary,
+          fontFamily: Fonts.dmSans.bold,
+          fontSize: moderateScale(16),
+        }}
+      >
+        Play again ▸
+      </Text>
     </Pressable>
+    <View style={{ flexDirection: 'row', gap: Spacing.md, width: '100%' }}>
+      <Pressable
+        onPress={() => router.replace('/(tabs)/practice')}
+        style={({ pressed }) => ({
+          flex: 1,
+          backgroundColor: Colors.surfaceContainerHighest,
+          borderRadius: Radius.lg,
+          paddingVertical: moderateScale(14),
+          alignItems: 'center',
+          opacity: pressed ? 0.7 : 1,
+        })}
+      >
+        <Text
+          style={{
+            color: Colors.onSurface,
+            fontFamily: Fonts.dmSans.bold,
+            fontSize: moderateScale(15),
+          }}
+        >
+          Back to games
+        </Text>
+      </Pressable>
+      <Pressable
+        onPress={() => router.replace('/(tabs)/')}
+        style={({ pressed }) => ({
+          flex: 1,
+          backgroundColor: Colors.surfaceContainerHighest,
+          borderRadius: Radius.lg,
+          paddingVertical: moderateScale(14),
+          alignItems: 'center',
+          opacity: pressed ? 0.7 : 1,
+        })}
+      >
+        <Text
+          style={{
+            color: Colors.onSurface,
+            fontFamily: Fonts.dmSans.bold,
+            fontSize: moderateScale(15),
+          }}
+        >
+          Back home
+        </Text>
+      </Pressable>
+    </View>
   </View>
-);
+  );
+};
 
 export default ResultScreen;

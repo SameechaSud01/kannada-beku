@@ -2,7 +2,9 @@ import { View, Text, ScrollView, Pressable } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
+import { moderateScale } from 'react-native-size-matters';
 import { Fonts } from '../../constants/fonts';
+import { Spacing, Radius } from '../../constants/spacing';
 
 type Heritage = {
   eyebrow: string;
@@ -33,12 +35,12 @@ export default function HeritageScreen() {
 
   if (!entry) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#FBFBE2', paddingTop: insets.top + 32, paddingHorizontal: 24, alignItems: 'center' }}>
-        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 20, color: '#1B1D0E', marginBottom: 8 }}>
+      <View style={{ flex: 1, backgroundColor: '#FBFBE2', paddingTop: insets.top + Spacing.xxxl, paddingHorizontal: Spacing.xxl, alignItems: 'center' }}>
+        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(20), color: '#1B1D0E', marginBottom: Spacing.sm }}>
           Heritage entry not found
         </Text>
-        <Pressable onPress={() => router.back()} hitSlop={8} style={{ paddingVertical: 12 }}>
-          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 14, color: '#91001B' }}>
+        <Pressable onPress={() => router.back()} hitSlop={8} style={{ paddingVertical: Spacing.md }}>
+          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(14), color: '#91001B' }}>
             ← Back
           </Text>
         </Pressable>
@@ -50,13 +52,13 @@ export default function HeritageScreen() {
     <View style={{ flex: 1, backgroundColor: '#FBFBE2' }}>
       <View
         style={{
-          paddingTop: insets.top + 8,
-          paddingBottom: 12,
-          paddingHorizontal: 24,
+          paddingTop: insets.top + Spacing.sm,
+          paddingBottom: Spacing.md,
+          paddingHorizontal: Spacing.xxl,
           backgroundColor: 'rgba(251,251,226,0.85)',
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 14,
+          gap: moderateScale(14),
         }}
       >
         <Pressable
@@ -69,47 +71,47 @@ export default function HeritageScreen() {
             <Path d="M19 12H5M12 19l-7-7 7-7" stroke="#91001B" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
           </Svg>
         </Pressable>
-        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 16, color: '#1B1D0E' }}>
+        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: '#1B1D0E' }}>
           Heritage
         </Text>
       </View>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
+        contentContainerStyle={{ paddingBottom: insets.bottom + Spacing.xxxl }}
       >
         <View
           style={{
-            marginHorizontal: 24,
-            marginTop: 12,
-            height: 220,
-            borderRadius: 32,
+            marginHorizontal: Spacing.xxl,
+            marginTop: Spacing.md,
+            height: moderateScale(220),
+            borderRadius: moderateScale(32),
             overflow: 'hidden',
             backgroundColor: '#5C1A1A',
           }}
         >
           <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#7A2020', opacity: 0.6 }} />
-          <View style={{ position: 'absolute', top: 20, right: 30, width: 100, height: 160, borderRadius: 8, backgroundColor: '#A04030', opacity: 0.4 }} />
-          <View style={{ position: 'absolute', top: 30, left: 40, width: 60, height: 140, borderRadius: 6, backgroundColor: '#8B3025', opacity: 0.3 }} />
+          <View style={{ position: 'absolute', top: Spacing.xl, right: moderateScale(30), width: moderateScale(100), height: moderateScale(160), borderRadius: Radius.sm, backgroundColor: '#A04030', opacity: 0.4 }} />
+          <View style={{ position: 'absolute', top: moderateScale(30), left: moderateScale(40), width: moderateScale(60), height: moderateScale(140), borderRadius: moderateScale(6), backgroundColor: '#8B3025', opacity: 0.3 }} />
         </View>
 
-        <View style={{ paddingHorizontal: 24, paddingTop: 24 }}>
+        <View style={{ paddingHorizontal: Spacing.xxl, paddingTop: Spacing.xxl }}>
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 10,
+              fontSize: moderateScale(10),
               letterSpacing: 2.5,
               color: '#785900',
               textTransform: 'uppercase',
-              marginBottom: 8,
+              marginBottom: Spacing.sm,
             }}
           >
             {entry.eyebrow}
           </Text>
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 28, color: '#1B1D0E', letterSpacing: -0.5, marginBottom: 6 }}>
+          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(28), color: '#1B1D0E', letterSpacing: -0.5, marginBottom: moderateScale(6) }}>
             {entry.title}
           </Text>
-          <Text style={{ fontFamily: Fonts.lora.italic, fontSize: 14, color: '#464646', marginBottom: 24 }}>
+          <Text style={{ fontFamily: Fonts.lora.italic, fontSize: moderateScale(14), color: '#464646', marginBottom: Spacing.xxl }}>
             {entry.subtitle}
           </Text>
           {entry.body.map((p, i) => (
@@ -117,10 +119,10 @@ export default function HeritageScreen() {
               key={i}
               style={{
                 fontFamily: Fonts.dmSans.regular,
-                fontSize: 15,
+                fontSize: moderateScale(15),
                 color: '#1B1D0E',
-                lineHeight: 24,
-                marginBottom: 16,
+                lineHeight: moderateScale(24),
+                marginBottom: Spacing.lg,
               }}
             >
               {p}

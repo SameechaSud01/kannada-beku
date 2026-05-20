@@ -3,9 +3,10 @@ import { View, Text, ScrollView, Pressable, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
-import { Radius } from '../../constants/spacing';
+import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { LESSONS, LESSON_ORDER } from '../../constants/lessons';
@@ -76,8 +77,8 @@ export default function HomeScreen() {
   // Progress = lessons completed / 8 (Spec 01 §1)
   const completedCount = Math.min(completedLessons.length, TOTAL_LESSON_SLOTS);
   const progressPercent = Math.round((completedCount / TOTAL_LESSON_SLOTS) * 100);
-  const ringSize = 76;
-  const ringStroke = 7;
+  const ringSize = moderateScale(76);
+  const ringStroke = moderateScale(7);
   const ringR = (ringSize - ringStroke) / 2;
   const ringCirc = 2 * Math.PI * ringR;
   const ringOffset = ringCirc * (1 - completedCount / TOTAL_LESSON_SLOTS);
@@ -114,23 +115,23 @@ export default function HomeScreen() {
       {/* ── APP BAR — empty left, centred wordmark, streak right (no hamburger) ── */}
       <View
         style={{
-          paddingTop: insets.top + 8,
-          paddingBottom: 12,
-          paddingHorizontal: 24,
+          paddingTop: insets.top + Spacing.sm,
+          paddingBottom: Spacing.md,
+          paddingHorizontal: Spacing.xxl,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
-        <View style={{ width: 56 }} />
+        <View style={{ width: moderateScale(56) }} />
         <Text
           style={{
             fontFamily: Fonts.notoSerifKannada.bold,
-            fontSize: 22,
+            fontSize: moderateScale(22),
             color: Colors.primary,
             letterSpacing: -0.3,
-            lineHeight: 36,
-            paddingTop: 4,
+            lineHeight: moderateScale(36),
+            paddingTop: Spacing.xs,
           }}
           maxFontSizeMultiplier={1.2}
         >
@@ -140,8 +141,8 @@ export default function HomeScreen() {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            gap: 6,
-            minWidth: 56,
+            gap: moderateScale(6),
+            minWidth: moderateScale(56),
             justifyContent: 'flex-end',
           }}
           accessibilityRole="text"
@@ -151,7 +152,7 @@ export default function HomeScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 16,
+              fontSize: moderateScale(16),
               color: Colors.onSurface,
             }}
             maxFontSizeMultiplier={1.3}
@@ -163,17 +164,17 @@ export default function HomeScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 40 + insets.bottom }}
+        contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
       >
-        <View style={{ paddingHorizontal: 24, paddingTop: 12 }}>
+        <View style={{ paddingHorizontal: Spacing.xxl, paddingTop: Spacing.md }}>
           {/* Greeting line */}
           <Text
             style={{
               fontFamily: Fonts.dmSans.medium,
-              fontSize: 14,
+              fontSize: moderateScale(14),
               letterSpacing: 0.2,
               color: Colors.tertiary,
-              marginBottom: 24,
+              marginBottom: Spacing.xxl,
             }}
             maxFontSizeMultiplier={1.4}
           >
@@ -185,18 +186,18 @@ export default function HomeScreen() {
             style={{
               backgroundColor: Colors.surfaceContainerLow,
               borderRadius: Radius.xl,
-              padding: 24,
-              marginBottom: 16,
+              padding: Spacing.xxl,
+              marginBottom: Spacing.lg,
             }}
           >
             <Text
               style={{
                 fontFamily: Fonts.dmSans.bold,
-                fontSize: 11,
+                fontSize: moderateScale(11),
                 letterSpacing: 2,
                 color: Colors.tertiary,
                 textTransform: 'uppercase',
-                marginBottom: 14,
+                marginBottom: moderateScale(14),
               }}
               maxFontSizeMultiplier={1.4}
             >
@@ -205,10 +206,10 @@ export default function HomeScreen() {
             <Text
               style={{
                 fontFamily: Fonts.notoSerifKannada.bold,
-                fontSize: 36,
-                lineHeight: 52,
+                fontSize: moderateScale(36),
+                lineHeight: moderateScale(52),
                 color: Colors.primary,
-                marginBottom: 6,
+                marginBottom: moderateScale(6),
               }}
               maxFontSizeMultiplier={1.3}
               adjustsFontSizeToFit
@@ -219,9 +220,9 @@ export default function HomeScreen() {
             <Text
               style={{
                 fontFamily: Fonts.lora.italic,
-                fontSize: 15,
+                fontSize: moderateScale(15),
                 color: Colors.onSurface,
-                marginBottom: 4,
+                marginBottom: Spacing.xs,
               }}
               maxFontSizeMultiplier={1.4}
             >
@@ -230,9 +231,9 @@ export default function HomeScreen() {
             <Text
               style={{
                 fontFamily: Fonts.dmSans.regular,
-                fontSize: 13,
+                fontSize: moderateScale(13),
                 color: Colors.tertiary,
-                marginBottom: 14,
+                marginBottom: moderateScale(14),
               }}
               maxFontSizeMultiplier={1.4}
             >
@@ -246,8 +247,8 @@ export default function HomeScreen() {
               style={({ pressed }) => ({
                 flexDirection: 'row',
                 alignItems: 'center',
-                gap: 8,
-                minHeight: 44,
+                gap: Spacing.sm,
+                minHeight: moderateScale(44),
                 alignSelf: 'flex-start',
                 opacity: pressed ? 0.6 : 1,
               })}
@@ -256,7 +257,7 @@ export default function HomeScreen() {
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.bold,
-                  fontSize: 11,
+                  fontSize: moderateScale(11),
                   letterSpacing: 1.8,
                   color: Colors.secondary,
                   textTransform: 'uppercase',
@@ -276,11 +277,11 @@ export default function HomeScreen() {
             style={({ pressed }) => ({
               backgroundColor: Colors.surfaceContainerHighest,
               borderRadius: Radius.xl,
-              padding: 24,
-              marginBottom: 16,
+              padding: Spacing.xxl,
+              marginBottom: Spacing.lg,
               flexDirection: 'row',
               alignItems: 'center',
-              gap: 22,
+              gap: moderateScale(22),
               transform: [{ scale: pressed && nextLessonRealId ? 0.98 : 1 }],
             })}
           >
@@ -321,7 +322,7 @@ export default function HomeScreen() {
                 style={{
                   position: 'absolute',
                   fontFamily: Fonts.dmSans.bold,
-                  fontSize: 16,
+                  fontSize: moderateScale(16),
                   color: Colors.primary,
                 }}
                 maxFontSizeMultiplier={1.2}
@@ -334,11 +335,11 @@ export default function HomeScreen() {
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.bold,
-                  fontSize: 11,
+                  fontSize: moderateScale(11),
                   letterSpacing: 2,
                   color: Colors.tertiary,
                   textTransform: 'uppercase',
-                  marginBottom: 6,
+                  marginBottom: moderateScale(6),
                 }}
                 maxFontSizeMultiplier={1.4}
               >
@@ -347,9 +348,9 @@ export default function HomeScreen() {
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.bold,
-                  fontSize: 18,
+                  fontSize: moderateScale(18),
                   color: Colors.onSurface,
-                  marginBottom: 4,
+                  marginBottom: Spacing.xs,
                 }}
                 maxFontSizeMultiplier={1.3}
               >
@@ -358,9 +359,9 @@ export default function HomeScreen() {
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.regular,
-                  fontSize: 13,
+                  fontSize: moderateScale(13),
                   color: Colors.tertiary,
-                  lineHeight: 18,
+                  lineHeight: moderateScale(18),
                 }}
                 numberOfLines={2}
                 maxFontSizeMultiplier={1.4}
@@ -380,17 +381,17 @@ export default function HomeScreen() {
             style={({ pressed }) => ({
               backgroundColor: Colors.surfaceContainerHighest,
               borderRadius: Radius.xl,
-              padding: 20,
+              padding: Spacing.xl,
               flexDirection: 'row',
               alignItems: 'center',
-              gap: 16,
+              gap: Spacing.lg,
               transform: [{ scale: pressed ? 0.98 : 1 }],
             })}
           >
             <View
               style={{
-                width: 48,
-                height: 48,
+                width: moderateScale(48),
+                height: moderateScale(48),
                 borderRadius: Radius.lg,
                 backgroundColor: Colors.surfaceContainerHigh,
                 alignItems: 'center',
@@ -403,9 +404,9 @@ export default function HomeScreen() {
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.bold,
-                  fontSize: 16,
+                  fontSize: moderateScale(16),
                   color: Colors.primary,
-                  marginBottom: 2,
+                  marginBottom: moderateScale(2),
                 }}
                 maxFontSizeMultiplier={1.3}
               >
@@ -414,9 +415,9 @@ export default function HomeScreen() {
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.regular,
-                  fontSize: 13,
+                  fontSize: moderateScale(13),
                   color: Colors.tertiary,
-                  lineHeight: 18,
+                  lineHeight: moderateScale(18),
                 }}
                 numberOfLines={2}
                 maxFontSizeMultiplier={1.4}

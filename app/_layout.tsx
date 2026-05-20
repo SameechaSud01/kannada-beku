@@ -10,14 +10,13 @@ import {
   NotoSerifKannada_700Bold,
 } from '@expo-google-fonts/noto-serif-kannada';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useUserStore } from '../stores/useUserStore';
 import { useProgressStore } from '../stores/progressStore';
 import { supabase } from '../services/api/supabase';
 import { Audio } from 'expo-av';
 import { isKannadaVoiceAvailable } from '../services/audio/deviceTtsAudioService';
-
-import '../global.css';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -111,8 +110,10 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppGate />
-    </QueryClientProvider>
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <AppGate />
+      </QueryClientProvider>
+    </SafeAreaProvider>
   );
 }

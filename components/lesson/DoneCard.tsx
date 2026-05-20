@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
@@ -23,18 +24,11 @@ export function DoneCard({ lesson, drillAttempts, onClose }: DoneCardProps) {
   const totalDrills = drillAttempts.length;
   const phraseCount = lesson.intake.length;
 
-  const completedAlready = useProgressStore((s) => s.completedLessons.includes(lesson.id));
   const completeLesson = useProgressStore((s) => s.completeLesson);
   const updateStreak = useProgressStore((s) => s.updateStreak);
   const recordActivity = useProgressStore((s) => s.recordActivity);
 
   useEffect(() => {
-    // IMPORTANT: completeLesson() in progressStore over-increments xp,
-    // totalPhrasesLearned, totalMinutesPracticed on duplicate calls
-    // (only the completedLessons array is deduped at the action level).
-    // The completedAlready check above is the load-bearing guard against
-    // this bug. Do not call this useEffect without it.
-    if (completedAlready) return;
     const score = totalDrills > 0 ? Math.round((correctCount / totalDrills) * 100) : 0;
     completeLesson(lesson.id, score, phraseCount, 0);
     updateStreak();
@@ -62,10 +56,10 @@ export function DoneCard({ lesson, drillAttempts, onClose }: DoneCardProps) {
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: 24,
+            fontSize: moderateScale(24),
             color: Colors.onSurface,
             textAlign: 'center',
-            lineHeight: 32,
+            lineHeight: moderateScale(32),
             marginBottom: Spacing.xl,
           }}
         >
@@ -76,19 +70,19 @@ export function DoneCard({ lesson, drillAttempts, onClose }: DoneCardProps) {
         <View style={{ alignItems: 'flex-start', alignSelf: 'center', gap: Spacing.sm, marginBottom: Spacing.xl }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }}>
             <Icons.tabLearn size={18} color={Colors.primary} />
-            <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 15, color: Colors.onSurface }}>
+            <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(15), color: Colors.onSurface }}>
               {phraseCount} {phraseCount === 1 ? 'phrase' : 'phrases'} learned
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }}>
             <Icons.tabPractice size={18} color={Colors.primary} />
-            <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 15, color: Colors.onSurface }}>
+            <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(15), color: Colors.onSurface }}>
               {correctCount} of {totalDrills} drills correct
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }}>
             <Icons.mic size={18} color={Colors.primary} />
-            <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 15, color: Colors.onSurface }}>
+            <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(15), color: Colors.onSurface }}>
               You spoke Kannada today
             </Text>
           </View>
@@ -106,7 +100,7 @@ export function DoneCard({ lesson, drillAttempts, onClose }: DoneCardProps) {
           <Text
             style={{
               fontFamily: Fonts.dmSans.medium,
-              fontSize: 12,
+              fontSize: moderateScale(12),
               color: Colors.tertiary,
               letterSpacing: 1,
               textTransform: 'uppercase',
@@ -118,9 +112,9 @@ export function DoneCard({ lesson, drillAttempts, onClose }: DoneCardProps) {
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 17,
+              fontSize: moderateScale(17),
               color: Colors.onSecondaryContainer,
-              lineHeight: 26,
+              lineHeight: moderateScale(26),
             }}
           >
             {lesson.situation.realWorldPrompt}
@@ -140,7 +134,7 @@ export function DoneCard({ lesson, drillAttempts, onClose }: DoneCardProps) {
             <Text
               style={{
                 fontFamily: Fonts.dmSans.medium,
-                fontSize: 13,
+                fontSize: moderateScale(13),
                 color: Colors.primaryContainer,
                 textAlign: 'center',
               }}
@@ -170,8 +164,8 @@ export function DoneCard({ lesson, drillAttempts, onClose }: DoneCardProps) {
                 ? Colors.primary
                 : Colors.primaryContainer,
             borderRadius: Radius.md,
-            paddingVertical: Spacing.md + 2,
-            minHeight: 44,
+            paddingVertical: Spacing.md + moderateScale(2),
+            minHeight: moderateScale(44),
             alignItems: 'center',
             justifyContent: 'center',
             transform: [{ scale: pressed && !intentMarked ? 0.96 : 1 }],
@@ -179,7 +173,7 @@ export function DoneCard({ lesson, drillAttempts, onClose }: DoneCardProps) {
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }}>
             {intentMarked && <Icons.correct size={16} color={Colors.onPrimary} />}
-            <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 15, color: Colors.onPrimary }}>
+            <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(15), color: Colors.onPrimary }}>
               {intentMarked ? 'Committed' : "I'll try this in real life"}
             </Text>
           </View>
@@ -193,7 +187,7 @@ export function DoneCard({ lesson, drillAttempts, onClose }: DoneCardProps) {
             backgroundColor: pressed ? Colors.surfaceContainerHigh : 'transparent',
             borderRadius: Radius.md,
             paddingVertical: Spacing.md,
-            minHeight: 44,
+            minHeight: moderateScale(44),
             alignItems: 'center',
             justifyContent: 'center',
           })}
@@ -201,7 +195,7 @@ export function DoneCard({ lesson, drillAttempts, onClose }: DoneCardProps) {
           <Text
             style={{
               fontFamily: Fonts.dmSans.medium,
-              fontSize: 14,
+              fontSize: moderateScale(14),
               color: Colors.tertiary,
             }}
           >

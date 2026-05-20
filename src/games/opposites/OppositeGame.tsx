@@ -1,12 +1,17 @@
 import React from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { moderateScale } from 'react-native-size-matters';
+import { Colors } from '@/constants/colors';
+import { Spacing, Radius } from '@/constants/spacing';
+import { Fonts } from '@/constants/fonts';
 import { useGameState } from './hooks/useGameState';
 import ProgressBar from './components/ProgressBar';
 import QuestionCard from './components/QuestionCard';
 import OptionGrid from './components/OptionGrid';
 import FeedbackBanner from './components/FeedbackBanner';
 import ResultScreen from './components/ResultScreen';
+import { ExitBackButton } from '@/components/ui/ExitBackButton';
 
 const OppositeGame: React.FC = () => {
   const {
@@ -26,20 +31,52 @@ const OppositeGame: React.FC = () => {
 
   if (phase === 'result') {
     return (
-      <SafeAreaView className='flex-1 bg-white'>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
+        <ExitBackButton />
         <ResultScreen score={score} total={totalQuestions} onReplay={restart} />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className='flex-1 bg-white'>
-      <ScrollView contentContainerClassName='px-4 py-4 gap-y-4'>
-        <View className='flex-row justify-between items-center'>
-          <Text className='text-sm text-gray-500'>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
+      <ScrollView
+        contentContainerStyle={{
+          paddingHorizontal: Spacing.lg,
+          paddingVertical: Spacing.lg,
+          gap: Spacing.lg,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: Spacing.md,
+          }}
+        >
+          <ExitBackButton
+            floating={false}
+            message="Exit this game? You'll lose your progress."
+          />
+          <Text
+            style={{
+              fontSize: moderateScale(14),
+              color: Colors.tertiary,
+              fontFamily: Fonts.dmSans.regular,
+            }}
+          >
             Question {currentIndex + 1} / {totalQuestions}
           </Text>
-          <Text className='text-sm font-semibold text-gray-700'>Score {score}</Text>
+          <Text
+            style={{
+              fontSize: moderateScale(14),
+              fontFamily: Fonts.dmSans.bold,
+              color: Colors.onSurface,
+            }}
+          >
+            Score {score}
+          </Text>
         </View>
 
         <ProgressBar current={currentIndex} total={totalQuestions} />
@@ -63,10 +100,22 @@ const OppositeGame: React.FC = () => {
 
         {answerState !== 'unanswered' && (
           <Pressable
-            className='w-full bg-emerald-600 rounded-2xl py-3.5 items-center'
+            style={{
+              width: '100%',
+              backgroundColor: Colors.primary,
+              borderRadius: Radius.xl,
+              paddingVertical: moderateScale(14),
+              alignItems: 'center',
+            }}
             onPress={handleNext}
           >
-            <Text className='text-white font-bold text-base'>
+            <Text
+              style={{
+                color: Colors.onPrimary,
+                fontFamily: Fonts.dmSans.bold,
+                fontSize: moderateScale(16),
+              }}
+            >
               {currentIndex + 1 < totalQuestions ? 'Next →' : 'See results'}
             </Text>
           </Pressable>

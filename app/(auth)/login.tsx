@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Pressable, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
@@ -27,8 +28,9 @@ export default function LoginScreen() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       }
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+      Alert.alert('Error', message);
     } finally {
       setLoading(false);
     }
@@ -45,10 +47,10 @@ export default function LoginScreen() {
           <Text
             style={{
               fontFamily: Fonts.notoSerifKannada.bold,
-              fontSize: 48,
+              fontSize: moderateScale(48),
               color: Colors.primaryContainer,
-              lineHeight: 72,
-              paddingTop: 8,
+              lineHeight: moderateScale(72),
+              paddingTop: Spacing.sm,
               marginBottom: Spacing.sm,
             }}
           >
@@ -57,7 +59,7 @@ export default function LoginScreen() {
           <Text
             style={{
               fontFamily: Fonts.lora.italic,
-              fontSize: 20,
+              fontSize: moderateScale(20),
               color: Colors.primaryContainer,
             }}
           >
@@ -66,7 +68,7 @@ export default function LoginScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.regular,
-              fontSize: 14,
+              fontSize: moderateScale(14),
               color: Colors.tertiary,
               marginTop: Spacing.sm,
             }}
@@ -84,9 +86,9 @@ export default function LoginScreen() {
           keyboardType="email-address"
           style={{
             fontFamily: Fonts.dmSans.regular,
-            fontSize: 15,
+            fontSize: moderateScale(15),
             backgroundColor: Colors.surfaceContainerHighest,
-            borderWidth: 0.5,
+            borderWidth: moderateScale(0.5),
             borderColor: Colors.outlineVariant,
             borderRadius: Radius.md,
             paddingHorizontal: Spacing.lg,
@@ -104,9 +106,9 @@ export default function LoginScreen() {
           secureTextEntry
           style={{
             fontFamily: Fonts.dmSans.regular,
-            fontSize: 15,
+            fontSize: moderateScale(15),
             backgroundColor: Colors.surfaceContainerHighest,
-            borderWidth: 0.5,
+            borderWidth: moderateScale(0.5),
             borderColor: Colors.outlineVariant,
             borderRadius: Radius.md,
             paddingHorizontal: Spacing.lg,
@@ -124,7 +126,7 @@ export default function LoginScreen() {
           style={({ pressed }) => ({
             backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
             borderRadius: Radius.md,
-            paddingVertical: Spacing.md + 2,
+            paddingVertical: Spacing.md + moderateScale(2),
             alignItems: 'center',
             opacity: loading ? 0.7 : 1,
             transform: [{ scale: pressed ? 0.96 : 1 }],
@@ -133,7 +135,7 @@ export default function LoginScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: 14,
+              fontSize: moderateScale(14),
               color: Colors.onPrimary,
               letterSpacing: 0.5,
             }}
@@ -150,7 +152,7 @@ export default function LoginScreen() {
           <Text
             style={{
               fontFamily: Fonts.dmSans.regular,
-              fontSize: 13,
+              fontSize: moderateScale(13),
               color: Colors.tertiary,
             }}
           >
