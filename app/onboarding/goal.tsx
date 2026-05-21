@@ -58,7 +58,7 @@ export default function GoalScreen() {
           }}
           maxFontSizeMultiplier={1.3}
         >
-          What do you want{'\n'}to learn?
+          What do you want to learn?
         </Text>
         <Text
           style={{
@@ -110,7 +110,7 @@ export default function GoalScreen() {
           }}
           style={({ pressed }) => ({
             flex: 2,
-            backgroundColor: selected ? (pressed ? Colors.primary : Colors.primaryContainer) : '#C8C4B0',
+            backgroundColor: selected ? (pressed ? Colors.primary : Colors.primaryContainer) : Colors.surfaceDim,
             borderRadius: moderateScale(16),
             paddingVertical: moderateScale(18),
             alignItems: 'center',

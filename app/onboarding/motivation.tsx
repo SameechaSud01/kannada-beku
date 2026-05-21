@@ -29,9 +29,19 @@ const OTHER_MAX_LEN = 60;
 export default function MotivationScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [selected, setSelected] = useState<string[]>([]);
-  const [otherChecked, setOtherChecked] = useState(false);
-  const [otherText, setOtherText] = useState('');
+
+  // Seed from store so selections survive back-nav. A stored value not in the
+  // preset list is the user's previous "Other" free text — restore it as such.
+  const [selected, setSelected] = useState<string[]>(() => {
+    const stored = useUserStore.getState().motivations;
+    return stored.filter((m) => MOTIVATIONS.includes(m));
+  });
+  const initialOther = (() => {
+    const stored = useUserStore.getState().motivations;
+    return stored.find((m) => !MOTIVATIONS.includes(m)) ?? '';
+  })();
+  const [otherChecked, setOtherChecked] = useState(initialOther.length > 0);
+  const [otherText, setOtherText] = useState(initialOther);
 
   const otherTrimmed = otherText.trim();
   const filledCount = selected.length + (otherChecked && otherTrimmed.length > 0 ? 1 : 0);
@@ -41,7 +51,7 @@ export default function MotivationScreen() {
       if (prev.includes(motivation)) {
         return prev.filter((m) => m !== motivation);
       }
-      if (prev.length + (otherChecked && otherTrimmed.length > 0 ? 1 : 0) >= MAX_SELECTIONS) {
+      if (prev.length >= MAX_SELECTIONS) {
         return prev;
       }
       return [...prev, motivation];
@@ -49,13 +59,7 @@ export default function MotivationScreen() {
   };
 
   const toggleOther = () => {
-    setOtherChecked((prev) => {
-      if (prev) {
-        return false;
-      }
-      // Don't block selecting the card itself if cap reached — only the value counts.
-      return true;
-    });
+    setOtherChecked((prev) => !prev);
   };
 
   const canContinue = filledCount > 0;
@@ -66,7 +70,7 @@ export default function MotivationScreen() {
     if (otherChecked && otherTrimmed.length > 0) {
       finalList.push(otherTrimmed);
     }
-    useUserStore.setState({ motivations: finalList });
+    useUserStore.getState().setMotivations(finalList);
     router.push('/onboarding/commitment');
   };
 
@@ -166,7 +170,7 @@ export default function MotivationScreen() {
             disabled={!canContinue}
             style={({ pressed }) => ({
               flex: 2,
-              backgroundColor: canContinue ? (pressed ? Colors.primary : Colors.primaryContainer) : '#C8C4B0',
+              backgroundColor: canContinue ? (pressed ? Colors.primary : Colors.primaryContainer) : Colors.surfaceDim,
               borderRadius: moderateScale(16),
               paddingVertical: moderateScale(18),
               alignItems: 'center',

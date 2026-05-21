@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,7 +13,8 @@ import { useModal } from '../../components/modals/ModalHost';
 import { LearningTimeInfoDialog } from '../../components/modals/instances/LearningTimeInfoDialog';
 import { useUserStore } from '../../stores/useUserStore';
 import { useAuthStore } from '../../stores/useAuthStore';
-import { syncOnboardingToSupabase } from '../../services/api/onboarding';
+import { completeOnboarding } from '../../services/api/users';
+import { Toasts } from '../../components/modals/instances/toastCatalog';
 
 type Minutes = 5 | 10 | 20;
 
@@ -28,6 +29,7 @@ export default function CommitmentScreen() {
   const insets = useSafeAreaInsets();
   const modal = useModal();
   const [selected, setSelected] = useState<Minutes | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const openInfo = (minutes: Minutes) => {
     modal.show({
@@ -38,33 +40,47 @@ export default function CommitmentScreen() {
     });
   };
 
-  const handleFinish = () => {
-    if (!selected) return;
-
-    const store = useUserStore.getState();
-    const learningMode = store.learningMode ?? 'both';
-    const motivations = store.motivations.length > 0 ? store.motivations : [];
-
-    useUserStore.getState().setOnboarding({
-      learningMode,
-      motivations,
-      dailyGoalMinutes: selected,
-    });
+  const handleFinish = async () => {
+    if (!selected || submitting) return;
 
     const userId = useAuthStore.getState().user?.id;
-    if (userId) {
-      // Fire-and-forget: failure is logged inside the helper; user proceeds either way.
-      void syncOnboardingToSupabase({
-        userId,
-        name: store.displayName,
-        learningMode,
-        motivations,
-        dailyGoalMinutes: selected,
-      });
+    if (!userId) {
+      Toasts.sessionLost();
+      return;
     }
 
-    router.replace('/(tabs)');
+    const { displayName, learningMode, motivations } = useUserStore.getState();
+
+    // Defensive — the screen flow should prevent this, but if the user
+    // navigated here without completing earlier steps, route back instead
+    // of submitting incomplete answers.
+    if (!learningMode) {
+      router.replace('/onboarding/goal');
+      return;
+    }
+    if (motivations.length === 0) {
+      router.replace('/onboarding/motivation');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const row = await completeOnboarding(userId, {
+        name: displayName ?? null,
+        learning_mode: learningMode,
+        motivations,
+        daily_goal_minutes: selected,
+      });
+      useUserStore.getState().hydrateFromUserRow(row);
+      router.replace('/(tabs)');
+    } catch (err) {
+      console.warn('[onboarding] completeOnboarding failed', err);
+      Toasts.onboardingSaveFailed();
+      setSubmitting(false);
+    }
   };
+
+  const canSubmit = !!selected && !submitting;
 
   return (
     <View
@@ -132,12 +148,14 @@ export default function CommitmentScreen() {
       <View style={{ flexDirection: 'row', gap: Spacing.md }}>
         <Pressable
           onPress={() => router.back()}
+          disabled={submitting}
           style={({ pressed }) => ({
             flex: 1,
             backgroundColor: Colors.surfaceContainerHighest,
             borderRadius: moderateScale(16),
             paddingVertical: moderateScale(18),
             alignItems: 'center',
+            opacity: submitting ? 0.6 : 1,
             transform: [{ scale: pressed ? 0.97 : 1 }],
           })}
         >
@@ -147,19 +165,28 @@ export default function CommitmentScreen() {
         </Pressable>
         <Pressable
           onPress={handleFinish}
-          disabled={!selected}
+          disabled={!canSubmit}
+          accessibilityRole="button"
+          accessibilityLabel="Finish onboarding"
+          accessibilityState={{ disabled: !canSubmit, busy: submitting }}
           style={({ pressed }) => ({
             flex: 2,
-            backgroundColor: selected ? (pressed ? Colors.primary : Colors.primaryContainer) : '#C8C4B0',
+            backgroundColor: selected ? (pressed ? Colors.primary : Colors.primaryContainer) : Colors.surfaceDim,
             borderRadius: moderateScale(16),
             paddingVertical: moderateScale(18),
             alignItems: 'center',
-            transform: [{ scale: pressed && selected ? 0.97 : 1 }],
+            justifyContent: 'center',
+            minHeight: moderateScale(56),
+            transform: [{ scale: pressed && canSubmit ? 0.97 : 1 }],
           })}
         >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onPrimary }}>
-            Let's Go!
-          </Text>
+          {submitting ? (
+            <ActivityIndicator color={Colors.onPrimary} />
+          ) : (
+            <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onPrimary }}>
+              Let's Go!
+            </Text>
+          )}
         </Pressable>
       </View>
     </View>

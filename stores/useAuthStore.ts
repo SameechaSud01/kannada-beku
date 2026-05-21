@@ -1,5 +1,9 @@
 import { create } from 'zustand';
 import { Session, User } from '@supabase/supabase-js';
+import { supabase } from '../services/api/supabase';
+import { useUserStore } from './useUserStore';
+import { useProgressStore } from './progressStore';
+import { resetLessonsCache } from '../services/api/lessons';
 
 interface AuthState {
   session: Session | null;
@@ -7,6 +11,7 @@ interface AuthState {
   isLoading: boolean;
   setSession: (session: Session | null) => void;
   setLoading: (loading: boolean) => void;
+  signOut: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()((set) => ({
@@ -21,4 +26,12 @@ export const useAuthStore = create<AuthState>()((set) => ({
     }),
 
   setLoading: (isLoading) => set({ isLoading }),
+
+  signOut: async () => {
+    await supabase.auth.signOut();
+    useUserStore.getState().reset();
+    useProgressStore.getState().reset();
+    resetLessonsCache();
+    set({ session: null, user: null });
+  },
 }));

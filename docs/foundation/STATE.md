@@ -71,9 +71,11 @@ Actions: `setOnboarding(data)`, `setDisplayName(name)`, `setLearningMode(mode)`,
 | `lastGoalCelebrationDate` | `string \| null` | ISO date the `GoalCompleteDialog` last fired. Prevents re-firing the same day. Added for [MODALS](../../spec_docs/Sameecha/MODALS.md) §6.7. |
 | `isHydrated` | `boolean` | Set true by `onRehydrateStorage`. |
 
-Actions: `updateLessonProgress(lessonId, phraseIndex)`, `completeLesson(lessonId, score, phrasesLearned, minutesPracticed)`, `updateStreak()`, `recordActivity()`, `markGoalCelebrated()`, `setHydrated(hydrated)`, `reset()`. `reset()` wipes all progress and is called by `AppGate` when the signed-in Supabase user changes.
+Actions: `updateLessonProgress(lessonId, phraseIndex)`, `completeLesson(lessonId, score, phrasesLearned, minutesPracticed)`, `updateStreak()`, `recordActivity()`, `markGoalCelebrated()`, `hydrateFromServerCompletions(slugs)`, `setHydrated(hydrated)`, `reset()`. `reset()` wipes all progress and is called by `AppGate` on sign-out and when the signed-in Supabase user changes; `hydrateFromServerCompletions(slugs)` merges server-fetched completion slugs into `completedLessons` (deduped union, completion-only).
 
 > **Note (MODALS §6.7):** `completeLesson` now also increments `todayMinutes` by `minutesPracticed` (with date-rollover). `DoneCard` calls it with an `ESTIMATED_MIN_PER_LESSON = 5` placeholder until per-lesson timing is wired.
+
+> **Note (spec_progress_persistence):** `completedLessons` is now a **hydrated cache** of server truth. The store mutation is still client-only and idempotent, but the canonical call path runs through `useCompleteLessonMutation` (DB UPSERT first, then store). `hydrateFromServerCompletions` is the union-merge AppGate calls after `fetchCompletedLessons` resolves. `xp`, `streak`, `totalPhrasesLearned`, `totalMinutesPracticed`, and `weeklyActivity` remain client-only for now — a future Spec A2 mirrors those scalars.
 
 #### Streak logic
 
@@ -124,7 +126,7 @@ Wrap stores; **screens should not read stores directly.** Defined in [hooks/prog
 
 ## Server state — Supabase
 
-Client: [services/api/supabase.ts](../../services/api/supabase.ts). Singleton; reads `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` (throws if missing). Auth-only currently — no data tables in active use from the app.
+Client: [services/api/supabase.ts](../../services/api/supabase.ts). Singleton; reads `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` (throws if missing). `public.users`, `public.lessons`, and `public.user_lesson_progress` are the tables in active use; per-game progress tables exist in the DB but the app does not yet read or write them.
 
 ### Tables
 
@@ -151,23 +153,21 @@ Client: [services/api/supabase.ts](../../services/api/supabase.ts). Singleton; r
 
 `QueryClient` initialised in [app/_layout.tsx](../../app/_layout.tsx) with defaults. **No queries currently active** — lesson content is static.
 
-### Query key conventions (when we start using it)
+### Query key conventions
 
-`[OPEN]`
+`[LOCKED]` — first conventions landed with [spec_progress_persistence.md](../../spec_docs/Sameecha/spec_progress_persistence.md). Future query keys follow the same `[<resource>, userId, …]` shape.
 
-> **TODO:** Lock in a convention. Proposal:
-> ```ts
-> ['profile', userId]
-> ['progress', userId]
-> ['lesson-progress', userId, lessonId]
-> ['weekly-activity', userId, weekStart]
-> ```
+| Key | Reads | Source |
+|---|---|---|
+| `['lesson-completions', userId]` | Server list of completed lessons (slug + score + completed_at) | [services/api/progress.ts](../../services/api/progress.ts) `fetchCompletedLessons` |
 
 ### Mutation conventions
 
-`[OPEN]`
+`[LOCKED]` — first mutation landed with [spec_progress_persistence.md](../../spec_docs/Sameecha/spec_progress_persistence.md).
 
-> **TODO:** Define invalidation rules. Proposal: a `completeLesson` mutation invalidates `['progress', userId]` and `['weekly-activity', userId, weekStart]`.
+| Mutation key | Hook | Invalidates |
+|---|---|---|
+| `['completeLesson']` | [hooks/useCompleteLessonMutation.ts](../../hooks/useCompleteLessonMutation.ts) | `['lesson-completions', userId]` |
 
 ## Cross-store sync rules
 

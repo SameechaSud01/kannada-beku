@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import type { UserRow } from '../services/api/users';
 
 interface OnboardingData {
   learningMode: 'spoken' | 'written' | 'both';
@@ -27,6 +28,7 @@ interface UserState {
   setOnboarding: (data: OnboardingData) => void;
   setDisplayName: (name: string) => void;
   setLearningMode: (mode: 'spoken' | 'written' | 'both') => void;
+  setMotivations: (motivations: string[]) => void;
   setMode: (mode: 'rowdy' | 'classic') => void;
   setHasSeenTtsWarning: (seen: boolean) => void;
   recordPermissionDenial: (kind: 'notifications' | 'mic') => void;
@@ -35,6 +37,9 @@ interface UserState {
   bindUser: (userId: string) => void;
   /** Wipe all per-user state and bind to a fresh user id. Called on user switch. */
   resetForUser: (userId: string) => void;
+  hydrateFromUserRow: (row: UserRow) => void;
+  /** Reset user-scoped state on signOut. Preserves device-scoped prefs. */
+  reset: () => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -64,6 +69,8 @@ export const useUserStore = create<UserState>()(
 
       setLearningMode: (learningMode) => set({ learningMode }),
 
+      setMotivations: (motivations) => set({ motivations }),
+
       setMode: (mode) => set({ mode }),
 
       setHasSeenTtsWarning: (hasSeenTtsWarning) => set({ hasSeenTtsWarning }),
@@ -89,6 +96,27 @@ export const useUserStore = create<UserState>()(
           motivations: [],
           dailyGoalMinutes: null,
           // mode + permissionDenials + hasSeenTtsWarning are install-scoped, not user-scoped — keep them.
+        }),
+
+      hydrateFromUserRow: (row) =>
+        set({
+          displayName: row.name,
+          learningMode: row.learning_mode,
+          motivations: row.motivations ?? [],
+          dailyGoalMinutes: row.daily_goal_minutes,
+          hasCompletedOnboarding: !!row.onboarding_completed_at,
+        }),
+
+      reset: () =>
+        set({
+          userId: null,
+          hasCompletedOnboarding: false,
+          displayName: null,
+          learningMode: null,
+          motivations: [],
+          dailyGoalMinutes: null,
+          // Preserved: mode, hasSeenTtsWarning, permissionDenials, isHydrated —
+          // device-scoped state survives account switches.
         }),
     }),
     {
