@@ -9,7 +9,7 @@ import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { useAuthStore } from '../../stores/useAuthStore';
-import { LESSONS, LESSON_ORDER } from '../../constants/lessons';
+import { useDbLessons } from '../../hooks/useLessons';
 import { PLANNED_LESSON_SLOTS, TOTAL_LESSON_SLOTS } from '../../constants/lessons/plannedLessons';
 import type { Phrase } from '../../constants/lessons/types';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
@@ -20,18 +20,12 @@ import { formatFirstName } from '../../utils/formatName';
 import { useCompletedLessons, useStreak } from '../../hooks/progress';
 
 const STARTER_PHRASE: Phrase = {
-  id: 'starter.namaskara',
   kannada: 'ನಮಸ್ಕಾರ',
-  transliteration: 'Namaskāra',
+  transliteration: 'namaskara',
   english: 'Hello / Greetings',
-  vocabAtoms: ['ನಮಸ್ಕಾರ'],
 };
 
 const ESTIMATED_MIN_PER_LESSON = 5;
-
-function speakable(text: string): string {
-  return text.replace(/\[name\]/g, '').trim();
-}
 
 function wordOfDayIndex(arrayLength: number): number {
   if (arrayLength <= 0) return 0;
@@ -41,7 +35,6 @@ function wordOfDayIndex(arrayLength: number): number {
   return sum % arrayLength;
 }
 
-
 export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -49,6 +42,8 @@ export default function HomeScreen() {
   const streak = useStreak();
   const user = useAuthStore((s) => s.user);
   const modal = useModal();
+  const lessonsQuery = useDbLessons();
+  const dbLessons = lessonsQuery.data ?? [];
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(4)).current;
@@ -67,18 +62,16 @@ export default function HomeScreen() {
     'there';
   const userName = formatFirstName(rawName, 'there');
 
-  // Word of the Day — drawn from learned phrases when available
-  const completedPhrases: Phrase[] = completedLessons
-    .map((id) => LESSONS[id])
-    .filter((l): l is NonNullable<typeof l> => Boolean(l))
-    .flatMap((l) => l.intake);
+  // Word of the Day — drawn from learned phrases when available.
+  const completedSlugSet = new Set(completedLessons);
+  const completedPhrases: Phrase[] = dbLessons
+    .filter((l) => completedSlugSet.has(l.slug))
+    .flatMap((l) => l.phrases);
   const hasCompletedPhrases = completedPhrases.length > 0;
   const wordOfDay: Phrase = hasCompletedPhrases
     ? completedPhrases[wordOfDayIndex(completedPhrases.length)]
     : STARTER_PHRASE;
-  const wordOfDayKn = speakable(wordOfDay.kannada) || wordOfDay.kannada;
 
-  // Progress = lessons completed / 8 (Spec 01 §1)
   const completedCount = Math.min(completedLessons.length, TOTAL_LESSON_SLOTS);
   const progressPercent = Math.round((completedCount / TOTAL_LESSON_SLOTS) * 100);
   const ringSize = moderateScale(76);
@@ -87,27 +80,23 @@ export default function HomeScreen() {
   const ringCirc = 2 * Math.PI * ringR;
   const ringOffset = ringCirc * (1 - completedCount / TOTAL_LESSON_SLOTS);
 
-  // Next lesson — real if available, otherwise the next planned slot title
-  const nextLessonRealId = LESSON_ORDER.find((id) => !completedLessons.includes(id));
-  const nextLesson = nextLessonRealId ? LESSONS[nextLessonRealId] : null;
+  const nextLessonSlot = dbLessons.find((l) => !completedSlugSet.has(l.slug));
   const nextSlot = PLANNED_LESSON_SLOTS[completedCount];
-  const nextTitle = nextLesson?.situation.title ?? nextSlot?.title ?? 'All caught up';
+  const nextTitle = nextLessonSlot?.title ?? nextSlot?.title ?? 'All caught up';
 
   const allDone = completedCount >= TOTAL_LESSON_SLOTS;
 
   const handleStartNext = () => {
-    if (nextLessonRealId) router.push(`/lesson/${nextLessonRealId}`);
+    if (nextLessonSlot) router.push(`/lesson/${nextLessonSlot.slug}`);
   };
 
   const handleListenWordOfDay = () => {
-    const txt = speakable(wordOfDay.kannada);
+    const txt = wordOfDay.transliteration;
     if (!txt) return;
-    deviceTtsAudioService
-      .play(txt)
-      .catch((err) => {
-        console.warn('[audio] home word-of-day failed', err);
-        Toasts.audioFailed(handleListenWordOfDay);
-      });
+    deviceTtsAudioService.play(txt).catch((err) => {
+      console.warn('[audio] home word-of-day failed', err);
+      Toasts.audioFailed(handleListenWordOfDay);
+    });
   };
 
   return (
@@ -119,7 +108,6 @@ export default function HomeScreen() {
         transform: [{ translateY: slideAnim }],
       }}
     >
-      {/* ── APP BAR — empty left, centred wordmark, streak right (no hamburger) ── */}
       <View
         style={{
           paddingTop: insets.top + Spacing.sm,
@@ -174,7 +162,6 @@ export default function HomeScreen() {
         contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
       >
         <View style={{ paddingHorizontal: Spacing.xxl, paddingTop: Spacing.md }}>
-          {/* Greeting line */}
           <Text
             style={{
               fontFamily: Fonts.dmSans.medium,
@@ -188,7 +175,7 @@ export default function HomeScreen() {
             Namaskāra, {userName}
           </Text>
 
-          {/* ── 1. WORD OF THE DAY ── */}
+          {/* Word of the Day */}
           <Pressable
             onPress={() =>
               modal.show({
@@ -225,26 +212,15 @@ export default function HomeScreen() {
             </Text>
             <Text
               style={{
-                fontFamily: Fonts.notoSerifKannada.bold,
-                fontSize: moderateScale(36),
-                lineHeight: moderateScale(52),
+                fontFamily: Fonts.lora.italic,
+                fontSize: moderateScale(34),
+                lineHeight: moderateScale(46),
                 color: Colors.primary,
                 marginBottom: moderateScale(6),
               }}
               maxFontSizeMultiplier={1.3}
               adjustsFontSizeToFit
               numberOfLines={2}
-            >
-              {wordOfDayKn}
-            </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.lora.italic,
-                fontSize: moderateScale(15),
-                color: Colors.onSurface,
-                marginBottom: Spacing.xs,
-              }}
-              maxFontSizeMultiplier={1.4}
             >
               {wordOfDay.transliteration}
             </Text>
@@ -253,11 +229,23 @@ export default function HomeScreen() {
                 fontFamily: Fonts.dmSans.regular,
                 fontSize: moderateScale(13),
                 color: Colors.tertiary,
-                marginBottom: moderateScale(14),
+                marginBottom: moderateScale(4),
               }}
               maxFontSizeMultiplier={1.4}
             >
               {wordOfDay.english}
+            </Text>
+            <Text
+              style={{
+                fontFamily: Fonts.notoSerifKannada.regular,
+                fontSize: moderateScale(13),
+                color: Colors.tertiary,
+                opacity: 0.7,
+                marginBottom: moderateScale(14),
+              }}
+              maxFontSizeMultiplier={1.4}
+            >
+              {wordOfDay.kannada}
             </Text>
             <Pressable
               onPress={handleListenWordOfDay}
@@ -288,11 +276,11 @@ export default function HomeScreen() {
             </Pressable>
           </Pressable>
 
-          {/* ── 2. YOUR PROGRESS — lessons/8 ring ── */}
+          {/* Progress ring */}
           <Pressable
             onPress={handleStartNext}
-            disabled={allDone || !nextLessonRealId}
-            accessibilityRole={nextLessonRealId ? 'button' : 'text'}
+            disabled={allDone || !nextLessonSlot}
+            accessibilityRole={nextLessonSlot ? 'button' : 'text'}
             accessibilityLabel={`Progress: ${completedCount} of ${TOTAL_LESSON_SLOTS} lessons. Next: ${nextTitle}.`}
             style={({ pressed }) => ({
               backgroundColor: Colors.surfaceContainerHighest,
@@ -302,7 +290,7 @@ export default function HomeScreen() {
               flexDirection: 'row',
               alignItems: 'center',
               gap: moderateScale(22),
-              transform: [{ scale: pressed && nextLessonRealId ? 0.98 : 1 }],
+              transform: [{ scale: pressed && nextLessonSlot ? 0.98 : 1 }],
             })}
           >
             <View
@@ -393,7 +381,7 @@ export default function HomeScreen() {
             </View>
           </Pressable>
 
-          {/* ── 3. EMERGENCY KANNADA GUIDE ── */}
+          {/* Emergency Kannada Guide */}
           <Pressable
             onPress={() => router.push('/emergency')}
             accessibilityRole="button"

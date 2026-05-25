@@ -87,7 +87,7 @@ export const Icons = {
   setAudio: IconVolume,
   setHelp: IconHelpCircle,
 
-  // Lesson runner — drill / output / intake (replaces former emoji glyphs)
+  // Lesson runner — practice / shadowing feedback glyphs
   correct: IconCircleCheck,
   wrong: IconCircleX,
   close: IconX,
