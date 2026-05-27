@@ -23,6 +23,12 @@ interface UserState {
   hasSeenTtsWarning: boolean;
   /** ISO timestamp of last denial, scoped per kind. We re-ask at most once per week. */
   permissionDenials: Partial<Record<'notifications' | 'mic', string>>;
+  /** 'HH:MM' 24h, mirrors public.users.daily_reminder_time. */
+  dailyReminderTime: string | null;
+  /** TTS playback rate (0.50–1.50), mirrors public.users.tts_rate. */
+  ttsRate: number;
+  /** Auto-speak lesson cards on mount, mirrors public.users.auto_replay. */
+  autoReplay: boolean;
   isHydrated: boolean;
 
   setOnboarding: (data: OnboardingData) => void;
@@ -32,6 +38,9 @@ interface UserState {
   setMode: (mode: 'rowdy' | 'classic') => void;
   setHasSeenTtsWarning: (seen: boolean) => void;
   recordPermissionDenial: (kind: 'notifications' | 'mic') => void;
+  setDailyReminderTime: (time: string | null) => void;
+  setTtsRate: (rate: number) => void;
+  setAutoReplay: (value: boolean) => void;
   setHydrated: (hydrated: boolean) => void;
   /** Bind the persisted data to a Supabase user id. */
   bindUser: (userId: string) => void;
@@ -54,6 +63,9 @@ export const useUserStore = create<UserState>()(
       mode: 'classic',
       hasSeenTtsWarning: false,
       permissionDenials: {},
+      dailyReminderTime: null,
+      ttsRate: 1.0,
+      autoReplay: true,
       isHydrated: false,
 
       setOnboarding: (data) =>
@@ -83,6 +95,12 @@ export const useUserStore = create<UserState>()(
           },
         })),
 
+      setDailyReminderTime: (dailyReminderTime) => set({ dailyReminderTime }),
+
+      setTtsRate: (ttsRate) => set({ ttsRate }),
+
+      setAutoReplay: (autoReplay) => set({ autoReplay }),
+
       setHydrated: (isHydrated) => set({ isHydrated }),
 
       bindUser: (userId) => set({ userId }),
@@ -95,6 +113,9 @@ export const useUserStore = create<UserState>()(
           learningMode: null,
           motivations: [],
           dailyGoalMinutes: null,
+          dailyReminderTime: null,
+          ttsRate: 1.0,
+          autoReplay: true,
           // mode + permissionDenials + hasSeenTtsWarning are install-scoped, not user-scoped — keep them.
         }),
 
@@ -105,6 +126,9 @@ export const useUserStore = create<UserState>()(
           motivations: row.motivations ?? [],
           dailyGoalMinutes: row.daily_goal_minutes,
           hasCompletedOnboarding: !!row.onboarding_completed_at,
+          dailyReminderTime: row.daily_reminder_time ?? null,
+          ttsRate: row.tts_rate ?? 1.0,
+          autoReplay: row.auto_replay ?? true,
         }),
 
       reset: () =>
@@ -115,6 +139,9 @@ export const useUserStore = create<UserState>()(
           learningMode: null,
           motivations: [],
           dailyGoalMinutes: null,
+          dailyReminderTime: null,
+          ttsRate: 1.0,
+          autoReplay: true,
           // Preserved: mode, hasSeenTtsWarning, permissionDenials, isHydrated —
           // device-scoped state survives account switches.
         }),

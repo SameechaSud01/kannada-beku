@@ -14,14 +14,18 @@ export type UserRow = {
   current_streak: number;
   onboarding_completed_at: string | null;
   created_at: string;
+  daily_reminder_time: string | null;
+  tts_rate: number;
+  auto_replay: boolean;
 };
+
+const USER_SELECT =
+  'id, email, name, avatar_url, learning_mode, motivations, daily_goal_minutes, current_streak, onboarding_completed_at, created_at, daily_reminder_time, tts_rate, auto_replay';
 
 export async function fetchUserRow(userId: string): Promise<UserRow | null> {
   const { data, error } = await supabase
     .from('users')
-    .select(
-      'id, email, name, avatar_url, learning_mode, motivations, daily_goal_minutes, current_streak, onboarding_completed_at, created_at',
-    )
+    .select(USER_SELECT)
     .eq('id', userId)
     .maybeSingle();
 
@@ -50,11 +54,65 @@ export async function completeOnboarding(
     .from('users')
     .update(update)
     .eq('id', userId)
-    .select(
-      'id, email, name, avatar_url, learning_mode, motivations, daily_goal_minutes, current_streak, onboarding_completed_at, created_at',
-    )
+    .select(USER_SELECT)
     .single();
 
+  if (error) throw error;
+  return data as UserRow;
+}
+
+export async function updateLearningMode(
+  userId: string,
+  mode: LearningMode,
+): Promise<UserRow> {
+  const { data, error } = await supabase
+    .from('users')
+    .update({ learning_mode: mode })
+    .eq('id', userId)
+    .select(USER_SELECT)
+    .single();
+  if (error) throw error;
+  return data as UserRow;
+}
+
+export async function updateDailyReminderTime(
+  userId: string,
+  time: string | null,
+): Promise<UserRow> {
+  const { data, error } = await supabase
+    .from('users')
+    .update({ daily_reminder_time: time })
+    .eq('id', userId)
+    .select(USER_SELECT)
+    .single();
+  if (error) throw error;
+  return data as UserRow;
+}
+
+export async function updateTtsRate(
+  userId: string,
+  rate: number,
+): Promise<UserRow> {
+  const { data, error } = await supabase
+    .from('users')
+    .update({ tts_rate: rate })
+    .eq('id', userId)
+    .select(USER_SELECT)
+    .single();
+  if (error) throw error;
+  return data as UserRow;
+}
+
+export async function updateAutoReplay(
+  userId: string,
+  value: boolean,
+): Promise<UserRow> {
+  const { data, error } = await supabase
+    .from('users')
+    .update({ auto_replay: value })
+    .eq('id', userId)
+    .select(USER_SELECT)
+    .single();
   if (error) throw error;
   return data as UserRow;
 }

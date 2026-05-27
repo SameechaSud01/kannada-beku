@@ -9,6 +9,7 @@ import { Icons } from '../../constants/icons';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { LessonProgressBar } from './LessonProgressBar';
+import { useUserStore } from '../../stores/useUserStore';
 import type { Phrase, Word } from '../../constants/lessons/types';
 
 interface TeachPhrasesPhaseProps {
@@ -35,6 +36,7 @@ export function TeachPhrasesPhase({
   const total = phrases.length;
   const isLast = phraseIndex >= total - 1;
   const [highlightedChip, setHighlightedChip] = useState<number | null>(null);
+  const autoReplay = useUserStore((s) => s.autoReplay);
 
   const chips = useMemo(() => {
     if (!phrase) return [];
@@ -45,14 +47,14 @@ export function TeachPhrasesPhase({
   }, [phrase, words]);
 
   useEffect(() => {
-    if (!phrase) return;
+    if (!phrase || !autoReplay) return;
     deviceTtsAudioService.play(phrase.kannada).catch((err) => {
       console.warn('[teach_phrases] auto-play failed', err);
     });
     return () => {
       deviceTtsAudioService.stop().catch(() => undefined);
     };
-  }, [phrase?.kannada]);
+  }, [phrase?.kannada, autoReplay]);
 
   if (!phrase) return null;
 

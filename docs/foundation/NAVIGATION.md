@@ -54,6 +54,10 @@ Loads fonts, sets audio mode (`playsInSilentModeIOS: true`), probes Kannada TTS 
 | `/practice/[id]` | [[id].tsx](../../app/practice/%5Bid%5D.tsx) | root stack | TODO | Game detail. Param: `id` = game id |
 | `/heritage/[id]` | [[id].tsx](../../app/heritage/%5Bid%5D.tsx) | root stack | TODO | Heritage detail. Param: `id` = slug |
 | `/emergency` | [emergency.tsx](../../app/emergency.tsx) | root stack | TODO | Emergency phrase guide |
+| `/settings/audio` | [audio.tsx](../../app/settings/audio.tsx) | Stack, `slide_from_right`, `headerShown: false` (screen owns header) | Screen-owned back chip + title | TTS rate, auto-replay, device-voice link. See [spec_profile_settings_wiring](../../spec_docs/Sameecha/spec_profile_settings_wiring.md) §4. |
+| `/settings/help` | [help.tsx](../../app/settings/help.tsx) | ↑ | Screen-owned back chip + title | Contact / bug-report mailto + version + policy links. §5. |
+
+Reminders is presented as a bottom sheet ([RemindersSheet](../../components/modals/instances/RemindersSheet.tsx)) via `ModalHost`, not a routed screen — the surface is too small to justify a full page. See [spec_profile_settings_wiring](../../spec_docs/Sameecha/spec_profile_settings_wiring.md) §3.
 
 > **TODO:** Header behavior for dynamic routes (`/lesson/[id]`, `/practice/[id]`, `/heritage/[id]`, `/emergency`) — confirm if any show a header or all are headerless.
 

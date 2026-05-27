@@ -46,11 +46,14 @@ Actions: `setSession(session)`, `setLoading(loading)`.
 | `mode` | `'rowdy' \| 'classic'` | `[LOCKED: SCHEDULED FOR REMOVAL]` — see [CONTENT.md](CONTENT.md#voice-system) and [CONTRADICTIONS.md](CONTRADICTIONS.md) C3. UI voice tone; drives `useCopy()` resolution today. |
 | `hasSeenTtsWarning` | `boolean` | One-time per install flag for the TTS-unavailable dialog. Added for [MODALS](../../spec_docs/Sameecha/MODALS.md) §6.9. |
 | `permissionDenials` | `Partial<Record<'notifications' \| 'mic', string>>` | ISO timestamp of last "Not now" tap, per permission kind. Used to throttle re-asks (≤ once/week). Added for [MODALS](../../spec_docs/Sameecha/MODALS.md) §6.8. |
+| `dailyReminderTime` | `string \| null` | Mirrors `public.users.daily_reminder_time` (`'HH:MM'` 24h). Added for [spec_profile_settings_wiring](../../spec_docs/Sameecha/spec_profile_settings_wiring.md) §3. |
+| `ttsRate` | `number` | Mirrors `public.users.tts_rate` (0.50–1.50). Added for [spec_profile_settings_wiring](../../spec_docs/Sameecha/spec_profile_settings_wiring.md) §4. |
+| `autoReplay` | `boolean` | Mirrors `public.users.auto_replay`. Added for [spec_profile_settings_wiring](../../spec_docs/Sameecha/spec_profile_settings_wiring.md) §4. |
 | `isHydrated` | `boolean` | Set true by `onRehydrateStorage`. |
 
-Actions: `setOnboarding(data)`, `setDisplayName(name)`, `setLearningMode(mode)`, `setMode(mode)`, `setHasSeenTtsWarning(seen)`, `recordPermissionDenial(kind)`, `setHydrated(hydrated)`, `bindUser(userId)`, `resetForUser(userId)`. **`setMode` is also scheduled for removal alongside the field.** `resetForUser` clears per-user fields (`hasCompletedOnboarding`, `displayName`, `learningMode`, `motivations`, `dailyGoalMinutes`) and keeps install-scoped flags (`mode`, `hasSeenTtsWarning`, `permissionDenials`).
+Actions: `setOnboarding(data)`, `setDisplayName(name)`, `setLearningMode(mode)`, `setMode(mode)`, `setHasSeenTtsWarning(seen)`, `recordPermissionDenial(kind)`, `setDailyReminderTime(time)`, `setTtsRate(rate)`, `setAutoReplay(value)`, `setHydrated(hydrated)`, `bindUser(userId)`, `resetForUser(userId)`. **`setMode` is also scheduled for removal alongside the field.** `resetForUser` clears per-user fields (`hasCompletedOnboarding`, `displayName`, `learningMode`, `motivations`, `dailyGoalMinutes`, `dailyReminderTime`, `ttsRate`, `autoReplay`) and keeps install-scoped flags (`mode`, `hasSeenTtsWarning`, `permissionDenials`).
 
-> **Note:** Profile screen collapses `learningMode`: `'written'` / `'both'` → `'fluency'`; `'spoken'` → `'spoken'`. This collapse should be a derived selector, not duplicated UI logic. **TODO:** refactor into `useFluencyMode()`.
+> **Note:** Profile screen collapses `learningMode`: `'written'` / `'both'` → `'fluency'`; `'spoken'` → `'spoken'`. Implemented as [`useFluencyMode()`](../../hooks/useFluencyMode.ts) — screens consume that selector, not the raw store field.
 
 ### `useProgressStore`
 
@@ -113,7 +116,9 @@ Wrap stores; **screens should not read stores directly.** Defined in [hooks/prog
 | `useCompletedLessons()` | `string[]` | `progressStore.completedLessons` |
 | `useDailyGoalToday()` | `{ completed: 0\|1, target: 1 }` | `progressStore.weeklyActivity[today]` |
 
-> **TODO:** add selectors for `useFluencyMode()` (the collapsed `learningMode`), `useXp()`, `useCurrentLesson()`.
+| `useFluencyMode()` | `'spoken' \| 'fluency' \| null` | Collapsed `userStore.learningMode` per [spec_profile_settings_wiring](../../spec_docs/Sameecha/spec_profile_settings_wiring.md) §1 ([hooks/useFluencyMode.ts](../../hooks/useFluencyMode.ts)) |
+
+> **TODO:** add selectors for `useXp()`, `useCurrentLesson()`.
 
 ## Reset / logout
 
@@ -136,7 +141,7 @@ Client: [services/api/supabase.ts](../../services/api/supabase.ts). Singleton; r
 
 | Table | Purpose | Key columns | Accessor |
 |---|---|---|---|
-| `users` | Persist auth identity + onboarding answers | `id` (PK, FK `auth.users`), `email` (unique), `name`, `avatar_url`, `learning_mode` (`'spoken'\|'written'\|'both'`), `motivations` (`text[]`), `daily_goal_minutes` (`5\|10\|20`), `current_streak`, `onboarding_completed_at`, `created_at` | [services/api/users.ts](../../services/api/users.ts) (see [spec_auth_onboarding.md](../../spec_docs/Sameecha/spec_auth_onboarding.md)) |
+| `users` | Persist auth identity + onboarding answers + per-user prefs | `id` (PK, FK `auth.users`), `email` (unique), `name`, `avatar_url`, `learning_mode` (`'spoken'\|'written'\|'both'`), `motivations` (`text[]`), `daily_goal_minutes` (`5\|10\|20`), `current_streak`, `onboarding_completed_at`, `created_at`, `daily_reminder_time` (text, `'HH:MM'` 24h), `tts_rate` (numeric(3,2), default 1.00), `auto_replay` (boolean, default true) | [services/api/users.ts](../../services/api/users.ts) (see [spec_auth_onboarding.md](../../spec_docs/Sameecha/spec_auth_onboarding.md), [spec_profile_settings_wiring.md](../../spec_docs/Sameecha/spec_profile_settings_wiring.md)) |
 | `lessons` | Per-lesson row; FK anchor for completions | `id` (uuid PK), `lesson_no` (int unique, used for ordering), `title`, `slug` (text unique-where-not-null — bridge to `constants/lessons/*.ts` string IDs), `situation`, `real_world_prompt`, `content_json` (jsonb reference snapshot — see [spec_lesson_content_source.md](../../spec_docs/Sameecha/spec_lesson_content_source.md)), `audio_url` (nullable), `created_at` | [services/api/lessons.ts](../../services/api/lessons.ts) |
 | `user_lesson_progress` | "Did I finish lesson X?" + best score | `user_id` + `lesson_id` (composite PK), `completed_at` (nullable), `score` (nullable int, 0–100 check, personal-best semantic via `record_lesson_completion` RPC) | [services/api/progress.ts](../../services/api/progress.ts) (see [spec_progress_persistence.md](../../spec_docs/Sameecha/spec_progress_persistence.md)) |
 | `opposites_items` / `opposites_progress` | Server backing for the Opposites game. items seeded from former [wordPairs.ts](../../src/games/opposites/data/wordPairs.ts) + lesson vocab. progress is per-item personal-best via `record_opposites_attempt` RPC. | items: `id` (PK), `lesson_id`, `sort_order`, `word`, `opposite`, `options_json`, `transliteration`, `meaning` · progress: `user_id` + `item_id` (PK), `is_correct`, `attempts`, `last_played` | [services/api/games/opposites.ts](../../services/api/games/opposites.ts) (see [spec_db_wiring_games_and_overall_progress.md](../../spec_docs/Sameecha/spec_db_wiring_games_and_overall_progress.md)) |

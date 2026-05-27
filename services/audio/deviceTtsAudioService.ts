@@ -1,9 +1,16 @@
 import * as Speech from 'expo-speech';
 import { Audio } from 'expo-av';
 import type { AudioService, PlayOptions } from './AudioService';
+import { useUserStore } from '../../stores/useUserStore';
 
 const DEFAULT_LANGUAGE = 'kn-IN';
-const DEFAULT_RATE = 0.7;
+const MIN_RATE = 0.5;
+const MAX_RATE = 1.5;
+
+function resolveRate(explicit?: number): number {
+  const raw = explicit ?? useUserStore.getState().ttsRate ?? 1.0;
+  return Math.max(MIN_RATE, Math.min(MAX_RATE, raw));
+}
 
 let currentRecording: Audio.Recording | null = null;
 let currentPlaybackSound: Audio.Sound | null = null;
@@ -26,7 +33,7 @@ export async function isKannadaVoiceAvailable(): Promise<boolean> {
 export const deviceTtsAudioService: AudioService = {
   async play(text: string, options?: PlayOptions) {
     const language = options?.language ?? DEFAULT_LANGUAGE;
-    const rate = options?.rate ?? DEFAULT_RATE;
+    const rate = resolveRate(options?.rate);
     Speech.stop();
     return new Promise<void>((resolve, reject) => {
       let settled = false;
