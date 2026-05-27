@@ -16,8 +16,10 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSMicrophoneUsageDescription": "Kannada Baa records your voice so you can hear yourself practice phrases. Recordings stay on your device.",
-        "NSUserNotificationsUsageDescription": "Kannada Baa sends one daily reminder at the time you choose so you keep your streak."
-      }
+        "NSUserNotificationsUsageDescription": "Kannada Baa sends one daily reminder at the time you choose so you keep your streak.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.samsud01.kannadabaa"
     },
     "android": {
       "adaptiveIcon": {
@@ -27,8 +29,10 @@
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "permissions": [
+        "android.permission.RECORD_AUDIO",
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.samsud01.kannadabaa"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -40,6 +44,12 @@
       "expo-font",
       "@react-native-community/datetimepicker",
       "expo-notifications"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "adccfc42-2b05-4f37-bffb-d785e3ed8dc3"
+      }
+    }
   }
 }
