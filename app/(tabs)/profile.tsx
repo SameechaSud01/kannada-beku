@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { View, Text, ScrollView, Pressable, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
+import { useRouter } from 'expo-router';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
@@ -11,34 +12,26 @@ import { useAuthStore } from '../../stores/useAuthStore';
 import { useUserStore } from '../../stores/useUserStore';
 import { useStreak, useWordsLearned } from '../../hooks/progress';
 import { useOverallProgress } from '../../hooks/useOverallProgress';
+import { useFluencyMode } from '../../hooks/useFluencyMode';
 import { formatFirstName } from '../../utils/formatName';
 import { useModal } from '../../components/modals/ModalHost';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { SignOutDialog } from '../../components/modals/instances/SignOutDialog';
-
-type LearningGoal = 'spoken' | 'fluency';
-
-/** Map the existing 3-typed store value down to the 2 UI options (Spec 01 §4). */
-function storeToGoal(mode: 'spoken' | 'written' | 'both' | null): LearningGoal {
-  if (mode === 'spoken') return 'spoken';
-  // 'written' is a legacy value — collapse to fluency (Spec 01 §4 + Spec 04).
-  return 'fluency';
-}
-
-function goalToStore(goal: LearningGoal): 'spoken' | 'both' {
-  return goal === 'spoken' ? 'spoken' : 'both';
-}
+import { RemindersSheet } from '../../components/modals/instances/RemindersSheet';
+import { GoalSummarySheet } from '../../components/modals/instances/GoalSummarySheet';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const streak = useStreak();
   const wordsLearned = useWordsLearned();
   const overall = useOverallProgress();
   const overallPct = Math.max(0, Math.min(100, Math.round(overall.data?.progressPct ?? 0)));
   const user = useAuthStore((s) => s.user);
-  const learningMode = useUserStore((s) => s.learningMode);
   const displayName = useUserStore((s) => s.displayName);
-  const setLearningMode = useUserStore((s) => s.setLearningMode);
+  const motivations = useUserStore((s) => s.motivations);
+  const dailyGoalMinutes = useUserStore((s) => s.dailyGoalMinutes);
+  const goal = useFluencyMode();
   const modal = useModal();
 
   const handleSignOutPress = () => {
@@ -62,8 +55,6 @@ export default function ProfileScreen() {
     });
   };
 
-  const goal: LearningGoal = storeToGoal(learningMode);
-
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(4)).current;
 
@@ -82,9 +73,9 @@ export default function ProfileScreen() {
     'Learner';
   const userName = formatFirstName(rawName, 'Learner');
 
-  const handleGoalChange = (next: LearningGoal) => {
-    setLearningMode(goalToStore(next));
-  };
+  const goalLabel = goal === 'spoken' ? 'Spoken only' : goal === 'fluency' ? 'Complete fluency' : null;
+  const dailyGoalLabel = dailyGoalMinutes ? `${dailyGoalMinutes} min / day` : null;
+  const hasOnboardingSummary = !!(goalLabel || dailyGoalLabel || motivations.length);
 
   const settingsItems: Array<{
     id: string;
@@ -92,9 +83,28 @@ export default function ProfileScreen() {
     Icon: TablerIcon;
     onPress: () => void;
   }> = [
-    { id: 'reminders', label: 'Reminders', Icon: Icons.setReminders, onPress: () => {} },
-    { id: 'audio', label: 'Audio & pronunciation', Icon: Icons.setAudio, onPress: () => {} },
-    { id: 'help', label: 'Help & feedback', Icon: Icons.setHelp, onPress: () => {} },
+    {
+      id: 'reminders',
+      label: 'Reminders',
+      Icon: Icons.setReminders,
+      onPress: () =>
+        modal.show({
+          kind: 'sheet',
+          component: RemindersSheet,
+        }),
+    },
+    {
+      id: 'audio',
+      label: 'Audio & pronunciation',
+      Icon: Icons.setAudio,
+      onPress: () => router.push('/settings/audio'),
+    },
+    {
+      id: 'help',
+      label: 'Help & feedback',
+      Icon: Icons.setHelp,
+      onPress: () => router.push('/settings/help'),
+    },
   ];
 
   return (
@@ -190,21 +200,10 @@ export default function ProfileScreen() {
               fontSize: moderateScale(22),
               color: Colors.onSurface,
               letterSpacing: -0.3,
-              marginBottom: moderateScale(2),
             }}
             maxFontSizeMultiplier={1.3}
           >
             {userName}
-          </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.regular,
-              fontSize: moderateScale(13),
-              color: Colors.tertiary,
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            Linguistic enthusiast
           </Text>
         </View>
 
@@ -373,48 +372,86 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        {/* Learning goal — 2 options */}
-        <View style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(28) }}>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(11),
-              letterSpacing: 2.5,
-              color: Colors.tertiary,
-              textTransform: 'uppercase',
-              marginBottom: Spacing.md,
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            Learning goal
-          </Text>
-          <View style={{ gap: moderateScale(10) }}>
-            <GoalOption
-              label="Spoken only"
-              description="Conversation first — skip the script."
-              selected={goal === 'spoken'}
-              onPress={() => handleGoalChange('spoken')}
-            />
-            <GoalOption
-              label="Complete fluency"
-              description="Speak, read and write Kannada."
-              selected={goal === 'fluency'}
-              onPress={() => handleGoalChange('fluency')}
-            />
+        {/* Goal toggle hidden — only "spoken" ships today. The row below opens
+            a sheet with the onboarding answers (read-only for now). */}
+        {hasOnboardingSummary ? (
+          <View style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(28) }}>
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.bold,
+                fontSize: moderateScale(11),
+                letterSpacing: 2.5,
+                color: Colors.tertiary,
+                textTransform: 'uppercase',
+                marginBottom: Spacing.md,
+              }}
+              maxFontSizeMultiplier={1.4}
+            >
+              Your goal
+            </Text>
+            <Pressable
+              onPress={() =>
+                modal.show({
+                  kind: 'sheet',
+                  component: GoalSummarySheet,
+                })
+              }
+              accessibilityRole="button"
+              accessibilityLabel={`Your goal — ${goalLabel ?? 'view details'}`}
+              style={({ pressed }) => ({
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: Colors.surfaceContainerLow,
+                borderRadius: Radius.lg,
+                paddingVertical: moderateScale(14),
+                paddingHorizontal: Spacing.lg,
+                minHeight: moderateScale(56),
+                gap: Spacing.md,
+                opacity: pressed ? 0.7 : 1,
+              })}
+            >
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={{
+                    fontFamily: Fonts.dmSans.bold,
+                    fontSize: moderateScale(14),
+                    color: Colors.onSurface,
+                  }}
+                  maxFontSizeMultiplier={1.3}
+                >
+                  {goalLabel ?? 'View your goal'}
+                </Text>
+                {dailyGoalLabel ? (
+                  <Text
+                    style={{
+                      fontFamily: Fonts.dmSans.regular,
+                      fontSize: moderateScale(12),
+                      color: Colors.tertiary,
+                      marginTop: moderateScale(2),
+                    }}
+                    maxFontSizeMultiplier={1.3}
+                  >
+                    {dailyGoalLabel}
+                    {motivations.length ? ` · ${motivations.length} reason${motivations.length === 1 ? '' : 's'}` : ''}
+                  </Text>
+                ) : motivations.length ? (
+                  <Text
+                    style={{
+                      fontFamily: Fonts.dmSans.regular,
+                      fontSize: moderateScale(12),
+                      color: Colors.tertiary,
+                      marginTop: moderateScale(2),
+                    }}
+                    maxFontSizeMultiplier={1.3}
+                  >
+                    {`${motivations.length} reason${motivations.length === 1 ? '' : 's'}`}
+                  </Text>
+                ) : null}
+              </View>
+              <Icons.forward size={18} color={Colors.tertiary} />
+            </Pressable>
           </View>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.regular,
-              fontSize: moderateScale(12),
-              color: Colors.tertiary,
-              lineHeight: moderateScale(18),
-              marginTop: Spacing.md,
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            Set when you signed up. Both goals share lessons 1–8; the path only diverges after lesson 8.
-          </Text>
-        </View>
+        ) : null}
 
         {/* Settings list — ghost-border inset shadow separates rows (§2 No-Line) */}
         <View style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(28) }}>
@@ -507,74 +544,3 @@ export default function ProfileScreen() {
   );
 }
 
-function GoalOption({
-  label,
-  description,
-  selected,
-  onPress,
-}: {
-  label: string;
-  description: string;
-  selected: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="radio"
-      accessibilityState={{ selected }}
-      accessibilityLabel={label}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: selected
-          ? Colors.secondaryContainer
-          : Colors.surfaceContainerHighest,
-        borderRadius: Radius.lg,
-        padding: Spacing.lg,
-        minHeight: moderateScale(56),
-        // Selected affordance via inset shadow (No-Line rule). We use a same-tone
-        // ghost shadow rather than a border edge on the unselected card.
-        ...(selected
-          ? {
-              shadowColor: Colors.onSecondaryContainer,
-              shadowOffset: { width: 0, height: 0 },
-              shadowOpacity: 0.18,
-              shadowRadius: 0.5,
-              elevation: 0,
-            }
-          : {}),
-        transform: [{ scale: pressed ? 0.98 : 1 }],
-      })}
-    >
-      <View style={{ flex: 1 }}>
-        <Text
-          style={{
-            fontFamily: Fonts.dmSans.bold,
-            fontSize: moderateScale(15),
-            color: selected ? Colors.onSecondaryContainer : Colors.onSurface,
-            marginBottom: moderateScale(2),
-          }}
-          maxFontSizeMultiplier={1.3}
-        >
-          {label}
-        </Text>
-        <Text
-          style={{
-            fontFamily: Fonts.dmSans.regular,
-            fontSize: moderateScale(12),
-            color: selected ? Colors.onSecondaryContainer : Colors.tertiary,
-            lineHeight: moderateScale(16),
-            opacity: selected ? 0.85 : 1,
-          }}
-          maxFontSizeMultiplier={1.4}
-        >
-          {description}
-        </Text>
-      </View>
-      {selected && (
-        <Icons.lessonDone size={18} color={Colors.onSecondaryContainer} />
-      )}
-    </Pressable>
-  );
-}

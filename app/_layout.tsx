@@ -24,6 +24,10 @@ import { isKannadaVoiceAvailable } from '../services/audio/deviceTtsAudioService
 import { ModalHost, useModal } from '../components/modals/ModalHost';
 import { ToastHost } from '../components/modals/ToastHost';
 import { TTSUnavailableDialog } from '../components/modals/instances/TTSUnavailableDialog';
+import {
+  scheduleDailyReminder,
+  hasNotificationPermission,
+} from '../lib/reminders';
 import * as Linking from 'expo-linking';
 
 SplashScreen.preventAutoHideAsync();
@@ -120,8 +124,19 @@ function AppGate() {
       const userId = session?.user?.id;
       if (!userId) return;
       fetchUserRow(userId)
-        .then((row) => {
-          if (row) useUserStore.getState().hydrateFromUserRow(row);
+        .then(async (row) => {
+          if (!row) return;
+          useUserStore.getState().hydrateFromUserRow(row);
+          // Re-arm the OS schedule on each sign-in so reinstalls / new devices
+          // restore the user's chosen time (spec_profile_settings_wiring §3).
+          if (row.daily_reminder_time) {
+            try {
+              const granted = await hasNotificationPermission();
+              if (granted) await scheduleDailyReminder(row.daily_reminder_time);
+            } catch (err) {
+              console.warn('[reminders] boot re-arm failed', err);
+            }
+          }
         })
         .catch((err) => {
           console.warn('[auth] fetchUserRow failed', err);

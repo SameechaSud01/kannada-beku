@@ -418,6 +418,24 @@ Standardized triggers. Add corresponding entries to [copy.ts](../../constants/co
 | `signIn.failed` | error | Supabase auth error | "Couldn't sign you in" | "Check your password and try again" | — |
 | `network.offline` | error | Network down during a Supabase call | "You're offline" | "We'll keep your work safe until you're back" | — |
 | `permission.notifDenied` | error (soft) | User denied notifications + tried to use a reminder feature | "Notifications are off" | "Tap to open settings" | onTap = `Linking.openSettings()` |
+| `preference.saveFailed` | error | Per-user pref write to `public.users` failed (learning goal, reminder time, TTS rate, auto-replay). See [spec_profile_settings_wiring](spec_profile_settings_wiring.md) §6. | "Couldn't save" | "Check your connection and try again" | — |
+
+### 6.11 `RemindersSheet` — bottom sheet `[PROPOSED]`
+
+**Trigger.** Profile → Settings → Reminders row.
+
+**Surface.** Bottom sheet (dynamic height) — the entire UI is a single switch row plus an inline time picker. A routed full-page screen overweighs the content. See [spec_profile_settings_wiring](spec_profile_settings_wiring.md) §3.
+
+**Anatomy.**
+
+| Element | Token / content |
+|---|---|
+| Title | "Reminders" `20pt`/bold/`Colors.onSurface`, top-left of the sheet body. |
+| Toggle row | "Daily lesson reminder" + RN `Switch`. `Colors.primary` track when on. |
+| Time row | Visible when toggle is on. Shows current time as `Colors.primary` bold; tap reveals inline `DateTimePicker` (spinner on iOS, default on Android). |
+| Caption | "We'll send one nudge a day. Tap the time to change it." centered, `Colors.tertiary`. |
+
+**Behavior.** Permission flow follows §6.8 `PermissionDialog`. Persists to `public.users.daily_reminder_time` with optimistic store update; revert + `preference.saveFailed` toast on error. Schedules `kannada-baa-daily-reminder` via [lib/reminders.ts](../../lib/reminders.ts).
 
 ---
 

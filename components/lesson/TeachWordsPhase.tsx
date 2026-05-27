@@ -9,6 +9,7 @@ import { Icons } from '../../constants/icons';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { LessonProgressBar } from './LessonProgressBar';
+import { useUserStore } from '../../stores/useUserStore';
 import type { Word } from '../../constants/lessons/types';
 
 interface TeachWordsPhaseProps {
@@ -22,16 +23,17 @@ export function TeachWordsPhase({ words, wordIndex, onAdvance }: TeachWordsPhase
   const word = words[wordIndex];
   const total = words.length;
   const isLast = wordIndex >= total - 1;
+  const autoReplay = useUserStore((s) => s.autoReplay);
 
   useEffect(() => {
-    if (!word) return;
+    if (!word || !autoReplay) return;
     deviceTtsAudioService.play(word.kannada).catch((err) => {
       console.warn('[teach_words] auto-play failed', err);
     });
     return () => {
       deviceTtsAudioService.stop().catch(() => undefined);
     };
-  }, [word?.kannada]);
+  }, [word?.kannada, autoReplay]);
 
   if (!word) return null;
 

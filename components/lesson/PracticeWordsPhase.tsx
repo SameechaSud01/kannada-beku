@@ -8,6 +8,7 @@ import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { LessonProgressBar } from './LessonProgressBar';
+import { useUserStore } from '../../stores/useUserStore';
 import type { Word } from '../../constants/lessons/types';
 
 interface PracticeWordsPhaseProps {
@@ -41,6 +42,7 @@ export function PracticeWordsPhase({
   const insets = useSafeAreaInsets();
   const word = words[practiceWordIndex];
   const total = words.length;
+  const autoReplay = useUserStore((s) => s.autoReplay);
 
   const [picked, setPicked] = useState<number | null>(null);
   const [canSayIt, setCanSayIt] = useState(false);
@@ -67,14 +69,14 @@ export function PracticeWordsPhase({
   }, [practiceWordIndex, step]);
 
   useEffect(() => {
-    if (!word) return;
+    if (!word || !autoReplay) return;
     deviceTtsAudioService.play(word.kannada).catch((err) => {
       console.warn('[practice_words] auto-play failed', err);
     });
     return () => {
       deviceTtsAudioService.stop().catch(() => undefined);
     };
-  }, [word?.kannada, step]);
+  }, [word?.kannada, step, autoReplay]);
 
   if (!word) return null;
 

@@ -113,4 +113,13 @@ export const Toasts = {
       },
     });
   },
+
+  preferenceSaveFailed() {
+    Toast.show({
+      kind: 'error',
+      id: 'preference.saveFailed',
+      title: "Couldn't save",
+      subtitle: 'Check your connection and try again',
+    });
+  },
 };
