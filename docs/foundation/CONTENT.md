@@ -2,7 +2,7 @@
 doc: CONTENT
 status: reviewed
 owner: samee
-last-reviewed: 2026-05-23
+last-reviewed: 2026-06-01
 related:
   - SCOPE.md
   - DESIGN.md
@@ -23,12 +23,15 @@ Owns: curriculum structure, vocabulary schema, audio / asset conventions, **and*
 
 **Volume:** 8-slot curriculum defined in [plannedLessons.ts](../../constants/lessons/plannedLessons.ts). 2 lessons implemented; 6 to write.
 
+**Reference primer outside the curriculum:** "Lesson 0 — Basics" is a non-scenario reference surface (Kannada vowels, consonants, pronunciation rules) shown once during onboarding and re-enterable from `/(tabs)/learn`. It lives in `public.lessons` (`lesson_no = 0`, `slug = 'basics'`) for content storage but is **not** a curriculum slot: no `situation`, no drills, no scoring, excluded from `completedLessons` / streak / XP / `user_overall_progress`. See [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md).
+
 ### Lesson slots
 
-`[LOCKED]` — slot titles, subtitles, and char placeholders match [plannedLessons.ts](../../constants/lessons/plannedLessons.ts).
+`[LOCKED]` — slot titles, subtitles, and char placeholders match [plannedLessons.ts](../../constants/lessons/plannedLessons.ts). Slot 0 is the reference primer (separate row above; not a curriculum slot).
 
 | Slot | Title | Subtitle | Char | Status |
 |---|---|---|---|---|
+| 0 | Kannada basics | Vowels, consonants, how to read it | — | TODO — see [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md) |
 | 1 | Greetings | Hello and how are you | ನ | ✅ Implemented |
 | 2 | Names | I, you, my name is | ಹ | ✅ Implemented |
 | 3 | Wanting | I want, I don't want | ಬೇ | TODO |

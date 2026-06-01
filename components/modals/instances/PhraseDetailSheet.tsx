@@ -82,7 +82,7 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
           </Text>
           <Text
             style={{
-              fontFamily: Fonts.notoSerifKannada.regular,
+              fontFamily: Fonts.notoSansKannada.regular,
               fontSize: moderateScale(14),
               color: Colors.tertiary,
               marginTop: moderateScale(6),
@@ -133,7 +133,7 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
                   ) : null}
                   <Text
                     style={{
-                      fontFamily: Fonts.notoSerifKannada.regular,
+                      fontFamily: Fonts.notoSansKannada.regular,
                       fontSize: moderateScale(13),
                       color: Colors.tertiary,
                       marginTop: moderateScale(2),

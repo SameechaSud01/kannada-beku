@@ -130,7 +130,7 @@ export default function ProfileScreen() {
         <View style={{ width: moderateScale(56) }} />
         <Text
           style={{
-            fontFamily: Fonts.notoSerifKannada.bold,
+            fontFamily: Fonts.notoSansKannada.bold,
             fontSize: moderateScale(22),
             color: Colors.primary,
             letterSpacing: -0.3,

@@ -33,7 +33,7 @@ export default function GoalScreen() {
         paddingHorizontal: Spacing.xxl,
       }}
     >
-      <ProgressDots total={5} current={2} />
+      <ProgressDots total={6} current={2} />
 
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <Text
@@ -47,7 +47,7 @@ export default function GoalScreen() {
           }}
           maxFontSizeMultiplier={1.4}
         >
-          Step 2 of 4
+          Step 2 of 5
         </Text>
         <Text
           style={{

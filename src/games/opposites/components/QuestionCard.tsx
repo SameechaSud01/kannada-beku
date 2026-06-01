@@ -68,7 +68,7 @@ const QuestionCard: React.FC<Props> = ({ word, tr, meaning, streak }) => (
     </Text>
     <Text
       style={{
-        fontFamily: Fonts.notoSerifKannada.regular,
+        fontFamily: Fonts.notoSansKannada.regular,
         fontSize: moderateScale(14),
         textAlign: 'center',
         color: Colors.tertiary,

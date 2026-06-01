@@ -2,7 +2,7 @@
 doc: STATE
 status: reviewed
 owner: samee
-last-reviewed: 2026-05-23
+last-reviewed: 2026-06-01
 related:
   - SCOPE.md
   - NAVIGATION.md
@@ -45,13 +45,15 @@ Actions: `setSession(session)`, `setLoading(loading)`.
 | `dailyGoalMinutes` | `5 \| 10 \| 20 \| null` | From onboarding step 4. |
 | `mode` | `'rowdy' \| 'classic'` | `[LOCKED: SCHEDULED FOR REMOVAL]` — see [CONTENT.md](CONTENT.md#voice-system) and [CONTRADICTIONS.md](CONTRADICTIONS.md) C3. UI voice tone; drives `useCopy()` resolution today. |
 | `hasSeenTtsWarning` | `boolean` | One-time per install flag for the TTS-unavailable dialog. Added for [MODALS](../../spec_docs/Sameecha/MODALS.md) §6.9. |
+| `hasSeenBasicsGuide` | `boolean` | Set true when the user taps Continue on `/onboarding/basics` (gates the onboarding step) **or** opens `/guide` voluntarily later. Per-user; cleared by `resetForUser`. Added for [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md). |
+| `hasSeenBasicsHomeNudge` | `boolean` | Set true after the one-time home toast pointing to the Learn-tab basics card dismisses. Install-scoped (kept across `resetForUser`). Added for [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md). |
 | `permissionDenials` | `Partial<Record<'notifications' \| 'mic', string>>` | ISO timestamp of last "Not now" tap, per permission kind. Used to throttle re-asks (≤ once/week). Added for [MODALS](../../spec_docs/Sameecha/MODALS.md) §6.8. |
 | `dailyReminderTime` | `string \| null` | Mirrors `public.users.daily_reminder_time` (`'HH:MM'` 24h). Added for [spec_profile_settings_wiring](../../spec_docs/Sameecha/spec_profile_settings_wiring.md) §3. |
 | `ttsRate` | `number` | Mirrors `public.users.tts_rate` (0.50–1.50). Added for [spec_profile_settings_wiring](../../spec_docs/Sameecha/spec_profile_settings_wiring.md) §4. |
 | `autoReplay` | `boolean` | Mirrors `public.users.auto_replay`. Added for [spec_profile_settings_wiring](../../spec_docs/Sameecha/spec_profile_settings_wiring.md) §4. |
 | `isHydrated` | `boolean` | Set true by `onRehydrateStorage`. |
 
-Actions: `setOnboarding(data)`, `setDisplayName(name)`, `setLearningMode(mode)`, `setMode(mode)`, `setHasSeenTtsWarning(seen)`, `recordPermissionDenial(kind)`, `setDailyReminderTime(time)`, `setTtsRate(rate)`, `setAutoReplay(value)`, `setHydrated(hydrated)`, `bindUser(userId)`, `resetForUser(userId)`. **`setMode` is also scheduled for removal alongside the field.** `resetForUser` clears per-user fields (`hasCompletedOnboarding`, `displayName`, `learningMode`, `motivations`, `dailyGoalMinutes`, `dailyReminderTime`, `ttsRate`, `autoReplay`) and keeps install-scoped flags (`mode`, `hasSeenTtsWarning`, `permissionDenials`).
+Actions: `setOnboarding(data)`, `setDisplayName(name)`, `setLearningMode(mode)`, `setMode(mode)`, `setHasSeenTtsWarning(seen)`, `setHasSeenBasicsGuide(seen)`, `setHasSeenBasicsHomeNudge(seen)`, `recordPermissionDenial(kind)`, `setDailyReminderTime(time)`, `setTtsRate(rate)`, `setAutoReplay(value)`, `setHydrated(hydrated)`, `bindUser(userId)`, `resetForUser(userId)`. **`setMode` is also scheduled for removal alongside the field.** `setOnboarding(data)` writes `hasSeenBasicsGuide: true` as part of the onboarding-completion transition (the basics screen is the last step). `resetForUser` clears per-user fields (`hasCompletedOnboarding`, `displayName`, `learningMode`, `motivations`, `dailyGoalMinutes`, `dailyReminderTime`, `ttsRate`, `autoReplay`, `hasSeenBasicsGuide`) and keeps install-scoped flags (`mode`, `hasSeenTtsWarning`, `hasSeenBasicsHomeNudge`, `permissionDenials`).
 
 > **Note:** Profile screen collapses `learningMode`: `'written'` / `'both'` → `'fluency'`; `'spoken'` → `'spoken'`. Implemented as [`useFluencyMode()`](../../hooks/useFluencyMode.ts) — screens consume that selector, not the raw store field.
 

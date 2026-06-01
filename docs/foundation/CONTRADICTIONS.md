@@ -2,7 +2,7 @@
 doc: CONTRADICTIONS
 status: living
 owner: samee
-last-reviewed: 2026-05-23
+last-reviewed: 2026-06-01
 related:
   - SCOPE.md
   - DESIGN.md
@@ -47,6 +47,27 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 **Owning spec:** [CONTENT.md](CONTENT.md#authoring-rules-spec-leads-code--content-must-conform).
 
 **Resolution owed:** Either (a) implement the `fill_blank` drill UI for real, or (b) remove `fill_blank` from the type union and the authoring-rules wording until it's built. Lessons 2–8 should not depend on `fill_blank` until one of those lands.
+
+### C11 — Beginners' Guide spec landed; code not yet shipped
+
+**What's wrong:** [spec_beginners_guide.md](../../spec_docs/Sameecha/spec_beginners_guide.md) is `[LOCKED]` as of 2026-06-01 and amends [NAVIGATION.md J1](NAVIGATION.md#j1-first-time-sign-up) (6-step onboarding), [CONTENT.md](CONTENT.md#curriculum-overview) (Lesson 0 reference primer), [STATE.md](STATE.md#useuserstore) (`hasSeenBasicsGuide`, `hasSeenBasicsHomeNudge`), and [spec_lesson_content_source.md](../../spec_docs/Sameecha/spec_lesson_content_source.md) (optional `sections?` field on `content_json.reference`). The code reflects none of these yet:
+
+- No `app/onboarding/basics.tsx` route — onboarding still ends at `/onboarding/commitment`.
+- No `app/guide.tsx` route.
+- No `components/guide/*` components.
+- `useUserStore` does not yet declare or persist `hasSeenBasicsGuide` / `hasSeenBasicsHomeNudge`.
+- `constants/guide.ts` does not exist.
+- No `services/api/migrations/2026-06-XX_lesson_0_basics_seed.sql` — the `public.lessons` table has no `lesson_no = 0` row.
+- The `recompute_overall_progress` trigger function's lesson-count predicate has not been audited for whether it would falsely include `lesson_no = 0`.
+
+**Why it matters:** Until the code ships, a new sign-up follows the *old* 5-step onboarding (without the Basics step), and the Learn tab has no re-entry card. The spec is committed-and-locked but invisible to users. Anyone touching `useUserStore`, `onboarding/_layout.tsx`, or the lessons schema in the interim could land changes that contradict the locked spec.
+
+**Owning specs:** [spec_beginners_guide.md](../../spec_docs/Sameecha/spec_beginners_guide.md) (canonical), with cross-refs in [NAVIGATION.md](NAVIGATION.md), [CONTENT.md](CONTENT.md), [STATE.md](STATE.md), and [spec_lesson_content_source.md](../../spec_docs/Sameecha/spec_lesson_content_source.md).
+
+**Resolution owed:**
+1. Audit `recompute_overall_progress` (in [services/api/migrations/2026-05-27_db_wiring_games_and_overall.sql](../../services/api/migrations/2026-05-27_db_wiring_games_and_overall.sql)) for its lesson-count predicate; if it counts all `public.lessons` rows unconditionally, add `where lesson_no > 0` in the same PR as the seed migration.
+2. Ship the migration, the routes, the components, the `useUserStore` flags, and the Learn-tab basics card per the acceptance criteria in [spec_beginners_guide.md](../../spec_docs/Sameecha/spec_beginners_guide.md).
+3. Close this entry once verified end-to-end on iPhone SE and a larger device.
 
 ### C9 — Stale "NativeWind" text in repo README; CLAUDE.md verified clean
 

@@ -17,6 +17,7 @@ import { useCompletedLessons, useStreak } from '../../hooks/progress';
 import { useKarnatakaFunFacts } from '../../hooks/useKarnatakaFunFacts';
 import type { FunFact } from '../../services/api/karnataka_fun_facts';
 import FUN_FACTS_FALLBACK from '../../data/karnataka_fun_facts.json';
+import { Toasts } from '../../components/modals/instances/toastCatalog';
 
 const ESTIMATED_MIN_PER_LESSON = 5;
 
@@ -56,6 +57,21 @@ export default function HomeScreen() {
       console.warn('[home] fun-facts fetch failed', factsQuery.error);
     }
   }, [factsQuery.error]);
+
+  // One-time nudge pointing at the Learn-tab Beginners' Guide card.
+  // Fires on the first home arrival after onboarding completion only.
+  // See spec_beginners_guide.md §Re-entry — first home toast.
+  const hasSeenBasicsGuide = useUserStore((s) => s.hasSeenBasicsGuide);
+  const hasSeenBasicsHomeNudge = useUserStore((s) => s.hasSeenBasicsHomeNudge);
+  const userHydrated = useUserStore((s) => s.isHydrated);
+  const setHasSeenBasicsHomeNudge = useUserStore((s) => s.setHasSeenBasicsHomeNudge);
+  useEffect(() => {
+    if (!userHydrated) return;
+    if (!hasSeenBasicsGuide) return;
+    if (hasSeenBasicsHomeNudge) return;
+    Toasts.basicsHomeNudge();
+    setHasSeenBasicsHomeNudge(true);
+  }, [userHydrated, hasSeenBasicsGuide, hasSeenBasicsHomeNudge, setHasSeenBasicsHomeNudge]);
 
   const rawName =
     displayName ||
@@ -114,7 +130,7 @@ export default function HomeScreen() {
         <View style={{ width: moderateScale(56) }} />
         <Text
           style={{
-            fontFamily: Fonts.notoSerifKannada.bold,
+            fontFamily: Fonts.notoSansKannada.bold,
             fontSize: moderateScale(22),
             color: Colors.primary,
             letterSpacing: -0.3,

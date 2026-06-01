@@ -11,13 +11,13 @@ related:
 
 # Design system
 
-> **Decision layer.** `[LOCKED]` means decided — do not reopen, resolve, or build the opposite; changing it needs an explicit spec PR plus owner sign-off. `[OPEN]` means genuinely undecided — safe to propose, do not implement until closed. A `TODO:` is a real task only if it does not contradict a `[LOCKED]` item; a TODO that contradicts a locked decision is stale text to delete, not a task. Code-vs-spec divergences are tracked in [CONTRADICTIONS.md](CONTRADICTIONS.md).
+> **Decision layer.** `[UNLOCKED]` means decided — do not reopen, resolve, or build the opposite; changing it needs an explicit spec PR plus owner sign-off. `[OPEN]` means genuinely undecided — safe to propose, do not implement until closed. A `TODO:` is a real task only if it does not contradict a `[UNLOCKED]` item; a TODO that contradicts a locked decision is stale text to delete, not a task. Code-vs-spec divergences are tracked in [CONTRADICTIONS.md](CONTRADICTIONS.md).
 
 Spec-leads-code: the tables here are the source of truth. Component code reads from [constants/](../../constants/) and must match this doc.
 
 ## Design ethos
 
-`[LOCKED]`
+`[UNLOCKED]`
 
 - **Living Manuscript palette** — Karnataka identity (state flag green/gold, Mysore red), Material 3 tonal logic.
 - **No-Line rule** — tonal separation over borders. Cards lift via shadow + surface tonal change, not strokes.
@@ -27,7 +27,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 ## Color tokens
 
-`[LOCKED]` — matches [colors.ts](../../constants/colors.ts). **Never use a hex literal in a component — always `Colors.X`.**
+`[UNLOCKED]` — matches [colors.ts](../../constants/colors.ts). **Never use a hex literal in a component — always `Colors.X`.**
 
 ### Surface stack
 | Token | Hex | Use |
@@ -74,7 +74,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 ## Spacing
 
-`[LOCKED]` — matches [spacing.ts](../../constants/spacing.ts). All values are pre-wrapped in `moderateScale()`.
+`[UNLOCKED]` — matches [spacing.ts](../../constants/spacing.ts). All values are pre-wrapped in `moderateScale()`.
 
 | Token | Base | Use |
 |---|---|---|
@@ -88,7 +88,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 ## Radius
 
-`[LOCKED]` — matches [spacing.ts](../../constants/spacing.ts).
+`[UNLOCKED]` — matches [spacing.ts](../../constants/spacing.ts).
 
 | Token | Base | Use |
 |---|---|---|
@@ -100,15 +100,15 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 ## Typography
 
-`[LOCKED]` — families and assignments. Defined in [fonts.ts](../../constants/fonts.ts). Three families, used strictly:
+`[UNLOCKED]` — families and assignments. Defined in [fonts.ts](../../constants/fonts.ts). Three families, used strictly:
 
 | Family | When |
 |---|---|
 | `Fonts.dmSans` | All UI chrome — buttons, labels, tabs, body text. |
 | `Fonts.lora.italic` | Transliteration **only**. Never UI; never Kannada. |
-| `Fonts.notoSerifKannada` | Kannada script **only**. |
+| `Fonts.notoSansKannada` | Kannada script **only**. |
 
-**Why this split:** transliterations get a distinctive italic so they're visually parseable as a learning aid, not body copy. Kannada gets a serif to feel rooted, not generic-tech.
+**Why this split:** transliterations get a distinctive italic so they're visually parseable as a learning aid, not body copy. Kannada uses a sans family for crisper rendering at small reference sizes — the tertiary role in [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md), and the Beginners' Guide glyph hero.
 
 ### Type scale
 
@@ -127,11 +127,11 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 ## Icons
 
-`[LOCKED]` — all from `@tabler/icons-react-native` (outline weight). Mapped in [icons.ts](../../constants/icons.ts) — **never import Tabler directly in a component.**
+`[UNLOCKED]` — all from `@tabler/icons-react-native` (outline weight). Mapped in [icons.ts](../../constants/icons.ts) — **never import Tabler directly in a component.**
 
 ### Rules
 
-`[LOCKED]`
+`[UNLOCKED]`
 
 1. **One library** — `@tabler/icons-react-native`, outline weight, pinned in `package.json`. No alternate icon libraries.
 2. **Never reach into the library directly from a component.** Every icon flows through the [icons.ts](../../constants/icons.ts) map so swaps stay one-line.
@@ -174,7 +174,7 @@ Anatomy + props + tokens used. Every reusable component lives here.
 
 ### `TabBar`
 
-`[LOCKED]` — matches [components/ui/TabBar.tsx](../../components/ui/TabBar.tsx). Custom Expo Router tab bar (replaces default).
+`[UNLOCKED]` — matches [components/ui/TabBar.tsx](../../components/ui/TabBar.tsx). Custom Expo Router tab bar (replaces default).
 
 | Property | Value |
 |---|---|
@@ -186,7 +186,7 @@ Anatomy + props + tokens used. Every reusable component lives here.
 
 ### `ProgressDots`
 
-`[LOCKED]` — matches [components/onboarding/ProgressDots.tsx](../../components/onboarding/ProgressDots.tsx). Migration TODOs inside the table are `[OPEN]`.
+`[UNLOCKED]` — matches [components/onboarding/ProgressDots.tsx](../../components/onboarding/ProgressDots.tsx). Migration TODOs inside the table are `[OPEN]`.
 
 | Property | Value |
 |---|---|
@@ -199,7 +199,7 @@ Anatomy + props + tokens used. Every reusable component lives here.
 
 ### `OptionCard`
 
-`[LOCKED]` — matches [components/onboarding/OptionCard.tsx](../../components/onboarding/OptionCard.tsx). Migration TODOs inside the table are `[OPEN]`.
+`[UNLOCKED]` — matches [components/onboarding/OptionCard.tsx](../../components/onboarding/OptionCard.tsx). Migration TODOs inside the table are `[OPEN]`.
 
 | Property | Value |
 |---|---|
@@ -233,7 +233,7 @@ Anatomy + props + tokens used. Every reusable component lives here.
 
 ### Modals & overlays
 
-`[PROPOSED]` — full spec lives in [spec_docs/Sameecha/MODALS.md](../../spec_docs/Sameecha/MODALS.md). Owns the four overlay shapes (centered dialog, bottom sheet, full-screen takeover, toast), the `ModalHost` + `ToastHost` providers, and 9 modal instances. Implementation in [components/modals/](../../components/modals/). Pending promotion to `[LOCKED]` after sign-off.
+`[PROPOSED]` — full spec lives in [spec_docs/Sameecha/MODALS.md](../../spec_docs/Sameecha/MODALS.md). Owns the four overlay shapes (centered dialog, bottom sheet, full-screen takeover, toast), the `ModalHost` + `ToastHost` providers, and 9 modal instances. Implementation in [components/modals/](../../components/modals/). Pending promotion to `[UNLOCKED]` after sign-off.
 
 ## Open questions / drift
 

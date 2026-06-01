@@ -21,6 +21,18 @@ interface UserState {
   mode: 'rowdy' | 'classic';
   /** TTS missing-voice warning shown at boot (MODALS §6.9). One-time per install. */
   hasSeenTtsWarning: boolean;
+  /**
+   * True once the user reaches the end of /onboarding/basics and taps Continue,
+   * or opens /guide voluntarily. Per-user; cleared by resetForUser. Added for
+   * spec_beginners_guide.md.
+   */
+  hasSeenBasicsGuide: boolean;
+  /**
+   * True after the one-time home toast pointing to the Learn-tab basics card
+   * dismisses. Install-scoped — kept across resetForUser so a reinstall on the
+   * same device doesn't replay. Added for spec_beginners_guide.md.
+   */
+  hasSeenBasicsHomeNudge: boolean;
   /** ISO timestamp of last denial, scoped per kind. We re-ask at most once per week. */
   permissionDenials: Partial<Record<'notifications' | 'mic', string>>;
   /** 'HH:MM' 24h, mirrors public.users.daily_reminder_time. */
@@ -41,7 +53,10 @@ interface UserState {
   setLearningMode: (mode: 'spoken' | 'written' | 'both') => void;
   setMotivations: (motivations: string[]) => void;
   setMode: (mode: 'rowdy' | 'classic') => void;
+  setDailyGoalMinutes: (minutes: 5 | 10 | 20) => void;
   setHasSeenTtsWarning: (seen: boolean) => void;
+  setHasSeenBasicsGuide: (seen: boolean) => void;
+  setHasSeenBasicsHomeNudge: (seen: boolean) => void;
   recordPermissionDenial: (kind: 'notifications' | 'mic') => void;
   setDailyReminderTime: (time: string | null) => void;
   setTtsRate: (rate: number) => void;
@@ -68,6 +83,8 @@ export const useUserStore = create<UserState>()(
       dailyGoalMinutes: null,
       mode: 'classic',
       hasSeenTtsWarning: false,
+      hasSeenBasicsGuide: false,
+      hasSeenBasicsHomeNudge: false,
       permissionDenials: {},
       dailyReminderTime: null,
       ttsRate: 1.0,
@@ -78,6 +95,7 @@ export const useUserStore = create<UserState>()(
       setOnboarding: (data) =>
         set((s) => ({
           hasCompletedOnboarding: true,
+          hasSeenBasicsGuide: true,
           displayName: data.displayName?.trim() || s.displayName,
           learningMode: data.learningMode,
           motivations: data.motivations,
@@ -92,7 +110,14 @@ export const useUserStore = create<UserState>()(
 
       setMode: (mode) => set({ mode }),
 
+      setDailyGoalMinutes: (dailyGoalMinutes) => set({ dailyGoalMinutes }),
+
       setHasSeenTtsWarning: (hasSeenTtsWarning) => set({ hasSeenTtsWarning }),
+
+      setHasSeenBasicsGuide: (hasSeenBasicsGuide) => set({ hasSeenBasicsGuide }),
+
+      setHasSeenBasicsHomeNudge: (hasSeenBasicsHomeNudge) =>
+        set({ hasSeenBasicsHomeNudge }),
 
       recordPermissionDenial: (kind) =>
         set((s) => ({
@@ -126,7 +151,9 @@ export const useUserStore = create<UserState>()(
           ttsRate: 1.0,
           autoReplay: true,
           pendingOnboardingSync: null,
-          // mode + permissionDenials + hasSeenTtsWarning are install-scoped, not user-scoped — keep them.
+          hasSeenBasicsGuide: false,
+          // mode + permissionDenials + hasSeenTtsWarning + hasSeenBasicsHomeNudge
+          // are install-scoped, not user-scoped — keep them.
         }),
 
       hydrateFromUserRow: (row) =>
@@ -153,8 +180,10 @@ export const useUserStore = create<UserState>()(
           ttsRate: 1.0,
           autoReplay: true,
           pendingOnboardingSync: null,
-          // Preserved: mode, hasSeenTtsWarning, permissionDenials, isHydrated —
-          // device-scoped state survives account switches.
+          hasSeenBasicsGuide: false,
+          // Preserved: mode, hasSeenTtsWarning, hasSeenBasicsHomeNudge,
+          // permissionDenials, isHydrated — device-scoped state survives
+          // account switches.
         }),
     }),
     {

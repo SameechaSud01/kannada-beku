@@ -123,7 +123,7 @@ const OptionButton: React.FC<Props> = ({ option, state, onPress }) => {
         </Text>
         <Text
           style={{
-            fontFamily: Fonts.notoSerifKannada.regular,
+            fontFamily: Fonts.notoSansKannada.regular,
             fontSize: moderateScale(13),
             textAlign: 'center',
             marginTop: moderateScale(4),

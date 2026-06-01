@@ -106,7 +106,7 @@ function PreviewCard({ body }: { body: string }) {
       >
         <Text
           style={{
-            fontFamily: Fonts.notoSerifKannada.medium,
+            fontFamily: Fonts.notoSansKannada.medium,
             fontSize: moderateScale(17),
             color: Colors.onPrimary,
           }}
