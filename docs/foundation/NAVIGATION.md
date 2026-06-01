@@ -2,7 +2,7 @@
 doc: NAVIGATION
 status: reviewed
 owner: samee
-last-reviewed: 2026-05-19
+last-reviewed: 2026-06-01
 related:
   - SCOPE.md
   - STATE.md
@@ -49,7 +49,9 @@ Loads fonts, sets audio mode (`playsInSilentModeIOS: true`), probes Kannada TTS 
 | `/onboarding/name` | [name.tsx](../../app/onboarding/name.tsx) | ↑ | none | Display name (step 1/4). See [spec_onboarding_tweaks](../../spec_docs/Sameecha/spec_onboarding_tweaks.md). |
 | `/onboarding/goal` | [goal.tsx](../../app/onboarding/goal.tsx) | ↑ | none | Learning mode (step 2/4) |
 | `/onboarding/motivation` | [motivation.tsx](../../app/onboarding/motivation.tsx) | ↑ | none | Motivation (step 3/4, max 3, supports "Other") |
-| `/onboarding/commitment` | [commitment.tsx](../../app/onboarding/commitment.tsx) | ↑ | none | Daily goal (step 4/4, info dialog per choice) |
+| `/onboarding/commitment` | [commitment.tsx](../../app/onboarding/commitment.tsx) | ↑ | none | Daily goal (step 4/5, info dialog per choice) |
+| `/onboarding/basics` | [basics.tsx](../../app/onboarding/basics.tsx) | ↑ | none | Beginners' Guide primer (step 5/5). See [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md). |
+| `/guide` | [guide.tsx](../../app/guide.tsx) | root stack | Screen-owned back chip + title | Voluntary re-entry to the Beginners' Guide from `/(tabs)/learn`. Identical content to `/onboarding/basics`, no `ProgressDots`. |
 | `/lesson/[id]` | [[id].tsx](../../app/lesson/%5Bid%5D.tsx) | root stack | TODO | Lesson runner. Param: `id` = `LessonId` |
 | `/practice/[id]` | [[id].tsx](../../app/practice/%5Bid%5D.tsx) | root stack | TODO | Game detail. Param: `id` = game id |
 | `/heritage/[id]` | [[id].tsx](../../app/heritage/%5Bid%5D.tsx) | root stack | TODO | Heritage detail. Param: `id` = slug |
@@ -113,7 +115,8 @@ Per-flow rules:
 | `(tabs)` (home, learn, practice, profile) | none | n/a — root tabs |
 | `(auth)/login` | none | first screen of its flow |
 | `/onboarding/welcome` | none | first onboarding step; no meaningful prior route |
-| `/onboarding/{name,goal,motivation,commitment}` | inline Back/Continue pair (existing) | `router.back()` — no confirm; selections are not yet committed to the store |
+| `/onboarding/{name,goal,motivation,commitment,basics}` | inline Back/Continue pair (existing) | `router.back()` — no confirm; selections are not yet committed to the store |
+| `/guide` (voluntary re-entry) | screen-owned back chip | Plain `router.back()` — read-only surface, nothing to lose. See [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md). |
 | `/lesson/[id]` scenario / intake / drill / output | floating chip overlay | `ExitLessonDialog` (lesson variant) — destructive confirm, blocks backdrop tap + Android hardware back. See [MODALS](../../spec_docs/Sameecha/MODALS.md) §6.1. |
 | `/lesson/[id]` done | none | Existing close button on `DoneCard` handles exit |
 | `/(games)/dictation`, `/(games)/opposites` mid-game | inline chip in header row | `ExitLessonDialog` (game variant). See [MODALS](../../spec_docs/Sameecha/MODALS.md) §6.1. |
@@ -128,13 +131,14 @@ Named multi-screen flows. Each names entry → exit.
 
 ### J1: First-time sign-up
 
-`[LOCKED]` — describes the live flow.
+`[LOCKED]` — describes the live flow. Amended 2026-06-01 to add the Beginners' Guide as step 5/5 (see [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md)).
 
 1. App launch → `AppGate` → no session → `/(auth)/login`
 2. User taps "Create account" toggle → fills email/password → submits
 3. Supabase confirms (no email-verification flow in MVP — TODO confirm)
 4. `setSession()` fires → `AppGate` reruns → not onboarded → `/onboarding/welcome`
-5. Welcome → Name → Goal → Motivation → Commitment → `setOnboarding()` → `/(tabs)`
+5. Welcome → Name → Goal → Motivation → Commitment → Basics → `setOnboarding()` → `/(tabs)`
+6. On first arrival at `/(tabs)/` after this flow, a one-time home toast fires pointing to the Learn-tab basics card (`hasSeenBasicsHomeNudge` gates re-fire). See [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md).
 
 ### J2: Complete a lesson
 

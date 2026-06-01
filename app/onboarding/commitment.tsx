@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,9 +12,6 @@ import { ProgressDots } from '../../components/onboarding/ProgressDots';
 import { useModal } from '../../components/modals/ModalHost';
 import { LearningTimeInfoDialog } from '../../components/modals/instances/LearningTimeInfoDialog';
 import { useUserStore } from '../../stores/useUserStore';
-import { useAuthStore } from '../../stores/useAuthStore';
-import { completeOnboarding } from '../../services/api/users';
-import { Toasts } from '../../components/modals/instances/toastCatalog';
 
 type Minutes = 5 | 10 | 20;
 
@@ -28,8 +25,9 @@ export default function CommitmentScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const modal = useModal();
-  const [selected, setSelected] = useState<Minutes | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+  const [selected, setSelected] = useState<Minutes | null>(
+    useUserStore.getState().dailyGoalMinutes,
+  );
 
   const openInfo = (minutes: Minutes) => {
     modal.show({
@@ -40,61 +38,13 @@ export default function CommitmentScreen() {
     });
   };
 
-  const handleFinish = async () => {
-    if (!selected || submitting) return;
-
-    const userId = useAuthStore.getState().user?.id;
-    if (!userId) {
-      Toasts.sessionLost();
-      return;
-    }
-
-    const { displayName, learningMode, motivations } = useUserStore.getState();
-
-    // Defensive — the screen flow should prevent this, but if the user
-    // navigated here without completing earlier steps, route back instead
-    // of submitting incomplete answers.
-    if (!learningMode) {
-      router.replace('/onboarding/goal');
-      return;
-    }
-    if (motivations.length === 0) {
-      router.replace('/onboarding/motivation');
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const row = await completeOnboarding(userId, {
-        name: displayName ?? null,
-        learning_mode: learningMode,
-        motivations,
-        daily_goal_minutes: selected,
-      });
-      useUserStore.getState().hydrateFromUserRow(row);
-      router.replace('/(tabs)');
-    } catch (err) {
-      // spec_security_hardening.md §6: don't trap the user on commitment if the
-      // sync fails. Capture the answers, mark local onboarding done, route
-      // forward — the boot path retries on next session.
-      console.warn('[onboarding] completeOnboarding failed; queued for retry', err);
-      useUserStore.getState().setOnboarding({
-        displayName: displayName ?? undefined,
-        learningMode,
-        motivations,
-        dailyGoalMinutes: selected,
-      });
-      useUserStore.getState().setPendingOnboardingSync({
-        displayName: displayName ?? undefined,
-        learningMode,
-        motivations,
-        dailyGoalMinutes: selected,
-      });
-      router.replace('/(tabs)');
-    }
+  const handleContinue = () => {
+    if (!selected) return;
+    useUserStore.getState().setDailyGoalMinutes(selected);
+    router.push('/onboarding/basics');
   };
 
-  const canSubmit = !!selected && !submitting;
+  const canSubmit = !!selected;
 
   return (
     <View
@@ -106,7 +56,7 @@ export default function CommitmentScreen() {
         paddingHorizontal: Spacing.xxl,
       }}
     >
-      <ProgressDots total={5} current={4} />
+      <ProgressDots total={6} current={4} />
 
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <Text
@@ -120,7 +70,7 @@ export default function CommitmentScreen() {
           }}
           maxFontSizeMultiplier={1.4}
         >
-          Step 4 of 4
+          Step 4 of 5
         </Text>
         <Text
           style={{
@@ -162,14 +112,12 @@ export default function CommitmentScreen() {
       <View style={{ flexDirection: 'row', gap: Spacing.md }}>
         <Pressable
           onPress={() => router.back()}
-          disabled={submitting}
           style={({ pressed }) => ({
             flex: 1,
             backgroundColor: Colors.surfaceContainerHighest,
             borderRadius: moderateScale(16),
             paddingVertical: moderateScale(18),
             alignItems: 'center',
-            opacity: submitting ? 0.6 : 1,
             transform: [{ scale: pressed ? 0.97 : 1 }],
           })}
         >
@@ -178,11 +126,11 @@ export default function CommitmentScreen() {
           </Text>
         </Pressable>
         <Pressable
-          onPress={handleFinish}
+          onPress={handleContinue}
           disabled={!canSubmit}
           accessibilityRole="button"
-          accessibilityLabel="Finish onboarding"
-          accessibilityState={{ disabled: !canSubmit, busy: submitting }}
+          accessibilityLabel="Continue to the next step"
+          accessibilityState={{ disabled: !canSubmit }}
           style={({ pressed }) => ({
             flex: 2,
             backgroundColor: selected ? (pressed ? Colors.primary : Colors.primaryContainer) : Colors.surfaceDim,
@@ -194,13 +142,9 @@ export default function CommitmentScreen() {
             transform: [{ scale: pressed && canSubmit ? 0.97 : 1 }],
           })}
         >
-          {submitting ? (
-            <ActivityIndicator color={Colors.onPrimary} />
-          ) : (
-            <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onPrimary }}>
-              Let's Go!
-            </Text>
-          )}
+          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onPrimary }}>
+            Continue
+          </Text>
         </Pressable>
       </View>
     </View>

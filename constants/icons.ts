@@ -59,6 +59,8 @@ export const Icons = {
   // Tab bar
   tabHome: IconHome,
   tabLearn: IconBook2,
+  // Beginners' Guide entry (Learn tab card, spec_beginners_guide.md)
+  book: IconBook2,
   tabPractice: IconTargetArrow, // changed from microphone (user-confirmed, Spec 03)
   tabProfile: IconUser,
 

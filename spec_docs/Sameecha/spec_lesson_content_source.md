@@ -57,7 +57,8 @@ to, today and on every future SQL update.
     "verified": false,
     "notes":    "optional — free-text editor note",
     "words":    [ <ReferenceWord> ],
-    "phrases":  [ <ReferencePhrase> ]
+    "phrases":  [ <ReferencePhrase> ],
+    "sections": [ <GuideSection> ]    // optional; lesson-0-only today
   }
 }
 ```
@@ -82,6 +83,8 @@ type ReferencePhrase = {
 };
 ```
 
+`sections` is an optional sibling of `words` / `phrases`, used today only by the Lesson 0 basics primer ([spec_beginners_guide.md](spec_beginners_guide.md)). Its shape is owned by that spec; ordinary lessons (1–8) omit the field.
+
 **Rules:**
 1. Every authored lesson row carries `content_json.reference.source`
    pointing to the artifact the vocab came from. Multiple sources are
@@ -91,7 +94,10 @@ type ReferencePhrase = {
    a `notes` field on the same object.
 3. Empty references are represented as `{}` (not as a `reference` with
    empty arrays). Lessons L7 and L8 are `{}` today because no PDF
-   covers them.
+   covers them. **Exception:** Lesson 0 (basics primer) carries
+   `words: []`, `phrases: []`, and a populated `sections: [...]`. The
+   reference is not empty — `sections` is the payload — so rule 3
+   does not apply.
 4. Word and phrase ordering inside the arrays mirrors the source PDF's
    table order. Do not re-sort.
 

@@ -82,7 +82,7 @@ export default function LoginScreen() {
         <View style={{ alignItems: 'center', marginBottom: Spacing.xxxl }}>
           <Text
             style={{
-              fontFamily: Fonts.notoSerifKannada.bold,
+              fontFamily: Fonts.notoSansKannada.bold,
               fontSize: moderateScale(48),
               color: Colors.primaryContainer,
               lineHeight: moderateScale(72),

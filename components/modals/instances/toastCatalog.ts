@@ -122,4 +122,12 @@ export const Toasts = {
       subtitle: 'Check your connection and try again',
     });
   },
+
+  basicsHomeNudge() {
+    Toast.show({
+      kind: 'success',
+      id: 'basics.homeNudge',
+      title: 'Tap "Kannada basics" on the Learn tab anytime to revisit the primer.',
+    });
+  },
 };

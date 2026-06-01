@@ -12,10 +12,10 @@ export const Fonts = {
     mediumItalic: 'Lora_500Medium_Italic',
   },
 
-  // Noto Serif Kannada — Kannada script ONLY
-  notoSerifKannada: {
-    regular: 'NotoSerifKannada_400Regular',
-    medium: 'NotoSerifKannada_500Medium',
-    bold: 'NotoSerifKannada_700Bold',
+  // Noto Sans Kannada — Kannada script ONLY
+  notoSansKannada: {
+    regular: 'NotoSansKannada_400Regular',
+    medium: 'NotoSansKannada_500Medium',
+    bold: 'NotoSansKannada_700Bold',
   },
 };

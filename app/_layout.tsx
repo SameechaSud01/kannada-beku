@@ -2,13 +2,12 @@ import { useEffect } from 'react';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, DMSans_400Regular, DMSans_500Medium, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
-import { NotoSansKannada_400Regular, NotoSansKannada_700Bold } from '@expo-google-fonts/noto-sans-kannada';
-import { Lora_400Regular_Italic, Lora_500Medium_Italic } from '@expo-google-fonts/lora';
 import {
-  NotoSerifKannada_400Regular,
-  NotoSerifKannada_500Medium,
-  NotoSerifKannada_700Bold,
-} from '@expo-google-fonts/noto-serif-kannada';
+  NotoSansKannada_400Regular,
+  NotoSansKannada_500Medium,
+  NotoSansKannada_700Bold,
+} from '@expo-google-fonts/noto-sans-kannada';
+import { Lora_400Regular_Italic, Lora_500Medium_Italic } from '@expo-google-fonts/lora';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -228,10 +227,8 @@ export default function RootLayout() {
     DMSans_700Bold,
     Lora_400Regular_Italic,
     Lora_500Medium_Italic,
-    NotoSerifKannada_400Regular,
-    NotoSerifKannada_500Medium,
-    NotoSerifKannada_700Bold,
     NotoSansKannada_400Regular,
+    NotoSansKannada_500Medium,
     NotoSansKannada_700Bold,
   });
 

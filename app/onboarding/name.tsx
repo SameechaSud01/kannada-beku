@@ -41,7 +41,7 @@ export default function NameScreen() {
           paddingHorizontal: Spacing.xxl,
         }}
       >
-        <ProgressDots total={5} current={1} />
+        <ProgressDots total={6} current={1} />
 
         <View style={{ flex: 1, justifyContent: 'center' }}>
           <Text
@@ -55,7 +55,7 @@ export default function NameScreen() {
             }}
             maxFontSizeMultiplier={1.4}
           >
-            Step 1 of 4
+            Step 1 of 5
           </Text>
           <Text
             style={{

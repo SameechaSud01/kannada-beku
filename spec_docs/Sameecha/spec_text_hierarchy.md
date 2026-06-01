@@ -19,7 +19,7 @@ Wherever the UI renders a Kannada vocabulary item or phrase showing two or three
 
 1. **Primary** (largest, top, high contrast) — transliteration (romanised Kannada). `Fonts.lora.italic`.
 2. **Secondary** (medium, below, muted) — English meaning. `Fonts.dmSans.medium` or `.regular`, `Colors.tertiary`.
-3. **Tertiary** (small, below, ~70% opacity) — Kannada script. `Fonts.notoSerifKannada.regular`, `Colors.tertiary`.
+3. **Tertiary** (small, below, ~70% opacity) — Kannada script. `Fonts.notoSansKannada.regular`, `Colors.tertiary`.
 
 **Why:** the app is for English-speaking learners of Kannada (see [SCOPE.md](../../docs/foundation/SCOPE.md)). Transliteration is what they can read aloud and recall; English is the meaning hook; Kannada script is reference. Inverting the hierarchy (Kannada-first) makes the script the cognitive load and pushes learners toward memorising the script, which contradicts "spoken comfort first."
 
@@ -60,6 +60,7 @@ For every surface listed in §2:
 `[OPEN]`
 
 - **App-name branding "ಕನ್ನಡ ಬಾ"** on home, learn, practice, profile, login, onboarding — single-glyph decorative usage, no hierarchy to apply.
+- **Beginners' Guide — `<GlyphCard />` on `/onboarding/basics` and `/guide`** — `[LOCKED]` Kannada-first exception, because the script *is* the subject being learned on that surface rather than a reference label next to a vocabulary item. Rationale and scope live in [spec_beginners_guide.md §Text-hierarchy exception](spec_beginners_guide.md#text-hierarchy-exception). `<RuleCard />` and `<KeyRow />` on the same screen don't render Kannada script and so don't apply the rule either way.
 - **LessonSelector lesson-pill glyph** — single decorative Kannada glyph badge inside a lesson pill, not a vocabulary item.
 - **TeachPhrasesPhase per-word chips** — 2-field (transliteration + kannada) chip row above the full-phrase card. Adding per-chip English would clutter the chip row; full phrase below already shows English in canonical order.
 - **Dictation FeedbackCard reveal** — currently shows kannada-only when the correct answer is revealed; threading English through requires changes to `DictationItem` plumbing. Flagged for a follow-up; the dictation game's primary input already targets transliteration, so the reveal is consistent with the rule's spirit.

@@ -16,6 +16,7 @@ import {
 import { useModal } from '../../components/modals/ModalHost';
 import { LessonLockedDialog } from '../../components/modals/instances/LessonLockedDialog';
 import { LessonInfoDialog } from '../../components/modals/instances/LessonInfoDialog';
+import { BasicsCard } from '../../components/guide/BasicsCard';
 
 const ESTIMATED_MIN_PER_LESSON = 5;
 
@@ -146,7 +147,7 @@ export default function LearnScreen() {
         <View style={{ width: moderateScale(56) }} />
         <Text
           style={{
-            fontFamily: Fonts.notoSerifKannada.bold,
+            fontFamily: Fonts.notoSansKannada.bold,
             fontSize: moderateScale(22),
             color: Colors.primary,
             letterSpacing: -0.3,
@@ -213,6 +214,12 @@ export default function LearnScreen() {
           >
             Finish a lesson to unlock the next one.
           </Text>
+        </View>
+
+        <View
+          style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(14) }}
+        >
+          <BasicsCard />
         </View>
 
         <View style={{ paddingHorizontal: Spacing.xxl, gap: moderateScale(10) }}>
@@ -286,7 +293,7 @@ function LessonRowView({
       >
         <Text
           style={{
-            fontFamily: Fonts.notoSerifKannada.bold,
+            fontFamily: Fonts.notoSansKannada.bold,
             fontSize: moderateScale(24),
             lineHeight: moderateScale(36),
             paddingTop: moderateScale(2),

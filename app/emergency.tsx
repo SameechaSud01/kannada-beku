@@ -240,7 +240,7 @@ export default function EmergencyScreen() {
                         </Text>
                         <Text
                           style={{
-                            fontFamily: Fonts.notoSerifKannada.regular,
+                            fontFamily: Fonts.notoSansKannada.regular,
                             fontSize: moderateScale(13),
                             color: Colors.tertiary,
                             lineHeight: moderateScale(20),

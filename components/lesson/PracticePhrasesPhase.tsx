@@ -6,6 +6,7 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
+import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { LessonProgressBar } from './LessonProgressBar';
 import { useUserStore } from '../../stores/useUserStore';
@@ -99,7 +100,7 @@ export function PracticePhrasesPhase({
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.surface }}>
-      <View style={{ paddingTop: insets.top + Spacing.lg, paddingHorizontal: Spacing.lg }}>
+      <View style={{ paddingTop: insets.top + BACK_CHIP_TOP_RESERVE, paddingHorizontal: Spacing.lg }}>
         <LessonProgressBar
           current={practicePhrasesIndex + 1}
           total={total}
@@ -262,7 +263,7 @@ export function PracticePhrasesPhase({
             </Text>
             <Text
               style={{
-                fontFamily: Fonts.notoSerifKannada.regular,
+                fontFamily: Fonts.notoSansKannada.regular,
                 fontSize: moderateScale(12),
                 color: Colors.tertiary,
                 textAlign: 'center',

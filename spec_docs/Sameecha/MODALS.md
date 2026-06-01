@@ -151,7 +151,7 @@ Add to existing token files before implementing modals.
 | `constants/shadows.ts` | `toastSoft` | `{ color: '#000', opacity: 0.18, radius: 30, offset: { 0, 10 } }` | Error-bottom toast |
 | `constants/shadows.ts` | `medallion` | `{ color: secondary, opacity: 0.20, radius: 22, offset: { 0, 16 } }` | Hero medallions (streak takeover) |
 
-> No font additions are needed for the modal system — uses existing `Fonts.dmSans`, `Fonts.lora.italic`, and `Fonts.notoSerifKannada`.
+> No font additions are needed for the modal system — uses existing `Fonts.dmSans`, `Fonts.lora.italic`, and `Fonts.notoSansKannada`.
 
 ---
 
@@ -248,7 +248,7 @@ Each instance below is a self-contained component under `components/modals/insta
 | Element | Token / content |
 |---|---|
 | Drag handle | `38 × 5`, radius `3`, `Colors.surfaceDim`, centered, `marginBottom: 8`. |
-| Header row | Flex row, gap `16`. Left (flex 1): Kannada `36pt`/medium/`Fonts.notoSerifKannada`/`Colors.onSurface`/lineHeight `1.15`, then translit `18pt`/medium-italic/`Fonts.lora.italic`/`Colors.secondary` (marginTop `4`), then English `13pt`/`Colors.tertiary` (marginTop `2`). Right: `RoundIconButton variant="primary" icon="play" size={48}`. |
+| Header row | Flex row, gap `16`. Left (flex 1): Kannada `36pt`/medium/`Fonts.notoSansKannada`/`Colors.onSurface`/lineHeight `1.15`, then translit `18pt`/medium-italic/`Fonts.lora.italic`/`Colors.secondary` (marginTop `4`), then English `13pt`/`Colors.tertiary` (marginTop `2`). Right: `RoundIconButton variant="primary" icon="play" size={48}`. |
 | Divider | `GoldRule label="Break it down"` (the dotted divider from DESIGN.md proposal). |
 | Atom rows | For each entry in `phrase.vocabAtoms`: card `Colors.surfaceContainerHighest`, radius `Radius.lg`, padding `12`, row flex, gap `10`. Kannada `18pt`/medium + translit italic `13pt`/`Colors.secondary` + flex spacer + gloss `12pt`/`Colors.tertiary` right-aligned. |
 | Note callout (optional) | If `phrase.note` exists: bg `Colors.secondaryFixed`, radius `Radius.lg`, padding `12`. `Icons.sparkle` 16pt + body `12pt`/medium/`Colors.onSecondaryContainer`/`lineHeight: 1.4`. |
@@ -273,7 +273,7 @@ Each instance below is a self-contained component under `components/modals/insta
 | Element | Token / content |
 |---|---|
 | Drag handle | same as 6.4 |
-| Eyebrow | "{kannada} · {translit}" centered, `11pt`/bold/`Colors.tertiary`/uppercase. Kannada in `Fonts.notoSerifKannada` 13pt inline, translit in `Fonts.lora.italic`. |
+| Eyebrow | "{kannada} · {translit}" centered, `11pt`/bold/`Colors.tertiary`/uppercase. Kannada in `Fonts.notoSansKannada` 13pt inline, translit in `Fonts.lora.italic`. |
 | Title | "How was that one?" `22pt`/bold/`Colors.onSurface`, centered. |
 | Subtitle | "Be honest — it tunes when you'll see it again." `Fonts.lora.italic` 13pt/`Colors.tertiary`, centered. |
 | Rating row × 3 | See table below. |

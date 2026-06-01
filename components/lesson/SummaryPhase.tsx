@@ -5,6 +5,7 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
+import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import type { Phrase, Word } from '../../constants/lessons/types';
 
@@ -23,7 +24,7 @@ export function SummaryPhase({ words, phrases, onAdvance }: SummaryPhaseProps) {
         contentContainerStyle={{
           flexGrow: 1,
           paddingHorizontal: Spacing.lg,
-          paddingTop: insets.top + Spacing.xxxl,
+          paddingTop: insets.top + BACK_CHIP_TOP_RESERVE,
           paddingBottom: Spacing.lg,
         }}
       >
@@ -148,7 +149,7 @@ function SummaryRow({
         </Text>
         <Text
           style={{
-            fontFamily: Fonts.notoSerifKannada.regular,
+            fontFamily: Fonts.notoSansKannada.regular,
             fontSize: moderateScale(12),
             color: Colors.tertiary,
             marginTop: moderateScale(2),

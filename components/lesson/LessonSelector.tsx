@@ -107,7 +107,7 @@ function LessonPill({ lesson, index, onTap }: LessonPillProps) {
           {unlocked ? (
             <Text
               style={{
-                fontFamily: Fonts.notoSerifKannada.bold,
+                fontFamily: Fonts.notoSansKannada.bold,
                 fontSize: moderateScale(22),
                 color: Colors.onSurface,
               }}

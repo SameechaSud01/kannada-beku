@@ -24,12 +24,12 @@ export default function WelcomeScreen() {
         justifyContent: 'space-between',
       }}
     >
-      <ProgressDots total={5} current={0} />
+      <ProgressDots total={6} current={0} />
 
       <View style={{ alignItems: 'center' }}>
         <Text
           style={{
-            fontFamily: Fonts.notoSerifKannada.bold,
+            fontFamily: Fonts.notoSansKannada.bold,
             fontSize: moderateScale(72),
             color: Colors.primaryContainer,
             lineHeight: moderateScale(110),

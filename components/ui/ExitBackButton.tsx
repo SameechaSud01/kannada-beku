@@ -16,6 +16,14 @@ interface ExitBackButtonProps {
   floating?: boolean;
 }
 
+/**
+ * Vertical space the floating back chip occupies below `insets.top`, plus a
+ * small breathing gap. Screens that render the floating chip should offset
+ * their top content by `insets.top + BACK_CHIP_TOP_RESERVE` so the chip
+ * doesn't overlap titles, cards, or progress bars.
+ */
+export const BACK_CHIP_TOP_RESERVE = Spacing.sm + moderateScale(40) + Spacing.sm;
+
 export function ExitBackButton({
   skipConfirm,
   variant = 'lesson',

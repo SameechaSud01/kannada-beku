@@ -4,6 +4,7 @@ import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
+import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
 import type { Lesson } from '../../constants/lessons/types';
 
 interface SituationPhaseProps {
@@ -20,7 +21,7 @@ export function SituationPhase({ lesson, onAdvance }: SituationPhaseProps) {
         contentContainerStyle={{
           flexGrow: 1,
           paddingHorizontal: Spacing.lg,
-          paddingTop: insets.top + Spacing.xxxl,
+          paddingTop: insets.top + BACK_CHIP_TOP_RESERVE,
           paddingBottom: Spacing.lg,
         }}
       >
