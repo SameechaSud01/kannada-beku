@@ -5,6 +5,8 @@ import { Colors } from '@/constants/colors';
 import { Spacing, Radius } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
 import { Icons } from '@/constants/icons';
+import { GlossTag } from '@/components/ui/GlossTag';
+import { splitGloss } from '@/utils/gloss';
 
 type Props = {
   word: string;
@@ -16,7 +18,9 @@ type Props = {
   onHint: () => void;
 };
 
-const QuestionCard: React.FC<Props> = ({ word, tr, meaning, streak }) => (
+const QuestionCard: React.FC<Props> = ({ word, tr, meaning, streak }) => {
+  const { text: meaningText, tag } = splitGloss(meaning);
+  return (
   <View
     style={{
       borderRadius: Radius.xl,
@@ -64,8 +68,13 @@ const QuestionCard: React.FC<Props> = ({ word, tr, meaning, streak }) => (
       }}
       maxFontSizeMultiplier={1.3}
     >
-      {meaning}
+      {meaningText}
     </Text>
+    {tag ? (
+      <View style={{ marginTop: Spacing.sm }}>
+        <GlossTag tag={tag} />
+      </View>
+    ) : null}
     <Text
       style={{
         fontFamily: Fonts.notoSansKannada.regular,
@@ -108,6 +117,7 @@ const QuestionCard: React.FC<Props> = ({ word, tr, meaning, streak }) => (
       </View>
     )}
   </View>
-);
+  );
+};
 
 export default QuestionCard;

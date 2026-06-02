@@ -83,6 +83,18 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 
 **Resolution owed:** Edit [README.md](../../README.md) to drop NativeWind from the stack list (line 3) and from the "Styling" section (line 153), replacing with "inline styles + tokens in `constants/`". No CLAUDE.md edit needed beyond the new top-of-file session-start instruction.
 
+### C12 — CONTENT.md still points game content at deleted local data files
+
+**What's wrong:** [CONTENT.md](CONTENT.md#game-content) describes Opposites as "Consumes word-pair data from [wordPairs.ts](../../src/games/opposites/wordPairs.ts)" with a TODO asking for the word-pair count. As of 2026-06-02 ([spec_content_integrity](../../spec_docs/Sameecha/spec_content_integrity.md) §3.7) the live games consume content **from Supabase** (`fetchOppositesItemsByLessonNo` / `fetchDictationItemsByLessonNo` / `fetchImageMatchItemsByLessonNo`), and the dead local banks were deleted: `src/games/opposites/data/wordPairs.ts` (`RAW_PAIRS`), `src/games/imagematch/data/vocabBank.ts` (`VOCAB_BANK`), `src/games/dictation/data/wordBank.ts` (`WORD_BANK`), plus their tests. The `data/karnataka_fun_facts.json` fallback import was removed from Home (Home is now DB-only with an empty state). The `wordPairs.ts` link in CONTENT.md now points at a non-existent file.
+
+**Why it matters:** A reader following CONTENT.md will look for word-pair data in a deleted file and miss that the DB seed ([2026-05-27_db_wiring_games_seed.sql](../../services/api/migrations/2026-05-27_db_wiring_games_seed.sql)) is the source of truth.
+
+**Owning spec:** [CONTENT.md](CONTENT.md#game-content).
+
+**Resolution owed:** Update CONTENT.md's "Game content" section to point Opposites/Dictation at the DB seed + accessors (and drop the stale `wordPairs.ts` link and word-pair-count TODO). `data/emergency.json` and `data/karnataka_fun_facts.json` are intentionally retained as seed artifacts (per C10 precedent) — not a divergence.
+
+**Note:** `constants/lessons/plannedLessons.ts` was deliberately **left in app code** (drives unlock/progress math); moving it to the DB is out of scope per spec_content_integrity §3.7.
+
 ## Resolved
 
 ### C10 — `emergency_phrases` table now read by app code ✅

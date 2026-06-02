@@ -9,15 +9,11 @@ import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useUserStore } from '../../stores/useUserStore';
-import { updateTtsRate, updateAutoReplay } from '../../services/api/users';
+import { updateAutoReplay } from '../../services/api/users';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
-
-const RATE_OPTIONS: { label: string; value: number }[] = [
-  { label: '0.75x', value: 0.75 },
-  { label: '1.0x', value: 1.0 },
-  { label: '1.25x', value: 1.25 },
-];
+import { RATE_OPTIONS } from '../../constants/audio';
+import { useTtsRate } from '../../hooks/useTtsRate';
 
 const SAMPLE_KANNADA = 'ನಮಸ್ಕಾರ';
 
@@ -25,23 +21,9 @@ export default function AudioScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const userId = useAuthStore((s) => s.user?.id);
-  const ttsRate = useUserStore((s) => s.ttsRate);
-  const setTtsRate = useUserStore((s) => s.setTtsRate);
+  const { ttsRate, changeRate } = useTtsRate();
   const autoReplay = useUserStore((s) => s.autoReplay);
   const setAutoReplay = useUserStore((s) => s.setAutoReplay);
-
-  async function handleRateChange(next: number) {
-    if (!userId || next === ttsRate) return;
-    const previous = useUserStore.getState().ttsRate;
-    setTtsRate(next);
-    try {
-      await updateTtsRate(userId, next);
-    } catch (err) {
-      console.warn('[audio] updateTtsRate failed', err);
-      setTtsRate(previous);
-      Toasts.preferenceSaveFailed();
-    }
-  }
 
   async function handleAutoReplayToggle(next: boolean) {
     if (!userId) return;
@@ -124,7 +106,7 @@ export default function AudioScreen() {
               return (
                 <Pressable
                   key={opt.value}
-                  onPress={() => handleRateChange(opt.value)}
+                  onPress={() => changeRate(opt.value)}
                   accessibilityRole="radio"
                   accessibilityState={{ selected }}
                   accessibilityLabel={`Speed ${opt.label}`}

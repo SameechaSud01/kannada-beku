@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Pressable, Text } from 'react-native';
+import { Animated, Pressable, Text, View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '@/constants/colors';
 import { Spacing, Radius } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
 import { Icons } from '@/constants/icons';
+import { GlossTag } from '@/components/ui/GlossTag';
+import { splitGloss } from '@/utils/gloss';
 import type { Option } from '../types';
 
 export type OptionState = 'default' | 'correct' | 'wrong' | 'reveal' | 'disabled';
@@ -26,6 +28,8 @@ const OptionButton: React.FC<Props> = ({ option, state, onPress }) => {
 
   const isLifted = state === 'correct' || state === 'reveal';
   const isWrong = state === 'wrong';
+
+  const { text: enText, tag } = splitGloss(option.en);
 
   useEffect(() => {
     Animated.parallel([
@@ -119,8 +123,13 @@ const OptionButton: React.FC<Props> = ({ option, state, onPress }) => {
           }}
           maxFontSizeMultiplier={1.3}
         >
-          {option.en}
+          {enText}
         </Text>
+        {tag ? (
+          <View style={{ marginTop: moderateScale(4) }}>
+            <GlossTag tag={tag} />
+          </View>
+        ) : null}
         <Text
           style={{
             fontFamily: Fonts.notoSansKannada.regular,
