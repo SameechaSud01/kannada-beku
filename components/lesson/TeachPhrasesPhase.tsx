@@ -11,6 +11,8 @@ import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioServic
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { LessonProgressBar } from './LessonProgressBar';
 import { useUserStore } from '../../stores/useUserStore';
+import { GlossTag } from '../ui/GlossTag';
+import { splitGloss } from '../../utils/gloss';
 import type { Phrase, Word } from '../../constants/lessons/types';
 
 interface TeachPhrasesPhaseProps {
@@ -58,6 +60,8 @@ export function TeachPhrasesPhase({
   }, [phrase?.kannada, autoReplay]);
 
   if (!phrase) return null;
+
+  const { text: englishText, tag } = splitGloss(phrase.english);
 
   const handleReplay = () => {
     deviceTtsAudioService.play(phrase.kannada).catch((err) => {
@@ -185,8 +189,13 @@ export function TeachPhrasesPhase({
             }}
             maxFontSizeMultiplier={1.3}
           >
-            {phrase.english}
+            {englishText}
           </Text>
+          {tag ? (
+            <View style={{ marginTop: Spacing.sm }}>
+              <GlossTag tag={tag} />
+            </View>
+          ) : null}
           <Text
             style={{
               fontFamily: Fonts.notoSansKannada.regular,

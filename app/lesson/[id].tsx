@@ -16,6 +16,7 @@ import { PracticePhrasesPhase } from '../../components/lesson/PracticePhrasesPha
 import { SummaryPhase } from '../../components/lesson/SummaryPhase';
 import { RealWorldPhase } from '../../components/lesson/RealWorldPhase';
 import { DoneCard } from '../../components/lesson/DoneCard';
+import { PhaseBackButton } from '../../components/lesson/PhaseBackButton';
 import { ExitBackButton } from '../../components/ui/ExitBackButton';
 
 export default function LessonScreen() {
@@ -104,6 +105,7 @@ export default function LessonScreen() {
     <View style={{ flex: 1 }}>
       {phaseEl}
       <ExitBackButton />
+      {runner.canGoPrevious && <PhaseBackButton onPress={runner.goPrevious} />}
     </View>
   );
 }

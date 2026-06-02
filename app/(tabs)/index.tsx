@@ -16,7 +16,6 @@ import { formatFirstName } from '../../utils/formatName';
 import { useCompletedLessons, useStreak } from '../../hooks/progress';
 import { useKarnatakaFunFacts } from '../../hooks/useKarnatakaFunFacts';
 import type { FunFact } from '../../services/api/karnataka_fun_facts';
-import FUN_FACTS_FALLBACK from '../../data/karnataka_fun_facts.json';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 
 const ESTIMATED_MIN_PER_LESSON = 5;
@@ -81,12 +80,10 @@ export default function HomeScreen() {
     'there';
   const userName = formatFirstName(rawName, 'there');
 
-  // Karnataka fun fact — DB-backed with bundled JSON fallback.
-  const facts: readonly CardFact[] =
-    factsQuery.data && factsQuery.data.length > 0
-      ? factsQuery.data
-      : (FUN_FACTS_FALLBACK as readonly CardFact[]);
-  const factOfDay = facts[factOfDayIndex(facts.length)];
+  // Karnataka fun fact — DB-only (no local fallback). When the query is empty
+  // or errored, factOfDay is null and the card is omitted (explicit empty state).
+  const facts: readonly CardFact[] = factsQuery.data ?? [];
+  const factOfDay = facts.length > 0 ? facts[factOfDayIndex(facts.length)] : null;
 
   const completedSlugSet = new Set(completedLessons);
 
@@ -98,7 +95,12 @@ export default function HomeScreen() {
   const ringCirc = 2 * Math.PI * ringR;
   const ringOffset = ringCirc * (1 - completedCount / TOTAL_LESSON_SLOTS);
 
-  const nextLessonSlot = dbLessons.find((l) => !completedSlugSet.has(l.slug));
+  // Never offer a lesson whose content_json is empty/under-seeded — its phases
+  // would render blank. Guards against the #3 blank-lesson defect
+  // (spec_nav_and_games_fixes §2.1, D1).
+  const nextLessonSlot = dbLessons.find(
+    (l) => !completedSlugSet.has(l.slug) && (l.words.length > 0 || l.phrases.length > 0),
+  );
   const nextSlot = PLANNED_LESSON_SLOTS[completedCount];
   const nextTitle = nextLessonSlot?.title ?? nextSlot?.title ?? 'All caught up';
 
@@ -184,7 +186,8 @@ export default function HomeScreen() {
             Namaskāra, {userName}
           </Text>
 
-          {/* Karnataka fun fact */}
+          {/* Karnataka fun fact — DB-only; omitted when unavailable */}
+          {factOfDay ? (
           <View
             accessibilityRole="text"
             accessibilityLabel={`Did you know? ${factOfDay.category}. ${factOfDay.fact}`}
@@ -233,6 +236,7 @@ export default function HomeScreen() {
               {factOfDay.fact}
             </Text>
           </View>
+          ) : null}
 
           {/* Progress ring */}
           <Pressable

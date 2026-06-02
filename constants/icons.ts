@@ -21,6 +21,7 @@
  */
 import {
   IconAlertTriangle,
+  IconArrowBackUp,
   IconArrowLeft,
   IconArrowsLeftRight,
   IconBell,
@@ -69,6 +70,9 @@ export const Icons = {
   audio: IconVolume,
   forward: IconChevronRight,
   back: IconArrowLeft,
+  // In-lesson "previous step" affordance — distinct from the exit-lesson back
+  // chip (spec_lesson_runner_ux §2.2).
+  stepBack: IconArrowBackUp,
   lessonDone: IconCircleCheck,
   locked: IconLock,
   emergency: IconUrgent,
