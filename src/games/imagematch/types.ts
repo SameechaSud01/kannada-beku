@@ -1,8 +1,7 @@
-export type QuestionType = 'word-to-picture' | 'picture-to-word';
-
 export type GamePhase = 'playing' | 'result';
 
-export type OptionState = 'default' | 'correct' | 'wrong' | 'reveal' | 'disabled';
+/** Visual state of a single board tile (word or image). */
+export type TileState = 'default' | 'selected' | 'matched' | 'mismatch';
 
 export type VocabItem = {
   id:    string;
@@ -10,10 +9,5 @@ export type VocabItem = {
   ph:    string;
   en:    string;
   emoji: string;
-};
-
-export type Question = {
-  type:    QuestionType;
-  target:  VocabItem;
-  options: VocabItem[];
+  imageUrl?: string | null;
 };

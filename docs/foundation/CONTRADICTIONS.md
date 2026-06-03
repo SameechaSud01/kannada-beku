@@ -95,6 +95,16 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 
 **Note:** `constants/lessons/plannedLessons.ts` was deliberately **left in app code** (drives unlock/progress math); moving it to the DB is out of scope per spec_content_integrity §3.7.
 
+### C13 — Image Match hidden from Practice, but still 1 of 3 games in the locked overall-progress formula
+
+**What's wrong:** Image Match was removed from the Practice game list ([app/(tabs)/practice.tsx](../../app/%28tabs%29/practice.tsx) `GAMES`) on 2026-06-03 pending a better mechanic (the tap-to-connect board, see [spec_imagematch_board_redesign.md](../../spec_docs/Sameecha/spec_imagematch_board_redesign.md) §6 draw-a-thread `[DEFERRED]`). The game runner (`src/games/imagematch/`) and route case (`app/(games)/[game]/[n].tsx`) remain intact — only the UI entry point is gone. But the `[LOCKED]` `user_overall_progress` formula still counts **image_match** as one of its 3 games (the 80%-of-items "cleared" threshold reads `image_match_progress.is_correct`).
+
+**Why it matters:** With no UI path to play Image Match, a user cannot accumulate `image_match_progress`, so **overall progress can never reach 100%** while the game is hidden. Any surface that renders the overall-progress percentage will appear permanently capped.
+
+**Owning specs:** [spec_db_wiring_games_and_overall_progress.md](../../spec_docs/Sameecha/spec_db_wiring_games_and_overall_progress.md) (locked formula), [spec_imagematch_board_redesign.md](../../spec_docs/Sameecha/spec_imagematch_board_redesign.md).
+
+**Resolution owed:** Either (a) re-list Image Match once a better mechanic ships (restore the one line in `GAMES`), or (b) if it stays hidden, get owner sign-off to amend the locked formula to 2 games (opposites + dictation) via migration — a `[LOCKED]` change, not to be done silently. Until one lands, treat the capped overall progress as known.
+
 ## Resolved
 
 ### C10 — `emergency_phrases` table now read by app code ✅

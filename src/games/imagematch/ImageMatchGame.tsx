@@ -7,13 +7,11 @@ import { Colors } from '@/constants/colors';
 import { Spacing, Radius } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
 import { useImageMatchItems, useRecordImageMatchAttempt } from '../../../hooks/games/imageMatch';
-import { useImageMatch } from './hooks/useImageMatch';
+import { useImageMatchBoard } from './hooks/useImageMatchBoard';
 import ProgressBar from './components/ProgressBar';
-import QuestionCard from './components/QuestionCard';
-import PictureOptionGrid from './components/PictureOptionGrid';
-import WordOptionList from './components/WordOptionList';
-import FeedbackBanner from './components/FeedbackBanner';
-import ResultScreen from './components/ResultScreen';
+import MatchBoard from './components/MatchBoard';
+import ResultScreen from '../shared/ResultScreen';
+import { haptics } from '../shared/haptics';
 import { ExitBackButton } from '@/components/ui/ExitBackButton';
 import type { VocabItem } from './types';
 import type { ImageMatchItem } from '../../../services/api/games/imageMatch';
@@ -29,15 +27,19 @@ function toVocab(item: ImageMatchItem): VocabItem {
     ph: item.transliteration ?? '',
     en: item.meaning,
     emoji: item.emoji ?? PLACEHOLDER_EMOJI,
+    imageUrl: item.imageUrl,
   };
 }
 
 const ImageMatchGame: React.FC<Props> = ({ lessonNo }) => {
-  // Fetch lesson's items + a fallback pool from neighboring lessons for
-  // distractor sampling when the lesson has < 4 items (e.g. L1 has 1).
+  // Fetch the lesson's items + a fallback pool from neighbouring lessons (BOTH
+  // directions) for distractor sampling when the lesson has < 4 items. Earlier
+  // neighbours alone leave Lesson 1 with no pool, so pull later lessons too.
   const target = useImageMatchItems(lessonNo);
-  const neighbor1 = useImageMatchItems(lessonNo > 1 ? lessonNo - 1 : null);
-  const neighbor2 = useImageMatchItems(lessonNo > 2 ? lessonNo - 2 : null);
+  const prev1 = useImageMatchItems(lessonNo > 1 ? lessonNo - 1 : null);
+  const prev2 = useImageMatchItems(lessonNo > 2 ? lessonNo - 2 : null);
+  const next1 = useImageMatchItems(lessonNo + 1);
+  const next2 = useImageMatchItems(lessonNo + 2);
 
   const targetBank = useMemo<VocabItem[]>(
     () => (target.data ?? []).map(toVocab),
@@ -47,8 +49,10 @@ const ImageMatchGame: React.FC<Props> = ({ lessonNo }) => {
   const distractorBank = useMemo<VocabItem[]>(() => {
     const all = [
       ...(target.data ?? []),
-      ...(neighbor1.data ?? []),
-      ...(neighbor2.data ?? []),
+      ...(prev1.data ?? []),
+      ...(prev2.data ?? []),
+      ...(next1.data ?? []),
+      ...(next2.data ?? []),
     ];
     // de-dupe by id
     const seen = new Set<string>();
@@ -59,9 +63,14 @@ const ImageMatchGame: React.FC<Props> = ({ lessonNo }) => {
       dedup.push(item);
     }
     return dedup.map(toVocab);
-  }, [target.data, neighbor1.data, neighbor2.data]);
+  }, [target.data, prev1.data, prev2.data, next1.data, next2.data]);
 
-  if (target.isLoading) return <CenteredLoading />;
+  // Wait for the neighbour pools too — the board is built once on mount, so it
+  // must have its distractors in hand or it would render a degenerate board
+  // (e.g. L1's single pair).
+  const neighborsLoading = prev1.isLoading || prev2.isLoading || next1.isLoading || next2.isLoading;
+
+  if (target.isLoading || neighborsLoading) return <CenteredLoading />;
   if (target.isError) return <ErrorState onRetry={() => target.refetch()} />;
   if (targetBank.length === 0) return <EmptyState lessonNo={lessonNo} />;
 
@@ -78,33 +87,35 @@ function ImageMatchGameInner({
   const recordAttempt = useRecordImageMatchAttempt();
 
   const {
-    currentQuestion,
-    currentIndex,
-    totalQuestions,
-    phase,
-    answered,
-    selectedId,
+    wordColumn,
+    imageColumn,
+    matchedCount,
+    totalPairs,
     score,
-    hintVisible,
-    handleOptionTap,
-    handleNext,
-    toggleHint,
+    phase,
+    selectedWordId,
+    handleWordTap,
+    handleImageTap,
     restart,
-  } = useImageMatch(targetBank, distractorBank, ({ itemId, isCorrect }) => {
+  } = useImageMatchBoard(targetBank, distractorBank, ({ itemId, isCorrect }) => {
     recordAttempt.mutate(
       { itemId, isCorrect },
       { onError: (err) => console.warn('[image-match] record attempt failed', err) },
     );
+    if (isCorrect) haptics.correct();
+    else haptics.wrong();
   });
 
   if (phase === 'result') {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
         <ExitBackButton skipConfirm />
-        <ResultScreen score={score} total={totalQuestions} onReplay={restart} />
+        <ResultScreen score={score} total={totalPairs} onReplay={restart} />
       </SafeAreaView>
     );
   }
+
+  const prompt = selectedWordId ? 'Now tap its picture' : 'Tap a word, then its picture';
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
@@ -131,7 +142,7 @@ function ImageMatchGameInner({
               fontFamily: Fonts.dmSans.regular,
             }}
           >
-            Question {currentIndex + 1} / {totalQuestions}
+            {matchedCount} / {totalPairs} matched
           </Text>
           <Text
             style={{
@@ -144,60 +155,26 @@ function ImageMatchGameInner({
           </Text>
         </View>
 
-        <ProgressBar current={currentIndex} total={totalQuestions} />
+        <ProgressBar current={matchedCount} total={totalPairs} />
 
-        <QuestionCard
-          question={currentQuestion}
-          hintVisible={hintVisible}
-          onHintPress={toggleHint}
+        <Text
+          style={{
+            fontSize: moderateScale(15),
+            fontFamily: Fonts.dmSans.medium,
+            color: Colors.onSurface,
+            textAlign: 'center',
+          }}
+          maxFontSizeMultiplier={1.3}
+        >
+          {prompt}
+        </Text>
+
+        <MatchBoard
+          wordColumn={wordColumn}
+          imageColumn={imageColumn}
+          onWordTap={handleWordTap}
+          onImageTap={handleImageTap}
         />
-
-        {currentQuestion.type === 'word-to-picture' ? (
-          <PictureOptionGrid
-            options={currentQuestion.options}
-            targetId={currentQuestion.target.id}
-            selectedId={selectedId}
-            answered={answered}
-            onSelect={handleOptionTap}
-          />
-        ) : (
-          <WordOptionList
-            options={currentQuestion.options}
-            targetId={currentQuestion.target.id}
-            selectedId={selectedId}
-            answered={answered}
-            hintVisible={hintVisible}
-            onSelect={handleOptionTap}
-          />
-        )}
-
-        <FeedbackBanner
-          answered={answered}
-          correct={selectedId === currentQuestion.target.id}
-        />
-
-        {answered && (
-          <Pressable
-            style={{
-              width: '100%',
-              backgroundColor: Colors.primary,
-              borderRadius: Radius.xl,
-              paddingVertical: moderateScale(14),
-              alignItems: 'center',
-            }}
-            onPress={handleNext}
-          >
-            <Text
-              style={{
-                color: Colors.onPrimary,
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(16),
-              }}
-            >
-              {currentIndex + 1 < totalQuestions ? 'Next →' : 'See results'}
-            </Text>
-          </Pressable>
-        )}
       </ScrollView>
     </SafeAreaView>
   );

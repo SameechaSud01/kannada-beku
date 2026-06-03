@@ -17,11 +17,9 @@ Owns: animation vocabulary, gestures, haptics, sound cues, and the canonical loa
 
 ## Animation library
 
-`[OPEN]` — library choice.
+`[PROPOSED]` — decided in [spec_game_polish.md](../../spec_docs/Sameecha/spec_game_polish.md) §1, pending promotion to `[LOCKED]`.
 
-Current: **React Native `Animated`** (built-in). `react-native-reanimated` v4 is installed but unused.
-
-> **TODO:** Decide — stay on `Animated` for simplicity, or adopt Reanimated for richer interactions (shared element transitions, gesture-driven scrubbing). Pick before games are built (currently the bulk of interaction work).
+Current and chosen: **React Native `Animated`** (built-in), plus **`PanResponder`** (built-in) for the gesture games (Image Match draw-a-thread, Dictation tile drag). `react-native-reanimated` v4 stays installed but unused. **Why:** every game already uses `Animated`; staying on it is the low-risk choice and `PanResponder` covers the drag interactions without adopting Reanimated.
 
 ## Animation vocabulary
 
@@ -66,23 +64,19 @@ Standard animations used across the app. **If you need a new motion, add it here
 - Swipe-to-go-back: Expo Router default (iOS).
 - No custom `PanGesture` / `TapGesture` (Reanimated / GH) usage.
 
-> **TODO:** Drill UIs may want drag (drag-to-match in opposites, drag-to-arrange in fill-blank). Spec when implemented.
+> **Game drag** `[PROPOSED]` — [spec_game_polish.md](../../spec_docs/Sameecha/spec_game_polish.md) §1 permits `PanResponder` (RN built-in) for drag interactions: Image Match draw-a-thread ([spec_imagematch_board_redesign.md](../../spec_docs/Sameecha/spec_imagematch_board_redesign.md) §6) and Dictation tile drag ([spec_dictation_syllable_builder.md](../../spec_docs/Sameecha/spec_dictation_syllable_builder.md) §2). Not Reanimated/GH.
 
 ## Haptics
 
-`[OPEN]`
+`[PROPOSED]` — shipped in the games per [spec_game_polish.md](../../spec_docs/Sameecha/spec_game_polish.md) §3, pending promotion to `[LOCKED]`. `expo-haptics` added as a dependency; a guarded wrapper lives at `src/games/shared/haptics.ts`.
 
-**Not implemented.** `expo-haptics` is not installed.
+| Moment | Haptic | Why |
+|---|---|---|
+| Correct answer / match | `selectionAsync` (light) | confirms input registered |
+| Wrong answer / mismatch / timeout | `notificationAsync(Error)` | corporeal "no" pairs with shake |
+| Round complete (result) | `notificationAsync(Success)` | satisfying capstone |
 
-> **TODO:** Decide whether to ship haptics in MVP. Proposal:
->
-> | Moment | Haptic | Why |
-> |---|---|---|
-> | Correct answer | `selection` (light) | confirms input registered |
-> | Wrong answer | `notification.error` (medium) | corporeal "no" pairs with shake |
-> | Lesson complete | `notification.success` (heavy) | satisfying capstone |
-> | Streak milestone | `notification.success` + custom | celebrate |
-> | Button press (CTAs only) | `selection` | tap feedback |
+> **TODO (still open):** lesson-complete + streak-milestone + CTA-press haptics outside the games are not yet wired — extend the wrapper when those moments adopt haptics.
 
 ## Sound cues
 
@@ -162,11 +156,14 @@ Catalogued moments — each has its full animation + audio + haptic + copy spec.
 - **Haptic:** none (TODO: `notification.error`).
 - **Copy:** `useCopy('wrongAnswer')`.
 
-### M3: Correct answer (drill)
+### M3: Correct answer (drill / game)
 
-`[OPEN]`
+`[PROPOSED]` — specced in [spec_game_polish.md](../../spec_docs/Sameecha/spec_game_polish.md) §2, pending promotion to `[LOCKED]`.
 
-> **TODO:** Spec — currently no special treatment beyond advancing. Should there be a small celebration?
+- **Visual:** spring lift (`translateY -7px`, `scale 1.04`) + fade-in `Icons.correct` checkmark + shadow elevation 2→6; feedback banner "Correct!" / "On a roll!" at streak ≥3. (Source: `src/games/opposites/components/OptionButton.tsx`, generalized into `src/games/shared/`.)
+- **Haptic:** `selectionAsync` (light) — see Haptics above.
+- **Audio:** none (UI SFX still skipped).
+- Applies to the games today; the lesson drill (`ListenPickItem`) may adopt it later.
 
 ### M4: Streak milestone (3, 7, 12, 30, 60, 100, 365 days)
 

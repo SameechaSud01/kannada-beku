@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
+import { splitGloss } from '@/utils/gloss';
 import OptionButton, { type OptionState } from './OptionButton';
 import type { Option, AnswerState } from '../types';
 
@@ -25,24 +26,39 @@ function deriveState(
   return 'disabled';
 }
 
-const OptionGrid: React.FC<Props> = ({ opts, answerState, selectedOpt, correctAnswer, onSelect }) => (
-  <View
-    style={{
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: moderateScale(10),
-    }}
-  >
-    {opts.map((opt) => (
-      <View key={opt.kn} style={{ width: '48%' }}>
-        <OptionButton
-          option={opt}
-          state={deriveState(opt.kn, selectedOpt, answerState, correctAnswer)}
-          onPress={() => onSelect(opt.kn)}
-        />
-      </View>
-    ))}
-  </View>
-);
+function chunk<T>(arr: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
+const GAP = moderateScale(10);
+
+const OptionGrid: React.FC<Props> = ({ opts, answerState, selectedOpt, correctAnswer, onSelect }) => {
+  // If ANY option carries a gloss tag, every tile reserves the tag's height —
+  // so all tiles are identical in size whether or not they have a tag.
+  const reserveTag = opts.some((o) => Boolean(splitGloss(o.en).tag));
+
+  return (
+    <View style={{ gap: GAP }}>
+      {chunk(opts, 2).map((row, ri) => (
+        <View key={ri} style={{ flexDirection: 'row', gap: GAP, alignItems: 'stretch' }}>
+          {row.map((opt) => (
+            <View key={opt.kn} style={{ flex: 1 }}>
+              <OptionButton
+                option={opt}
+                state={deriveState(opt.kn, selectedOpt, answerState, correctAnswer)}
+                onPress={() => onSelect(opt.kn)}
+                reserveTag={reserveTag}
+              />
+            </View>
+          ))}
+          {/* keep a lone trailing tile at half width */}
+          {row.length === 1 ? <View style={{ flex: 1 }} /> : null}
+        </View>
+      ))}
+    </View>
+  );
+};
 
 export default OptionGrid;
