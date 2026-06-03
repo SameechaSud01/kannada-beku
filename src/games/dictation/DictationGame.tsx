@@ -11,8 +11,11 @@ import { useDictationGame } from './hooks/useDictationGame';
 import ProgressBar from './components/ProgressBar';
 import AudioButton from './components/AudioButton';
 import AnswerInput from './components/AnswerInput';
-import FeedbackCard from './components/FeedbackCard';
-import ResultScreen from './components/ResultScreen';
+import SyllableTray from './components/SyllableTray';
+import AnswerRow from './components/AnswerRow';
+import ResultScreen from '../shared/ResultScreen';
+import FeedbackBanner from '../shared/FeedbackBanner';
+import { useAnswerHaptics } from '../shared/haptics';
 import { ExitBackButton } from '../../../components/ui/ExitBackButton';
 import type { DictationWord } from './types';
 import type { DictationItem } from '../../../services/api/games/dictation';
@@ -48,12 +51,20 @@ function DictationGameInner({ bank }: { bank: DictationWord[] }) {
     totalWords,
     phase,
     answerState,
-    lastScore,
-    sessionAvg,
-    answeredCount,
+    score,
+    streak,
+    bestStreak,
     isPlaying,
+    tileable,
+    tray,
+    placed,
+    aksharaCount,
+    canCheck,
     playCurrentWord,
-    submitAnswer,
+    tapTile,
+    removeAt,
+    check,
+    submitTyped,
     nextWord,
     skipWord,
     restart,
@@ -64,29 +75,31 @@ function DictationGameInner({ bank }: { bank: DictationWord[] }) {
     );
   });
 
-  const [inputText, setInputText] = useState('');
+  useAnswerHaptics(answerState === 'correct' ? 'correct' : answerState === 'unanswered' ? 'unanswered' : 'wrong');
 
+  const [inputText, setInputText] = useState('');
   useEffect(() => {
     setInputText('');
   }, [currentIndex]);
-
-  const handleSubmit = () => submitAnswer(inputText);
 
   if (phase === 'result') {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
         <ExitBackButton skipConfirm />
         <ResultScreen
-          sessionAvg={sessionAvg}
-          answeredCount={answeredCount}
-          totalWords={totalWords}
+          score={score}
+          total={totalWords}
+          bestStreak={bestStreak}
+          subline={`${score} / ${totalWords} correct`}
           onReplay={restart}
         />
       </SafeAreaView>
     );
   }
 
-  const canSubmit = inputText.trim().length > 0;
+  const answered = answerState !== 'unanswered';
+  const canSubmit = tileable ? canCheck : inputText.trim().length > 0;
+  const onCheck = () => (tileable ? check() : submitTyped(inputText));
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
@@ -103,10 +116,8 @@ function DictationGameInner({ bank }: { bank: DictationWord[] }) {
             {' '}/ {totalWords}
           </Text>
           <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: 14, color: Colors.tertiary }}>
-            Avg{' '}
-            <Text style={{ fontFamily: Fonts.dmSans.bold, color: Colors.onSurface }}>
-              {answeredCount > 0 ? `${sessionAvg}%` : '—'}
-            </Text>
+            Score{' '}
+            <Text style={{ fontFamily: Fonts.dmSans.bold, color: Colors.onSurface }}>{score}</Text>
           </Text>
         </View>
 
@@ -123,29 +134,52 @@ function DictationGameInner({ bank }: { bank: DictationWord[] }) {
           }}
         >
           <AudioButton isPlaying={isPlaying} onPress={playCurrentWord} />
+          <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary }}>
+            {tileable ? 'Tap the tiles to spell the word' : 'Type what you hear'}
+          </Text>
         </View>
 
-        <AnswerInput
-          value={inputText}
-          onChange={setInputText}
-          onSubmit={handleSubmit}
-          answerState={answerState}
-          disabled={answerState !== 'unanswered'}
-        />
-
-        {answerState !== 'unanswered' && (
-          <FeedbackCard
+        {tileable ? (
+          <>
+            <AnswerRow
+              tray={tray}
+              placed={placed}
+              aksharaCount={aksharaCount}
+              answerState={answerState}
+              onRemove={removeAt}
+            />
+            <SyllableTray tray={tray} placed={placed} disabled={answered} onTap={tapTile} />
+          </>
+        ) : (
+          <AnswerInput
+            value={inputText}
+            onChange={setInputText}
+            onSubmit={onCheck}
             answerState={answerState}
-            score={lastScore ?? 0}
-            accepted={currentWord.accepted}
-            kannadaWord={currentWord.kn}
+            disabled={answered}
           />
         )}
 
+        <FeedbackBanner state={answerState === 'correct' ? 'correct' : answered ? 'wrong' : 'unanswered'} streak={streak} />
+
+        {/* On a miss, reveal the correct word so the learner still learns it. */}
+        {answered && answerState !== 'correct' && (
+          <View style={{ alignItems: 'center', gap: moderateScale(2) }}>
+            <Text style={{ fontFamily: Fonts.notoSansKannada.bold, fontSize: moderateScale(22), color: Colors.onSurface }}>
+              {currentWord.kn}
+            </Text>
+            {currentWord.phonetic ? (
+              <Text style={{ fontFamily: Fonts.lora.italic, fontSize: moderateScale(14), color: Colors.tertiary }}>
+                {currentWord.phonetic}
+              </Text>
+            ) : null}
+          </View>
+        )}
+
         {/* Check / Next */}
-        {answerState === 'unanswered' ? (
+        {!answered ? (
           <Pressable
-            onPress={handleSubmit}
+            onPress={onCheck}
             disabled={!canSubmit}
             style={({ pressed }) => ({
               backgroundColor: Colors.primary,
@@ -177,7 +211,7 @@ function DictationGameInner({ bank }: { bank: DictationWord[] }) {
         )}
 
         {/* Skip */}
-        {answerState === 'unanswered' && (
+        {!answered && (
           <Pressable onPress={skipWord} style={{ alignItems: 'center' }}>
             <Text
               style={{

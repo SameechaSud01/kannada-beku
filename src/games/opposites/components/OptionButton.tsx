@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '@/constants/colors';
@@ -7,6 +7,7 @@ import { Fonts } from '@/constants/fonts';
 import { Icons } from '@/constants/icons';
 import { GlossTag } from '@/components/ui/GlossTag';
 import { splitGloss } from '@/utils/gloss';
+import { useShake, useCorrectLift } from '../../shared/animations';
 import type { Option } from '../types';
 
 export type OptionState = 'default' | 'correct' | 'wrong' | 'reveal' | 'disabled';
@@ -15,60 +16,19 @@ type Props = {
   option: Option;
   state: OptionState;
   onPress: () => void;
+  /** When any option in the round has a gloss tag, every tile reserves the
+   *  tag's height (invisible placeholder when absent) so all tiles match. */
+  reserveTag?: boolean;
 };
 
-const LIFT_PX = moderateScale(7);
-const LIFT_SCALE = 1.04;
-
-const OptionButton: React.FC<Props> = ({ option, state, onPress }) => {
-  const translateY = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(1)).current;
-  const translateX = useRef(new Animated.Value(0)).current;
-  const checkProgress = useRef(new Animated.Value(0)).current;
-
+const OptionButton: React.FC<Props> = ({ option, state, onPress, reserveTag }) => {
   const isLifted = state === 'correct' || state === 'reveal';
   const isWrong = state === 'wrong';
 
   const { text: enText, tag } = splitGloss(option.en);
 
-  useEffect(() => {
-    Animated.parallel([
-      Animated.spring(translateY, {
-        toValue: isLifted ? -LIFT_PX : 0,
-        damping: 15,
-        stiffness: 180,
-        mass: 1,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scale, {
-        toValue: isLifted ? LIFT_SCALE : 1,
-        damping: 15,
-        stiffness: 180,
-        mass: 1,
-        useNativeDriver: true,
-      }),
-      Animated.timing(checkProgress, {
-        toValue: isLifted ? 1 : 0,
-        duration: isLifted ? 180 : 120,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [isLifted, translateY, scale, checkProgress]);
-
-  useEffect(() => {
-    if (!isWrong) return;
-    Animated.sequence([
-      Animated.timing(translateX, { toValue: 6, duration: 50, useNativeDriver: true }),
-      Animated.timing(translateX, { toValue: -6, duration: 50, useNativeDriver: true }),
-      Animated.timing(translateX, { toValue: 4, duration: 50, useNativeDriver: true }),
-      Animated.timing(translateX, { toValue: 0, duration: 50, useNativeDriver: true }),
-    ]).start();
-  }, [isWrong, translateX]);
-
-  const checkScale = checkProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.6, 1],
-  });
+  const translateX = useShake(isWrong);
+  const { translateY, scale, checkProgress, checkScale } = useCorrectLift(isLifted);
 
   return (
     <Animated.View
@@ -128,6 +88,11 @@ const OptionButton: React.FC<Props> = ({ option, state, onPress }) => {
         {tag ? (
           <View style={{ marginTop: moderateScale(4) }}>
             <GlossTag tag={tag} />
+          </View>
+        ) : reserveTag ? (
+          // Invisible same-height placeholder so tag-less tiles match tagged ones.
+          <View style={{ marginTop: moderateScale(4), opacity: 0 }} pointerEvents="none">
+            <GlossTag tag="—" />
           </View>
         ) : null}
         <Text

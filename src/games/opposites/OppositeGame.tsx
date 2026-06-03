@@ -11,8 +11,9 @@ import { useGameState } from './hooks/useGameState';
 import ProgressBar from './components/ProgressBar';
 import QuestionCard from './components/QuestionCard';
 import OptionGrid from './components/OptionGrid';
-import FeedbackBanner from './components/FeedbackBanner';
-import ResultScreen from './components/ResultScreen';
+import FeedbackBanner from '../shared/FeedbackBanner';
+import ResultScreen from '../shared/ResultScreen';
+import { useAnswerHaptics } from '../shared/haptics';
 import { ExitBackButton } from '@/components/ui/ExitBackButton';
 import type { QuestionPair } from './types';
 import type { OppositesItem } from '../../../services/api/games/opposites';
@@ -76,6 +77,8 @@ function OppositeGameInner({ pairs }: { pairs: QuestionPair[] }) {
       { onError: (err) => console.warn('[opposites] record attempt failed', err) },
     );
   });
+
+  useAnswerHaptics(answerState);
 
   if (phase === 'result') {
     return (
@@ -144,7 +147,7 @@ function OppositeGameInner({ pairs }: { pairs: QuestionPair[] }) {
           onSelect={handleOptionTap}
         />
 
-        <FeedbackBanner answerState={answerState} streak={streak} hintUsed={hintUsed} />
+        <FeedbackBanner state={answerState} streak={streak} />
 
         {answerState !== 'unanswered' && (
           <Pressable
