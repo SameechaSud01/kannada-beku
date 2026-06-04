@@ -247,36 +247,37 @@ function GameCard({
       }
       style={({ pressed }) => ({
         width: '48%',
-        minHeight: moderateScale(126),
+        minHeight: moderateScale(158),
         borderRadius: Radius.xl,
         backgroundColor: game.bg,
         borderBottomWidth: 5,
         borderBottomColor: game.lip,
         overflow: 'hidden',
-        padding: moderateScale(15),
+        padding: moderateScale(16),
         justifyContent: 'flex-end',
         opacity: hasUnlocked ? 1 : 0.55,
         transform: [{ scale: pressed && hasUnlocked ? 0.98 : 1 }],
       })}
     >
-      {/* Big translucent decorative glyph */}
+      {/* Decorative glyph — fully visible, top-right */}
       <Text
         aria-hidden
         style={{
           position: 'absolute',
-          right: moderateScale(-6),
-          bottom: moderateScale(-26),
+          top: moderateScale(8),
+          right: moderateScale(12),
           fontFamily: Fonts.notoSansKannada.bold,
-          fontSize: moderateScale(96),
-          lineHeight: moderateScale(96),
-          color: 'rgba(255,255,255,0.16)',
+          fontSize: moderateScale(64),
+          lineHeight: moderateScale(72),
+          color: 'rgba(255,255,255,0.22)',
         }}
+        maxFontSizeMultiplier={1}
       >
         {game.glyph}
       </Text>
 
       {!hasUnlocked ? (
-        <View style={{ position: 'absolute', top: moderateScale(12), right: moderateScale(12) }}>
+        <View style={{ position: 'absolute', top: moderateScale(12), left: moderateScale(12) }}>
           <Icons.locked size={moderateScale(16)} color={game.fg} />
         </View>
       ) : null}
