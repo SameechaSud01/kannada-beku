@@ -88,9 +88,11 @@ export default function PracticeScreen() {
   const completed = completedLessons.length;
   const hasUnlocked = completed > 0;
 
-  const bannerText = hasUnlocked
-    ? `Lessons 1–${completed} are loaded into every game.`
-    : 'Finish Lesson 1 to load content into these games.';
+  const bannerText = !hasUnlocked
+    ? 'Finish Lesson 1 to unlock your games.'
+    : completed === 1
+      ? 'Lesson 1 is ready to play with.'
+      : `Lessons 1–${completed} are ready to play with.`;
 
   return (
     <Animated.View
