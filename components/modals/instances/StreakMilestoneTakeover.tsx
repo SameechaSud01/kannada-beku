@@ -16,7 +16,12 @@ export function isStreakMilestone(n: number): n is StreakMilestone {
   return (STREAK_MILESTONES as readonly number[]).includes(n);
 }
 
-const COPY: Record<StreakMilestone, { title: string; body: string; word: string }> = {
+/**
+ * Locked per-milestone copy (MODALS §6.6, INTERACTIONS M4). Exported so the
+ * unified Celebration overlay (spec_playful_redesign Phase 3) can reuse the same
+ * words for its streak variant — the copy stays single-sourced and locked.
+ */
+export const STREAK_MILESTONE_COPY: Record<StreakMilestone, { title: string; body: string; word: string }> = {
   3: {
     word: 'three',
     title: 'Three days.',
@@ -73,7 +78,7 @@ export function StreakMilestoneTakeover({
   onShare,
 }: StreakMilestoneTakeoverProps) {
   const insets = useSafeAreaInsets();
-  const copy = COPY[streak];
+  const copy = STREAK_MILESTONE_COPY[streak];
 
   return (
     <Takeover onClose={onContinue}>

@@ -15,6 +15,7 @@ import { useOverallProgress } from '../../hooks/useOverallProgress';
 import { useFluencyMode } from '../../hooks/useFluencyMode';
 import { formatFirstName } from '../../utils/formatName';
 import { useModal } from '../../components/modals/ModalHost';
+import { Celebration, type CelebrationKind } from '../../components/ui/Celebration';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { SignOutDialog } from '../../components/modals/instances/SignOutDialog';
 import { RemindersSheet } from '../../components/modals/instances/RemindersSheet';
@@ -33,6 +34,22 @@ export default function ProfileScreen() {
   const dailyGoalMinutes = useUserStore((s) => s.dailyGoalMinutes);
   const goal = useFluencyMode();
   const modal = useModal();
+
+  // TEMP (Phase 3 dev trigger) — fires each Celebration kind so the overlay can
+  // be verified before real triggers are wired in Phase 4 (level/streak) and
+  // Phase 5 (lesson). Remove this block + its UI when those land.
+  const showCelebration = (kind: CelebrationKind) => {
+    modal.show({
+      kind: 'takeover',
+      component: Celebration,
+      props: {
+        kind,
+        streak: 12 as const,
+        level: 3,
+        onClose: () => modal.dismiss(),
+      },
+    });
+  };
 
   const handleSignOutPress = () => {
     modal.show({
@@ -538,6 +555,38 @@ export default function ProfileScreen() {
               Sign out
             </Text>
           </Pressable>
+        </View>
+
+        {/* TEMP (Phase 3 dev trigger) — remove with the showCelebration helper. */}
+        <View style={{ paddingHorizontal: Spacing.xxl, marginTop: moderateScale(28), gap: Spacing.sm }}>
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.bold,
+              fontSize: moderateScale(11),
+              letterSpacing: 2.5,
+              color: Colors.tertiary,
+              textTransform: 'uppercase',
+            }}
+          >
+            Dev · celebration preview
+          </Text>
+          {(['lesson', 'streak', 'level'] as const).map((k) => (
+            <Pressable
+              key={k}
+              onPress={() => showCelebration(k)}
+              style={({ pressed }) => ({
+                paddingVertical: moderateScale(12),
+                paddingHorizontal: Spacing.lg,
+                borderRadius: Radius.lg,
+                backgroundColor: Colors.surfaceContainerHigh,
+                opacity: pressed ? 0.7 : 1,
+              })}
+            >
+              <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(13), color: Colors.onSurface }}>
+                Celebrate: {k}
+              </Text>
+            </Pressable>
+          ))}
         </View>
       </ScrollView>
     </Animated.View>
