@@ -8,6 +8,13 @@ import {
   NotoSansKannada_700Bold,
 } from '@expo-google-fonts/noto-sans-kannada';
 import { Lora_400Regular_Italic, Lora_500Medium_Italic } from '@expo-google-fonts/lora';
+import {
+  BalooTamma2_400Regular,
+  BalooTamma2_500Medium,
+  BalooTamma2_600SemiBold,
+  BalooTamma2_700Bold,
+  BalooTamma2_800ExtraBold,
+} from '@expo-google-fonts/baloo-tamma-2';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -230,6 +237,11 @@ export default function RootLayout() {
     NotoSansKannada_400Regular,
     NotoSansKannada_500Medium,
     NotoSansKannada_700Bold,
+    BalooTamma2_400Regular,
+    BalooTamma2_500Medium,
+    BalooTamma2_600SemiBold,
+    BalooTamma2_700Bold,
+    BalooTamma2_800ExtraBold,
   });
 
   useEffect(() => {

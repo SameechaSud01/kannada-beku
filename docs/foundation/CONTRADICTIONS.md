@@ -83,6 +83,22 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 
 **Resolution owed:** Edit [README.md](../../README.md) to drop NativeWind from the stack list (line 3) and from the "Styling" section (line 153), replacing with "inline styles + tokens in `constants/`". No CLAUDE.md edit needed beyond the new top-of-file session-start instruction.
 
+### C12 — Playful redesign spec landed; foundation amendments recorded, code not yet shipped
+
+**What's wrong:** [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) is signed off (2026-06-04) and amends three locked decisions — [DESIGN.md](DESIGN.md) typography (Baloo display face, Amendment A), DESIGN.md type scale (codified), DESIGN.md `TabBar` (floating icon-only pill, Amendment B), DESIGN.md additive colour tokens, and [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md) §4 (Emergency English-first exception, Amendment C). The docs now reflect the decisions, but **the code reflects none of them yet:**
+
+- `@expo-google-fonts/baloo-tamma-2` and `expo-linear-gradient` are not in [package.json](../../package.json); `useFonts(...)` in [app/_layout.tsx](../../app/_layout.tsx) loads no Baloo.
+- [constants/fonts.ts](../../constants/fonts.ts) has no `baloo` group or codified type scale; [constants/colors.ts](../../constants/colors.ts) lacks the additive tokens (`goldBright`, `goldLip`, `redLip`, `textFaint`).
+- [components/ui/TabBar.tsx](../../components/ui/TabBar.tsx) still renders the full-width tonal bar **with text labels**, not the floating icon-only pill.
+- [app/emergency.tsx](../../app/emergency.tsx) still renders transliteration-first, not the English-first exception.
+- No shared `LipButton` / `BrandGradient` / `Watermark` / `AudioOrb` / `ProgressRing` / `Celebration` components exist under [components/ui/](../../components/ui/).
+
+**Why it matters:** until the code ships, the app runs the old tonal tab bar, DM-Sans-only typography, and transliteration-first Emergency — divergent from the now-committed spec + amended foundation. Anyone touching `TabBar`, `fonts.ts`, `colors.ts`, or `emergency.tsx` in the interim could land changes that contradict the amended docs.
+
+**Owning spec:** [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) (canonical), with cross-refs in [DESIGN.md](DESIGN.md) and [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md).
+
+**Resolution owed:** Execute Phases 1–8 of spec_playful_redesign.md §6. Close this entry once verified end-to-end on iPhone SE and a larger device. Work is isolated on the `app_redesign` branch.
+
 ## Resolved
 
 ### C10 — `emergency_phrases` table now read by app code ✅

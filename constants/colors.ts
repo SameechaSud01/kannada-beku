@@ -34,4 +34,11 @@ export const Colors = {
 
   // ── Error states (MODALS §5) ───────────────────────────
   errorContainerLow: '#f3dada', // pale Mysore red — error-state card bg, toast icon bg
+
+  // ── Playful redesign — additive tokens (DESIGN.md, 2026-06-04) ──
+  // Strictly red / gold / deep-gold / warm-neutral. No blue/green/teal/coral.
+  goldBright: '#ffd24d', // lighter gold highlight (gradients, hi state)
+  goldLip:    '#c98a00', // button "lip" / ring on gold chunky buttons
+  redLip:     '#6e0014', // deep maroon — bottom "lip" on red buttons; 4th Practice card
+  textFaint:  '#908d76', // hints, locked labels (faintest text tier)
 };

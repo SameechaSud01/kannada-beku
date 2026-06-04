@@ -22,7 +22,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 - **Living Manuscript palette** — Karnataka identity (state flag green/gold, Mysore red), Material 3 tonal logic.
 - **No-Line rule** — tonal separation over borders. Cards lift via shadow + surface tonal change, not strokes.
 - **Warm, never sterile** — sandstone text (`#1b1d0e`, `#464646`), never pure black or grey.
-- **One script per font** — Kannada in Noto Serif Kannada, transliteration in Lora italic, everything else DM Sans. Never mix.
+- **One script per font** — Kannada in Noto Serif Kannada, transliteration in Lora italic, all body/label chrome in DM Sans. Display headings, big numbers, and button labels use Baloo Tamma 2 (the playful display face). Never mix within a role. *(Amended 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) Amendment A — owner sign-off.)*
 - **No raw pixels** — every dimension wraps `moderateScale()` (or `scale()`/`verticalScale()`) from `react-native-size-matters`.
 
 ## Color tokens
@@ -70,6 +70,19 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 |---|---|---|
 | `errorContainerLow` | `#f3dada` | Pale Mysore red — error-state card bg, toast icon bg. Added for the modal/overlay system; see [MODALS](../../spec_docs/Sameecha/MODALS.md). |
 
+### Playful-redesign additive tokens
+
+`[UNLOCKED]` — added 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) (additive; existing tokens unchanged). Strictly red / gold / deep-gold / warm-neutral — **no blue/green/teal/coral.**
+
+| Token | Hex | Use |
+|---|---|---|
+| `goldBright` | `#ffd24d` | Lighter gold highlight (gradients, hi state). |
+| `goldLip` | `#c98a00` | Button "lip" / ring on gold chunky buttons. |
+| `redLip` | `#6e0014` | Deep maroon — bottom "lip" on red chunky buttons; 4th Practice card. |
+| `textFaint` | `#908d76` | Hints, locked labels (faintest text tier). |
+
+**Brand gradient (the only gradient):** a single Mysore-red linear gradient, `primaryContainer → primary` rendered at ~152°, used **only** on the Home hook card, Profile avatar, Emergency header, and Auth background. Implemented via `expo-linear-gradient`. No multi-hue gradients.
+
 **Why these tones, not Tailwind defaults:** the palette is a deliberate Karnataka identity statement (state flag colors + Mysore red + sandstone). Material 3 tonal logic expresses elevation without strokes (see No-Line rule).
 
 ## Spacing
@@ -104,26 +117,28 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 | Family | When |
 |---|---|
-| `Fonts.dmSans` | All UI chrome — buttons, labels, tabs, body text. |
+| `Fonts.baloo` | **Display** — screen titles, hero titles, card headings, big numbers (streak, %, stats), and button labels. *Added 2026-06-04 (Amendment A).* |
+| `Fonts.dmSans` | Body/label chrome — body text, sub-labels, uppercase eyebrows, settings rows, tab labels. |
 | `Fonts.lora.italic` | Transliteration **only**. Never UI; never Kannada. |
-| `Fonts.notoSansKannada` | Kannada script **only**. |
+| `Fonts.notoSansKannada` | Kannada script **only** (Baloo Tamma 2 offered as an optional rounded Kannada face — default stays Noto). |
 
-**Why this split:** transliterations get a distinctive italic so they're visually parseable as a learning aid, not body copy. Kannada uses a sans family for crisper rendering at small reference sizes — the tertiary role in [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md), and the Beginners' Guide glyph hero.
+**Why this split:** Baloo Tamma 2 is the single biggest driver of the "playful" feel — a rounded display face for headings and numbers that also renders Kannada, so script and UI feel like one family. Transliterations get a distinctive italic so they're visually parseable as a learning aid, not body copy. Kannada uses a sans family for crisper rendering at small reference sizes — the tertiary role in [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md), and the Beginners' Guide glyph hero.
 
 ### Type scale
 
-`[OPEN]`
+`[UNLOCKED]` — codified 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) Amendment A. Compact by design (pulled down from earlier drafts); headings tighten line-height to ~1.05–1.2. Defined in [fonts.ts](../../constants/fonts.ts).
 
-> **TODO:** Codify a scale. Sizes are currently picked ad-hoc per component. Proposal:
->
-> | Token | Size | Use |
-> |---|---|---|
-> | `display` | `moderateScale(28)` | Onboarding hero |
-> | `title` | `moderateScale(22)` | Screen titles |
-> | `headline` | `moderateScale(18)` | Card titles |
-> | `body` | `moderateScale(15)` | Body |
-> | `label` | `moderateScale(13)` | Captions, tab labels |
-> | `kannada-display` | `moderateScale(32)` | Phrase intake hero |
+| Token | Size | Weight | Family | Use |
+|---|---|---|---|---|
+| `heroTitle` | `moderateScale(30)` | 800 | Baloo | Home hook hero ("Names"), celebration title |
+| `screenTitle` | `moderateScale(24)` | 800 | Baloo | Screen titles ("Your journey", "Practice") |
+| `cardHeading` | `moderateScale(16)`–`moderateScale(20)` | 700 | Baloo | Card titles, game names, phrase English |
+| `bigNumber` | `moderateScale(16)`–`moderateScale(34)` | 800 | Baloo | Streak, ring %, stats |
+| `buttonLabel` | `moderateScale(16.5)` | 700 | Baloo | CTA labels |
+| `body` | `moderateScale(12.5)`–`moderateScale(15)` | 500–700 | DM Sans | Descriptions, subs |
+| `eyebrow` | `moderateScale(10.5)`–`moderateScale(12)` | 800 | DM Sans | Uppercase, letter-spacing 1.2–1.6 |
+| `translit` | `moderateScale(15)`–`moderateScale(42)` | 400 italic | Lora | Word/phrase teaching |
+| `kannada` | `moderateScale(13.5)`–`moderateScale(88)` | 400–700 | Noto/Baloo | Muted reference + decorative watermark glyphs |
 
 ## Icons
 
@@ -174,15 +189,19 @@ Anatomy + props + tokens used. Every reusable component lives here.
 
 ### `TabBar`
 
-`[UNLOCKED]` — matches [components/ui/TabBar.tsx](../../components/ui/TabBar.tsx). Custom Expo Router tab bar (replaces default).
+`[UNLOCKED]` — matches [components/ui/TabBar.tsx](../../components/ui/TabBar.tsx). Custom Expo Router tab bar (replaces default). *Amended 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) Amendment B — owner sign-off: floating icon-only pill, no labels.*
 
 | Property | Value |
 |---|---|
-| Background | `surfaceContainerLow` |
-| Active icon color | `primaryContainer` |
+| Shape | Floating rounded-`full` pill, centered, floats ~24 from bottom (safe-area aware) |
+| Labels | **None** (icon-only) |
+| Pill background | `surfaceContainerLow` |
+| Active tab | Solid `primaryContainer` circle, `onPrimary` icon, soft red shadow |
 | Inactive icon color | `tertiary` |
 | Icon size | 19 pt |
 | Border | None (No-Line rule) |
+| Hidden on | lesson / emergency / auth routes (outside `(tabs)`) |
+| Tabs | Four — Home / Learn / Practice / Profile (unchanged; NAVIGATION not affected) |
 
 ### `ProgressDots`
 
@@ -241,5 +260,5 @@ Anatomy + props + tokens used. Every reusable component lives here.
 
 - README and [.claude/CLAUDE.md](../.claude/CLAUDE.md) still mention "NativeWind". NativeWind was ripped out (commit `818e1ba`); we now use inline styles + tokens. Update both.
 - `OptionCard` and `ProgressDots` use hex literals — migrate to tokens.
-- Type scale not codified — see TODO above.
+- Type scale codified 2026-06-04 (Amendment A) — `fonts.ts` token group still owed in code (tracked by CONTRADICTIONS C12).
 - Shadow tokens not codified — see TODO above.
