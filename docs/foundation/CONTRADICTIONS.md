@@ -105,20 +105,21 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 
 **Resolution owed:** Either (a) re-list Image Match once a better mechanic ships (restore the one line in `GAMES`), or (b) if it stays hidden, get owner sign-off to amend the locked formula to 2 games (opposites + dictation) via migration — a `[LOCKED]` change, not to be done silently. Until one lands, treat the capped overall progress as known.
 
-### C14 — Playful redesign spec landed; foundation amendments recorded, code not yet shipped
+### C14 — Playful redesign code shipped on `app_redesign`; pending final on-device verification
 
-**What's wrong:** [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) is signed off (2026-06-04) and amends three locked decisions — [DESIGN.md](DESIGN.md) typography (Baloo display face, Amendment A), DESIGN.md type scale (codified), DESIGN.md `TabBar` (floating icon-only pill, Amendment B), DESIGN.md additive colour tokens, and [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md) §4 (Emergency English-first exception, Amendment C). Phase 1 (deps + tokens + Baloo font-load) has shipped; the remaining UI work has not:
+**What's wrong (narrowing):** [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) (signed off 2026-06-04) amends locked decisions — DESIGN.md typography (Baloo, Amendment A), type scale, `TabBar` (floating pill, Amendment B), additive colour tokens, the near-white surface ramp (Amendment D), and [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md) §4 (Emergency English-first, Amendment C). Phases 1–8 are now implemented on the `app_redesign` branch:
 
-- ✅ `@expo-google-fonts/baloo-tamma-2` + `expo-linear-gradient` added; `useFonts(...)` loads Baloo; `constants/fonts.ts` has the `baloo` group + `TypeScale`; `constants/colors.ts` has the additive tokens.
-- ❌ [components/ui/TabBar.tsx](../../components/ui/TabBar.tsx) still renders the full-width tonal bar **with text labels**, not the floating icon-only pill.
-- ❌ [app/emergency.tsx](../../app/emergency.tsx) still renders transliteration-first, not the English-first exception.
-- ❌ No shared `LipButton` / `BrandGradient` / `Watermark` / `AudioOrb` / `ProgressRing` / `Celebration` components exist under [components/ui/](../../components/ui/); screens (Home/Learn/Practice/Profile/lesson runner) not yet restyled.
+- ✅ Deps + tokens + Baloo font-load; `fonts.ts` `baloo` group + `TypeScale`; `colors.ts` additive tokens + near-white ramp.
+- ✅ Shared `components/ui/` primitives: `BrandGradient`, `LipButton`, `ProgressRing`, `AudioOrb`, `Watermark`, `Celebration`, `StreakPill`.
+- ✅ `TabBar` is the floating icon-only red pill.
+- ✅ Home / Learn / Practice / Profile restyled; lesson runner restyled with `LipButton` footers, `AnswerOption` correct/wrong micro-interactions, and the lesson-complete `Celebration` (streak unified to `Celebration`, locked copy reused).
+- ✅ Emergency is English-first with the gradient header. Welcome has the gradient treatment.
 
-**Why it matters:** until the code ships, the app runs the old tonal tab bar and transliteration-first Emergency — divergent from the now-committed spec + amended foundation. Anyone touching `TabBar` or `emergency.tsx` in the interim could land changes that contradict the amended docs.
+**Still open:** (a) final **end-to-end on-device verification** on iPhone SE + a larger device (owner is testing phase-by-phase); (b) optional items intentionally deferred — the Discord-style loading screen, the `AudioOrb` ping on lesson audio buttons, and a user-facing watermark/reduced-motion **settings toggle** (defaults are hard-coded per spec: watermark on/Rangoli, Noto Kannada, near-white bg, reduced-motion honoured in `Celebration`). The `level` Celebration variant is built but unwired (no real level system).
 
-**Owning spec:** [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) (canonical), with cross-refs in [DESIGN.md](DESIGN.md) and [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md).
+**Owning spec:** [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md).
 
-**Resolution owed:** Execute Phases 2–8 of spec_playful_redesign.md §6. Close this entry once verified end-to-end on iPhone SE and a larger device. Work is isolated on the `app_redesign` branch.
+**Resolution owed:** Close once the owner confirms the full flow on device. Then merge `app_redesign` → `main`. Decide separately whether to build the deferred optional items.
 
 ## Resolved
 

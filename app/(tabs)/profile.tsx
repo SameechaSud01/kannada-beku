@@ -3,13 +3,6 @@ import { View, Text, ScrollView, Pressable, Animated as RNAnimated } from 'react
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { useRouter } from 'expo-router';
-import ReAnimated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
@@ -27,6 +20,7 @@ import { Celebration } from '../../components/ui/Celebration';
 import { isStreakMilestone } from '../../components/modals/instances/StreakMilestoneTakeover';
 import { BrandGradient } from '../../components/ui/BrandGradient';
 import { Watermark } from '../../components/ui/Watermark';
+import { StreakPill } from '../../components/ui/StreakPill';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { SignOutDialog } from '../../components/modals/instances/SignOutDialog';
 import { RemindersSheet } from '../../components/modals/instances/RemindersSheet';
@@ -421,45 +415,3 @@ function StatCard({ Icon, iconColor, value, label }: { Icon: TablerIcon; iconCol
   );
 }
 
-/** Gold-wash streak pill with a flame that wiggles on tap. */
-function StreakPill({ streak, onPress }: { streak: number; onPress: () => void }) {
-  const rot = useSharedValue(0);
-  const flameStyle = useAnimatedStyle(() => ({ transform: [{ rotate: `${rot.value}deg` }] }));
-  const handle = () => {
-    rot.value = withSequence(
-      withTiming(-12, { duration: 90, easing: Easing.out(Easing.ease) }),
-      withTiming(10, { duration: 90 }),
-      withTiming(0, { duration: 90 }),
-    );
-    onPress();
-  };
-  return (
-    <Pressable
-      onPress={handle}
-      accessibilityRole="button"
-      accessibilityLabel={`Current streak: ${streak} day${streak === 1 ? '' : 's'}`}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: moderateScale(4),
-        backgroundColor: Colors.secondaryFixed,
-        borderRadius: Radius.full,
-        paddingVertical: moderateScale(6),
-        paddingLeft: moderateScale(9),
-        paddingRight: moderateScale(12),
-        borderWidth: 1.5,
-        borderColor: Colors.secondaryContainer,
-      }}
-    >
-      <ReAnimated.View style={flameStyle}>
-        <Icons.streak size={moderateScale(17)} color={Colors.primary} />
-      </ReAnimated.View>
-      <Text
-        style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(16), color: Colors.onSurface }}
-        maxFontSizeMultiplier={1.2}
-      >
-        {streak}
-      </Text>
-    </Pressable>
-  );
-}
