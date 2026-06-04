@@ -36,8 +36,26 @@ React Query, and the `ModalHost`/`ToastHost` overlay system).
 > **Signed off 2026-06-04 — `[LOCKED]`.** The three locked-decision conflicts
 > (Amendments A/B/C below) were approved by the owner: A (Baloo display font),
 > B (floating icon-only TabBar), C (Emergency English-first, option C-1). The
-> foundation docs are amended and CONTRADICTIONS C14 is open. Phase 0 is done;
-> Phases 1–8 are now buildable. All work is isolated on branch `app_redesign`.
+> foundation docs are amended and CONTRADICTIONS C14 is open. Phase 0 + Phase 1
+> (deps + tokens + Baloo font-load) are done; Phases 2–8 remain. All work is
+> isolated on branch `app_redesign`.
+
+> **Reconciliation with the post-rename, post-merge codebase (2026-06-04).**
+> `app_redesign` has merged `origin/main`. Two realities supersede the handoff
+> prototype (which predates them — treat its visuals as reference only):
+> 1. **App renamed "Kannada Baa" → "Kannada Beku".** The wordmark is now
+>    **`ಕನ್ನಡ ಬೇಕು`** and the single-glyph avatar/loader glyph is **`ಬೇ`** (not
+>    `ಬಾ`). Use the live brand everywhere the prototype shows the old wordmark.
+>    The handoff filename `Kannada Baa - Playful.html` is a literal artifact name
+>    and is left unchanged.
+> 2. **Practice games changed.** The prototype's grid (Dictation / Opposites /
+>    Quick Quiz "Soon" / Image Match "Soon") is stale. The live `GAMES` list in
+>    [practice.tsx](../../app/%28tabs%29/practice.tsx) is **Quick quiz, Dictation,
+>    Conversations, Opposites** — Quick Quiz shipped (not "Soon"), Conversations
+>    is new, and **Image Match is hidden** (CONTRADICTIONS C13). Phase 4 restyles
+>    *the current* game cards with the red→gold spectrum; it does **not** restore
+>    Image Match or re-add "Soon" badges. A **shared game UI** also shipped on
+>    main — the redesign restyles within it, not around it.
 
 ---
 
@@ -48,10 +66,10 @@ React Query, and the `ModalHost`/`ToastHost` overlay system).
 | Does IA / routes / navigation graph change? | No. Same route tree, same four tabs, same journeys J1–J4. | `[LOCKED]` (inherits NAVIGATION) |
 | Does copy or the lesson phase machine change? | No. `useLessonRunner` phases and all strings are verbatim. | `[LOCKED]` (inherits CONTENT / `useLessonRunner`) |
 | Does domain state change? | No new domain state. Only UI-only state (active celebration, fun-fact banner index/dismiss, watermark motif + on/off). | `[OPEN]` |
-| New dependencies? | `expo-linear-gradient`, `@expo-google-fonts/baloo-tamma-2`; optional `expo-haptics`. | `[OPEN]` — owner approves deps |
-| Display typeface (Baloo Tamma 2)? | Adds a 4th font family for titles / big numbers / button labels. **Contradicts locked typography.** | `[OPEN]` — **needs amendment A** |
-| Tab bar shape? | Icon-only floating red-pill bar (active = solid red circle). **Contradicts locked TabBar.** | `[OPEN]` — **needs amendment B** |
-| Emergency text hierarchy? | English-first (English hero → transliteration → Kannada). **Contradicts locked text hierarchy.** | `[OPEN]` — **needs amendment C** |
+| New dependencies? | `expo-linear-gradient`, `@expo-google-fonts/baloo-tamma-2`; optional `expo-haptics`. | `[LOCKED]` — deps approved |
+| Display typeface (Baloo Tamma 2)? | Adds a 4th font family for titles / big numbers / button labels. **Contradicts locked typography.** | `[LOCKED]` — approved (Amendment A) |
+| Tab bar shape? | Icon-only floating red-pill bar (active = solid red circle). **Contradicts locked TabBar.** | `[LOCKED]` — approved (Amendment B) |
+| Emergency text hierarchy? | English-first (English hero → transliteration → Kannada). **Contradicts locked text hierarchy.** | `[LOCKED]` — approved (Amendment C) |
 | Celebration / sparkle glyphs? | Use the `Icons` map (no emoji/dingbats). Plain `→`/`▸` arrows in CTA text stay. | `[LOCKED]` (inherits DESIGN icon rule) |
 | Animation library? | Adopt `react-native-reanimated` for the redesign's motion (installed, currently unused). | `[OPEN]` — closes INTERACTIONS TODO |
 | Type scale? | Codify the prototype's compact scale in `constants/fonts.ts`. | `[OPEN]` — closes DESIGN type-scale TODO |
@@ -157,7 +175,7 @@ tracks the gap between this spec landing and the code shipping.
   wrong-answer shake (already locked at 200ms — reuse), lip-button press,
   audio-orb ping loop, "stuck" card pulse, page transitions, celebration overlay.
 - **Watermark system:** Rangoli (default) / Glyphs / Rays, global toggle (on).
-- **Optional:** Discord-style loading screen (bobbing ಬಾ + bar + rotating
+- **Optional:** Discord-style loading screen (bobbing ಬೇ + bar + rotating
   fun-fact tip) for route/lesson loads.
 
 ### Out
