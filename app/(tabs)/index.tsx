@@ -259,13 +259,15 @@ export default function HomeScreen() {
                 <Text
                   style={{
                     fontFamily: Fonts.baloo.extrabold,
-                    fontSize: moderateScale(30),
+                    fontSize: moderateScale(28),
                     color: Colors.onPrimary,
                     letterSpacing: -0.5,
-                    lineHeight: moderateScale(34),
-                    marginTop: Spacing.md,
+                    lineHeight: moderateScale(38),
+                    marginTop: Spacing.sm,
                   }}
                   maxFontSizeMultiplier={1.2}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
                 >
                   {nextTitle}
                 </Text>
