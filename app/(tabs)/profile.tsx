@@ -1,11 +1,19 @@
 import { useEffect, useRef } from 'react';
-import { View, Text, ScrollView, Pressable, Animated } from 'react-native';
+import { View, Text, ScrollView, Pressable, Animated as RNAnimated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { useRouter } from 'expo-router';
+import ReAnimated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
+import { Shadows } from '../../constants/shadows';
 import { Icons } from '../../constants/icons';
 import type { Icon as TablerIcon } from '@tabler/icons-react-native';
 import { useAuthStore } from '../../stores/useAuthStore';
@@ -15,7 +23,10 @@ import { useOverallProgress } from '../../hooks/useOverallProgress';
 import { useFluencyMode } from '../../hooks/useFluencyMode';
 import { formatFirstName } from '../../utils/formatName';
 import { useModal } from '../../components/modals/ModalHost';
-import { Celebration, type CelebrationKind } from '../../components/ui/Celebration';
+import { Celebration } from '../../components/ui/Celebration';
+import { isStreakMilestone } from '../../components/modals/instances/StreakMilestoneTakeover';
+import { BrandGradient } from '../../components/ui/BrandGradient';
+import { Watermark } from '../../components/ui/Watermark';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { SignOutDialog } from '../../components/modals/instances/SignOutDialog';
 import { RemindersSheet } from '../../components/modals/instances/RemindersSheet';
@@ -35,20 +46,16 @@ export default function ProfileScreen() {
   const goal = useFluencyMode();
   const modal = useModal();
 
-  // TEMP (Phase 3 dev trigger) — fires each Celebration kind so the overlay can
-  // be verified before real triggers are wired in Phase 4 (level/streak) and
-  // Phase 5 (lesson). Remove this block + its UI when those land.
-  const showCelebration = (kind: CelebrationKind) => {
-    modal.show({
-      kind: 'takeover',
-      component: Celebration,
-      props: {
-        kind,
-        streak: 12 as const,
-        level: 3,
-        onClose: () => modal.dismiss(),
-      },
-    });
+  // Streak pill → flame wiggle; replays the streak Celebration only on a real
+  // milestone day (locked milestone copy — no fake milestones).
+  const handleStreakPress = () => {
+    if (isStreakMilestone(streak)) {
+      modal.show({
+        kind: 'takeover',
+        component: Celebration,
+        props: { kind: 'streak', streak, onClose: () => modal.dismiss() },
+      });
+    }
   };
 
   const handleSignOutPress = () => {
@@ -72,13 +79,13 @@ export default function ProfileScreen() {
     });
   };
 
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(4)).current;
+  const fadeAnim = useRef(new RNAnimated.Value(0)).current;
+  const slideAnim = useRef(new RNAnimated.Value(4)).current;
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, { toValue: 1, duration: 220, useNativeDriver: true }),
-      Animated.timing(slideAnim, { toValue: 0, duration: 220, useNativeDriver: true }),
+    RNAnimated.parallel([
+      RNAnimated.timing(fadeAnim, { toValue: 1, duration: 220, useNativeDriver: true }),
+      RNAnimated.timing(slideAnim, { toValue: 0, duration: 220, useNativeDriver: true }),
     ]).start();
   }, []);
 
@@ -93,22 +100,16 @@ export default function ProfileScreen() {
   const goalLabel = goal === 'spoken' ? 'Spoken only' : goal === 'fluency' ? 'Complete fluency' : null;
   const dailyGoalLabel = dailyGoalMinutes ? `${dailyGoalMinutes} min / day` : null;
   const hasOnboardingSummary = !!(goalLabel || dailyGoalLabel || motivations.length);
+  const goalSub = [dailyGoalLabel, motivations.length ? `${motivations.length} reason${motivations.length === 1 ? '' : 's'}` : null]
+    .filter(Boolean)
+    .join(' · ');
 
-  const settingsItems: Array<{
-    id: string;
-    label: string;
-    Icon: TablerIcon;
-    onPress: () => void;
-  }> = [
+  const settingsItems: Array<{ id: string; label: string; Icon: TablerIcon; onPress: () => void }> = [
     {
       id: 'reminders',
       label: 'Reminders',
       Icon: Icons.setReminders,
-      onPress: () =>
-        modal.show({
-          kind: 'sheet',
-          component: RemindersSheet,
-        }),
+      onPress: () => modal.show({ kind: 'sheet', component: RemindersSheet }),
     },
     {
       id: 'audio',
@@ -125,7 +126,7 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <Animated.View
+    <RNAnimated.View
       style={{
         flex: 1,
         backgroundColor: Colors.surface,
@@ -133,54 +134,34 @@ export default function ProfileScreen() {
         transform: [{ translateY: slideAnim }],
       }}
     >
-      {/* APP BAR — centred wordmark, streak right (no hamburger) */}
+      <Watermark motif="rangoli" />
+
+      {/* Top bar — wordmark + streak pill + hairline */}
       <View
         style={{
           paddingTop: insets.top + Spacing.sm,
-          paddingBottom: Spacing.md,
-          paddingHorizontal: Spacing.xxl,
+          paddingBottom: Spacing.sm,
+          paddingHorizontal: Spacing.lg,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
+          borderBottomWidth: 1,
+          borderBottomColor: Colors.hairline,
         }}
       >
-        <View style={{ width: moderateScale(56) }} />
         <Text
           style={{
             fontFamily: Fonts.notoSansKannada.bold,
             fontSize: moderateScale(22),
             color: Colors.primary,
             letterSpacing: -0.3,
-            lineHeight: moderateScale(36),
-            paddingTop: Spacing.xs,
+            lineHeight: moderateScale(34),
           }}
           maxFontSizeMultiplier={1.2}
         >
           ಕನ್ನಡ ಬೇಕು
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: moderateScale(6),
-            minWidth: moderateScale(56),
-            justifyContent: 'flex-end',
-          }}
-          accessibilityRole="text"
-          accessibilityLabel={`Current streak: ${streak} day${streak === 1 ? '' : 's'}`}
-        >
-          <Icons.streak size={20} color={Colors.primary} />
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(16),
-              color: Colors.onSurface,
-            }}
-            maxFontSizeMultiplier={1.3}
-          >
-            {streak}
-          </Text>
-        </View>
+        <StreakPill streak={streak} onPress={handleStreakPress} />
       </View>
 
       <ScrollView
@@ -188,65 +169,56 @@ export default function ProfileScreen() {
         contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
       >
         {/* Avatar + name */}
-        <View style={{ alignItems: 'center', paddingTop: Spacing.lg, marginBottom: moderateScale(28) }}>
+        <View style={{ alignItems: 'center', paddingTop: Spacing.xxl, marginBottom: moderateScale(20) }}>
           <View
             style={{
-              width: moderateScale(96),
-              height: moderateScale(96),
+              width: moderateScale(84),
+              height: moderateScale(84),
               borderRadius: Radius.full,
-              backgroundColor: Colors.primary,
-              alignItems: 'center',
-              justifyContent: 'center',
               marginBottom: Spacing.md,
+              ...Shadows.tabActive,
             }}
           >
-            <Text
+            <BrandGradient
               style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(36),
-                color: Colors.onPrimary,
+                width: '100%',
+                height: '100%',
+                borderRadius: Radius.full,
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
               }}
-              maxFontSizeMultiplier={1.2}
             >
-              {userName[0]?.toUpperCase()}
-            </Text>
+              <Text
+                style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(36), color: Colors.onPrimary }}
+                maxFontSizeMultiplier={1.2}
+              >
+                {userName[0]?.toUpperCase()}
+              </Text>
+            </BrandGradient>
           </View>
           <Text
-            style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(22),
-              color: Colors.onSurface,
-              letterSpacing: -0.3,
-            }}
+            style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(24), color: Colors.onSurface, letterSpacing: -0.3 }}
             maxFontSizeMultiplier={1.3}
           >
             {userName}
           </Text>
         </View>
 
-        {/* Overall progress band — reads user_overall_progress (PR3) */}
-        <View style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(20) }}>
+        {/* Overall progress band — gold-wash */}
+        <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(11) }}>
           <View
-            style={{
-              backgroundColor: Colors.surfaceContainerLow,
-              borderRadius: Radius.lg,
-              padding: moderateScale(18),
-            }}
+            style={{ backgroundColor: Colors.secondaryFixed, borderRadius: Radius.xl, padding: moderateScale(18) }}
+            accessibilityRole="progressbar"
+            accessibilityLabel={`Overall progress: ${overallPct} percent. Lessons and games combined.`}
           >
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'baseline',
-                marginBottom: Spacing.sm,
-              }}
-            >
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: Spacing.sm }}>
               <Text
                 style={{
                   fontFamily: Fonts.dmSans.bold,
-                  fontSize: moderateScale(10),
-                  letterSpacing: 1.8,
-                  color: Colors.tertiary,
+                  fontSize: moderateScale(11),
+                  letterSpacing: 1.4,
+                  color: Colors.onSecondaryContainer,
                   textTransform: 'uppercase',
                 }}
                 maxFontSizeMultiplier={1.4}
@@ -254,42 +226,19 @@ export default function ProfileScreen() {
                 Overall progress
               </Text>
               <Text
-                style={{
-                  fontFamily: Fonts.dmSans.bold,
-                  fontSize: moderateScale(20),
-                  color: Colors.onSurface,
-                }}
+                style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(22), color: Colors.onSurface }}
                 maxFontSizeMultiplier={1.3}
               >
                 {overall.isLoading ? '—' : `${overallPct}%`}
               </Text>
             </View>
             <View
-              style={{
-                height: moderateScale(8),
-                backgroundColor: Colors.surfaceContainerHighest,
-                borderRadius: Radius.full,
-                overflow: 'hidden',
-              }}
-              accessibilityRole="progressbar"
-              accessibilityLabel={`Overall progress: ${overallPct} percent`}
+              style={{ height: moderateScale(9), backgroundColor: Colors.surfaceContainerHighest, borderRadius: Radius.full, overflow: 'hidden' }}
             >
-              <View
-                style={{
-                  height: '100%',
-                  width: `${overallPct}%`,
-                  backgroundColor: Colors.primary,
-                  borderRadius: Radius.full,
-                }}
-              />
+              <View style={{ height: '100%', width: `${overallPct}%`, backgroundColor: Colors.goldLip, borderRadius: Radius.full }} />
             </View>
             <Text
-              style={{
-                fontFamily: Fonts.dmSans.regular,
-                fontSize: moderateScale(11),
-                color: Colors.tertiary,
-                marginTop: Spacing.sm,
-              }}
+              style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12), color: Colors.onSecondaryContainer, marginTop: Spacing.sm }}
               maxFontSizeMultiplier={1.3}
             >
               Lessons + games combined
@@ -297,201 +246,73 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        {/* Two stat cards — container-low */}
-        <View style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(28) }}>
-          <View style={{ flexDirection: 'row', gap: Spacing.md }}>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: Colors.surfaceContainerLow,
-                borderRadius: Radius.lg,
-                padding: moderateScale(18),
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: Spacing.sm,
-                  marginBottom: Spacing.md,
-                }}
-              >
-                <Icons.streak size={20} color={Colors.primary} />
-              </View>
-              <Text
-                style={{
-                  fontFamily: Fonts.dmSans.bold,
-                  fontSize: moderateScale(28),
-                  color: Colors.onSurface,
-                  lineHeight: moderateScale(32),
-                }}
-                maxFontSizeMultiplier={1.3}
-              >
-                {streak}
-              </Text>
-              <Text
-                style={{
-                  fontFamily: Fonts.dmSans.bold,
-                  fontSize: moderateScale(10),
-                  letterSpacing: 1.8,
-                  color: Colors.tertiary,
-                  textTransform: 'uppercase',
-                  marginTop: Spacing.xs,
-                }}
-                maxFontSizeMultiplier={1.4}
-              >
-                Day streak
-              </Text>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: Colors.surfaceContainerLow,
-                borderRadius: Radius.lg,
-                padding: moderateScale(18),
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: Spacing.sm,
-                  marginBottom: Spacing.md,
-                }}
-              >
-                <Icons.tabLearn size={20} color={Colors.secondary} />
-              </View>
-              <Text
-                style={{
-                  fontFamily: Fonts.dmSans.bold,
-                  fontSize: moderateScale(28),
-                  color: Colors.onSurface,
-                  lineHeight: moderateScale(32),
-                }}
-                maxFontSizeMultiplier={1.3}
-              >
-                {wordsLearned}
-              </Text>
-              <Text
-                style={{
-                  fontFamily: Fonts.dmSans.bold,
-                  fontSize: moderateScale(10),
-                  letterSpacing: 1.8,
-                  color: Colors.tertiary,
-                  textTransform: 'uppercase',
-                  marginTop: Spacing.xs,
-                }}
-                maxFontSizeMultiplier={1.4}
-              >
-                Words learned
-              </Text>
-            </View>
+        {/* Two stat cards */}
+        <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(28) }}>
+          <View style={{ flexDirection: 'row', gap: moderateScale(11) }}>
+            <StatCard Icon={Icons.streak} iconColor={Colors.primary} value={streak} label="Day streak" />
+            <StatCard Icon={Icons.tabLearn} iconColor={Colors.secondary} value={wordsLearned} label="Words learned" />
           </View>
         </View>
 
-        {/* Goal toggle hidden — only "spoken" ships today. The row below opens
-            a sheet with the onboarding answers (read-only for now). */}
+        {/* Your goal */}
         {hasOnboardingSummary ? (
-          <View style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(28) }}>
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(11),
-                letterSpacing: 2.5,
-                color: Colors.tertiary,
-                textTransform: 'uppercase',
-                marginBottom: Spacing.md,
-              }}
-              maxFontSizeMultiplier={1.4}
-            >
-              Your goal
-            </Text>
+          <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(28) }}>
+            <SectionLabel>Your goal</SectionLabel>
             <Pressable
-              onPress={() =>
-                modal.show({
-                  kind: 'sheet',
-                  component: GoalSummarySheet,
-                })
-              }
+              onPress={() => modal.show({ kind: 'sheet', component: GoalSummarySheet })}
               accessibilityRole="button"
               accessibilityLabel={`Your goal — ${goalLabel ?? 'view details'}`}
               style={({ pressed }) => ({
                 flexDirection: 'row',
                 alignItems: 'center',
-                backgroundColor: Colors.surfaceContainerLow,
+                gap: Spacing.md,
+                backgroundColor: Colors.surfaceContainerLowest,
                 borderRadius: Radius.lg,
                 paddingVertical: moderateScale(14),
                 paddingHorizontal: Spacing.lg,
                 minHeight: moderateScale(56),
-                gap: Spacing.md,
+                borderWidth: 1,
+                borderColor: Colors.hairline,
                 opacity: pressed ? 0.7 : 1,
               })}
             >
+              <View
+                style={{
+                  width: moderateScale(40),
+                  height: moderateScale(40),
+                  borderRadius: moderateScale(12),
+                  backgroundColor: Colors.surfaceContainerHigh,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Icons.tabPractice size={moderateScale(20)} color={Colors.secondary} />
+              </View>
               <View style={{ flex: 1 }}>
                 <Text
-                  style={{
-                    fontFamily: Fonts.dmSans.bold,
-                    fontSize: moderateScale(14),
-                    color: Colors.onSurface,
-                  }}
+                  style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(16), color: Colors.onSurface, letterSpacing: -0.2 }}
                   maxFontSizeMultiplier={1.3}
                 >
                   {goalLabel ?? 'View your goal'}
                 </Text>
-                {dailyGoalLabel ? (
+                {goalSub ? (
                   <Text
-                    style={{
-                      fontFamily: Fonts.dmSans.regular,
-                      fontSize: moderateScale(12),
-                      color: Colors.tertiary,
-                      marginTop: moderateScale(2),
-                    }}
+                    style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12.5), color: Colors.tertiary, marginTop: moderateScale(1) }}
                     maxFontSizeMultiplier={1.3}
                   >
-                    {dailyGoalLabel}
-                    {motivations.length ? ` · ${motivations.length} reason${motivations.length === 1 ? '' : 's'}` : ''}
-                  </Text>
-                ) : motivations.length ? (
-                  <Text
-                    style={{
-                      fontFamily: Fonts.dmSans.regular,
-                      fontSize: moderateScale(12),
-                      color: Colors.tertiary,
-                      marginTop: moderateScale(2),
-                    }}
-                    maxFontSizeMultiplier={1.3}
-                  >
-                    {`${motivations.length} reason${motivations.length === 1 ? '' : 's'}`}
+                    {goalSub}
                   </Text>
                 ) : null}
               </View>
-              <Icons.forward size={18} color={Colors.tertiary} />
+              <Icons.forward size={moderateScale(17)} color={Colors.textFaint} />
             </Pressable>
           </View>
         ) : null}
 
-        {/* Settings list — ghost-border inset shadow separates rows (§2 No-Line) */}
-        <View style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(28) }}>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(11),
-              letterSpacing: 2.5,
-              color: Colors.tertiary,
-              textTransform: 'uppercase',
-              marginBottom: Spacing.md,
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            Settings
-          </Text>
-          <View
-            style={{
-              backgroundColor: Colors.surfaceContainerLow,
-              borderRadius: Radius.lg,
-              overflow: 'hidden',
-            }}
-          >
+        {/* Settings list — alternating tonal rows */}
+        <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(20) }}>
+          <SectionLabel>Settings</SectionLabel>
+          <View style={{ borderRadius: Radius.lg, overflow: 'hidden', borderWidth: 1, borderColor: Colors.hairline }}>
             {settingsItems.map((item, idx) => (
               <Pressable
                 key={item.id}
@@ -501,95 +322,143 @@ export default function ProfileScreen() {
                 style={({ pressed }) => ({
                   flexDirection: 'row',
                   alignItems: 'center',
+                  gap: moderateScale(13),
                   paddingVertical: moderateScale(14),
                   paddingHorizontal: Spacing.lg,
-                  gap: moderateScale(14),
                   minHeight: moderateScale(56),
-                  // Tonal step on every other row substitutes for borders.
-                  backgroundColor:
-                    idx % 2 === 0
-                      ? Colors.surfaceContainerLow
-                      : Colors.surfaceContainerHigh,
+                  backgroundColor: idx % 2 === 0 ? Colors.surfaceContainerLowest : Colors.surfaceContainerLow,
                   opacity: pressed ? 0.7 : 1,
                 })}
               >
-                <item.Icon size={20} color={Colors.primary} />
+                <item.Icon size={moderateScale(20)} color={Colors.primary} strokeWidth={2.1} />
                 <Text
-                  style={{
-                    flex: 1,
-                    fontFamily: Fonts.dmSans.medium,
-                    fontSize: moderateScale(14),
-                    color: Colors.onSurface,
-                  }}
+                  style={{ flex: 1, fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14.5), color: Colors.onSurface }}
                   maxFontSizeMultiplier={1.3}
                 >
                   {item.label}
                 </Text>
-                <Icons.forward size={18} color={Colors.tertiary} />
+                <Icons.forward size={moderateScale(17)} color={Colors.textFaint} />
               </Pressable>
             ))}
           </View>
         </View>
 
         {/* Sign out */}
-        <View style={{ paddingHorizontal: Spacing.xxl }}>
+        <View style={{ paddingHorizontal: Spacing.lg }}>
           <Pressable
             onPress={handleSignOutPress}
             accessibilityRole="button"
             accessibilityLabel="Sign out"
-            style={({ pressed }) => ({
-              paddingVertical: moderateScale(14),
-              alignItems: 'center',
-              minHeight: moderateScale(44),
-              opacity: pressed ? 0.6 : 1,
-            })}
+            style={({ pressed }) => ({ paddingVertical: moderateScale(14), alignItems: 'center', minHeight: moderateScale(44), opacity: pressed ? 0.6 : 1 })}
           >
             <Text
-              style={{
-                fontFamily: Fonts.dmSans.medium,
-                fontSize: moderateScale(14),
-                color: Colors.primary,
-              }}
+              style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(14), color: Colors.primary }}
               maxFontSizeMultiplier={1.3}
             >
               Sign out
             </Text>
           </Pressable>
         </View>
-
-        {/* TEMP (Phase 3 dev trigger) — remove with the showCelebration helper. */}
-        <View style={{ paddingHorizontal: Spacing.xxl, marginTop: moderateScale(28), gap: Spacing.sm }}>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(11),
-              letterSpacing: 2.5,
-              color: Colors.tertiary,
-              textTransform: 'uppercase',
-            }}
-          >
-            Dev · celebration preview
-          </Text>
-          {(['lesson', 'streak', 'level'] as const).map((k) => (
-            <Pressable
-              key={k}
-              onPress={() => showCelebration(k)}
-              style={({ pressed }) => ({
-                paddingVertical: moderateScale(12),
-                paddingHorizontal: Spacing.lg,
-                borderRadius: Radius.lg,
-                backgroundColor: Colors.surfaceContainerHigh,
-                opacity: pressed ? 0.7 : 1,
-              })}
-            >
-              <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(13), color: Colors.onSurface }}>
-                Celebrate: {k}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
       </ScrollView>
-    </Animated.View>
+    </RNAnimated.View>
   );
 }
 
+function SectionLabel({ children }: { children: string }) {
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(7), marginBottom: Spacing.md }}>
+      <View style={{ width: moderateScale(4), height: moderateScale(13), borderRadius: 2, backgroundColor: Colors.secondary }} />
+      <Text
+        style={{
+          fontFamily: Fonts.dmSans.bold,
+          fontSize: moderateScale(11),
+          letterSpacing: 1.4,
+          color: Colors.tertiary,
+          textTransform: 'uppercase',
+        }}
+        maxFontSizeMultiplier={1.4}
+      >
+        {children}
+      </Text>
+    </View>
+  );
+}
+
+function StatCard({ Icon, iconColor, value, label }: { Icon: TablerIcon; iconColor: string; value: number; label: string }) {
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: Colors.surfaceContainerLowest,
+        borderRadius: Radius.xl,
+        padding: moderateScale(16),
+        borderWidth: 1,
+        borderColor: Colors.hairline,
+      }}
+    >
+      <Icon size={moderateScale(20)} color={iconColor} />
+      <Text
+        style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(30), color: Colors.onSurface, letterSpacing: -0.8, marginTop: moderateScale(7), lineHeight: moderateScale(34) }}
+        maxFontSizeMultiplier={1.2}
+      >
+        {value}
+      </Text>
+      <Text
+        style={{
+          fontFamily: Fonts.dmSans.bold,
+          fontSize: moderateScale(10.5),
+          letterSpacing: 1.2,
+          color: Colors.textFaint,
+          textTransform: 'uppercase',
+          marginTop: moderateScale(5),
+        }}
+        maxFontSizeMultiplier={1.4}
+      >
+        {label}
+      </Text>
+    </View>
+  );
+}
+
+/** Gold-wash streak pill with a flame that wiggles on tap. */
+function StreakPill({ streak, onPress }: { streak: number; onPress: () => void }) {
+  const rot = useSharedValue(0);
+  const flameStyle = useAnimatedStyle(() => ({ transform: [{ rotate: `${rot.value}deg` }] }));
+  const handle = () => {
+    rot.value = withSequence(
+      withTiming(-12, { duration: 90, easing: Easing.out(Easing.ease) }),
+      withTiming(10, { duration: 90 }),
+      withTiming(0, { duration: 90 }),
+    );
+    onPress();
+  };
+  return (
+    <Pressable
+      onPress={handle}
+      accessibilityRole="button"
+      accessibilityLabel={`Current streak: ${streak} day${streak === 1 ? '' : 's'}`}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: moderateScale(4),
+        backgroundColor: Colors.secondaryFixed,
+        borderRadius: Radius.full,
+        paddingVertical: moderateScale(6),
+        paddingLeft: moderateScale(9),
+        paddingRight: moderateScale(12),
+        borderWidth: 1.5,
+        borderColor: Colors.secondaryContainer,
+      }}
+    >
+      <ReAnimated.View style={flameStyle}>
+        <Icons.streak size={moderateScale(17)} color={Colors.primary} />
+      </ReAnimated.View>
+      <Text
+        style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(16), color: Colors.onSurface }}
+        maxFontSizeMultiplier={1.2}
+      >
+        {streak}
+      </Text>
+    </Pressable>
+  );
+}
