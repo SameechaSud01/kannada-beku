@@ -26,7 +26,7 @@ export function SignOutDialog({ onConfirm, onCancel }: SignOutDialogProps) {
         }}
         maxFontSizeMultiplier={1.3}
       >
-        Sign out of Kannada Baa?
+        Sign out of Kannada Beku?
       </Text>
       <Text
         style={{

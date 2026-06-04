@@ -86,9 +86,9 @@ User-switch reset: AppGate compares `session.user.id` against `useUserStore.user
 
 ## Deep linking
 
-`[LOCKED]` — scheme matches [app.json](../app.json).
+`[LOCKED]` — scheme matches [app.json](../app.json). _Renamed `kannada-baa` → `kannada-beku` (owner-approved 2026-06-04, app rebrand)._
 
-- **Scheme:** `kannada-baa` (declared in [app.json](../app.json)).
+- **Scheme:** `kannada-beku` (declared in [app.json](../app.json)).
 - **Custom linking config:** none. All routes are file-based and addressable via path.
 
 > **TODO:** Universal links / Android App Links (`https://`) — needed for marketing? Out of MVP?

@@ -47,12 +47,12 @@ export default function HelpScreen() {
 
   function openContact() {
     if (!SUPPORT_EMAIL) return;
-    Linking.openURL(buildMailto(SUPPORT_EMAIL, 'Kannada Baa support')).catch(() => undefined);
+    Linking.openURL(buildMailto(SUPPORT_EMAIL, 'Kannada Beku support')).catch(() => undefined);
   }
 
   function openBugReport() {
     if (!SUPPORT_EMAIL) return;
-    Linking.openURL(buildMailto(SUPPORT_EMAIL, 'Bug report — Kannada Baa', bugReportBody()))
+    Linking.openURL(buildMailto(SUPPORT_EMAIL, 'Bug report — Kannada Beku', bugReportBody()))
       .catch(() => undefined);
   }
 

@@ -1,6 +1,6 @@
 # Spec docs
 
-This folder is the source of truth for **what** Kannada Baa is and **how** it should behave. Specs lead — code follows.
+This folder is the source of truth for **what** Kannada Beku is and **how** it should behave. Specs lead — code follows.
 
 If a spec says "X" and the code says "Y", the spec is correct unless we agree to update it. Open a PR against the spec first; the implementation follows.
 
