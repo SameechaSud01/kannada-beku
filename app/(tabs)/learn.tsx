@@ -7,7 +7,7 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
-import { useCompletedLessons, useStreak } from '../../hooks/progress';
+import { useCompletedLessons } from '../../hooks/progress';
 import { useDbLessons } from '../../hooks/useLessons';
 import {
   PLANNED_LESSON_SLOTS,
@@ -17,6 +17,7 @@ import { useModal } from '../../components/modals/ModalHost';
 import { LessonLockedDialog } from '../../components/modals/instances/LessonLockedDialog';
 import { LessonInfoDialog } from '../../components/modals/instances/LessonInfoDialog';
 import { BasicsCard } from '../../components/guide/BasicsCard';
+import { Watermark } from '../../components/ui/Watermark';
 
 const ESTIMATED_MIN_PER_LESSON = 5;
 
@@ -38,7 +39,6 @@ export default function LearnScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const completedLessons = useCompletedLessons();
-  const streak = useStreak();
   const modal = useModal();
   const lessonsQuery = useDbLessons();
   const dbLessons = lessonsQuery.data ?? [];
@@ -134,95 +134,52 @@ export default function LearnScreen() {
         transform: [{ translateY: slideAnim }],
       }}
     >
+      <Watermark motif="rangoli" />
+
+      {/* Header — "Your journey" + italic line + hairline */}
       <View
         style={{
           paddingTop: insets.top + Spacing.sm,
           paddingBottom: Spacing.md,
-          paddingHorizontal: Spacing.xxl,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          paddingHorizontal: Spacing.lg,
+          borderBottomWidth: 1,
+          borderBottomColor: Colors.hairline,
         }}
       >
-        <View style={{ width: moderateScale(56) }} />
         <Text
           style={{
-            fontFamily: Fonts.notoSansKannada.bold,
-            fontSize: moderateScale(22),
-            color: Colors.primary,
-            letterSpacing: -0.3,
-            lineHeight: moderateScale(36),
-            paddingTop: Spacing.xs,
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(25),
+            color: Colors.onSurface,
+            letterSpacing: -0.4,
+            lineHeight: moderateScale(32),
           }}
           maxFontSizeMultiplier={1.2}
         >
-          ಕನ್ನಡ ಬೇಕು
+          Your journey
         </Text>
-        <View
+        <Text
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: moderateScale(6),
-            minWidth: moderateScale(56),
-            justifyContent: 'flex-end',
+            fontFamily: Fonts.lora.italic,
+            fontSize: moderateScale(13),
+            color: Colors.tertiary,
+            marginTop: moderateScale(1),
           }}
-          accessibilityRole="text"
-          accessibilityLabel={`Current streak: ${streak} day${streak === 1 ? '' : 's'}`}
+          maxFontSizeMultiplier={1.4}
         >
-          <Icons.streak size={20} color={Colors.primary} />
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(16),
-              color: Colors.onSurface,
-            }}
-            maxFontSizeMultiplier={1.3}
-          >
-            {streak}
-          </Text>
-        </View>
+          Swalpa swalpa — one step at a time.
+        </Text>
       </View>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
       >
-        <View
-          style={{ paddingHorizontal: Spacing.xxl, paddingTop: Spacing.md, marginBottom: Spacing.xl }}
-        >
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(11),
-              letterSpacing: 2.5,
-              color: Colors.tertiary,
-              textTransform: 'uppercase',
-              marginBottom: moderateScale(6),
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            All lessons
-          </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.regular,
-              fontSize: moderateScale(13),
-              color: Colors.tertiary,
-              lineHeight: moderateScale(18),
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            Finish a lesson to unlock the next one.
-          </Text>
-        </View>
-
-        <View
-          style={{ paddingHorizontal: Spacing.xxl, marginBottom: moderateScale(14) }}
-        >
+        <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg, marginBottom: moderateScale(14) }}>
           <BasicsCard />
         </View>
 
-        <View style={{ paddingHorizontal: Spacing.xxl, gap: moderateScale(10) }}>
+        <View style={{ paddingHorizontal: Spacing.lg, gap: moderateScale(9) }}>
           {rows.map((row) => (
             <LessonRowView
               key={`slot-${row.slot}`}
@@ -250,7 +207,9 @@ function LessonRowView({
   const isDone = row.state === 'done';
   const isActive = row.state === 'active';
 
-  const cardBg = isLocked ? Colors.surfaceContainerLow : Colors.surfaceContainerHighest;
+  // Tile colours per state (done = gold-wash, active = red, locked = dim).
+  const tileBg = isDone ? Colors.secondaryFixed : isActive ? Colors.primary : Colors.surfaceContainerHigh;
+  const glyphColor = isDone ? Colors.onSecondaryContainer : isActive ? Colors.onPrimary : Colors.textFaint;
 
   return (
     <Pressable
@@ -264,31 +223,35 @@ function LessonRowView({
       style={({ pressed }) => ({
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: cardBg,
-        borderRadius: Radius.lg,
-        padding: moderateScale(14),
-        opacity: isLocked ? 0.5 : 1,
-        transform: [{ scale: pressed && !isLocked ? 0.98 : 1 }],
+        gap: moderateScale(13),
+        borderRadius: Radius.xl,
+        padding: moderateScale(12),
+        opacity: isLocked ? 0.62 : 1,
+        // Active = white card with a 2px red ring + soft red shadow.
+        // Done/locked = tonal fill, no border (No-Line rule).
+        backgroundColor: isActive ? Colors.surfaceContainerLowest : isDone ? Colors.secondaryFixed : Colors.surfaceContainerLow,
         ...(isActive
           ? {
-              shadowColor: Colors.outlineVariant,
-              shadowOffset: { width: 0, height: 0 },
-              shadowOpacity: 0.6,
-              shadowRadius: 6,
-              elevation: 0,
+              borderWidth: 2,
+              borderColor: Colors.primary,
+              shadowColor: Colors.primary,
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.18,
+              shadowRadius: 16,
+              elevation: 4,
             }
-          : {}),
+          : null),
+        transform: [{ scale: pressed && !isLocked ? 0.98 : 1 }],
       })}
     >
       <View
         style={{
-          width: moderateScale(46),
-          height: moderateScale(46),
-          borderRadius: Radius.md,
-          backgroundColor: Colors.surface,
+          width: moderateScale(50),
+          height: moderateScale(50),
+          borderRadius: moderateScale(15),
+          backgroundColor: tileBg,
           alignItems: 'center',
           justifyContent: 'center',
-          marginRight: moderateScale(14),
         }}
       >
         <Text
@@ -297,7 +260,7 @@ function LessonRowView({
             fontSize: moderateScale(24),
             lineHeight: moderateScale(36),
             paddingTop: moderateScale(2),
-            color: isDone ? Colors.primary : Colors.onSurface,
+            color: glyphColor,
           }}
           maxFontSizeMultiplier={1.2}
         >
@@ -308,14 +271,27 @@ function LessonRowView({
       <View style={{ flex: 1 }}>
         <Text
           style={{
-            fontFamily: Fonts.dmSans.medium,
-            fontSize: moderateScale(15),
+            fontFamily: Fonts.baloo.bold,
+            fontSize: moderateScale(17),
             color: Colors.onSurface,
+            letterSpacing: -0.2,
           }}
           maxFontSizeMultiplier={1.3}
           numberOfLines={1}
         >
-          {row.slot}. {row.title}
+          {row.title}
+        </Text>
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.medium,
+            fontSize: moderateScale(12.5),
+            color: Colors.tertiary,
+            marginTop: moderateScale(1),
+          }}
+          maxFontSizeMultiplier={1.3}
+          numberOfLines={1}
+        >
+          {row.subtitle}
         </Text>
       </View>
 
@@ -324,43 +300,47 @@ function LessonRowView({
         hitSlop={12}
         accessibilityRole="button"
         accessibilityLabel={`About Lesson ${row.slot}: ${row.title}`}
-        style={({ pressed }) => ({
-          marginLeft: moderateScale(8),
-          padding: moderateScale(4),
-          opacity: pressed ? 0.5 : 1,
-        })}
+        style={({ pressed }) => ({ padding: moderateScale(4), opacity: pressed ? 0.5 : 1 })}
       >
-        <Icons.info size={18} color={Colors.tertiary} />
+        <Icons.info size={moderateScale(18)} color={Colors.tertiary} />
       </Pressable>
 
-      <View style={{ marginLeft: moderateScale(10) }}>
-        {isDone && <Icons.lessonDone size={18} color={Colors.primary} />}
-        {isActive && (
+      <View style={{ marginLeft: moderateScale(4) }}>
+        {isDone ? (
           <View
             style={{
-              backgroundColor: Colors.primary,
+              width: moderateScale(26),
+              height: moderateScale(26),
               borderRadius: Radius.full,
-              paddingVertical: Spacing.sm,
-              paddingHorizontal: Spacing.lg,
+              backgroundColor: Colors.secondary,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(12),
-                letterSpacing: 0.5,
-                color: Colors.surface,
-              }}
-              maxFontSizeMultiplier={1.2}
-            >
-              Start
-            </Text>
+            <Icons.check size={moderateScale(15)} color={Colors.onPrimary} strokeWidth={2.6} />
           </View>
-        )}
-        {isLocked && (
-          <View style={{ opacity: 0.5 }}>
-            <Icons.locked size={16} color={Colors.tertiary} />
+        ) : isActive ? (
+          <View
+            style={{
+              width: moderateScale(32),
+              height: moderateScale(32),
+              borderRadius: Radius.full,
+              backgroundColor: Colors.primary,
+              alignItems: 'center',
+              justifyContent: 'center',
+              ...{
+                shadowColor: Colors.primary,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.4,
+                shadowRadius: 10,
+                elevation: 6,
+              },
+            }}
+          >
+            <Icons.play size={moderateScale(15)} color={Colors.onPrimary} />
           </View>
+        ) : (
+          <Icons.locked size={moderateScale(17)} color={Colors.textFaint} />
         )}
       </View>
     </Pressable>
