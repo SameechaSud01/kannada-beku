@@ -89,8 +89,8 @@ export function Celebration(props: CelebrationProps) {
 
   return (
     <View style={[StyleSheet.absoluteFill, { zIndex: 70 }]}>
-      <BlurView intensity={reduced ? 0 : 18} tint="dark" style={StyleSheet.absoluteFill} />
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(27,29,14,0.46)' }]} />
+      <BlurView intensity={reduced ? 0 : 32} tint="dark" style={StyleSheet.absoluteFill} />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(27,29,14,0.82)' }]} />
 
       {!reduced ? <Confetti /> : null}
 
@@ -125,11 +125,12 @@ export function Celebration(props: CelebrationProps) {
           <Text
             style={{
               fontFamily: Fonts.baloo.extrabold,
-              fontSize: moderateScale(32),
-              lineHeight: moderateScale(36),
+              fontSize: moderateScale(30),
+              lineHeight: moderateScale(40),
               color: Colors.onPrimary,
               textAlign: 'center',
               letterSpacing: -0.3,
+              paddingHorizontal: Spacing.sm,
             }}
             maxFontSizeMultiplier={1.3}
           >
@@ -155,7 +156,7 @@ export function Celebration(props: CelebrationProps) {
         </RisingText>
 
         <RisingText reduced={reduced} delay={450}>
-          <View style={{ marginTop: Spacing.xxl, minWidth: moderateScale(200) }}>
+          <View style={{ marginTop: Spacing.xxl }}>
             <LipButton
               label={cfg.cta}
               onPress={onClose}
@@ -163,6 +164,7 @@ export function Celebration(props: CelebrationProps) {
               lip={cfg.lip}
               fg={cfg.ink}
               icon={Icons.forward}
+              fullWidth={false}
             />
           </View>
         </RisingText>

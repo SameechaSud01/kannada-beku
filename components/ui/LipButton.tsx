@@ -19,6 +19,8 @@ export type LipButtonProps = {
   icon?: TablerIcon;
   small?: boolean;
   disabled?: boolean;
+  /** Stretch to the parent's width (default). Set false for a compact pill. */
+  fullWidth?: boolean;
   style?: StyleProp<ViewStyle>;
   accessibilityLabel?: string;
 };
@@ -41,6 +43,7 @@ export function LipButton({
   icon: Icon,
   small = false,
   disabled = false,
+  fullWidth = true,
   style,
   accessibilityLabel,
 }: LipButtonProps) {
@@ -53,7 +56,8 @@ export function LipButton({
       accessibilityState={{ disabled }}
       style={({ pressed }) => [
         {
-          width: '100%',
+          width: fullWidth ? '100%' : undefined,
+          alignSelf: fullWidth ? undefined : 'center',
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
@@ -61,7 +65,7 @@ export function LipButton({
           backgroundColor: color,
           borderRadius: small ? Radius.lg : moderateScale(15),
           paddingVertical: small ? Spacing.sm : Spacing.md,
-          paddingHorizontal: small ? Spacing.lg : Spacing.xl,
+          paddingHorizontal: fullWidth ? (small ? Spacing.lg : Spacing.xl) : moderateScale(40),
           borderBottomWidth: pressed ? DEPTH / 2 : DEPTH,
           borderBottomColor: lip,
           transform: [{ translateY: pressed ? DEPTH / 2 : 0 }],
