@@ -398,8 +398,9 @@ function StatCard({ Icon, iconColor, value, label }: { Icon: TablerIcon; iconCol
     >
       <Icon size={moderateScale(20)} color={iconColor} />
       <Text
-        style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(30), color: Colors.onSurface, letterSpacing: -0.8, marginTop: moderateScale(7), lineHeight: moderateScale(34) }}
+        style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(30), color: Colors.onSurface, letterSpacing: -0.8, marginTop: moderateScale(6), lineHeight: moderateScale(40) }}
         maxFontSizeMultiplier={1.2}
+        numberOfLines={1}
       >
         {value}
       </Text>
