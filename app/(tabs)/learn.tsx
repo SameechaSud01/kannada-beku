@@ -152,7 +152,7 @@ export default function LearnScreen() {
             fontSize: moderateScale(25),
             color: Colors.onSurface,
             letterSpacing: -0.4,
-            lineHeight: moderateScale(32),
+            lineHeight: moderateScale(38),
           }}
           maxFontSizeMultiplier={1.2}
         >
