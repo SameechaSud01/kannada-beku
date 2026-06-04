@@ -40,7 +40,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          backgroundColor: Colors.surfaceContainerLow,
+          backgroundColor: Colors.surfaceContainerHigh,
           borderRadius: Radius.full,
           paddingHorizontal: Spacing.sm,
           paddingVertical: Spacing.sm,

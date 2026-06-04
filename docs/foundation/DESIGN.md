@@ -30,14 +30,16 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 `[LOCKED]` — matches [colors.ts](../../constants/colors.ts). **Never use a hex literal in a component — always `Colors.X`.**
 
 ### Surface stack
+*(Near-white neutral ramp — amended 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) Amendment D, owner sign-off. Replaces the original cream ramp; faint warm whisper retained so the surface stays off clinical white per "warm, never sterile".)*
+
 | Token | Hex | Use |
 |---|---|---|
-| `surface` | `#fbfbe2` | Root page background (cream). |
+| `surface` | `#fcfcfa` | Root page background (near-white). |
 | `surfaceContainerLowest` | `#ffffff` | Glassmorphism only (70% opacity + blur). |
-| `surfaceContainerLow` | `#f5f5dc` | Secondary content zones; tab bar. |
-| `surfaceContainerHigh` | `#eaead1` | Selection chips, badge containers. |
-| `surfaceContainerHighest` | `#e4e4cc` | Interactive cards. |
-| `surfaceDim` | `#dbdcc3` | Backdrop for lifted cards; locked state. |
+| `surfaceContainerLow` | `#f4f4f0` | Secondary content zones; tab bar. |
+| `surfaceContainerHigh` | `#ececea` | Selection chips, badge containers. |
+| `surfaceContainerHighest` | `#e6e6e3` | Interactive cards. |
+| `surfaceDim` | `#dcdcd9` | Backdrop for lifted cards; locked state. |
 
 ### Primary — Mysore Red
 | Token | Hex | Use |
@@ -196,7 +198,7 @@ Anatomy + props + tokens used. Every reusable component lives here.
 |---|---|
 | Shape | Floating rounded-`full` pill, centered, floats ~24 from bottom (safe-area aware) |
 | Labels | **None** (icon-only) |
-| Pill background | `surfaceContainerLow` |
+| Pill background | `surfaceContainerHigh` *(Amendment D — readable against the near-white page; was `surfaceContainerLow`)* |
 | Active tab | Solid `primaryContainer` circle, `onPrimary` icon, soft red shadow |
 | Inactive icon color | `tertiary` |
 | Icon size | 19 pt |

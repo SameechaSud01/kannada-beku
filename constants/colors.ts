@@ -7,12 +7,14 @@
  */
 export const Colors = {
   // ── Surface tonal stack (§2, §4) ───────────────────────
-  surface:                 '#fbfbe2', // root page background
+  // Near-white neutral ramp (2026-06-04, spec_playful_redesign Amendment D —
+  // owner sign-off). Faint warm whisper keeps it off clinical white.
+  surface:                 '#fcfcfa', // root page background (near-white)
   surfaceContainerLowest:  '#ffffff', // glassmorphism only (70% opacity + blur)
-  surfaceContainerLow:     '#f5f5dc', // secondary content zones, tab bar
-  surfaceContainerHigh:    '#eaead1', // selection chips bg, badge containers
-  surfaceContainerHighest: '#e4e4cc', // interactive cards
-  surfaceDim:              '#dbdcc3', // backdrop for lifted cards, locked state
+  surfaceContainerLow:     '#f4f4f0', // secondary content zones, tab bar
+  surfaceContainerHigh:    '#ececea', // selection chips bg, badge containers
+  surfaceContainerHighest: '#e6e6e3', // interactive cards
+  surfaceDim:              '#dcdcd9', // backdrop for lifted cards, locked state
 
   // ── Primary — Mysore Red (§2, §5) ──────────────────────
   primary:           '#91001b', // CTA gradient start, active states, focus underline

@@ -5,6 +5,7 @@ import Svg, { Path } from 'react-native-svg';
 import { moderateScale } from 'react-native-size-matters';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
+import { Colors } from '../../constants/colors';
 
 type Heritage = {
   eyebrow: string;
@@ -35,7 +36,7 @@ export default function HeritageScreen() {
 
   if (!entry) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#FBFBE2', paddingTop: insets.top + Spacing.xxxl, paddingHorizontal: Spacing.xxl, alignItems: 'center' }}>
+      <View style={{ flex: 1, backgroundColor: Colors.surface, paddingTop: insets.top + Spacing.xxxl, paddingHorizontal: Spacing.xxl, alignItems: 'center' }}>
         <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(20), color: '#1B1D0E', marginBottom: Spacing.sm }}>
           Heritage entry not found
         </Text>
@@ -49,13 +50,13 @@ export default function HeritageScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FBFBE2' }}>
+    <View style={{ flex: 1, backgroundColor: Colors.surface }}>
       <View
         style={{
           paddingTop: insets.top + Spacing.sm,
           paddingBottom: Spacing.md,
           paddingHorizontal: Spacing.xxl,
-          backgroundColor: 'rgba(251,251,226,0.85)',
+          backgroundColor: 'rgba(252,252,250,0.85)',
           flexDirection: 'row',
           alignItems: 'center',
           gap: moderateScale(14),

@@ -139,6 +139,25 @@ tracks the gap between this spec landing and the code shipping.
   stress) is sound and Emergency is not a vocabulary-acquisition surface. **Owner
   must confirm before this screen is built.**
 
+### Amendment D — Surface stack → near-white neutral (DESIGN.md § Surface stack, `[LOCKED]`)
+
+- **Locked today:** a cream tonal ramp — `surface #fbfbe2` root, stepping up
+  through `#f5f5dc / #eaead1 / #e4e4cc / #dbdcc3`. Every screen background and the
+  TabBar pill draw from this cream stack.
+- **Redesign wants:** an **app-wide near-white** background (already named as a
+  Phase 8 default: "near-white bg"). The whole stack moves to a cohesive
+  near-white neutral ramp, keeping a faint warm whisper so it stays off clinical
+  white per "warm, never sterile".
+- **Amendment (owner sign-off 2026-06-04):** replace the surface ramp in
+  [colors.ts](../../constants/colors.ts) and the DESIGN.md § Surface stack table:
+  `surface #fcfcfa`, `surfaceContainerLow #f4f4f0`, `surfaceContainerHigh #ececea`,
+  `surfaceContainerHighest #e6e6e3`, `surfaceDim #dcdcd9` (`surfaceContainerLowest`
+  stays `#ffffff`). Hardcoded cream literals in
+  [heritage/[id].tsx](../../app/heritage/[id].tsx) repointed to `Colors.surface`.
+- **Knock-on:** the TabBar pill (`surfaceContainerLow`) now sits too close to the
+  near-white page to read as a distinct floating element — bump the pill fill to
+  `surfaceContainerHigh` so it stays legible against the lighter background.
+
 ### Minor / additive (no lock flip, document in DESIGN.md)
 
 - **Colour tokens** (`[UNLOCKED]`, "extend, don't replace"): add the redesign's
