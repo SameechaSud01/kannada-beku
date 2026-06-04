@@ -10,6 +10,7 @@ import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { LessonProgressBar } from './LessonProgressBar';
+import { LipButton } from '../ui/LipButton';
 import { useUserStore } from '../../stores/useUserStore';
 import { GlossTag } from '../ui/GlossTag';
 import { splitGloss } from '../../utils/gloss';
@@ -146,30 +147,12 @@ export function TeachWordsPhase({ words, wordIndex, onAdvance }: TeachWordsPhase
       </ScrollView>
 
       <View style={{ padding: Spacing.lg, paddingBottom: insets.bottom + Spacing.lg }}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={isLast ? 'Start practising words' : 'Got it, next word'}
+        <LipButton
+          label={isLast ? 'Start practising words' : 'Got it'}
           onPress={onAdvance}
-          style={({ pressed }) => ({
-            backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
-            borderRadius: Radius.md,
-            paddingVertical: Spacing.md + moderateScale(2),
-            alignItems: 'center',
-            transform: [{ scale: pressed ? 0.96 : 1 }],
-            minHeight: moderateScale(44),
-            justifyContent: 'center',
-          })}
-        >
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(15),
-              color: Colors.onPrimary,
-            }}
-          >
-            {isLast ? 'Start practising words' : 'Got it'}
-          </Text>
-        </Pressable>
+          accessibilityLabel={isLast ? 'Start practising words' : 'Got it, next word'}
+          icon={Icons.forward}
+        />
       </View>
     </View>
   );

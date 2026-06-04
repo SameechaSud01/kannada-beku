@@ -6,6 +6,7 @@ import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
+import { LipButton } from '../ui/LipButton';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import type { Phrase, Word } from '../../constants/lessons/types';
 
@@ -30,11 +31,14 @@ export function SummaryPhase({ words, phrases, onAdvance }: SummaryPhaseProps) {
       >
         <Text
           style={{
-            fontFamily: Fonts.dmSans.bold,
+            fontFamily: Fonts.baloo.extrabold,
             fontSize: moderateScale(24),
             color: Colors.onSurface,
+            letterSpacing: -0.3,
+            lineHeight: moderateScale(34),
             marginBottom: Spacing.xl,
           }}
+          maxFontSizeMultiplier={1.2}
         >
           What you learned
         </Text>
@@ -65,30 +69,7 @@ export function SummaryPhase({ words, phrases, onAdvance }: SummaryPhaseProps) {
       </ScrollView>
 
       <View style={{ padding: Spacing.lg, paddingBottom: insets.bottom + Spacing.lg }}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Continue"
-          onPress={onAdvance}
-          style={({ pressed }) => ({
-            backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
-            borderRadius: Radius.md,
-            paddingVertical: Spacing.md + moderateScale(2),
-            alignItems: 'center',
-            transform: [{ scale: pressed ? 0.96 : 1 }],
-            minHeight: moderateScale(44),
-            justifyContent: 'center',
-          })}
-        >
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(15),
-              color: Colors.onPrimary,
-            }}
-          >
-            Continue
-          </Text>
-        </Pressable>
+        <LipButton label="Continue" onPress={onAdvance} icon={Icons.forward} />
       </View>
     </View>
   );

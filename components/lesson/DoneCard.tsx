@@ -14,10 +14,9 @@ import { useProgressStore } from '../../stores/progressStore';
 import { useUserStore } from '../../stores/useUserStore';
 import { useModal } from '../../components/modals/ModalHost';
 import { GoalCompleteDialog } from '../../components/modals/instances/GoalCompleteDialog';
-import {
-  StreakMilestoneTakeover,
-  isStreakMilestone,
-} from '../../components/modals/instances/StreakMilestoneTakeover';
+import { isStreakMilestone } from '../../components/modals/instances/StreakMilestoneTakeover';
+import { Celebration } from '../ui/Celebration';
+import { LipButton } from '../ui/LipButton';
 import { Toast } from '../../components/modals/ToastHost';
 import {
   useCompleteLessonMutation,
@@ -69,19 +68,21 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
         onSuccess: () => {
           const post = useProgressStore.getState();
 
+          // Streak milestone wins (unified Celebration, locked milestone copy).
           if (post.streak !== prevStreak && isStreakMilestone(post.streak)) {
             modal.show({
               kind: 'takeover',
-              component: StreakMilestoneTakeover,
+              component: Celebration,
               props: {
+                kind: 'streak',
                 streak: post.streak,
-                nWordsLearned: post.totalPhrasesLearned,
-                onContinue: () => modal.dismiss(),
+                onClose: () => modal.dismiss(),
               },
             });
             return;
           }
 
+          // Else daily-goal complete (existing dialog).
           if (
             dailyGoalMinutes &&
             prevTodayMinutes < dailyGoalMinutes &&
@@ -100,6 +101,18 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
                   router.push('/(tabs)/learn');
                 },
                 onDone: () => modal.dismiss(),
+              },
+            });
+          } else {
+            // Default lesson-complete celebration (the recap sits behind it).
+            modal.show({
+              kind: 'takeover',
+              component: Celebration,
+              props: {
+                kind: 'lesson',
+                title: `${lesson.title} done!`,
+                sub: 'You spoke Kannada today. Keep the streak alive.',
+                onClose: () => modal.dismiss(),
               },
             });
           }
@@ -166,13 +179,15 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
       >
         <Text
           style={{
-            fontFamily: Fonts.dmSans.bold,
+            fontFamily: Fonts.baloo.extrabold,
             fontSize: moderateScale(24),
             color: Colors.onSurface,
             textAlign: 'center',
-            lineHeight: moderateScale(32),
+            lineHeight: moderateScale(34),
+            letterSpacing: -0.3,
             marginBottom: Spacing.xl,
           }}
+          maxFontSizeMultiplier={1.2}
         >
           Nice — that's the lesson done.
         </Text>
@@ -313,38 +328,14 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
           gap: Spacing.md,
         }}
       >
-        <Pressable
+        <LipButton
+          label={intentMarked ? 'Committed! ✓' : "I'll try this in real life"}
           onPress={handleMarkIntent}
-          disabled={intentMarked}
-          accessibilityRole="button"
           accessibilityLabel="Commit to trying this in real life"
-          style={({ pressed }) => ({
-            backgroundColor: intentMarked
-              ? Colors.surfaceDim
-              : pressed
-                ? Colors.primary
-                : Colors.primaryContainer,
-            borderRadius: Radius.md,
-            paddingVertical: Spacing.md + moderateScale(2),
-            minHeight: moderateScale(44),
-            alignItems: 'center',
-            justifyContent: 'center',
-            transform: [{ scale: pressed && !intentMarked ? 0.96 : 1 }],
-          })}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }}>
-            {intentMarked && <Icons.correct size={16} color={Colors.onPrimary} />}
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.medium,
-                fontSize: moderateScale(15),
-                color: Colors.onPrimary,
-              }}
-            >
-              {intentMarked ? 'Committed' : "I'll try this in real life"}
-            </Text>
-          </View>
-        </Pressable>
+          color={intentMarked ? Colors.secondary : Colors.primaryContainer}
+          lip={intentMarked ? Colors.onSecondaryContainer : Colors.redLip}
+          fg={Colors.onPrimary}
+        />
 
         <Pressable
           onPress={handleBackToLessons}

@@ -10,7 +10,8 @@ import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { LessonProgressBar } from './LessonProgressBar';
 import { SpeedControl } from './SpeedControl';
-import { FeedbackTag } from './FeedbackTag';
+import { AnswerOption } from './AnswerOption';
+import { LipButton } from '../ui/LipButton';
 import { useUserStore } from '../../stores/useUserStore';
 import type { Word } from '../../constants/lessons/types';
 
@@ -135,67 +136,28 @@ export function PracticeWordsPhase({
 
           <Text
             style={{
-              fontFamily: Fonts.dmSans.bold,
+              fontFamily: Fonts.baloo.bold,
               fontSize: moderateScale(20),
               color: Colors.onSurface,
               textAlign: 'center',
               marginBottom: Spacing.xl,
             }}
+            maxFontSizeMultiplier={1.2}
           >
             What does this mean?
           </Text>
 
           <View style={{ gap: Spacing.md }}>
-            {options.map((opt, idx) => {
-              const isPicked = picked === idx;
-              const isCorrect = idx === correctIndex;
-              const reveal = picked !== null;
-              let bg = Colors.surfaceContainerHighest;
-              let fg = Colors.onSurface;
-              if (reveal && isCorrect) {
-                bg = Colors.secondaryContainer;
-                fg = Colors.onSecondaryContainer;
-              } else if (reveal && isPicked && !isCorrect) {
-                bg = Colors.errorContainerLow;
-                fg = Colors.primary;
-              }
-              return (
-                <Pressable
-                  key={`${opt.english}-${idx}`}
-                  onPress={() => handlePickOption(idx)}
-                  disabled={picked !== null}
-                  accessibilityRole="button"
-                  accessibilityLabel={opt.english}
-                  style={({ pressed }) => ({
-                    backgroundColor: bg,
-                    borderRadius: Radius.lg,
-                    paddingVertical: Spacing.lg,
-                    paddingHorizontal: Spacing.lg,
-                    minHeight: moderateScale(56),
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transform: [{ scale: pressed && picked === null ? 0.98 : 1 }],
-                  })}
-                >
-                  <Text
-                    style={{
-                      fontFamily: Fonts.dmSans.medium,
-                      fontSize: moderateScale(15),
-                      color: fg,
-                      textAlign: 'center',
-                    }}
-                  >
-                    {opt.english}
-                  </Text>
-                  {reveal && isCorrect && (
-                    <FeedbackTag kind="correct" />
-                  )}
-                  {reveal && isPicked && !isCorrect && (
-                    <FeedbackTag kind="wrong" />
-                  )}
-                </Pressable>
-              );
-            })}
+            {options.map((opt, idx) => (
+              <AnswerOption
+                key={`${opt.english}-${idx}`}
+                label={opt.english}
+                index={idx}
+                picked={picked}
+                correctIndex={correctIndex}
+                onPick={handlePickOption}
+              />
+            ))}
           </View>
         </ScrollView>
       ) : (
@@ -293,30 +255,7 @@ export function PracticeWordsPhase({
 
       {step === 'say' && (
         <View style={{ padding: Spacing.lg, paddingBottom: insets.bottom + Spacing.lg }}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="I said it"
-            onPress={handleISaidIt}
-            style={({ pressed }) => ({
-              backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
-              borderRadius: Radius.md,
-              paddingVertical: Spacing.md + moderateScale(2),
-              alignItems: 'center',
-              transform: [{ scale: pressed ? 0.96 : 1 }],
-              minHeight: moderateScale(44),
-              justifyContent: 'center',
-            })}
-          >
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.medium,
-                fontSize: moderateScale(15),
-                color: Colors.onPrimary,
-              }}
-            >
-              I said it
-            </Text>
-          </Pressable>
+          <LipButton label="I said it" onPress={handleISaidIt} icon={Icons.forward} />
         </View>
       )}
     </View>
