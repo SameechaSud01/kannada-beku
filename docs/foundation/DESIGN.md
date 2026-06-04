@@ -80,6 +80,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 | `goldLip` | `#c98a00` | Button "lip" / ring on gold chunky buttons. |
 | `redLip` | `#6e0014` | Deep maroon — bottom "lip" on red chunky buttons; 4th Practice card. |
 | `textFaint` | `#908d76` | Hints, locked labels (faintest text tier). |
+| `hairline` | `rgba(27,29,14,0.08)` | Top-bar border + card insets ("felt, not seen"). The redesign's one sanctioned hairline. |
 
 **Brand gradient (the only gradient):** a single Mysore-red linear gradient, `primaryContainer → primary` rendered at ~152°, used **only** on the Home hook card, Profile avatar, Emergency header, and Auth background. Implemented via `expo-linear-gradient`. No multi-hue gradients.
 

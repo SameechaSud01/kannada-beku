@@ -41,4 +41,5 @@ export const Colors = {
   goldLip:    '#c98a00', // button "lip" / ring on gold chunky buttons
   redLip:     '#6e0014', // deep maroon — bottom "lip" on red buttons; 4th Practice card
   textFaint:  '#908d76', // hints, locked labels (faintest text tier)
+  hairline:   'rgba(27,29,14,0.08)', // top-bar border + card insets ("felt, not seen")
 };
