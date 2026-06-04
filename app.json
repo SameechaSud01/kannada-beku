@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "kannada-baa",
-    "slug": "kannada-baa",
+    "name": "kannada-beku",
+    "slug": "kannada-beku",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,11 +15,11 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "Kannada Baa records your voice so you can hear yourself practice phrases. Recordings stay on your device.",
-        "NSUserNotificationsUsageDescription": "Kannada Baa sends one daily reminder at the time you choose so you keep your streak.",
+        "NSMicrophoneUsageDescription": "Kannada Beku records your voice so you can hear yourself practice phrases. Recordings stay on your device.",
+        "NSUserNotificationsUsageDescription": "Kannada Beku sends one daily reminder at the time you choose so you keep your streak.",
         "ITSAppUsesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.samsud01.kannadabaa"
+      "bundleIdentifier": "com.samsud01.kannadabeku"
     },
     "android": {
       "adaptiveIcon": {
@@ -32,12 +32,12 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.samsud01.kannadabaa"
+      "package": "com.samsud01.kannadabeku"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "scheme": "kannada-baa",
+    "scheme": "kannada-beku",
     "plugins": [
       "expo-router",
       "expo-secure-store",

@@ -23,7 +23,7 @@ The top-of-stack doc. Every other spec answers "how"; this one answers "what" an
 
 > **TODO:** One-paragraph vision statement to confirm or rewrite.
 > Draft inferred from README + tone of [copy.ts](../../constants/copy.ts):
-> *Kannada Baa is a conversational Kannada learning app for non-Kannadiga adults in Bengaluru who want to belong — not pass a test. It is warm, forgiving, and culturally proud, with a Karnataka identity baked into every pixel.*
+> *Kannada Beku is a conversational Kannada learning app for non-Kannadiga adults in Bengaluru who want to belong — not pass a test. It is warm, forgiving, and culturally proud, with a Karnataka identity baked into every pixel.*
 
 ## Target users
 

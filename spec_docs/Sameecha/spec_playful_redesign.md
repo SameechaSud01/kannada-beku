@@ -4,7 +4,7 @@ status: locked
 owner: samee
 last-reviewed: 2026-06-04
 sign-off:
-  - 2026-06-04 — owner approved Amendments A (Baloo display font), B (floating icon-only TabBar), and C (Emergency English-first, option C-1). Foundation docs amended + CONTRADICTIONS C12 opened. Implementation isolated on branch `app_redesign`. Cadence: phase-by-phase with review.
+  - 2026-06-04 — owner approved Amendments A (Baloo display font), B (floating icon-only TabBar), and C (Emergency English-first, option C-1). Foundation docs amended + CONTRADICTIONS C14 opened. Implementation isolated on branch `app_redesign`. Cadence: phase-by-phase with review.
 related:
   - ../../docs/foundation/DESIGN.md
   - ../../docs/foundation/INTERACTIONS.md
@@ -36,7 +36,7 @@ React Query, and the `ModalHost`/`ToastHost` overlay system).
 > **Signed off 2026-06-04 — `[LOCKED]`.** The three locked-decision conflicts
 > (Amendments A/B/C below) were approved by the owner: A (Baloo display font),
 > B (floating icon-only TabBar), C (Emergency English-first, option C-1). The
-> foundation docs are amended and CONTRADICTIONS C12 is open. Phase 0 is done;
+> foundation docs are amended and CONTRADICTIONS C14 is open. Phase 0 is done;
 > Phases 1–8 are now buildable. All work is isolated on branch `app_redesign`.
 
 ---
@@ -64,7 +64,7 @@ React Query, and the `ModalHost`/`ToastHost` overlay system).
 
 This spec **cannot ship** until these locked decisions are amended with owner
 sign-off. Each is a genuine conflict, not a TODO. A new
-[CONTRADICTIONS.md](../../docs/foundation/CONTRADICTIONS.md) entry (**C12**)
+[CONTRADICTIONS.md](../../docs/foundation/CONTRADICTIONS.md) entry (**C14**)
 tracks the gap between this spec landing and the code shipping.
 
 ### Amendment A — Typography (DESIGN.md ethos + Typography table, both `[UNLOCKED]`)
@@ -196,7 +196,7 @@ contract. This table is the codebase mapping only.
 **Foundation conformance**
 - DESIGN.md amendments A & B and the spec_text_hierarchy.md decision (C-1 or C-2)
   are signed off and edited **in the same PR** that ships the corresponding code.
-- CONTRADICTIONS.md C12 is opened when this spec is promoted and closed when the
+- CONTRADICTIONS.md C14 is opened when this spec is promoted and closed when the
   code is verified end-to-end.
 - No hex literal in any component — every colour resolves through `Colors`.
 - No raw pixels — every dimension wraps `moderateScale`/`scale`/`verticalScale`.
@@ -232,7 +232,7 @@ screenshot pass on iPhone SE.
 **Phase 0 — Sign-off + spec promotion** *(blocks everything below)*
 - Owner decides amendments A (Baloo), B (TabBar), and C (Emergency C-1 vs C-2).
 - Edit DESIGN.md (typography + type scale + TabBar + colour tokens) and, per the
-  C decision, spec_text_hierarchy.md. Open CONTRADICTIONS C12.
+  C decision, spec_text_hierarchy.md. Open CONTRADICTIONS C14.
 - Promote this spec from `draft` → `[LOCKED]`.
 - **Verify:** foundation docs reflect the decisions; this section's amendments
   are no longer "pending."
@@ -286,14 +286,14 @@ screenshot pass on iPhone SE.
 - Wire the watermark motif picker + on/off and a reduced-motion preference
   (ship as Settings rows, or hard-code defaults: Noto Kannada, near-white bg,
   watermark on / Rangoli, motion on).
-- **Verify:** toggles work; defaults correct; close CONTRADICTIONS C12 after a
+- **Verify:** toggles work; defaults correct; close CONTRADICTIONS C14 after a
   full end-to-end pass on SE + large.
 
 ---
 
 ## 7. CONTRADICTIONS entry to open (on promotion)
 
-> **C12 — Playful redesign spec landed; foundation amendments + code not yet
+> **C14 — Playful redesign spec landed; foundation amendments + code not yet
 > shipped.** spec_playful_redesign.md requires amendments to DESIGN.md
 > (typography + TabBar + colour tokens + type scale) and a decision on
 > spec_text_hierarchy.md (Emergency English-first carve-out vs keep). Until the

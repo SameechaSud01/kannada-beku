@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kannada Baa — Conversion Funnel Teardown</title>
+<style>
+  :root{
+    --ink:#1d1f17; --soft:#5c5f4e; --line:#e3e4d3; --bg:#faf9f0;
+    --card:#ffffff; --green:#3a6b35; --gold:#b8860b; --red:#a3342a; --amber:#9a6b00;
+    --chip:#eef0df;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:48px 24px 96px}
+  h1{font-size:30px; line-height:1.2; margin:0 0 6px; letter-spacing:-.02em}
+  .sub{color:var(--soft); font-size:15px; margin:0 0 28px}
+  h2{font-size:22px; margin:44px 0 12px; letter-spacing:-.01em; border-bottom:2px solid var(--line); padding-bottom:8px}
+  h3{font-size:17px; margin:24px 0 6px}
+  p{margin:0 0 14px}
+  .verdict{
+    background:var(--card); border:1px solid var(--line); border-left:5px solid var(--green);
+    border-radius:12px; padding:20px 22px; margin:0 0 8px;
+  }
+  .verdict strong{color:var(--green)}
+  .lead{font-size:18px; line-height:1.5}
+  code{background:var(--chip); padding:1px 6px; border-radius:5px; font-size:13px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .quote{border-left:3px solid var(--gold); background:#fffaf0; padding:6px 14px; margin:10px 0; color:#5a4a10; font-style:italic; border-radius:0 8px 8px 0}
+  .leak{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin:18px 0; box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .leak h3{margin-top:0; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+  .rank{display:inline-flex; align-items:center; justify-content:center; min-width:30px; height:30px; padding:0 8px; border-radius:8px; background:var(--ink); color:#fff; font-weight:700; font-size:15px}
+  .tag{font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:3px 9px; border-radius:999px; white-space:nowrap}
+  .t-free{background:#e6f0e4; color:var(--green)}
+  .t-blocked{background:#fdf0d8; color:var(--amber)}
+  .t-locked{background:#f7e0dd; color:var(--red)}
+  .meta{font-size:13px; color:var(--soft); margin:-2px 0 12px}
+  .fix{background:#f3f6ee; border-radius:8px; padding:12px 14px; margin-top:12px}
+  .fix b{color:var(--green)}
+  ul{margin:8px 0 14px; padding-left:22px}
+  li{margin:5px 0}
+  .funnel{display:flex; flex-direction:column; gap:0; margin:18px 0}
+  .step{display:flex; gap:14px; align-items:flex-start; padding:10px 0; border-bottom:1px dashed var(--line)}
+  .step:last-child{border-bottom:0}
+  .step .n{flex:0 0 26px; height:26px; border-radius:50%; background:var(--chip); color:var(--soft); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; margin-top:1px}
+  .step .b{flex:1}
+  .step .b b{display:block}
+  .drop{color:var(--red); font-size:13px; font-weight:600}
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:14px}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--soft)}
+  .caveat{background:#fbf7e9; border:1px dashed var(--amber); border-radius:10px; padding:16px 18px; margin:28px 0; font-size:14px; color:#5a4a10}
+  .foot{margin-top:40px; padding-top:16px; border-top:1px solid var(--line); color:var(--soft); font-size:13px}
+  .legend{display:flex; gap:12px; flex-wrap:wrap; margin:10px 0 0; font-size:12px}
+  .legend span{display:inline-flex; align-items:center; gap:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Kannada Baa — Conversion Funnel Teardown</h1>
+  <p class="sub">A ruthless, code-grounded audit of cold-open → first lesson complete · 2026-06-04 · the metric here isn't "free trial," it's <b>activated user</b> (finishes lesson 1) and <b>day-2 return</b>.</p>
+
+  <div class="verdict lead">
+    Your product is <strong>good</strong>. Your <em>funnel</em> makes a stranger pay rent before they're allowed to see the apartment. The single highest-leverage fix — letting people taste a lesson before the signup wall — is <strong>locked</strong>, so this audit splits cleanly into <b>fixes I can ship today</b> and <b>decisions only you can reopen</b>. Don't let "locked" mean "never revisited" on the one screen that gates 100% of your activations.
+  </div>
+  <div class="legend">
+    <span><span class="tag t-free">Free</span> buildable now (spec'd or non-amending)</span>
+    <span><span class="tag t-blocked">Blocked</span> spec'd, waiting on you (consoles)</span>
+    <span><span class="tag t-locked">Locked</span> needs owner sign-off to even build</span>
+  </div>
+
+  <h2>The funnel, and where it bleeds</h2>
+  <div class="funnel">
+    <div class="step"><div class="n">1</div><div class="b"><b>Cold open → splash</b><span class="meta">Fonts load. Fine.</span></div></div>
+    <div class="step"><div class="n">2</div><div class="b"><b>Hard auth wall — email + password only</b> <span class="drop">⚠ biggest leak</span><span class="meta"><code>AppGate</code> forces no-session users to <code>/(auth)/login</code>. No guest path. No OAuth shipped. A stranger must invent an 8-char password before seeing anything.</span></div></div>
+    <div class="step"><div class="n">3</div><div class="b"><b>6-step onboarding interrogation</b> <span class="drop">⚠ heavy</span><span class="meta">name → goal → motivation (up to 3) → time commitment → a <em>forced</em> 4-page grammar primer (vowels/consonants) they must swipe all the way through. All before lesson 1.</span></div></div>
+    <div class="step"><div class="n">4</div><div class="b"><b>Home tab</b><span class="meta">"Namaskāra, [name]", progress ring, streak, "Did you know?" card. Solid.</span></div></div>
+    <div class="step"><div class="n">5</div><div class="b"><b>Learn tab → 8 lessons, linear unlock</b><span class="meta">Tap lesson 1 "Start".</span></div></div>
+    <div class="step"><div class="n">6</div><div class="b"><b>Lesson runner — 9 phases</b> <span class="drop">⚠ long first win</span><span class="meta">situation → teach words → practice words → teach phrases → practice phrases → summary → real-world → done. No reward "juice" until the final card.</span></div></div>
+  </div>
+  <p>You ask for <b>maximum commitment (account + 6 onboarding steps + grammar lecture) at the moment of minimum trust.</b> That's inverted. Every world-class learning app earns the account <em>after</em> the first win, not before.</p>
+
+  <h2>Ranked leaks — by trial-starts per unit of effort</h2>
+
+  <div class="leak">
+    <h3><span class="rank">1</span> The signup wall blocks every taste of value <span class="tag t-locked">Locked</span></h3>
+    <p class="meta">Evidence: <code>NAVIGATION.md</code> §"Auth + onboarding gating" <code>[LOCKED]</code> · <code>app/_layout.tsx:105–221</code> — no session ⇒ redirect to <code>/(auth)/login</code>. No anonymous/guest route exists.</p>
+    <p>This is the cardinal activation sin. A motivated stranger downloaded your app to <em>greet someone in Kannada</em> — and the first thing they meet is a form demanding email + an 8-character password, with zero proof the app is any good. Duolingo's entire growth engine is the opposite: do lesson 1, <em>then</em> we ask who you are. You're filtering out exactly the curious, low-commitment top-of-funnel that compounds into your best long-term users.</p>
+    <div class="fix"><b>Recommended:</b> Reopen the locked gate with a spec PR proposing a <b>guest / "try lesson 1 first" path</b>: anonymous local progress → account prompt fires <em>after</em> the lesson-1 win (peak motivation), then migrates the guest's progress on signup. I cannot build this without your sign-off — it directly amends a <code>[LOCKED]</code> NAVIGATION decision and the <code>useAuthStore</code>/AppGate contract. <b>If you greenlight one thing from this doc, make it this.</b></p></div>
+  </div>
+
+  <div class="leak">
+    <h3><span class="rank">2</span> Email/password is the only door — and the highest-friction one <span class="tag t-blocked">Blocked</span></h3>
+    <p class="meta">Evidence: <code>app/(auth)/login.tsx</code> — single email + password form · <code>spec_oauth_signin.md</code> exists and is <code>[LOCKED]</code> but not shipped.</p>
+    <p>Given the wall in #1 stays for now, the next-biggest win is making the wall <em>one tap</em>. Typing a unique password on a phone keyboard is where signups die. Your OAuth spec is already written and locked — Apple + Google one-tap. This is the highest-ROI item that doesn't reopen a locked decision.</p>
+    <div class="fix"><b>What I can do today:</b> write <code>services/api/auth-oauth.ts</code> + the two buttons on <code>login.tsx</code> per the spec. <b>What's blocking:</b> the Supabase / Apple Developer / Google Cloud console setup — I cannot click those for you. Do that setup and I'll land the code. <b>Note:</b> Apple guideline 4.8 means on iOS both buttons ship together or neither does.</p></div>
+  </div>
+
+  <div class="leak">
+    <h3><span class="rank">3</span> A forced grammar lecture sits between the user and their first word <span class="tag t-locked">Locked</span></h3>
+    <p class="meta">Evidence: <code>app/onboarding/basics.tsx</code> — Step 5 of the now-locked 6-step flow (<code>spec_beginners_guide.md</code> <code>[LOCKED]</code>, see <code>CONTRADICTIONS.md</code>). <code>hasReachedLast</code> gates "Continue" until all 4 pages are swiped: vowels → consonant rules → consonant chart → pronunciation key.</p>
+    <p>Someone who came to <em>speak</em> is handed a 13-vowel chart and a 34-consonant table before saying "namaskāra." That's the textbook that made them avoid learning the language in the first place. The cruel irony: <b>this exact guide already lives on the Learn tab as the "Kannada basics" card</b> (<code>components/guide/BasicsCard.tsx</code>) — available on demand, forever. You're force-feeding pre-lesson something you've already made available post-lesson.</p>
+    <div class="fix"><b>Recommended:</b> sign off making Step 5 <b>skippable</b> ("Skip — I'll explore later", with the Learn-tab card as the safety net), or move it out of the forced path entirely. This amends the <code>[LOCKED]</code> beginners-guide spec, so it needs a one-line owner decision before I touch it — but it's a small, surgical change with a big day-1 retention payoff.</p></div>
+  </div>
+
+  <div class="leak">
+    <h3><span class="rank">4</span> Zero emotional reward until the very last card <span class="tag t-free">Free</span></h3>
+    <p class="meta">Evidence: <code>spec_lesson_engagement.md</code> Pillar B (B4–B6) — haptics wrapper <code>src/games/shared/haptics.ts</code> installed but <b>unused</b>; XP/streak fire only at <code>done</code>. These items are explicitly <em>non-amending / additive</em> per §7.</p>
+    <p>The most fragile session of a user's life — their first lesson — <em>feels flat</em>. No haptic on a correct answer, no micro-celebration, no "3 in a row" momentum. The dopamine that makes mobile learning addictive is absent precisely where it matters most. You literally have the haptics engine installed and idle.</p>
+    <div class="fix"><b>What I can do today:</b> Phase 1 of the engagement spec — B4 (haptics on every answer), B5 (checkmark scale-pop on correct), B6 (combo meter). The spec marks these additive with <b>no locked-decision amendment and no sign-off required</b>. Cheapest "feel" win you have. Say go and I'll ship it (run + screenshot iPhone SE per your workflow).</p></div>
+  </div>
+
+  <div class="leak">
+    <h3><span class="rank">5</span> You collect the user's deepest motivation — then throw it away <span class="tag t-free">Free*</span></h3>
+    <p class="meta">Evidence: <code>app/onboarding/motivation.tsx</code> — emotionally loaded options stored to <code>useUserStore.motivations</code>, never surfaced again.</p>
+    <div class="quote">"Don't want to feel like an outsider" · "Stop getting overcharged (auto, markets)" · "Connect better with Kannadiga friends"</div>
+    <p>These are gold. A user who tapped "stop getting overcharged" should see their home screen and lesson framing speak to <em>that</em>. Instead the answer dies in a Zustand store. Either <b>use it</b> to personalize the home greeting / day-2 nudge / lesson intro, or <b>cut the step</b> to reduce onboarding friction. Collecting-and-discarding is the worst of both — friction with no payoff.</p>
+    <div class="fix"><b>*Needs a small spec</b> (it's a behavior change, not a bug fix) but doesn't touch a locked decision. Low effort, real felt-personalization. Recommend a short spec, then build.</p></div>
+  </div>
+
+  <div class="leak">
+    <h3><span class="rank">6</span> The login screen sells nothing <span class="tag t-free">Free*</span></h3>
+    <p class="meta">Evidence: <code>app/(auth)/login.tsx</code> hero = <code>ಕನ್ನಡ ಬಾ / Kannada Baa</code>; signup subtitle = <span class="quote">"Sign up to start learning Kannada today."</span></p>
+    <p>If the wall stays (#1), at least make it <em>persuade</em>. Right now a stranger on this screen has no value prop, no social proof, no reason to believe. The headline is beautiful and says nothing about what they get. Compare what a conversion-obsessed founder would ship:</p>
+    <ul>
+      <li><b>Promise the outcome:</b> "Actually speak Kannada — 5 minutes a day."</li>
+      <li><b>Reduce perceived cost:</b> "First lesson is free and takes 3 minutes."</li>
+      <li><b>Borrow trust:</b> a learner count, a one-line testimonial, or the very Karnataka fun-fact you already have data for.</li>
+    </ul>
+    <div class="fix"><b>*Copy/value-prop change</b> — low effort, no locked-decision conflict, but it's a content decision that should be your call (and ideally A/B'd). I'll implement whatever copy you lock.</p></div>
+  </div>
+
+  <div class="leak">
+    <h3><span class="rank">7</span> First "win" is 9 phases away <span class="tag t-locked">Locked</span></h3>
+    <p class="meta">Evidence: locked phase sequence (<code>spec_lesson_redesign</code>, reaffirmed in <code>spec_lesson_engagement</code> §1): situation → teach_words → practice_words → teach_phrases → practice_phrases → summary → real_world → done.</p>
+    <p>Time-to-first-win should be ~60 seconds for a first-ever session. Nine phases is a lot of runway before the payoff card. The phase <em>sequence</em> is explicitly locked and out of scope for the engagement spec, so I'm not proposing to reorder it — but a deliberately <b>shorter "lesson 0" taste</b> (fewer items) would be the on-spec way to shrink first-win latency. Flag for a future spec; don't touch the locked sequence.</p>
+  </div>
+
+  <div class="leak">
+    <h3><span class="rank">8</span> Silent risk: the whole value prop dies if the device has no Kannada TTS voice <span class="tag t-free">Verify</span></h3>
+    <p class="meta">Evidence: teach/practice phases play device TTS (<code>deviceTtsAudioService.ts</code>); on failure the user gets a toast and the audio is simply absent.</p>
+    <p>"Hear it, say it" is the core promise. On a device with no Kannada voice installed, the teaching audio fails — and for a brand-new user that's not a toast, it's a silent verdict that the app is broken. Worth quantifying how many real devices ship without a kn-IN voice and whether you need a bundled-audio fallback. Not a code fix yet — a thing to measure before it quietly caps activation.</p>
+  </div>
+
+  <h2>What I'd do, in order</h2>
+  <table>
+    <tr><th>#</th><th>Move</th><th>Effort</th><th>Gate</th></tr>
+    <tr><td>1</td><td><b>Ship OAuth one-tap</b> (leak #2) — biggest non-locked signup lift</td><td>M (code) + your console setup</td><td><span class="tag t-blocked">Blocked on you</span></td></tr>
+    <tr><td>2</td><td><b>Ship Phase-1 juice</b> (leak #4) — haptics + celebration + combo</td><td>S–M</td><td><span class="tag t-free">Go now</span></td></tr>
+    <tr><td>3</td><td><b>Decide:</b> make the forced grammar primer skippable (leak #3)</td><td>S</td><td><span class="tag t-locked">Your sign-off</span></td></tr>
+    <tr><td>4</td><td><b>Decide:</b> reopen the auth gate for a guest "taste lesson 1" path (leak #1)</td><td>L</td><td><span class="tag t-locked">Your sign-off</span></td></tr>
+    <tr><td>5</td><td>Use the motivation data + sharpen login copy (leaks #5, #6)</td><td>S each</td><td>Short spec</td></tr>
+    <tr><td>6</td><td>Measure TTS voice coverage (leak #8)</td><td>S</td><td>Data first</td></tr>
+  </table>
+
+  <div class="caveat">
+    <b>Honest caveats — read these.</b>
+    <ul style="margin-bottom:0">
+      <li><b>I did not see pixels.</b> Simulators are unavailable in this environment — <code>xcode-select</code> points at CommandLineTools, not Xcode.app, so <code>simctl</code> doesn't exist. This teardown is grounded in the actual code, routing, and the real copy strings — not a live render. To do the visual pass, run <code>! sudo xcode-select -s /Applications/Xcode.app/Contents/Developer</code>, then a dev build, and I'll screenshot iPhone SE per your CLAUDE.md workflow.</li>
+      <li><b>I changed no code.</b> Per your project rules, feature work needs a spec doc and locked decisions need owner sign-off. Three of the top fixes (#1, #3, #7) collide with <code>[LOCKED]</code> decisions — I've flagged them as decisions, not snuck them in as code.</li>
+      <li><b>The two "Go now" items</b> (OAuth code, Phase-1 juice) are already backed by spec docs. Point me at one and I'll execute against the spec's acceptance criteria.</li>
+    </ul>
+  </div>
+
+  <p class="foot">Generated for samee · all claims trace to files in this repo · no source code modified.</p>
+
+</div>
+</body>
+</html>

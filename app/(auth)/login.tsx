@@ -90,7 +90,7 @@ export default function LoginScreen() {
               marginBottom: Spacing.sm,
             }}
           >
-            ಕನ್ನಡ ಬಾ
+            ಕನ್ನಡ ಬೇಕು
           </Text>
           <Text
             style={{
@@ -99,7 +99,7 @@ export default function LoginScreen() {
               color: Colors.primaryContainer,
             }}
           >
-            Kannada Baa
+            Kannada Beku
           </Text>
         </View>
 

@@ -9,6 +9,8 @@ import { Icons } from '../../constants/icons';
 import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { LessonProgressBar } from './LessonProgressBar';
+import { SpeedControl } from './SpeedControl';
+import { FeedbackTag } from './FeedbackTag';
 import { useUserStore } from '../../stores/useUserStore';
 import type { Phrase } from '../../constants/lessons/types';
 
@@ -21,7 +23,6 @@ interface PracticePhrasesPhaseProps {
 
 const CORRECT_DELAY_MS = 800;
 const WRONG_DELAY_MS = 1000;
-const SAY_READY_DELAY_MS = 2500;
 
 function pickDistractors(phrases: Phrase[], currentIndex: number): Phrase[] {
   const pool = phrases.filter((_, i) => i !== currentIndex);
@@ -45,7 +46,6 @@ export function PracticePhrasesPhase({
   const total = phrases.length;
   const autoReplay = useUserStore((s) => s.autoReplay);
   const [picked, setPicked] = useState<number | null>(null);
-  const [canSayIt, setCanSayIt] = useState(false);
 
   const options = useMemo<Phrase[]>(() => {
     if (!phrase) return [];
@@ -58,13 +58,6 @@ export function PracticePhrasesPhase({
 
   useEffect(() => {
     setPicked(null);
-  }, [practicePhrasesIndex, step]);
-
-  useEffect(() => {
-    if (step !== 'say') return;
-    setCanSayIt(false);
-    const t = setTimeout(() => setCanSayIt(true), SAY_READY_DELAY_MS);
-    return () => clearTimeout(t);
   }, [practicePhrasesIndex, step]);
 
   useEffect(() => {
@@ -117,7 +110,7 @@ export function PracticePhrasesPhase({
             paddingBottom: Spacing.lg,
           }}
         >
-          <View style={{ alignItems: 'center', marginBottom: Spacing.xxl }}>
+          <View style={{ alignItems: 'center', marginBottom: Spacing.xxl, gap: Spacing.md }}>
             <Pressable
               onPress={handleReplay}
               accessibilityRole="button"
@@ -135,6 +128,7 @@ export function PracticePhrasesPhase({
             >
               <Icons.audio size={moderateScale(30)} color={Colors.onPrimary} />
             </Pressable>
+            <SpeedControl onRateChange={handleReplay} />
           </View>
 
           <Text
@@ -191,6 +185,12 @@ export function PracticePhrasesPhase({
                   >
                     {opt.english}
                   </Text>
+                  {reveal && isCorrect && (
+                    <FeedbackTag kind="correct" />
+                  )}
+                  {reveal && isPicked && !isCorrect && (
+                    <FeedbackTag kind="wrong" />
+                  )}
                 </Pressable>
               );
             })}
@@ -275,7 +275,7 @@ export function PracticePhrasesPhase({
             </Text>
           </View>
 
-          <View style={{ alignItems: 'center', marginTop: Spacing.xxl }}>
+          <View style={{ alignItems: 'center', marginTop: Spacing.xxl, gap: Spacing.md }}>
             <Pressable
               onPress={handleReplay}
               accessibilityRole="button"
@@ -292,6 +292,7 @@ export function PracticePhrasesPhase({
             >
               <Icons.audio size={moderateScale(24)} color={Colors.primary} />
             </Pressable>
+            <SpeedControl onRateChange={handleReplay} />
           </View>
         </ScrollView>
       )}
@@ -302,7 +303,6 @@ export function PracticePhrasesPhase({
             accessibilityRole="button"
             accessibilityLabel="I said it"
             onPress={handleISaidIt}
-            disabled={!canSayIt}
             style={({ pressed }) => ({
               backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
               borderRadius: Radius.md,
@@ -311,7 +311,6 @@ export function PracticePhrasesPhase({
               transform: [{ scale: pressed ? 0.96 : 1 }],
               minHeight: moderateScale(44),
               justifyContent: 'center',
-              opacity: canSayIt ? 1 : 0.5,
             })}
           >
             <Text

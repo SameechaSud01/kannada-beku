@@ -1,6 +1,6 @@
-# Kannada Baa — Windows Onboarding
+# Kannada Beku — Windows Onboarding
 
-Welcome! This guide gets you from a fresh Windows machine to a running build of **Kannada Baa**, plus a tour of the codebase so you can start making changes.
+Welcome! This guide gets you from a fresh Windows machine to a running build of **Kannada Beku**, plus a tour of the codebase so you can start making changes.
 
 If you hit anything that this guide doesn't cover, DM Samee — and please send a PR updating this file with what you learned.
 
@@ -8,7 +8,7 @@ If you hit anything that this guide doesn't cover, DM Samee — and please send 
 
 ## 1. What is this app?
 
-**Kannada Baa** (ಕನ್ನಡ ಬಾ — "Kannada, come!") is a mobile app that teaches conversational Kannada to non-Kannadigas living in Bengaluru. The audience is 20–35 year olds who want to get past pointing-and-smiling at autos, shops, and neighbours.
+**Kannada Beku** (ಕನ್ನಡ ಬೇಕು — "I want Kannada!") is a mobile app that teaches conversational Kannada to non-Kannadigas living in Bengaluru. The audience is 20–35 year olds who want to get past pointing-and-smiling at autos, shops, and neighbours.
 
 Design principles you'll see reflected everywhere:
 - **Warm and forgiving** — no streak shaming, no XP grinds, no "you broke your streak!" dread.
@@ -73,8 +73,8 @@ Install these, in order:
 
 ```powershell
 # 1. Clone (use quotes — the folder name has a space)
-git clone <repo-url> "Kannada Baa"
-cd "Kannada Baa"
+git clone <repo-url> "Kannada Beku"
+cd "Kannada Beku"
 
 # 2. Install dependencies (~3-5 min on first install).
 #    This also scaffolds .env from .env.example and installs the git hooks.
@@ -241,7 +241,7 @@ These are not in the README because the README assumes macOS.
   - And: `git config --global core.longpaths true`
   - Reboot.
 - **Line endings.** Git for Windows installs with `core.autocrlf=true` by default, which can rewrite line endings on checkout and confuse Metro on some files. We prefer `input`: `git config --global core.autocrlf input`.
-- **Folder name has a space.** "Kannada Baa" has a space. Always quote paths in PowerShell: `cd "Kannada Baa"`. Some older RN tooling chokes on spaces; if you hit weird errors, you can clone into `kannada-baa` (no space) — there's nothing in the repo that depends on the folder name.
+- **Folder name has a space.** "Kannada Beku" has a space. Always quote paths in PowerShell: `cd "Kannada Beku"`. Some older RN tooling chokes on spaces; if you hit weird errors, you can clone into `kannada-beku` (no space) — there's nothing in the repo that depends on the folder name.
 - **Antivirus / Windows Defender** can slow Metro to a crawl by scanning every file change. Add an exclusion for the repo folder and your global `npm` cache (`%AppData%\npm-cache`).
 - **Symlinks.** Some Metro / Expo plugins use symlinks. Either run your terminal as Administrator, or enable "Developer Mode" in Settings → Privacy & security → For developers.
 - **PowerShell execution policy.** If `npm` scripts fail with "running scripts is disabled", run once as admin: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.

@@ -2,6 +2,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+const LEGACY_STORAGE_KEY = 'kannada-baa-progress';
+const STORAGE_KEY = 'kannada-beku-progress';
+
+/**
+ * AsyncStorage adapter that performs a one-time migration from the pre-rename
+ * key (`kannada-baa-progress`) to the current key. On first read with no value
+ * under the new key, it copies any legacy value over and removes the old key so
+ * existing installs keep their streak/XP/completed lessons after the rebrand.
+ */
+const migratingStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    const current = await AsyncStorage.getItem(name);
+    if (current != null) return current;
+    const legacy = await AsyncStorage.getItem(LEGACY_STORAGE_KEY);
+    if (legacy != null) {
+      await AsyncStorage.setItem(name, legacy);
+      await AsyncStorage.removeItem(LEGACY_STORAGE_KEY);
+      return legacy;
+    }
+    return null;
+  },
+  setItem: (name: string, value: string) => AsyncStorage.setItem(name, value),
+  removeItem: (name: string) => AsyncStorage.removeItem(name),
+};
+
 interface ProgressState {
   streak: number;
   lastActiveDate: string;
@@ -142,8 +167,8 @@ export const useProgressStore = create<ProgressState>()(
         }),
     }),
     {
-      name: 'kannada-baa-progress',
-      storage: createJSONStorage(() => AsyncStorage),
+      name: STORAGE_KEY,
+      storage: createJSONStorage(() => migratingStorage),
       onRehydrateStorage: () => (state) => {
         state?.setHydrated(true);
       },

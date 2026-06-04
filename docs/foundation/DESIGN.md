@@ -11,13 +11,13 @@ related:
 
 # Design system
 
-> **Decision layer.** `[UNLOCKED]` means decided — do not reopen, resolve, or build the opposite; changing it needs an explicit spec PR plus owner sign-off. `[OPEN]` means genuinely undecided — safe to propose, do not implement until closed. A `TODO:` is a real task only if it does not contradict a `[UNLOCKED]` item; a TODO that contradicts a locked decision is stale text to delete, not a task. Code-vs-spec divergences are tracked in [CONTRADICTIONS.md](CONTRADICTIONS.md).
+> **Decision layer.** `[LOCKED]` means decided — do not reopen, resolve, or build the opposite; changing it needs an explicit spec PR plus owner sign-off. `[OPEN]` means genuinely undecided — safe to propose, do not implement until closed. A `TODO:` is a real task only if it does not contradict a `[LOCKED]` item; a TODO that contradicts a locked decision is stale text to delete, not a task. Code-vs-spec divergences are tracked in [CONTRADICTIONS.md](CONTRADICTIONS.md).
 
 Spec-leads-code: the tables here are the source of truth. Component code reads from [constants/](../../constants/) and must match this doc.
 
 ## Design ethos
 
-`[UNLOCKED]`
+`[LOCKED]`
 
 - **Living Manuscript palette** — Karnataka identity (state flag green/gold, Mysore red), Material 3 tonal logic.
 - **No-Line rule** — tonal separation over borders. Cards lift via shadow + surface tonal change, not strokes.
@@ -27,7 +27,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 ## Color tokens
 
-`[UNLOCKED]` — matches [colors.ts](../../constants/colors.ts). **Never use a hex literal in a component — always `Colors.X`.**
+`[LOCKED]` — matches [colors.ts](../../constants/colors.ts). **Never use a hex literal in a component — always `Colors.X`.**
 
 ### Surface stack
 | Token | Hex | Use |
@@ -72,7 +72,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 ### Playful-redesign additive tokens
 
-`[UNLOCKED]` — added 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) (additive; existing tokens unchanged). Strictly red / gold / deep-gold / warm-neutral — **no blue/green/teal/coral.**
+`[LOCKED]` — added 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) (additive; existing tokens unchanged). Strictly red / gold / deep-gold / warm-neutral — **no blue/green/teal/coral.**
 
 | Token | Hex | Use |
 |---|---|---|
@@ -87,7 +87,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 ## Spacing
 
-`[UNLOCKED]` — matches [spacing.ts](../../constants/spacing.ts). All values are pre-wrapped in `moderateScale()`.
+`[LOCKED]` — matches [spacing.ts](../../constants/spacing.ts). All values are pre-wrapped in `moderateScale()`.
 
 | Token | Base | Use |
 |---|---|---|
@@ -101,7 +101,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 ## Radius
 
-`[UNLOCKED]` — matches [spacing.ts](../../constants/spacing.ts).
+`[LOCKED]` — matches [spacing.ts](../../constants/spacing.ts).
 
 | Token | Base | Use |
 |---|---|---|
@@ -113,7 +113,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 ## Typography
 
-`[UNLOCKED]` — families and assignments. Defined in [fonts.ts](../../constants/fonts.ts). Three families, used strictly:
+`[LOCKED]` — families and assignments. Defined in [fonts.ts](../../constants/fonts.ts). Three families, used strictly:
 
 | Family | When |
 |---|---|
@@ -126,7 +126,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 ### Type scale
 
-`[UNLOCKED]` — codified 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) Amendment A. Compact by design (pulled down from earlier drafts); headings tighten line-height to ~1.05–1.2. Defined in [fonts.ts](../../constants/fonts.ts).
+`[LOCKED]` — codified 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) Amendment A. Compact by design (pulled down from earlier drafts); headings tighten line-height to ~1.05–1.2. Defined in [fonts.ts](../../constants/fonts.ts).
 
 | Token | Size | Weight | Family | Use |
 |---|---|---|---|---|
@@ -142,11 +142,11 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 
 ## Icons
 
-`[UNLOCKED]` — all from `@tabler/icons-react-native` (outline weight). Mapped in [icons.ts](../../constants/icons.ts) — **never import Tabler directly in a component.**
+`[LOCKED]` — all from `@tabler/icons-react-native` (outline weight). Mapped in [icons.ts](../../constants/icons.ts) — **never import Tabler directly in a component.**
 
 ### Rules
 
-`[UNLOCKED]`
+`[LOCKED]`
 
 1. **One library** — `@tabler/icons-react-native`, outline weight, pinned in `package.json`. No alternate icon libraries.
 2. **Never reach into the library directly from a component.** Every icon flows through the [icons.ts](../../constants/icons.ts) map so swaps stay one-line.
@@ -189,7 +189,7 @@ Anatomy + props + tokens used. Every reusable component lives here.
 
 ### `TabBar`
 
-`[UNLOCKED]` — matches [components/ui/TabBar.tsx](../../components/ui/TabBar.tsx). Custom Expo Router tab bar (replaces default). *Amended 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) Amendment B — owner sign-off: floating icon-only pill, no labels.*
+`[LOCKED]` — matches [components/ui/TabBar.tsx](../../components/ui/TabBar.tsx). Custom Expo Router tab bar (replaces default). *Amended 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) Amendment B — owner sign-off: floating icon-only pill, no labels.*
 
 | Property | Value |
 |---|---|
@@ -205,7 +205,7 @@ Anatomy + props + tokens used. Every reusable component lives here.
 
 ### `ProgressDots`
 
-`[UNLOCKED]` — matches [components/onboarding/ProgressDots.tsx](../../components/onboarding/ProgressDots.tsx). Migration TODOs inside the table are `[OPEN]`.
+`[LOCKED]` — matches [components/onboarding/ProgressDots.tsx](../../components/onboarding/ProgressDots.tsx). Migration TODOs inside the table are `[OPEN]`.
 
 | Property | Value |
 |---|---|
@@ -218,7 +218,7 @@ Anatomy + props + tokens used. Every reusable component lives here.
 
 ### `OptionCard`
 
-`[UNLOCKED]` — matches [components/onboarding/OptionCard.tsx](../../components/onboarding/OptionCard.tsx). Migration TODOs inside the table are `[OPEN]`.
+`[LOCKED]` — matches [components/onboarding/OptionCard.tsx](../../components/onboarding/OptionCard.tsx). Migration TODOs inside the table are `[OPEN]`.
 
 | Property | Value |
 |---|---|
@@ -252,7 +252,7 @@ Anatomy + props + tokens used. Every reusable component lives here.
 
 ### Modals & overlays
 
-`[PROPOSED]` — full spec lives in [spec_docs/Sameecha/MODALS.md](../../spec_docs/Sameecha/MODALS.md). Owns the four overlay shapes (centered dialog, bottom sheet, full-screen takeover, toast), the `ModalHost` + `ToastHost` providers, and 9 modal instances. Implementation in [components/modals/](../../components/modals/). Pending promotion to `[UNLOCKED]` after sign-off.
+`[PROPOSED]` — full spec lives in [spec_docs/Sameecha/MODALS.md](../../spec_docs/Sameecha/MODALS.md). Owns the four overlay shapes (centered dialog, bottom sheet, full-screen takeover, toast), the `ModalHost` + `ToastHost` providers, and 9 modal instances. Implementation in [components/modals/](../../components/modals/). Pending promotion to `[LOCKED]` after sign-off.
 
 ## Open questions / drift
 

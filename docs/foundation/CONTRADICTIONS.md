@@ -83,21 +83,42 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 
 **Resolution owed:** Edit [README.md](../../README.md) to drop NativeWind from the stack list (line 3) and from the "Styling" section (line 153), replacing with "inline styles + tokens in `constants/`". No CLAUDE.md edit needed beyond the new top-of-file session-start instruction.
 
-### C12 — Playful redesign spec landed; foundation amendments recorded, code not yet shipped
+### C12 — CONTENT.md still points game content at deleted local data files
 
-**What's wrong:** [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) is signed off (2026-06-04) and amends three locked decisions — [DESIGN.md](DESIGN.md) typography (Baloo display face, Amendment A), DESIGN.md type scale (codified), DESIGN.md `TabBar` (floating icon-only pill, Amendment B), DESIGN.md additive colour tokens, and [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md) §4 (Emergency English-first exception, Amendment C). The docs now reflect the decisions, but **the code reflects none of them yet:**
+**What's wrong:** [CONTENT.md](CONTENT.md#game-content) describes Opposites as "Consumes word-pair data from [wordPairs.ts](../../src/games/opposites/wordPairs.ts)" with a TODO asking for the word-pair count. As of 2026-06-02 ([spec_content_integrity](../../spec_docs/Sameecha/spec_content_integrity.md) §3.7) the live games consume content **from Supabase** (`fetchOppositesItemsByLessonNo` / `fetchDictationItemsByLessonNo` / `fetchImageMatchItemsByLessonNo`), and the dead local banks were deleted: `src/games/opposites/data/wordPairs.ts` (`RAW_PAIRS`), `src/games/imagematch/data/vocabBank.ts` (`VOCAB_BANK`), `src/games/dictation/data/wordBank.ts` (`WORD_BANK`), plus their tests. The `data/karnataka_fun_facts.json` fallback import was removed from Home (Home is now DB-only with an empty state). The `wordPairs.ts` link in CONTENT.md now points at a non-existent file.
 
-- `@expo-google-fonts/baloo-tamma-2` and `expo-linear-gradient` are not in [package.json](../../package.json); `useFonts(...)` in [app/_layout.tsx](../../app/_layout.tsx) loads no Baloo.
-- [constants/fonts.ts](../../constants/fonts.ts) has no `baloo` group or codified type scale; [constants/colors.ts](../../constants/colors.ts) lacks the additive tokens (`goldBright`, `goldLip`, `redLip`, `textFaint`).
-- [components/ui/TabBar.tsx](../../components/ui/TabBar.tsx) still renders the full-width tonal bar **with text labels**, not the floating icon-only pill.
-- [app/emergency.tsx](../../app/emergency.tsx) still renders transliteration-first, not the English-first exception.
-- No shared `LipButton` / `BrandGradient` / `Watermark` / `AudioOrb` / `ProgressRing` / `Celebration` components exist under [components/ui/](../../components/ui/).
+**Why it matters:** A reader following CONTENT.md will look for word-pair data in a deleted file and miss that the DB seed ([2026-05-27_db_wiring_games_seed.sql](../../services/api/migrations/2026-05-27_db_wiring_games_seed.sql)) is the source of truth.
 
-**Why it matters:** until the code ships, the app runs the old tonal tab bar, DM-Sans-only typography, and transliteration-first Emergency — divergent from the now-committed spec + amended foundation. Anyone touching `TabBar`, `fonts.ts`, `colors.ts`, or `emergency.tsx` in the interim could land changes that contradict the amended docs.
+**Owning spec:** [CONTENT.md](CONTENT.md#game-content).
+
+**Resolution owed:** Update CONTENT.md's "Game content" section to point Opposites/Dictation at the DB seed + accessors (and drop the stale `wordPairs.ts` link and word-pair-count TODO). `data/emergency.json` and `data/karnataka_fun_facts.json` are intentionally retained as seed artifacts (per C10 precedent) — not a divergence.
+
+**Note:** `constants/lessons/plannedLessons.ts` was deliberately **left in app code** (drives unlock/progress math); moving it to the DB is out of scope per spec_content_integrity §3.7.
+
+### C13 — Image Match hidden from Practice, but still 1 of 3 games in the locked overall-progress formula
+
+**What's wrong:** Image Match was removed from the Practice game list ([app/(tabs)/practice.tsx](../../app/%28tabs%29/practice.tsx) `GAMES`) on 2026-06-03 pending a better mechanic (the tap-to-connect board, see [spec_imagematch_board_redesign.md](../../spec_docs/Sameecha/spec_imagematch_board_redesign.md) §6 draw-a-thread `[DEFERRED]`). The game runner (`src/games/imagematch/`) and route case (`app/(games)/[game]/[n].tsx`) remain intact — only the UI entry point is gone. But the `[LOCKED]` `user_overall_progress` formula still counts **image_match** as one of its 3 games (the 80%-of-items "cleared" threshold reads `image_match_progress.is_correct`).
+
+**Why it matters:** With no UI path to play Image Match, a user cannot accumulate `image_match_progress`, so **overall progress can never reach 100%** while the game is hidden. Any surface that renders the overall-progress percentage will appear permanently capped.
+
+**Owning specs:** [spec_db_wiring_games_and_overall_progress.md](../../spec_docs/Sameecha/spec_db_wiring_games_and_overall_progress.md) (locked formula), [spec_imagematch_board_redesign.md](../../spec_docs/Sameecha/spec_imagematch_board_redesign.md).
+
+**Resolution owed:** Either (a) re-list Image Match once a better mechanic ships (restore the one line in `GAMES`), or (b) if it stays hidden, get owner sign-off to amend the locked formula to 2 games (opposites + dictation) via migration — a `[LOCKED]` change, not to be done silently. Until one lands, treat the capped overall progress as known.
+
+### C14 — Playful redesign spec landed; foundation amendments recorded, code not yet shipped
+
+**What's wrong:** [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) is signed off (2026-06-04) and amends three locked decisions — [DESIGN.md](DESIGN.md) typography (Baloo display face, Amendment A), DESIGN.md type scale (codified), DESIGN.md `TabBar` (floating icon-only pill, Amendment B), DESIGN.md additive colour tokens, and [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md) §4 (Emergency English-first exception, Amendment C). Phase 1 (deps + tokens + Baloo font-load) has shipped; the remaining UI work has not:
+
+- ✅ `@expo-google-fonts/baloo-tamma-2` + `expo-linear-gradient` added; `useFonts(...)` loads Baloo; `constants/fonts.ts` has the `baloo` group + `TypeScale`; `constants/colors.ts` has the additive tokens.
+- ❌ [components/ui/TabBar.tsx](../../components/ui/TabBar.tsx) still renders the full-width tonal bar **with text labels**, not the floating icon-only pill.
+- ❌ [app/emergency.tsx](../../app/emergency.tsx) still renders transliteration-first, not the English-first exception.
+- ❌ No shared `LipButton` / `BrandGradient` / `Watermark` / `AudioOrb` / `ProgressRing` / `Celebration` components exist under [components/ui/](../../components/ui/); screens (Home/Learn/Practice/Profile/lesson runner) not yet restyled.
+
+**Why it matters:** until the code ships, the app runs the old tonal tab bar and transliteration-first Emergency — divergent from the now-committed spec + amended foundation. Anyone touching `TabBar` or `emergency.tsx` in the interim could land changes that contradict the amended docs.
 
 **Owning spec:** [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) (canonical), with cross-refs in [DESIGN.md](DESIGN.md) and [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md).
 
-**Resolution owed:** Execute Phases 1–8 of spec_playful_redesign.md §6. Close this entry once verified end-to-end on iPhone SE and a larger device. Work is isolated on the `app_redesign` branch.
+**Resolution owed:** Execute Phases 2–8 of spec_playful_redesign.md §6. Close this entry once verified end-to-end on iPhone SE and a larger device. Work is isolated on the `app_redesign` branch.
 
 ## Resolved
 

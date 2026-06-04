@@ -141,10 +141,7 @@ export default function EmergencyScreen() {
                 marginBottom: moderateScale(28),
               }}
             >
-              Survival phrases for the auto, shop & street.{'\n'}
-              <Text style={{ fontFamily: Fonts.lora.italic, fontSize: moderateScale(12) }}>
-                [Unverified — pending Kannada-speaker review]
-              </Text>
+              Survival phrases for the auto, shop & street.
             </Text>
 
             {groups.map((group, gi) => (

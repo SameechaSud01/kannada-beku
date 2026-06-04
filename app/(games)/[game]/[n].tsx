@@ -5,11 +5,12 @@ import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '@/constants/colors';
 import { Spacing, Radius } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
-import { Icons } from '@/constants/icons';
-import { GAMES, isGameKey, type GameKey } from '@/constants/games';
+import { isGameKey, type GameKey } from '@/constants/games';
 import OppositeGame from '@/src/games/opposites';
 import DictationGame from '@/src/games/dictation';
 import ImageMatchGame from '@/src/games/imagematch';
+import QuickQuizGame from '@/src/games/quickquiz';
+import ConversationGame from '@/src/games/conversations';
 
 export default function GameRunnerScreen() {
   const router = useRouter();
@@ -32,91 +33,10 @@ export default function GameRunnerScreen() {
     case 'image-match':
       return <ImageMatchGame lessonNo={lessonNo} />;
     case 'quiz':
+      return <QuickQuizGame lessonNo={lessonNo} />;
     case 'conversations':
-      return (
-        <ComingSoon
-          title={GAMES[gameParam].title}
-          onBack={() => router.back()}
-        />
-      );
+      return <ConversationGame lessonNo={lessonNo} />;
   }
-}
-
-function ComingSoon({ title, onBack }: { title: string; onBack: () => void }) {
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }} edges={['top', 'bottom']}>
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingHorizontal: Spacing.xxl,
-          gap: Spacing.md,
-        }}
-      >
-        <View
-          style={{
-            width: moderateScale(56),
-            height: moderateScale(56),
-            borderRadius: Radius.full,
-            backgroundColor: Colors.secondaryFixed,
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: Spacing.sm,
-          }}
-        >
-          <Icons.locked size={moderateScale(24)} color={Colors.onSecondaryContainer} />
-        </View>
-        <Text
-          style={{
-            fontFamily: Fonts.dmSans.bold,
-            fontSize: moderateScale(20),
-            color: Colors.onSurface,
-            textAlign: 'center',
-          }}
-          maxFontSizeMultiplier={1.3}
-        >
-          {title} — coming soon
-        </Text>
-        <Text
-          style={{
-            fontFamily: Fonts.dmSans.regular,
-            fontSize: moderateScale(14),
-            color: Colors.tertiary,
-            textAlign: 'center',
-            lineHeight: moderateScale(20),
-            marginBottom: Spacing.md,
-          }}
-          maxFontSizeMultiplier={1.4}
-        >
-          This game isn&apos;t built yet. Try Opposites or Dictation for now.
-        </Text>
-        <Pressable
-          onPress={onBack}
-          accessibilityRole="button"
-          accessibilityLabel="Back to lesson selector"
-          style={({ pressed }) => ({
-            backgroundColor: Colors.primary,
-            borderRadius: Radius.lg,
-            paddingVertical: Spacing.md,
-            paddingHorizontal: Spacing.xl,
-            transform: [{ scale: pressed ? 0.97 : 1 }],
-          })}
-        >
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(14),
-              color: Colors.onPrimary,
-            }}
-            maxFontSizeMultiplier={1.3}
-          >
-            Back to lessons
-          </Text>
-        </Pressable>
-      </View>
-    </SafeAreaView>
-  );
 }
 
 function NotFound({ onBack }: { onBack: () => void }) {

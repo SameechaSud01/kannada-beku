@@ -1,4 +1,4 @@
-# Kannada Baa
+# Kannada Beku
 
 A mobile app for learning Kannada — built with Expo (SDK 54), Expo Router, React Native 0.81, Zustand, TanStack Query, and Supabase. Styling is inline `style={{...}}` objects drawing from token files in `constants/`.
 
@@ -23,8 +23,8 @@ A mobile app for learning Kannada — built with Expo (SDK 54), Expo Router, Rea
 
 ```bash
 # 1. Clone and enter the repo
-git clone <repo-url> "Kannada Baa"
-cd "Kannada Baa"
+git clone <repo-url> "Kannada Beku"
+cd "Kannada Beku"
 
 # 2. Install dependencies. This also runs automatically on install:
 #    - scaffolds .env from .env.example (if you don't have one yet)

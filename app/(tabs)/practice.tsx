@@ -21,7 +21,9 @@ type GameDef = {
 
 export const GAMES: GameDef[] = [
   { id: 'quiz', title: 'Quick quiz', subtitle: 'Test your speed and accuracy.', Icon: Icons.gameQuickQuiz },
-  { id: 'image-match', title: 'Image match', subtitle: 'Connect words to their visuals.', Icon: Icons.gameImageMatch },
+  // 'image-match' temporarily hidden from Practice — the tap-to-connect board
+  // needs a better mechanic before re-listing. Game code + route remain intact
+  // so re-enabling is a one-line restore here.
   { id: 'dictation', title: 'Dictation', subtitle: 'Listen and write what you hear.', Icon: Icons.gameDictation },
   { id: 'conversations', title: 'Conversations', subtitle: 'Roleplay real-world scenarios.', Icon: Icons.gameConversations },
   { id: 'opposites', title: 'Opposites', subtitle: 'Learn word pairs and antonyms.', Icon: Icons.gameOpposites },
@@ -82,7 +84,7 @@ export default function PracticeScreen() {
           }}
           maxFontSizeMultiplier={1.2}
         >
-          ಕನ್ನಡ ಬಾ
+          ಕನ್ನಡ ಬೇಕು
         </Text>
         <View
           style={{

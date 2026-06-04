@@ -59,7 +59,7 @@ Actions: `setOnboarding(data)`, `setDisplayName(name)`, `setLearningMode(mode)`,
 
 ### `useProgressStore`
 
-`[LOCKED]` — matches [stores/progressStore.ts](../../stores/progressStore.ts). **Persisted** via AsyncStorage, key `kannada-baa-progress`.
+`[LOCKED]` — matches [stores/progressStore.ts](../../stores/progressStore.ts). **Persisted** via AsyncStorage, key `kannada-beku-progress`. _Renamed from `kannada-baa-progress` (owner-approved 2026-06-04, app rebrand); the store migrates the legacy key on first read._
 
 | Field | Type | Notes |
 |---|---|---|
@@ -103,7 +103,7 @@ Actions: `updateLessonProgress(lessonId, phraseIndex)`, `completeLesson(lessonId
 |---|---|---|---|
 | `useAuthStore` | Supabase client (via `expo-secure-store`) | n/a | Yes (`getSession()` resolves) |
 | `useUserStore` | AsyncStorage | `user_prefs` | Yes (gates onboarding redirect) |
-| `useProgressStore` | AsyncStorage | `kannada-baa-progress` | Yes (gates onboarding redirect) |
+| `useProgressStore` | AsyncStorage | `kannada-beku-progress` | Yes (gates onboarding redirect) |
 
 ## Selectors / hooks
 
