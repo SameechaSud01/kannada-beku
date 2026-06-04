@@ -1,7 +1,10 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
-const REMINDER_ID = 'kannada-baa-daily-reminder';
+const REMINDER_ID = 'kannada-beku-daily-reminder';
+// Pre-rename id — cancelled alongside the current one so the old "ಕನ್ನಡ ಬಾ"
+// reminder doesn't linger or duplicate after the rebrand.
+const LEGACY_REMINDER_ID = 'kannada-baa-daily-reminder';
 const ANDROID_CHANNEL_ID = 'daily-reminders';
 
 /**
@@ -42,6 +45,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
 export async function scheduleDailyReminder(time: string): Promise<void> {
   await ensureAndroidChannel();
   await Notifications.cancelScheduledNotificationAsync(REMINDER_ID).catch(() => undefined);
+  await Notifications.cancelScheduledNotificationAsync(LEGACY_REMINDER_ID).catch(() => undefined);
   const [hourStr, minuteStr] = time.split(':');
   const hour = Number(hourStr);
   const minute = Number(minuteStr);
@@ -49,7 +53,7 @@ export async function scheduleDailyReminder(time: string): Promise<void> {
   await Notifications.scheduleNotificationAsync({
     identifier: REMINDER_ID,
     content: {
-      title: 'ಕನ್ನಡ ಬಾ',
+      title: 'ಕನ್ನಡ ಬೇಕು',
       body: "Time for today's lesson.",
     },
     trigger: {
@@ -63,4 +67,5 @@ export async function scheduleDailyReminder(time: string): Promise<void> {
 
 export async function cancelDailyReminder(): Promise<void> {
   await Notifications.cancelScheduledNotificationAsync(REMINDER_ID).catch(() => undefined);
+  await Notifications.cancelScheduledNotificationAsync(LEGACY_REMINDER_ID).catch(() => undefined);
 }

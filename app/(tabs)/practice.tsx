@@ -82,7 +82,7 @@ export default function PracticeScreen() {
           }}
           maxFontSizeMultiplier={1.2}
         >
-          ಕನ್ನಡ ಬಾ
+          ಕನ್ನಡ ಬೇಕು
         </Text>
         <View
           style={{

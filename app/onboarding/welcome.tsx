@@ -38,7 +38,7 @@ export default function WelcomeScreen() {
             marginBottom: Spacing.sm,
           }}
         >
-          ಕನ್ನಡ ಬಾ
+          ಕನ್ನಡ ಬೇಕು
         </Text>
         <Text
           style={{
@@ -49,7 +49,7 @@ export default function WelcomeScreen() {
             marginBottom: Spacing.sm,
           }}
         >
-          Kannada Baa
+          Kannada Beku
         </Text>
         <Text
           style={{

@@ -112,7 +112,7 @@ function PreviewCard({ body }: { body: string }) {
           }}
           maxFontSizeMultiplier={1.2}
         >
-          ಬಾ
+          ಬೇ
         </Text>
       </View>
       <View style={{ flex: 1 }}>
@@ -124,7 +124,7 @@ function PreviewCard({ body }: { body: string }) {
           }}
           maxFontSizeMultiplier={1.3}
         >
-          Kannada Baa
+          Kannada Beku
         </Text>
         <Text
           style={{
