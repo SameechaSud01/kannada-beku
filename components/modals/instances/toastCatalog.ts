@@ -77,6 +77,15 @@ export const Toasts = {
     });
   },
 
+  socialSignInFailed() {
+    Toast.show({
+      kind: 'error',
+      id: 'signIn.socialFailed',
+      title: "Couldn't sign you in",
+      subtitle: 'Please try again, or use email and password',
+    });
+  },
+
   resetEmailSent() {
     Toast.show({
       kind: 'success',

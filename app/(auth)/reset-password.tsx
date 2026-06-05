@@ -9,7 +9,7 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -38,6 +38,12 @@ const INPUT_STYLE = {
 export default function ResetPasswordScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const params = useLocalSearchParams<{
+    code?: string;
+    token_hash?: string;
+    error?: string;
+    error_code?: string;
+  }>();
   const url = Linking.useURL();
   const exchanged = useRef(false);
   const [ready, setReady] = useState(false);
@@ -49,23 +55,50 @@ export default function ResetPasswordScreen() {
   // AppGate early-returns while we're on this screen so the new session does
   // not bounce us away before the password is set (spec_password_reset.md).
   useEffect(() => {
-    if (exchanged.current || !url) return;
-    const { queryParams } = Linking.parse(url);
-    const code = typeof queryParams?.code === 'string' ? queryParams.code : null;
-    if (!code) return; // wait until the inbound URL carries the code
+    if (exchanged.current) return;
+
+    // expo-router consumes the inbound deep link and exposes its query string
+    // via useLocalSearchParams (Linking.useURL is often null here). Parse the
+    // raw URL too as a cold-start fallback.
+    const fromUrl = url ? Linking.parse(url).queryParams ?? {} : {};
+    const pick = (key: string): string | null => {
+      const v = (params as Record<string, unknown>)[key] ?? fromUrl[key];
+      return typeof v === 'string' ? v : null;
+    };
+    const code = pick('code');
+    const tokenHash = pick('token_hash');
+    const errCode = pick('error') ?? pick('error_code');
+
+    if (errCode) {
+      exchanged.current = true;
+      Toasts.resetLinkInvalid();
+      router.replace('/(auth)/forgot-password');
+      return;
+    }
+    if (!code && !tokenHash) return; // wait for the params to arrive
+
+    // Supabase recovery links arrive in one of two shapes depending on the
+    // email template: PKCE (`?code=`) → exchangeCodeForSession, or token-hash
+    // (`?token_hash=...&type=recovery`) → verifyOtp.
     exchanged.current = true;
-    supabase.auth
-      .exchangeCodeForSession(code)
-      .then(({ error }) => {
+    (async () => {
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (error) throw error;
-        setReady(true);
-      })
-      .catch((err) => {
-        console.warn('[auth] reset code exchange failed', err);
-        Toasts.resetLinkInvalid();
-        router.replace('/(auth)/forgot-password');
-      });
-  }, [url, router]);
+      } else if (tokenHash) {
+        const { error } = await supabase.auth.verifyOtp({
+          type: 'recovery',
+          token_hash: tokenHash,
+        });
+        if (error) throw error;
+      }
+      setReady(true);
+    })().catch((err) => {
+      console.warn('[auth] reset verification failed', err);
+      Toasts.resetLinkInvalid();
+      router.replace('/(auth)/forgot-password');
+    });
+  }, [params, url, router]);
 
   const lengthOk = password.length >= 8;
   const matchOk = password === confirm;
