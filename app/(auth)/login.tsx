@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Pressable, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
+import { useRouter } from 'expo-router';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
@@ -29,6 +30,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState<Mode>('login');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const isSignUp = mode === 'signup';
   const copy = COPY[mode];
@@ -189,6 +191,26 @@ export default function LoginScreen() {
           }}
           placeholderTextColor={Colors.tertiary}
         />
+
+        {/* Forgot password — login mode only */}
+        {!isSignUp && (
+          <Pressable
+            onPress={() => router.push('/(auth)/forgot-password')}
+            accessibilityRole="button"
+            hitSlop={10}
+            style={{ alignSelf: 'flex-end', marginTop: -Spacing.md, marginBottom: Spacing.lg }}
+          >
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.medium,
+                fontSize: moderateScale(13),
+                color: Colors.primary,
+              }}
+            >
+              Forgot password?
+            </Text>
+          </Pressable>
+        )}
 
         {/* Submit */}
         <Pressable
