@@ -22,6 +22,7 @@ export function SummaryPhase({ words, phrases, onAdvance }: SummaryPhaseProps) {
   return (
     <View style={{ flex: 1, backgroundColor: Colors.surface }}>
       <ScrollView
+        style={{ flex: 1 }}
         contentContainerStyle={{
           flexGrow: 1,
           paddingHorizontal: Spacing.lg,
@@ -120,7 +121,7 @@ function SummaryRow({
       <View style={{ flex: 1 }}>
         <Text
           style={{
-            fontFamily: Fonts.lora.italic,
+            fontFamily: Fonts.dmSans.bold,
             fontSize: moderateScale(15),
             color: Colors.onSurface,
           }}

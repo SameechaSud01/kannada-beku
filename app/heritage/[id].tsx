@@ -112,7 +112,7 @@ export default function HeritageScreen() {
           <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(28), color: '#1B1D0E', letterSpacing: -0.5, marginBottom: moderateScale(6) }}>
             {entry.title}
           </Text>
-          <Text style={{ fontFamily: Fonts.lora.italic, fontSize: moderateScale(14), color: '#464646', marginBottom: Spacing.xxl }}>
+          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: '#464646', marginBottom: Spacing.xxl }}>
             {entry.subtitle}
           </Text>
           {entry.body.map((p, i) => (

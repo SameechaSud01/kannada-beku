@@ -201,7 +201,7 @@ export default function EmergencyScreen() {
                   {item.transliteration ? (
                     <Text
                       style={{
-                        fontFamily: Fonts.lora.italic,
+                        fontFamily: Fonts.dmSans.bold,
                         fontSize: moderateScale(15),
                         lineHeight: moderateScale(21),
                         color: Colors.primary,
@@ -237,7 +237,7 @@ export default function EmergencyScreen() {
 
             <Text
               style={{
-                fontFamily: Fonts.lora.italic,
+                fontFamily: Fonts.dmSans.bold,
                 fontSize: moderateScale(12),
                 color: Colors.tertiary,
                 textAlign: 'center',

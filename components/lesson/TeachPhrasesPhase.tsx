@@ -130,7 +130,7 @@ export function TeachPhrasesPhase({
               >
                 <Text
                   style={{
-                    fontFamily: Fonts.lora.italic,
+                    fontFamily: Fonts.dmSans.bold,
                     fontSize: moderateScale(15),
                     color: Colors.onSurface,
                   }}
@@ -168,7 +168,7 @@ export function TeachPhrasesPhase({
         >
           <Text
             style={{
-              fontFamily: Fonts.lora.italic,
+              fontFamily: Fonts.dmSans.bold,
               fontSize: moderateScale(28),
               lineHeight: moderateScale(38),
               color: Colors.onSurface,

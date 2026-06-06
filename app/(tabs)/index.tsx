@@ -21,8 +21,6 @@ import { useUserStore } from '../../stores/useUserStore';
 import { PLANNED_LESSON_SLOTS, TOTAL_LESSON_SLOTS } from '../../constants/lessons/plannedLessons';
 import { formatFirstName } from '../../utils/formatName';
 import { useCompletedLessons, useStreak } from '../../hooks/progress';
-import { useKarnatakaFunFacts } from '../../hooks/useKarnatakaFunFacts';
-import type { FunFact } from '../../services/api/karnataka_fun_facts';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { useModal } from '../../components/modals/ModalHost';
 import { Celebration } from '../../components/ui/Celebration';
@@ -35,16 +33,6 @@ import { StreakPill } from '../../components/ui/StreakPill';
 
 const ESTIMATED_MIN_PER_LESSON = 5;
 
-type CardFact = Pick<FunFact, 'category' | 'fact'>;
-
-function factOfDayIndex(arrayLength: number): number {
-  if (arrayLength <= 0) return 0;
-  const dateStr = new Date().toISOString().split('T')[0];
-  let sum = 0;
-  for (let i = 0; i < dateStr.length; i++) sum += dateStr.charCodeAt(i);
-  return sum % arrayLength;
-}
-
 export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -55,7 +43,6 @@ export default function HomeScreen() {
   const displayName = useUserStore((s) => s.displayName);
   const lessonsQuery = useDbLessons();
   const dbLessons = lessonsQuery.data ?? [];
-  const factsQuery = useKarnatakaFunFacts();
 
   const fadeAnim = useRef(new RNAnimated.Value(0)).current;
   const slideAnim = useRef(new RNAnimated.Value(4)).current;
@@ -66,12 +53,6 @@ export default function HomeScreen() {
       RNAnimated.timing(slideAnim, { toValue: 0, duration: 220, useNativeDriver: true }),
     ]).start();
   }, []);
-
-  useEffect(() => {
-    if (factsQuery.error) {
-      console.warn('[home] fun-facts fetch failed', factsQuery.error);
-    }
-  }, [factsQuery.error]);
 
   // One-time nudge pointing at the Learn-tab Beginners' Guide card.
   // See spec_beginners_guide.md §Re-entry — first home toast.
@@ -94,8 +75,6 @@ export default function HomeScreen() {
     user?.email?.split('@')[0] ||
     'there';
   const userName = formatFirstName(rawName, 'there');
-
-  const facts: readonly CardFact[] = factsQuery.data ?? [];
 
   const completedSlugSet = new Set(completedLessons);
   const completedCount = Math.min(completedLessons.length, TOTAL_LESSON_SLOTS);
@@ -169,9 +148,6 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
       >
-        {/* Demoted fun-fact banner */}
-        {facts.length > 0 ? <FunFactBanner facts={facts} /> : null}
-
         <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.md }}>
           {/* Greeting */}
           <Text
@@ -304,9 +280,9 @@ export default function HomeScreen() {
                   <LipButton
                     label="Continue lesson"
                     onPress={handleStartNext}
-                    color={Colors.secondaryContainer}
-                    lip={Colors.goldLip}
-                    fg={Colors.onSecondaryContainer}
+                    color={Colors.primaryContainer}
+                    lip={Colors.redLip}
+                    fg={Colors.onPrimary}
                     icon={Icons.forward}
                   />
                 </View>
@@ -475,68 +451,6 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
     </RNAnimated.View>
-  );
-}
-
-/** Slim, dismissible, cycling fun-fact banner. */
-function FunFactBanner({ facts }: { facts: readonly CardFact[] }) {
-  const [index, setIndex] = useState(() => factOfDayIndex(facts.length));
-  const [dismissed, setDismissed] = useState(false);
-  if (dismissed || facts.length === 0) return null;
-  const fact = facts[index % facts.length];
-  return (
-    <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.md }}>
-      <Pressable
-        onPress={() => setIndex((v) => v + 1)}
-        accessibilityRole="button"
-        accessibilityLabel={`Did you know? ${fact.fact}. Tap for another.`}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: moderateScale(9),
-          backgroundColor: Colors.surfaceContainerLowest,
-          borderRadius: Radius.lg,
-          paddingVertical: Spacing.sm,
-          paddingHorizontal: moderateScale(10),
-          borderWidth: 1,
-          borderColor: Colors.hairline,
-        }}
-      >
-        <View
-          style={{
-            width: moderateScale(24),
-            height: moderateScale(24),
-            borderRadius: moderateScale(7),
-            backgroundColor: Colors.secondary,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Icons.sparkle size={moderateScale(14)} color={Colors.onPrimary} />
-        </View>
-        <Text
-          numberOfLines={1}
-          style={{
-            flex: 1,
-            fontFamily: Fonts.dmSans.medium,
-            fontSize: moderateScale(12.5),
-            color: Colors.tertiary,
-          }}
-          maxFontSizeMultiplier={1.3}
-        >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, color: Colors.secondary }}>Did you know? </Text>
-          {fact.fact}
-        </Text>
-        <Pressable
-          onPress={() => setDismissed(true)}
-          accessibilityRole="button"
-          accessibilityLabel="Dismiss fun fact"
-          hitSlop={moderateScale(8)}
-        >
-          <Icons.close size={moderateScale(14)} color={Colors.textFaint} />
-        </Pressable>
-      </Pressable>
-    </View>
   );
 }
 

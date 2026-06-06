@@ -74,7 +74,7 @@ const QuizOptionButton: React.FC<Props> = ({ option, state, onPress }) => {
       >
         <Text
           style={{
-            fontFamily: option.secondary ? Fonts.lora.italic : Fonts.dmSans.medium,
+            fontFamily: option.secondary ? Fonts.dmSans.bold : Fonts.dmSans.medium,
             fontSize: moderateScale(16),
             color: Colors.onSurface,
             textAlign: 'center',

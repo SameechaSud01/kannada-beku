@@ -121,6 +121,18 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 
 **Resolution owed:** Close once the owner confirms the full flow on device. Then merge `app_redesign` → `main`. Decide separately whether to build the deferred optional items.
 
+### C15 — Transliteration font moved off Lora italic → DM Sans bold
+
+**What's wrong:** [spec_ui_refinement.md](../../spec_docs/Sameecha/spec_ui_refinement.md) Item 1 (owner sign-off 2026-06-06) amends [DESIGN.md](DESIGN.md#typography) (ethos "One script per font" bullet, Typography families table, "why this split", and the `translit` type-scale row) and the redesign's Amendment A: transliterations render in the **brand sans** (`Fonts.dmSans.bold`, full-strength) distinguished from the muted English gloss by **weight + colour**, instead of Lora serif-italic. The `Fonts.lora` group and the `Lora_*` `useFonts` load are retired.
+
+**Status of code:** The ~24 call-sites, the `TypeScale.translit` token ([fonts.ts](../../constants/fonts.ts)), the `Fonts.lora` removal, and the `app/_layout.tsx` font-load + import are **swept on branch `app_redesign`** (Phase A of spec_ui_refinement.md). DESIGN.md is amended in the same change. **Pending end-to-end on-device verification** on iPhone SE + a larger device.
+
+**Why it matters:** Until verified on device, the visual result of the font swap (especially the large flashcard transliteration and the translit-vs-gloss separation now carried by weight + colour rather than italic slant) is unconfirmed. Anyone editing teaching components should use `Fonts.dmSans.bold` (or `TypeScale.translit`) for transliteration — not reach for the retired Lora.
+
+**Owning spec:** [spec_ui_refinement.md](../../spec_docs/Sameecha/spec_ui_refinement.md) (Item 1), [DESIGN.md](DESIGN.md#typography).
+
+**Resolution owed:** Owner confirms the flashcard / phrase-builder / recap / games read well on device; then close. Ships on `app_redesign` ahead of the C14 merge to `main`.
+
 ## Resolved
 
 ### C10 — `emergency_phrases` table now read by app code ✅

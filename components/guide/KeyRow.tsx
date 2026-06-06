@@ -22,7 +22,7 @@ export function KeyRow({ symbol, example }: KeyRowProps) {
     >
       <Text
         style={{
-          fontFamily: Fonts.lora.mediumItalic,
+          fontFamily: Fonts.dmSans.bold,
           fontSize: moderateScale(15),
           color: Colors.onSurface,
           minWidth: moderateScale(60),

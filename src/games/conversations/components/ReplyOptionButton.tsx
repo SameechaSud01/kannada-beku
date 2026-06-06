@@ -71,7 +71,7 @@ const ReplyOptionButton: React.FC<Props> = ({ option, state, onPress }) => {
           <View style={{ flex: 1 }}>
             {option.tr ? (
               <Text
-                style={{ fontFamily: Fonts.lora.italic, fontSize: moderateScale(16), color: Colors.onSurface }}
+                style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onSurface }}
                 maxFontSizeMultiplier={1.3}
               >
                 {option.tr}

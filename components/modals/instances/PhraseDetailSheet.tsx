@@ -56,7 +56,7 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
         <View style={{ flex: 1 }}>
           <Text
             style={{
-              fontFamily: Fonts.lora.mediumItalic,
+              fontFamily: Fonts.dmSans.bold,
               fontSize: moderateScale(28),
               lineHeight: moderateScale(38),
               color: Colors.onSurface,
@@ -122,7 +122,7 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
                   {atom.transliteration ? (
                     <Text
                       style={{
-                        fontFamily: Fonts.lora.italic,
+                        fontFamily: Fonts.dmSans.bold,
                         fontSize: moderateScale(16),
                         color: Colors.onSurface,
                       }}

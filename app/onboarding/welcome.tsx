@@ -53,9 +53,9 @@ export default function WelcomeScreen() {
             fontSize: moderateScale(84),
             lineHeight: moderateScale(120),
             color: Colors.onPrimary,
-            textShadowColor: Colors.redLip,
-            textShadowOffset: { width: 0, height: 6 },
-            textShadowRadius: 18,
+            textShadowColor: 'rgba(110,0,20,0.35)',
+            textShadowOffset: { width: 0, height: 2 },
+            textShadowRadius: 8,
           }}
           maxFontSizeMultiplier={1.1}
         >
@@ -79,7 +79,7 @@ export default function WelcomeScreen() {
           style={{
             fontFamily: Fonts.dmSans.medium,
             fontSize: moderateScale(15.5),
-            color: 'rgba(255,255,255,0.9)',
+            color: Colors.onPrimary,
             textAlign: 'center',
             lineHeight: moderateScale(23),
             marginTop: Spacing.md,

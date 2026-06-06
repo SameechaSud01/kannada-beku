@@ -212,7 +212,7 @@ export function PracticePhrasesPhase({
           >
             <Text
               style={{
-                fontFamily: Fonts.lora.italic,
+                fontFamily: Fonts.dmSans.bold,
                 fontSize: moderateScale(26),
                 lineHeight: moderateScale(36),
                 color: Colors.onSurface,

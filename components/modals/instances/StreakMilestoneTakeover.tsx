@@ -123,7 +123,7 @@ export function StreakMilestoneTakeover({
           </Text>
           <Text
             style={{
-              fontFamily: Fonts.lora.italic,
+              fontFamily: Fonts.dmSans.bold,
               fontSize: moderateScale(17),
               lineHeight: moderateScale(25),
               color: Colors.tertiary,

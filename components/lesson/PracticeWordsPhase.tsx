@@ -182,7 +182,7 @@ export function PracticeWordsPhase({
           >
             <Text
               style={{
-                fontFamily: Fonts.lora.italic,
+                fontFamily: Fonts.dmSans.bold,
                 fontSize: moderateScale(38),
                 lineHeight: moderateScale(50),
                 color: Colors.onSurface,

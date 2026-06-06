@@ -19,12 +19,6 @@ export const Fonts = {
     bold: 'DMSans_700Bold',
   },
 
-  // Lora — Transliterations ONLY (always italic)
-  lora: {
-    italic: 'Lora_400Regular_Italic',
-    mediumItalic: 'Lora_500Medium_Italic',
-  },
-
   // Noto Sans Kannada — Kannada script ONLY
   notoSansKannada: {
     regular: 'NotoSansKannada_400Regular',
@@ -47,5 +41,8 @@ export const TypeScale = {
   buttonLabel: { fontFamily: Fonts.baloo.bold,      fontSize: moderateScale(16.5) },
   body:        { fontFamily: Fonts.dmSans.medium,   fontSize: moderateScale(14) },
   eyebrow:     { fontFamily: Fonts.dmSans.bold,     fontSize: moderateScale(11), letterSpacing: 1.4 },
-  translit:    { fontFamily: Fonts.lora.italic,     fontSize: moderateScale(20) },
+  // Transliteration: brand sans (DM Sans), bold + full-strength foreground —
+  // distinguished from the muted English gloss by weight + colour, not a separate
+  // font (DESIGN.md Amendment A re-sign 2026-06-06; spec_ui_refinement.md Item 1).
+  translit:    { fontFamily: Fonts.dmSans.bold,      fontSize: moderateScale(20) },
 } as const;

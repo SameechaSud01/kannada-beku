@@ -301,11 +301,10 @@ function GameCard({
           fontFamily: Fonts.dmSans.medium,
           fontSize: moderateScale(12),
           color: game.fg,
-          opacity: 0.84,
           marginTop: moderateScale(1),
         }}
         maxFontSizeMultiplier={1.3}
-        numberOfLines={1}
+        numberOfLines={2}
       >
         {game.subtitle}
       </Text>

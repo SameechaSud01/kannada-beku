@@ -22,7 +22,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 - **Living Manuscript palette** — Karnataka identity (state flag green/gold, Mysore red), Material 3 tonal logic.
 - **No-Line rule** — tonal separation over borders. Cards lift via shadow + surface tonal change, not strokes.
 - **Warm, never sterile** — sandstone text (`#1b1d0e`, `#464646`), never pure black or grey.
-- **One script per font** — Kannada in Noto Serif Kannada, transliteration in Lora italic, all body/label chrome in DM Sans. Display headings, big numbers, and button labels use Baloo Tamma 2 (the playful display face). Never mix within a role. *(Amended 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) Amendment A — owner sign-off.)*
+- **One script per font** — Kannada in Noto Sans Kannada; all body, label, and **transliteration** chrome in DM Sans (transliteration distinguished from the English gloss by **weight + colour**, not a separate face). Display headings, big numbers, and button labels use Baloo Tamma 2 (the playful display face). Never mix within a role. *(Amended 2026-06-04 per [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) Amendment A. Transliteration moved off Lora serif-italic → DM Sans bold 2026-06-06 per [spec_ui_refinement.md](../../spec_docs/Sameecha/spec_ui_refinement.md) Item 1 — owner sign-off; Lora retired.)*
 - **No raw pixels** — every dimension wraps `moderateScale()` (or `scale()`/`verticalScale()`) from `react-native-size-matters`.
 
 ## Color tokens
@@ -121,11 +121,12 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 | Family | When |
 |---|---|
 | `Fonts.baloo` | **Display** — screen titles, hero titles, card headings, big numbers (streak, %, stats), and button labels. *Added 2026-06-04 (Amendment A).* |
-| `Fonts.dmSans` | Body/label chrome — body text, sub-labels, uppercase eyebrows, settings rows, tab labels. |
-| `Fonts.lora.italic` | Transliteration **only**. Never UI; never Kannada. |
+| `Fonts.dmSans` | Body/label chrome **and transliteration** — body text, sub-labels, uppercase eyebrows, settings rows, tab labels. Transliteration uses `dmSans.bold` full-strength; the English gloss uses `dmSans.regular`/`medium` muted. *(Transliteration moved here from Lora 2026-06-06 — Item 1.)* |
 | `Fonts.notoSansKannada` | Kannada script **only** (Baloo Tamma 2 offered as an optional rounded Kannada face — default stays Noto). |
 
-**Why this split:** Baloo Tamma 2 is the single biggest driver of the "playful" feel — a rounded display face for headings and numbers that also renders Kannada, so script and UI feel like one family. Transliterations get a distinctive italic so they're visually parseable as a learning aid, not body copy. Kannada uses a sans family for crisper rendering at small reference sizes — the tertiary role in [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md), and the Beginners' Guide glyph hero.
+*(`Fonts.lora` retired 2026-06-06 — the serif-italic transliteration face is removed from `fonts.ts` and the `useFonts` load.)*
+
+**Why this split:** Baloo Tamma 2 is the single biggest driver of the "playful" feel — a rounded display face for headings and numbers that also renders Kannada, so script and UI feel like one family. Transliterations stay parseable as a learning aid via **weight + colour** (DM Sans bold, full-strength) against the muted English gloss — one type system, no spliced-in serif. Kannada uses a sans family for crisper rendering at small reference sizes — the tertiary role in [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md), and the Beginners' Guide glyph hero.
 
 ### Type scale
 
@@ -140,7 +141,7 @@ Spec-leads-code: the tables here are the source of truth. Component code reads f
 | `buttonLabel` | `moderateScale(16.5)` | 700 | Baloo | CTA labels |
 | `body` | `moderateScale(12.5)`–`moderateScale(15)` | 500–700 | DM Sans | Descriptions, subs |
 | `eyebrow` | `moderateScale(10.5)`–`moderateScale(12)` | 800 | DM Sans | Uppercase, letter-spacing 1.2–1.6 |
-| `translit` | `moderateScale(15)`–`moderateScale(42)` | 400 italic | Lora | Word/phrase teaching |
+| `translit` | `moderateScale(15)`–`moderateScale(42)` | 700 | DM Sans | Word/phrase teaching (full-strength; muted gloss alongside) |
 | `kannada` | `moderateScale(13.5)`–`moderateScale(88)` | 400–700 | Noto/Baloo | Muted reference + decorative watermark glyphs |
 
 ## Icons

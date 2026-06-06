@@ -7,7 +7,6 @@ import {
   NotoSansKannada_500Medium,
   NotoSansKannada_700Bold,
 } from '@expo-google-fonts/noto-sans-kannada';
-import { Lora_400Regular_Italic, Lora_500Medium_Italic } from '@expo-google-fonts/lora';
 import {
   BalooTamma2_400Regular,
   BalooTamma2_500Medium,
@@ -232,8 +231,6 @@ export default function RootLayout() {
     DMSans_400Regular,
     DMSans_500Medium,
     DMSans_700Bold,
-    Lora_400Regular_Italic,
-    Lora_500Medium_Italic,
     NotoSansKannada_400Regular,
     NotoSansKannada_500Medium,
     NotoSansKannada_700Bold,

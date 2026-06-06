@@ -136,7 +136,7 @@ export default function LearnScreen() {
     >
       <Watermark motif="rangoli" />
 
-      {/* Header — "Your journey" + italic line + hairline */}
+      {/* Header — "Your journey" + subtitle line + hairline */}
       <View
         style={{
           paddingTop: insets.top + Spacing.sm,
@@ -160,7 +160,7 @@ export default function LearnScreen() {
         </Text>
         <Text
           style={{
-            fontFamily: Fonts.lora.italic,
+            fontFamily: Fonts.dmSans.bold,
             fontSize: moderateScale(13),
             color: Colors.tertiary,
             marginTop: moderateScale(1),
@@ -289,7 +289,7 @@ function LessonRowView({
             marginTop: moderateScale(1),
           }}
           maxFontSizeMultiplier={1.3}
-          numberOfLines={1}
+          numberOfLines={2}
         >
           {row.subtitle}
         </Text>
@@ -305,7 +305,14 @@ function LessonRowView({
         <Icons.info size={moderateScale(18)} color={Colors.tertiary} />
       </Pressable>
 
-      <View style={{ marginLeft: moderateScale(4) }}>
+      <View
+        style={{
+          marginLeft: moderateScale(4),
+          width: moderateScale(32),
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         {isDone ? (
           <View
             style={{

@@ -82,7 +82,7 @@ export function TeachWordsPhase({ words, wordIndex, onAdvance }: TeachWordsPhase
         >
           <Text
             style={{
-              fontFamily: Fonts.lora.italic,
+              fontFamily: Fonts.dmSans.bold,
               fontSize: moderateScale(42),
               lineHeight: moderateScale(54),
               color: Colors.onSurface,
