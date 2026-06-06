@@ -38,7 +38,9 @@ Loads fonts, sets audio mode (`playsInSilentModeIOS: true`), probes Kannada TTS 
 
 | Path | File | Group layout | Header | Notes |
 |---|---|---|---|---|
-| `/(auth)/login` | [login.tsx](../../app/%28auth%29/login.tsx) | Stack, `headerShown: false`, bg `Colors.surface` | none | Email/password via Supabase |
+| `/(auth)/login` | [login.tsx](../../app/%28auth%29/login.tsx) | Stack, `headerShown: false`, bg `Colors.surface` | none | Email/password via Supabase; "Forgot password?" link (login mode) |
+| `/(auth)/forgot-password` | [forgot-password.tsx](../../app/%28auth%29/forgot-password.tsx) | ↑ | Screen-owned back chip | Request reset email. See [spec_password_reset](../../spec_docs/Sameecha/spec_password_reset.md). |
+| `/(auth)/reset-password` | [reset-password.tsx](../../app/%28auth%29/reset-password.tsx) | ↑ | Screen-owned back chip | Deep-link landing; exchanges `code`, sets new password. See [spec_password_reset](../../spec_docs/Sameecha/spec_password_reset.md). |
 | `/(tabs)/` | [index.tsx](../../app/%28tabs%29/index.tsx) | Custom `TabBar`, `headerShown: false` | none | Home |
 | `/(tabs)/learn` | [learn.tsx](../../app/%28tabs%29/learn.tsx) | ↑ | none | Lesson catalog |
 | `/(tabs)/practice` | [practice.tsx](../../app/%28tabs%29/practice.tsx) | ↑ | none | Games menu |
@@ -77,6 +79,9 @@ Decision matrix:
 | ✅ | ❌ | `onboarding` | stay |
 | ✅ | ✅ | `(auth)` or `onboarding` | redirect to `/(tabs)` |
 | ✅ | ✅ | other | stay |
+| ✅ (recovery) | — | `(auth)/reset-password` | **stay** — no redirect; screen owns exit after password is set |
+
+**Reset-password exception:** while the user is on `(auth)/reset-password`, an active (recovery) session must not trigger any redirect. `AppGate` early-returns when `session && segments[1] === 'reset-password'`, so neither the onboarded→`/(tabs)` nor the un-onboarded→`/onboarding/welcome` rule fires; the screen calls `router.replace(...)` itself on success. See [spec_password_reset](../../spec_docs/Sameecha/spec_password_reset.md).
 
 Hydration: both `useUserStore.isHydrated` AND `useProgressStore.isHydrated` must be true before `AppGate` redirects. Otherwise stale persisted state may cause flicker.
 
@@ -89,7 +94,7 @@ User-switch reset: AppGate compares `session.user.id` against `useUserStore.user
 `[LOCKED]` — scheme matches [app.json](../app.json). _Renamed `kannada-baa` → `kannada-beku` (owner-approved 2026-06-04, app rebrand)._
 
 - **Scheme:** `kannada-beku` (declared in [app.json](../app.json)).
-- **Custom linking config:** none. All routes are file-based and addressable via path.
+- **Custom linking config:** the password-recovery link (`Linking.createURL('reset-password')`, allow-listed in Supabase) opens `(auth)/reset-password`, which manually exchanges the `?code=` param for a session (`detectSessionInUrl` stays `false`). First and only deep-link handler. See [spec_password_reset](../../spec_docs/Sameecha/spec_password_reset.md). All other routes are file-based and addressable via path.
 
 > **TODO:** Universal links / Android App Links (`https://`) — needed for marketing? Out of MVP?
 
@@ -114,6 +119,7 @@ Per-flow rules:
 |---|---|---|
 | `(tabs)` (home, learn, practice, profile) | none | n/a — root tabs |
 | `(auth)/login` | none | first screen of its flow |
+| `(auth)/forgot-password`, `(auth)/reset-password` | screen-owned back chip (`ExitBackButton skipConfirm`) | Plain `router.back()` — nothing committed yet |
 | `/onboarding/welcome` | none | first onboarding step; no meaningful prior route |
 | `/onboarding/{name,goal,motivation,commitment,basics}` | inline Back/Continue pair (existing) | `router.back()` — no confirm; selections are not yet committed to the store |
 | `/guide` (voluntary re-entry) | screen-owned back chip | Plain `router.back()` — read-only surface, nothing to lose. See [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md). |
@@ -164,7 +170,18 @@ Named multi-screen flows. Each names entry → exit.
 2. Browse 3 groups → tap a phrase → TTS plays
 3. Back out via header/swipe
 
-> **TODO:** J5+ — heritage flow, profile edit flow.
+### J5: Reset a forgotten password
+
+`[LOCKED]` — see [spec_password_reset](../../spec_docs/Sameecha/spec_password_reset.md).
+
+1. `/(auth)/login` (login mode) → tap "Forgot password?" → `/(auth)/forgot-password`
+2. Enter email → `resetPasswordForEmail` → "check your email" confirmation (no account-existence leak); Resend available
+3. User opens the email → taps the link → app deep-links to `/(auth)/reset-password`
+4. App exchanges `?code=` → recovery session; `AppGate` early-returns (no redirect)
+5. Set + confirm new password → `updateUser({ password })` → `passwordUpdated`
+6. Screen `router.replace`s into the app via the onboarded/un-onboarded split
+
+> **TODO:** J6+ — heritage flow, profile edit flow.
 
 ## Open questions
 
