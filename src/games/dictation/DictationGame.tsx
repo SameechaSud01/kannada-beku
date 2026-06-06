@@ -169,7 +169,7 @@ function DictationGameInner({ bank }: { bank: DictationWord[] }) {
               {currentWord.kn}
             </Text>
             {currentWord.phonetic ? (
-              <Text style={{ fontFamily: Fonts.lora.italic, fontSize: moderateScale(14), color: Colors.tertiary }}>
+              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: Colors.tertiary }}>
                 {currentWord.phonetic}
               </Text>
             ) : null}

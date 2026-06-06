@@ -4,7 +4,9 @@ import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
+import { Icons } from '../../constants/icons';
 import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
+import { LipButton } from '../ui/LipButton';
 
 interface RealWorldPhaseProps {
   prompt: string;
@@ -50,7 +52,7 @@ export function RealWorldPhase({ prompt, title, onAdvance }: RealWorldPhaseProps
         >
           <Text
             style={{
-              fontFamily: Fonts.dmSans.bold,
+              fontFamily: Fonts.baloo.bold,
               fontSize: moderateScale(22),
               lineHeight: moderateScale(30),
               color: Colors.onSecondaryContainer,
@@ -69,30 +71,7 @@ export function RealWorldPhase({ prompt, title, onAdvance }: RealWorldPhaseProps
           gap: Spacing.md,
         }}
       >
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="I'll try this"
-          onPress={onAdvance}
-          style={({ pressed }) => ({
-            backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
-            borderRadius: Radius.md,
-            paddingVertical: Spacing.md + moderateScale(2),
-            alignItems: 'center',
-            transform: [{ scale: pressed ? 0.96 : 1 }],
-            minHeight: moderateScale(44),
-            justifyContent: 'center',
-          })}
-        >
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(15),
-              color: Colors.onPrimary,
-            }}
-          >
-            I'll try this
-          </Text>
-        </Pressable>
+        <LipButton label="I'll try this" onPress={onAdvance} icon={Icons.forward} />
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Skip for now"

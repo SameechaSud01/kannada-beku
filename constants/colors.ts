@@ -7,12 +7,14 @@
  */
 export const Colors = {
   // ── Surface tonal stack (§2, §4) ───────────────────────
-  surface:                 '#fbfbe2', // root page background
+  // Near-white neutral ramp (2026-06-04, spec_playful_redesign Amendment D —
+  // owner sign-off). Faint warm whisper keeps it off clinical white.
+  surface:                 '#fcfcfa', // root page background (near-white)
   surfaceContainerLowest:  '#ffffff', // glassmorphism only (70% opacity + blur)
-  surfaceContainerLow:     '#f5f5dc', // secondary content zones, tab bar
-  surfaceContainerHigh:    '#eaead1', // selection chips bg, badge containers
-  surfaceContainerHighest: '#e4e4cc', // interactive cards
-  surfaceDim:              '#dbdcc3', // backdrop for lifted cards, locked state
+  surfaceContainerLow:     '#f4f4f0', // secondary content zones, tab bar
+  surfaceContainerHigh:    '#ececea', // selection chips bg, badge containers
+  surfaceContainerHighest: '#e6e6e3', // interactive cards
+  surfaceDim:              '#dcdcd9', // backdrop for lifted cards, locked state
 
   // ── Primary — Mysore Red (§2, §5) ──────────────────────
   primary:           '#91001b', // CTA gradient start, active states, focus underline
@@ -34,4 +36,12 @@ export const Colors = {
 
   // ── Error states (MODALS §5) ───────────────────────────
   errorContainerLow: '#f3dada', // pale Mysore red — error-state card bg, toast icon bg
+
+  // ── Playful redesign — additive tokens (DESIGN.md, 2026-06-04) ──
+  // Strictly red / gold / deep-gold / warm-neutral. No blue/green/teal/coral.
+  goldBright: '#ffd24d', // lighter gold highlight (gradients, hi state)
+  goldLip:    '#c98a00', // button "lip" / ring on gold chunky buttons
+  redLip:     '#6e0014', // deep maroon — bottom "lip" on red buttons; 4th Practice card
+  textFaint:  '#908d76', // hints, locked labels (faintest text tier)
+  hairline:   'rgba(27,29,14,0.08)', // top-bar border + card insets ("felt, not seen")
 };

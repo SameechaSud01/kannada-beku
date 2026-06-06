@@ -63,7 +63,7 @@ const OptionButton: React.FC<Props> = ({ option, state, onPress, reserveTag }) =
         {option.tr ? (
           <Text
             style={{
-              fontFamily: Fonts.lora.italic,
+              fontFamily: Fonts.dmSans.bold,
               fontSize: moderateScale(18),
               textAlign: 'center',
               color: Colors.onSurface,

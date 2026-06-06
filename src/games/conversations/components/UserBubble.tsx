@@ -35,7 +35,7 @@ const UserBubble: React.FC<Props> = ({ option, correct }) => (
       </Text>
       {option.tr ? (
         <Text
-          style={{ fontFamily: Fonts.lora.italic, fontSize: moderateScale(13), color: Colors.tertiary, textAlign: 'right' }}
+          style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(13), color: Colors.tertiary, textAlign: 'right' }}
           maxFontSizeMultiplier={1.3}
         >
           {option.tr}

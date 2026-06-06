@@ -49,7 +49,9 @@ import {
   IconPlayerPlayFilled,
   IconSparkles,
   IconStack2,
+  IconStarFilled,
   IconTargetArrow,
+  IconTrophy,
   IconUrgent,
   IconUser,
   IconVolume,
@@ -117,6 +119,10 @@ export const Icons = {
   sparkle: IconSparkles,
   flame: IconFlame,
   lock: IconLock,
+
+  // Celebration overlay (spec_playful_redesign §Celebration)
+  trophy: IconTrophy, // lesson complete
+  star: IconStarFilled, // level up
 } as const;
 
 export type IconName = keyof typeof Icons;

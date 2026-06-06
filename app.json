@@ -20,7 +20,8 @@
         "NSUserNotificationsUsageDescription": "Kannada Beku sends one daily reminder at the time you choose so you keep your streak.",
         "ITSAppUsesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.samsud01.kannadabeku"
+      "bundleIdentifier": "com.samsud01.kannadabeku",
+      "buildNumber": "3"
     },
     "android": {
       "adaptiveIcon": {
@@ -33,7 +34,8 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.samsud01.kannadabeku"
+      "package": "com.samsud01.kannadabeku",
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -42,7 +42,7 @@ export function GlyphCard({ kannada, transliteration, example }: GlyphCardProps)
       </Text>
       <Text
         style={{
-          fontFamily: Fonts.lora.mediumItalic,
+          fontFamily: Fonts.dmSans.bold,
           fontSize: moderateScale(20),
           color: Colors.tertiary,
           marginTop: Spacing.xs,

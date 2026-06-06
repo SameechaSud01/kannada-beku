@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kannada Baa — Gamification Analysis (7 Patterns)</title>
+<style>
+  :root{
+    --ink:#1d2520; --muted:#5d6b62; --line:#e2e8e2; --bg:#fafbf9;
+    --green:#1f7a4d; --green-soft:#e7f3ec; --gold:#b8860b; --gold-soft:#f8f1dd;
+    --red:#a4332a; --red-soft:#f7e8e6; --amber:#9a6b00; --amber-soft:#fbf2dd;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6; font-size:17px;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:48px 24px 96px}
+  h1{font-size:32px; line-height:1.2; margin:0 0 6px; letter-spacing:-0.4px}
+  .sub{color:var(--muted); font-size:16px; margin:0 0 32px}
+  h2{font-size:23px; margin:48px 0 4px; letter-spacing:-0.2px; padding-top:8px}
+  h3{font-size:18px; margin:28px 0 6px}
+  p{margin:12px 0}
+  a{color:var(--green)}
+  code{background:#eef3ee; padding:1px 6px; border-radius:5px; font-size:14px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .lead{font-size:18px}
+  .callout{background:var(--card); border:1px solid var(--line); border-left:4px solid var(--green);
+    border-radius:10px; padding:16px 20px; margin:20px 0}
+  .callout.warn{border-left-color:var(--amber)}
+  .callout.lock{border-left-color:var(--red)}
+  .callout h4{margin:0 0 6px; font-size:15px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted)}
+  table{border-collapse:collapse; width:100%; margin:18px 0; font-size:15px; background:var(--card);
+    border:1px solid var(--line); border-radius:10px; overflow:hidden}
+  th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{background:#f1f5f1; font-size:13px; text-transform:uppercase; letter-spacing:0.4px; color:var(--muted)}
+  tr:last-child td{border-bottom:none}
+  .pill{display:inline-block; padding:2px 10px; border-radius:999px; font-size:12.5px; font-weight:600; white-space:nowrap}
+  .ok{background:var(--green-soft); color:var(--green)}
+  .gap{background:var(--red-soft); color:var(--red)}
+  .partial{background:var(--amber-soft); color:var(--amber)}
+  .lockpill{background:#ecebf3; color:#54489a}
+  .patternbox{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:4px 24px 20px; margin:22px 0}
+  .verdict{font-weight:600}
+  .ref{color:var(--muted); font-size:14px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  ol.prio{counter-reset:p; list-style:none; padding:0}
+  ol.prio>li{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:18px 22px 18px 64px; margin:16px 0; position:relative}
+  ol.prio>li:before{counter-increment:p; content:counter(p); position:absolute; left:18px; top:18px;
+    width:30px; height:30px; border-radius:50%; background:var(--green); color:#fff;
+    font-weight:700; display:flex; align-items:center; justify-content:center; font-size:15px}
+  .meta{font-size:13.5px; color:var(--muted); margin-top:8px}
+  .meta b{color:var(--ink)}
+  hr{border:none; border-top:1px solid var(--line); margin:40px 0}
+  .tag{font-size:12px; font-weight:600; padding:1px 7px; border-radius:5px; background:#eef3ee; color:var(--green)}
+  .small{font-size:14.5px; color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Gamification, re-examined</h1>
+  <p class="sub">Mapping Kannada Baa's current mechanics against Tim Gabe's 7 research-backed patterns · 2026-06-04</p>
+
+  <p class="lead">Short version: <strong>the app is already on the right side of this video's central thesis.</strong> It has deliberately avoided the "PBL theater" (no leaderboards, hidden XP, no badge tree) that the talk spends its first third dismantling. The biggest wins aren't in <em>adding</em> gamification — they're in surfacing two things the code already <em>computes but never shows the user</em>: <strong>daily-goal closure</strong> and <strong>evidence of competence</strong>.</p>
+
+  <div class="callout">
+    <h4>Why this is an analysis, not a patch</h4>
+    <p style="margin:0">Per <code>.claude/CLAUDE.md</code>, features can't be built from a chat prompt — each needs a per-feature spec doc in <code>spec_docs/</code> that conforms to the <code>docs/foundation/</code> locks. Several ideas below also brush against <span class="pill lockpill">[LOCKED]</span> decisions. So this is a <strong>prioritized menu</strong>; the recommended next step is drafting specs for the top 2–3, not editing components.</p>
+  </div>
+
+  <h2>Scorecard — where the app stands today</h2>
+  <table>
+    <tr><th>#</th><th>Pattern</th><th>Today</th><th>One-line read</th></tr>
+    <tr><td>1</td><td>PBL Fallacy<br><span class="small">avoid points/badges/leaderboards</span></td><td><span class="pill ok">Aligned</span></td><td>No leaderboards (locked non-goal), XP hidden, no badges. Already passing.</td></tr>
+    <tr><td>2</td><td>Engineering Winnability<br><span class="small">winnable micro-competitions</span></td><td><span class="pill partial">Latent</span></td><td>Per-item personal-best is stored server-side but never framed as "beat your last."</td></tr>
+    <tr><td>3</td><td>S-Curve Problem<br><span class="small">don't over-gamify</span></td><td><span class="pill ok">Aligned</span></td><td>Restrained; suppression logic already prevents reward pile-up. Keep it lean.</td></tr>
+    <tr><td>4</td><td>Streak Trap<br><span class="small">obligation &gt; motivation</span></td><td><span class="pill partial">At risk</span></td><td>Streak is <span class="pill lockpill">locked-in</span> &amp; central; some copy leans on "don't lose it" loss-aversion.</td></tr>
+    <tr><td>5</td><td>Variable Reward Magnitude</td><td><span class="pill gap">Absent</span></td><td>All rewards fixed (20/10 XP, fixed milestones). No anticipation loop — by design caution.</td></tr>
+    <tr><td>6</td><td>Completion Drive<br><span class="small">Gestalt closure / rings</span></td><td><span class="pill partial">Half-built</span></td><td>Lesson ring exists; the daily-goal ring only appears <em>after</em> you finish. The open ring is the lever.</td></tr>
+    <tr><td>7</td><td>Competence vs Badge Theater</td><td><span class="pill gap">Biggest gap</span></td><td>Shows scores &amp; quantity ("words learned"), almost no <em>mastery</em> evidence. Maps directly to the app's mission.</td></tr>
+  </table>
+
+  <hr>
+
+  <h2>Pattern by pattern</h2>
+
+  <div class="patternbox">
+    <h3>1 · The PBL Fallacy — already won</h3>
+    <p><b>Video:</b> Points, badges and leaderboards are the scoreboard, not the game; they incentivize quantity over quality (LinkedIn, Foursquare walked them back).</p>
+    <p><b>In the code:</b> Leaderboards and "streak shaming / leaderboard pressure" are a <span class="pill lockpill">[LOCKED]</span> <em>non-goal</em> in <span class="ref">docs/foundation/SCOPE.md</span>. <code>xp</code> is awarded in <span class="ref">stores/progressStore.ts</span> (20 pts ≥80%, else 10) but <strong>never rendered anywhere</strong> — grep finds zero XP UI. No badge / trophy / achievement system exists.</p>
+    <p class="verdict">Verdict: <span class="pill ok">Aligned by design.</span> The instinct to keep XP invisible is exactly right. Don't "fix" it by surfacing a points counter. The only cleanup worth considering: XP is now near-vestigial (it feeds <code>total_score</code> server-side but drives no user-facing behavior) — flag it for a decision rather than quietly growing more logic around it.</p>
+  </div>
+
+  <div class="patternbox">
+    <h3>2 · Engineering Winnability — the latent win</h3>
+    <p><b>Video:</b> Strava beats impossible global leaderboards with hyper-local segments — small, <em>winnable</em> competitions. The unit that's winnable for a solo learner is <strong>your own past self</strong>.</p>
+    <p><b>In the code:</b> The data is already there. <code>opposites_progress</code>, <code>dictation_progress</code>, <code>image_match_progress</code> all store per-item <code>is_correct</code> / <code>attempts</code> with <em>personal-best</em> UPSERT semantics (the <code>record_*_attempt</code> RPCs in <span class="ref">docs/foundation/STATE.md</span>). But the game result screens (<span class="ref">src/games/*/components/ResultScreen.tsx</span>) show an <strong>ephemeral session score</strong> with no memory — "12" with no "your best was 9." The win is computed and thrown away.</p>
+    <p class="verdict">Verdict: <span class="pill partial">Latent — cheap to surface.</span> "You beat your last run on this set" / "new personal best" is winnable, self-referential, and never shames. It needs the runner to read prior progress before the session and compare. Respects the locked no-leaderboard non-goal because the only opponent is yesterday-you.</p>
+  </div>
+
+  <div class="patternbox">
+    <h3>3 · The S-Curve Problem — stay restrained</h3>
+    <p><b>Video:</b> More features ≠ more engagement; Habitica-style over-gamification causes cognitive overload and erodes the core utility.</p>
+    <p><b>In the code:</b> The app is already disciplined. There's exactly one celebration stack (streak takeover → daily-goal dialog), and it has <em>suppression logic</em>: a streak milestone suppresses the goal dialog the same lesson (<span class="ref">components/lesson/DoneCard.tsx</span>, INTERACTIONS M4/M7). That's the right reflex.</p>
+    <p class="verdict">Verdict: <span class="pill ok">Aligned.</span> This pattern is mostly a <em>guardrail on the other six</em>: when you add competence evidence (#7) and goal rings (#6), don't also add badges, levels, currencies and a shop. Every proposal below is additive to one surface, not a new system. If two ideas land, kill XP (#1) to keep net complexity flat.</p>
+  </div>
+
+  <div class="patternbox">
+    <h3>4 · The Streak Trap — reframe, don't remove</h3>
+    <p><b>Video:</b> Streaks flip from motivation to obligation; increasingly flagged by regulators for fostering compulsive use.</p>
+    <p><b>In the code:</b> Streak is <span class="pill lockpill">[LOCKED]</span> in <span class="ref">docs/foundation/STATE.md</span> and central to the loop — it's the first thing on home and profile. The intent is healthy: SCOPE explicitly bans "streak shaming," and the streak is defined as "did you practice today?" not "how many times did you tap done?" <strong>But the framing leans loss-averse in places:</strong> <code>GoalCompleteDialog</code> says the streak is "<em>still alive</em>" with a flame icon — that's the "don't lose it" lever the video warns about, not the "look how far you've come" lever.</p>
+    <div class="callout lock"><h4>Lock boundary</h4><p style="margin:0">You <strong>cannot remove or replace</strong> the streak (locked), and shouldn't propose the opposite. What's in bounds and fully consistent with "warm and forgiving": <strong>copy and emphasis</strong>. Reframe milestone/goal language from "alive / don't break it" toward competence ("you've practiced 7 days — phrases are sticking"). The takeover copy already does some of this well; the goal-dialog copy is the laggard.</p></div>
+    <p class="verdict">Verdict: <span class="pill partial">At risk via tone.</span> Cheapest possible fix — a copy pass on two strings — and it's arguably a bug-fix against the locked "no shaming" principle rather than a new feature. A <em>streak-freeze / forgiveness</em> mechanic would be a heavier, spec-worthy way to defuse the trap.</p>
+  </div>
+
+  <div class="patternbox">
+    <h3>5 · Variable Reward Magnitude — handle with care</h3>
+    <p><b>Video:</b> Anticipation of a <em>variable</em> reward sustains engagement better than loss aversion (streaks).</p>
+    <p><b>In the code:</b> Everything is fixed: 20/10 XP, a fixed milestone list, a <em>deterministic</em> daily fun-fact (<span class="ref">app/(tabs)/index.tsx</span> picks the fact by day index, not randomly). No anticipation loop exists.</p>
+    <div class="callout warn"><h4>Tension with the brand</h4><p style="margin:0">Variable-ratio rewards are the engine of slot machines, and the app's whole identity is "warm, forgiving, not addictive." Pure variable-magnitude points would betray that. The <em>safe</em> reading: make the reward a <strong>variable piece of culture/competence</strong>, not a variable number. E.g. finishing a lesson reveals one of several real Karnataka cultural notes / a "you can now say…" phrase you didn't expect. The variability is in <em>what you learn next</em>, which serves the mission instead of exploiting it.</p></div>
+    <p class="verdict">Verdict: <span class="pill gap">Absent — and mostly should stay that way.</span> Recommend the <em>narrow</em> version only (surprise cultural reveal tied to the existing fun-fact surface), explicitly <strong>not</strong> variable points. Lowest priority; easy to overdo.</p>
+  </div>
+
+  <div class="patternbox">
+    <h3>6 · Completion Drive — finish the ring you started</h3>
+    <p><b>Video:</b> Apple Watch rings exploit the Gestalt principle of closure — an open ring nags you to close it, driving a measured 49.5% behavior change.</p>
+    <p><b>In the code:</b> The app <em>has</em> rings but uses them for the wrong moment. The home screen shows a lesson-progress ring ("47% · 4 of 8 lessons") — good, that's closure on the curriculum. But the <strong>daily-goal</strong> ring only appears <em>inside <code>GoalCompleteDialog</code>, after you've already finished</em>. During the day, <code>todayMinutes</code> is tracked in <span class="ref">stores/progressStore.ts</span> but <strong>never shown</strong> — so there's no <em>open</em> ring pulling you back. You only see the ring once it's already closed, which is precisely backwards from the Watch mechanic.</p>
+    <p class="verdict">Verdict: <span class="pill partial">Half-built — highest ROI.</span> Put a live daily-goal ring on home (and/or profile) that fills as <code>todayMinutes</code> climbs toward <code>dailyGoalMinutes</code>. The state is already persisted with date-rollover; this is mostly a new read + a ring component you already have a version of. This is the single most research-backed lever in the talk and it's ~80% wired.</p>
+  </div>
+
+  <div class="patternbox">
+    <h3>7 · Competence vs Badge Theater — the mission-shaped gap</h3>
+    <p><b>Video:</b> Peloton and Chess.com retain by showing <em>evidence of skill development</em> (mastery), not recognition badges.</p>
+    <p><b>In the code:</b> The app shows <strong>quantity and scores, not mastery</strong>. Profile surfaces "Words learned" (a cumulative count, <code>totalPhrasesLearned</code>) and "Overall progress %" — both are scoreboards. Games show a session score and a tier label ("Perfect!" / "Keep practising"), then forget it. Yet the per-item correctness history exists in <code>*_progress</code> tables, and the streak takeover already gestures at competence ("phrases are starting to feel like yours") — the vocabulary is there, the surface isn't.</p>
+    <div class="callout"><h4>Why this one matters most</h4><p style="margin:0">The mission (SCOPE) is "<em>belong, not pass a test</em>." Competence evidence — "phrases <strong>you can actually use now</strong>," accuracy on greetings climbing 60%→90% — <em>is</em> the product promise made visible. A badge says "we recognize you." Mastery evidence says "you can do this thing you couldn't do." That's the same axis the app already sells.</p></div>
+    <p class="verdict">Verdict: <span class="pill gap">Biggest gap, best fit.</span> Replace/augment "Words learned" with a mastery view: phrases at "learned vs getting there vs mastered" using existing per-item correctness. Heavier than #6 (needs an aggregation), but it's the truest to the brand and reuses data you're already writing. Note the locked overall-progress formula (50% lessons + 50% games, 3-game split) must stay — this would be a <em>new</em> mastery surface, not a redefinition of that %.</p>
+  </div>
+
+  <hr>
+
+  <h2>Prioritized recommendations</h2>
+  <p class="small">Ranked by (research-backed impact × fit with locked principles) ÷ effort. Every item is <strong>spec-gated</strong>: it needs a <code>spec_docs/</code> doc before any code, and must clear the <code>[LOCKED]</code> notes called out.</p>
+
+  <ol class="prio">
+    <li>
+      <strong>Live daily-goal ring on home</strong> <span class="tag">Pattern 6</span>
+      <p>Show an <em>open, filling</em> ring for <code>todayMinutes / dailyGoalMinutes</code> on the home screen — the Watch-ring closure lever. The state already persists with date-rollover; reuse the ring component pattern from the lesson ring / goal dialog.</p>
+      <p class="meta"><b>Effort:</b> Low–Med · <b>Touches:</b> <code>app/(tabs)/index.tsx</code>, a progress selector in <code>hooks/progress.ts</code> · <b>Lock check:</b> none direct; keep it suppressed/absent when no <code>dailyGoalMinutes</code> is set (it's optional). <b>Spec gate:</b> new <code>spec_daily_goal_ring.md</code>.</p>
+    </li>
+    <li>
+      <strong>"Beat your last" in game results</strong> <span class="tag">Pattern 2</span>
+      <p>On each game's result screen, compare this run to the stored personal-best and surface "New best on this set!" / "1 short of your best." Self-referential, winnable, never a leaderboard.</p>
+      <p class="meta"><b>Effort:</b> Med · <b>Touches:</b> <code>src/games/*/components/ResultScreen.tsx</code>, the <code>record_*_attempt</code> read path · <b>Lock check:</b> respects the locked no-leaderboard non-goal (opponent = past self). <b>Spec gate:</b> <code>spec_game_personal_best.md</code>.</p>
+    </li>
+    <li>
+      <strong>Mastery view replacing "Words learned"</strong> <span class="tag">Pattern 7</span>
+      <p>Aggregate per-item correctness into "phrases you can use now / getting there / mastered." Evidence of skill, not a count. The strongest mission fit in the list.</p>
+      <p class="meta"><b>Effort:</b> Med–High (needs aggregation, maybe a server view) · <b>Touches:</b> <code>app/(tabs)/profile.tsx</code>, new accessor in <code>services/api/</code> · <b>Lock check:</b> must NOT redefine the locked overall-progress % formula — this is a new surface alongside it. <b>Spec gate:</b> <code>spec_mastery_view.md</code>.</p>
+    </li>
+    <li>
+      <strong>Copy pass: streak framing from "don't lose it" → "look how far"</strong> <span class="tag">Pattern 4</span>
+      <p>Reword the loss-averse bits (<code>GoalCompleteDialog</code> "streak still alive", flame framing) toward competence. Arguably a bug-fix against the locked "no streak shaming" principle.</p>
+      <p class="meta"><b>Effort:</b> Trivial · <b>Touches:</b> copy in <code>GoalCompleteDialog</code> / <code>constants/copy.ts</code> · <b>Lock check:</b> cannot remove/alter the streak <em>mechanic</em> (locked) — copy only. <b>Spec gate:</b> arguably a copy-fix exception, but confirm since it's a behavior-adjacent tone change.</p>
+    </li>
+    <li>
+      <strong>Decide XP's fate</strong> <span class="tag">Pattern 1 / 3</span>
+      <p>XP is awarded but never shown and drives no behavior. Either give it a real job or retire the field — don't let dead reward-logic accrete. Keeps net complexity flat as #1–3 add surfaces.</p>
+      <p class="meta"><b>Effort:</b> Low (a decision + cleanup) · <b>Touches:</b> <code>stores/progressStore.ts</code>, <code>total_score</code> usage · <b>Lock check:</b> <code>useProgressStore</code> shape is <span class="pill lockpill">[LOCKED]</span> — removing a field needs owner sign-off + spec. <b>Spec gate:</b> note in an existing progress spec.</p>
+    </li>
+    <li>
+      <strong>Surprise cultural reveal on lesson complete</strong> <span class="tag">Pattern 5</span>
+      <p>The <em>only</em> safe variable-reward: finishing reveals one of several real Karnataka notes / an unexpected "you can now say…". Variability in <em>content</em>, never in points. Lowest priority, easiest to overdo.</p>
+      <p class="meta"><b>Effort:</b> Med · <b>Touches:</b> <code>DoneCard</code>, fun-fact surface · <b>Lock check:</b> keep it non-compulsive (brand). <b>Spec gate:</b> <code>spec_completion_reward.md</code>.</p>
+    </li>
+  </ol>
+
+  <hr>
+
+  <h2>Guardrails I'm holding to</h2>
+  <table>
+    <tr><th>Locked decision</th><th>Implication for these ideas</th></tr>
+    <tr><td>No leaderboards / streak shaming (SCOPE non-goal)</td><td>All "competition" is self-referential. No social ranking.</td></tr>
+    <tr><td>Streak mechanic (STATE)</td><td>Reframe copy only; never remove or invert it.</td></tr>
+    <tr><td>Overall-progress formula = 50% lessons + 50% games, 3-game split (STATE)</td><td>Mastery view is a <em>new</em> surface, not a redefinition of that %.</td></tr>
+    <tr><td><code>useProgressStore</code> shape (STATE)</td><td>Retiring <code>xp</code> needs owner sign-off + spec, not a quiet delete.</td></tr>
+    <tr><td>No-implementation-from-prompt (CLAUDE.md)</td><td>This doc is the input to specs, not a green light to code.</td></tr>
+  </table>
+
+  <h2>Suggested next step</h2>
+  <p>Pick from the top three. My recommendation: <strong>draft <code>spec_daily_goal_ring.md</code> (#1) first</strong> — it's the highest research-backed impact, lowest effort, and nearly all the state already exists. <strong>#3 (mastery view)</strong> is the one most worth doing for the brand even though it's heavier. Say the word and I'll draft either spec against the foundation docs for your review before any code.</p>
+
+  <p class="small" style="margin-top:40px">Sources in repo: <code>docs/foundation/{SCOPE,STATE,INTERACTIONS}.md</code> · <code>stores/progressStore.ts</code> · <code>components/lesson/DoneCard.tsx</code> · <code>components/modals/instances/{StreakMilestoneTakeover,GoalCompleteDialog}.tsx</code> · <code>app/(tabs)/{index,profile}.tsx</code> · <code>src/games/{opposites,dictation,imagematch}/</code></p>
+
+</div>
+</body>
+</html>

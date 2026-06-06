@@ -67,7 +67,7 @@ export function ExitBackButton({
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel="Back"
+      accessibilityLabel="Exit lesson"
       hitSlop={12}
       style={({ pressed }) => ({
         ...floatingStyle,

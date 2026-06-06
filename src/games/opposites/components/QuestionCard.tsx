@@ -45,7 +45,7 @@ const QuestionCard: React.FC<Props> = ({ word, tr, meaning, streak }) => {
     {tr ? (
       <Text
         style={{
-          fontFamily: Fonts.lora.italic,
+          fontFamily: Fonts.dmSans.bold,
           fontSize: moderateScale(40),
           lineHeight: moderateScale(52),
           textAlign: 'center',

@@ -19,12 +19,12 @@ const COPY: Record<Mode, { title: string; subtitle: string; cta: string }> = {
   login: {
     title: 'Welcome back',
     subtitle: 'Log in to continue your Kannada journey.',
-    cta: 'LOG IN',
+    cta: 'Log in',
   },
   signup: {
     title: 'Create your account',
     subtitle: 'Sign up to start learning Kannada today.',
-    cta: 'SIGN UP',
+    cta: 'Sign up',
   },
 };
 
@@ -118,7 +118,7 @@ export default function LoginScreen() {
           </Text>
           <Text
             style={{
-              fontFamily: Fonts.lora.italic,
+              fontFamily: Fonts.baloo.medium,
               fontSize: moderateScale(20),
               color: Colors.primaryContainer,
             }}

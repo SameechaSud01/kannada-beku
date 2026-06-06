@@ -100,7 +100,7 @@ export function GoalCompleteDialog({
       </Text>
       <Text
         style={{
-          fontFamily: Fonts.lora.italic,
+          fontFamily: Fonts.dmSans.bold,
           fontSize: moderateScale(14),
           lineHeight: moderateScale(20),
           color: Colors.tertiary,

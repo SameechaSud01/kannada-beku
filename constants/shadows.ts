@@ -45,6 +45,25 @@ export const Shadows = {
     shadowRadius: 22,
     elevation: 12,
   } satisfies ShadowToken,
+
+  // Playful redesign — floating bottom-nav pill (spec_playful_redesign §Spacing,
+  // "0 8px 24px rgba(27,29,14,0.16)"). onSurface ink-tinted soft shadow.
+  floatingNav: {
+    shadowColor: Colors.onSurface,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.16,
+    shadowRadius: 24,
+    elevation: 12,
+  } satisfies ShadowToken,
+
+  // Active tab — solid red circle, soft red glow.
+  tabActive: {
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
+    elevation: 8,
+  } satisfies ShadowToken,
 } as const;
 
 export type ShadowName = keyof typeof Shadows;

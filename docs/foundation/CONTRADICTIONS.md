@@ -105,6 +105,34 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 
 **Resolution owed:** Either (a) re-list Image Match once a better mechanic ships (restore the one line in `GAMES`), or (b) if it stays hidden, get owner sign-off to amend the locked formula to 2 games (opposites + dictation) via migration — a `[LOCKED]` change, not to be done silently. Until one lands, treat the capped overall progress as known.
 
+### C14 — Playful redesign code shipped on `app_redesign`; pending final on-device verification
+
+**What's wrong (narrowing):** [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md) (signed off 2026-06-04) amends locked decisions — DESIGN.md typography (Baloo, Amendment A), type scale, `TabBar` (floating pill, Amendment B), additive colour tokens, the near-white surface ramp (Amendment D), and [spec_text_hierarchy.md](../../spec_docs/Sameecha/spec_text_hierarchy.md) §4 (Emergency English-first, Amendment C). Phases 1–8 are now implemented on the `app_redesign` branch:
+
+- ✅ Deps + tokens + Baloo font-load; `fonts.ts` `baloo` group + `TypeScale`; `colors.ts` additive tokens + near-white ramp.
+- ✅ Shared `components/ui/` primitives: `BrandGradient`, `LipButton`, `ProgressRing`, `AudioOrb`, `Watermark`, `Celebration`, `StreakPill`.
+- ✅ `TabBar` is the floating icon-only red pill.
+- ✅ Home / Learn / Practice / Profile restyled; lesson runner restyled with `LipButton` footers, `AnswerOption` correct/wrong micro-interactions, and the lesson-complete `Celebration` (streak unified to `Celebration`, locked copy reused).
+- ✅ Emergency is English-first with the gradient header. Welcome has the gradient treatment.
+
+**Still open:** (a) final **end-to-end on-device verification** on iPhone SE + a larger device (owner is testing phase-by-phase); (b) optional items intentionally deferred — the Discord-style loading screen, the `AudioOrb` ping on lesson audio buttons, and a user-facing watermark/reduced-motion **settings toggle** (defaults are hard-coded per spec: watermark on/Rangoli, Noto Kannada, near-white bg, reduced-motion honoured in `Celebration`). The `level` Celebration variant is built but unwired (no real level system).
+
+**Owning spec:** [spec_playful_redesign.md](../../spec_docs/Sameecha/spec_playful_redesign.md).
+
+**Resolution owed:** Close once the owner confirms the full flow on device. Then merge `app_redesign` → `main`. Decide separately whether to build the deferred optional items.
+
+### C15 — Transliteration font moved off Lora italic → DM Sans bold
+
+**What's wrong:** [spec_ui_refinement.md](../../spec_docs/Sameecha/spec_ui_refinement.md) Item 1 (owner sign-off 2026-06-06) amends [DESIGN.md](DESIGN.md#typography) (ethos "One script per font" bullet, Typography families table, "why this split", and the `translit` type-scale row) and the redesign's Amendment A: transliterations render in the **brand sans** (`Fonts.dmSans.bold`, full-strength) distinguished from the muted English gloss by **weight + colour**, instead of Lora serif-italic. The `Fonts.lora` group and the `Lora_*` `useFonts` load are retired.
+
+**Status of code:** The ~24 call-sites, the `TypeScale.translit` token ([fonts.ts](../../constants/fonts.ts)), the `Fonts.lora` removal, and the `app/_layout.tsx` font-load + import are **swept on branch `app_redesign`** (Phase A of spec_ui_refinement.md). DESIGN.md is amended in the same change. **Pending end-to-end on-device verification** on iPhone SE + a larger device.
+
+**Why it matters:** Until verified on device, the visual result of the font swap (especially the large flashcard transliteration and the translit-vs-gloss separation now carried by weight + colour rather than italic slant) is unconfirmed. Anyone editing teaching components should use `Fonts.dmSans.bold` (or `TypeScale.translit`) for transliteration — not reach for the retired Lora.
+
+**Owning spec:** [spec_ui_refinement.md](../../spec_docs/Sameecha/spec_ui_refinement.md) (Item 1), [DESIGN.md](DESIGN.md#typography).
+
+**Resolution owed:** Owner confirms the flashcard / phrase-builder / recap / games read well on device; then close. Ships on `app_redesign` ahead of the C14 merge to `main`.
+
 ## Resolved
 
 ### C10 — `emergency_phrases` table now read by app code ✅

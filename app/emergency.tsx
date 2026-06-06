@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -8,66 +9,81 @@ import { Spacing, Radius } from '../constants/spacing';
 import { Icons } from '../constants/icons';
 import { deviceTtsAudioService } from '../services/audio/deviceTtsAudioService';
 import { useEmergencyPhrases } from '../hooks/useEmergencyPhrases';
-
-function GroupIcon({ id }: { id: string }) {
-  const color = Colors.primary;
-  if (id === 'auto') return <Icons.emAuto size={18} color={color} />;
-  if (id === 'trouble') return <Icons.emHelp size={18} color={color} />;
-  return <Icons.emBasic size={18} color={color} />;
-}
+import { BrandGradient } from '../components/ui/BrandGradient';
+import { AudioOrb } from '../components/ui/AudioOrb';
 
 export default function EmergencyScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { data: groups, isLoading, isError, refetch } = useEmergencyPhrases();
+  const [activeGroup, setActiveGroup] = useState(0);
+  const [playingId, setPlayingId] = useState<string | null>(null);
 
-  const play = (text: string) => {
+  const play = (id: string, text: string) => {
+    setPlayingId(id);
     deviceTtsAudioService
       .play(text)
-      .catch((err) => console.warn('[audio] emergency phrase failed', err));
+      .catch((err) => console.warn('[audio] emergency phrase failed', err))
+      .finally(() => setPlayingId((cur) => (cur === id ? null : cur)));
   };
+
+  const current = groups?.[activeGroup];
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.surface }}>
-      {/* Header — back arrow + title, no hamburger, no tab bar change */}
-      <View
+      {/* Brand-gradient header — rounded bottom corners */}
+      <BrandGradient
         style={{
           paddingTop: insets.top + Spacing.sm,
-          paddingBottom: Spacing.md,
-          paddingHorizontal: Spacing.xxl,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: moderateScale(14),
+          paddingBottom: Spacing.xl,
+          paddingHorizontal: Spacing.lg,
+          borderBottomLeftRadius: Radius.xl,
+          borderBottomRightRadius: Radius.xl,
         }}
       >
-        <Pressable
-          onPress={() => router.back()}
-          accessibilityRole="button"
-          accessibilityLabel="Back"
-          hitSlop={12}
-          style={({ pressed }) => ({
-            width: moderateScale(40),
-            height: moderateScale(40),
-            borderRadius: Radius.full,
-            backgroundColor: Colors.surfaceContainerHighest,
-            alignItems: 'center',
-            justifyContent: 'center',
-            transform: [{ scale: pressed ? 0.94 : 1 }],
-          })}
-        >
-          <Icons.back size={20} color={Colors.primary} />
-        </Pressable>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(12) }}>
+          <Pressable
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Back"
+            hitSlop={12}
+            style={({ pressed }) => ({
+              width: moderateScale(40),
+              height: moderateScale(40),
+              borderRadius: Radius.full,
+              backgroundColor: 'rgba(255,255,255,0.18)',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transform: [{ scale: pressed ? 0.94 : 1 }],
+            })}
+          >
+            <Icons.back size={moderateScale(20)} color={Colors.onPrimary} />
+          </Pressable>
+          <Text
+            style={{
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(24),
+              color: Colors.onPrimary,
+              letterSpacing: -0.3,
+              lineHeight: moderateScale(34),
+            }}
+            maxFontSizeMultiplier={1.2}
+          >
+            Emergency Kannada
+          </Text>
+        </View>
         <Text
           style={{
-            fontFamily: Fonts.dmSans.bold,
-            fontSize: moderateScale(20),
-            color: Colors.onSurface,
-            letterSpacing: -0.3,
+            fontFamily: Fonts.dmSans.medium,
+            fontSize: moderateScale(13),
+            color: 'rgba(255,255,255,0.9)',
+            marginTop: Spacing.sm,
           }}
+          maxFontSizeMultiplier={1.3}
         >
-          Emergency Kannada
+          Tap a phrase to play it out loud · works offline.
         </Text>
-      </View>
+      </BrandGradient>
 
       {isLoading ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -75,32 +91,12 @@ export default function EmergencyScreen() {
         </View>
       ) : isError || !groups ? (
         <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingHorizontal: Spacing.xxl,
-            gap: Spacing.md,
-          }}
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.md }}
         >
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(16),
-              color: Colors.onSurface,
-              textAlign: 'center',
-            }}
-          >
+          <Text style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(16), color: Colors.onSurface, textAlign: 'center' }}>
             Couldn&apos;t load phrases
           </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.regular,
-              fontSize: moderateScale(13),
-              color: Colors.tertiary,
-              textAlign: 'center',
-            }}
-          >
+          <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary, textAlign: 'center' }}>
             Check your connection and try again.
           </Text>
           <Pressable
@@ -115,176 +111,151 @@ export default function EmergencyScreen() {
               transform: [{ scale: pressed ? 0.97 : 1 }],
             })}
           >
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(14),
-                color: Colors.onPrimary,
-              }}
-            >
-              Retry
-            </Text>
+            <Text style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(14), color: Colors.onPrimary }}>Retry</Text>
           </Pressable>
         </View>
       ) : (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
-        >
-          <View style={{ paddingHorizontal: Spacing.xxl, paddingTop: Spacing.md }}>
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.regular,
-                fontSize: moderateScale(14),
-                color: Colors.tertiary,
-                lineHeight: moderateScale(20),
-                marginBottom: moderateScale(28),
-              }}
+        <>
+          {/* Category tabs — active = red lip pill */}
+          <View style={{ paddingTop: Spacing.lg }}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: Spacing.lg, gap: Spacing.sm }}
             >
-              Survival phrases for the auto, shop & street.
-            </Text>
+              {groups.map((group, gi) => {
+                const active = gi === activeGroup;
+                return (
+                  <Pressable
+                    key={group.id}
+                    onPress={() => setActiveGroup(gi)}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: active }}
+                    accessibilityLabel={group.label}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: moderateScale(6),
+                      backgroundColor: active ? Colors.primaryContainer : Colors.surfaceContainerHigh,
+                      borderRadius: Radius.full,
+                      paddingVertical: moderateScale(9),
+                      paddingHorizontal: Spacing.lg,
+                      ...(active ? { borderBottomWidth: 3, borderBottomColor: Colors.redLip } : null),
+                    }}
+                  >
+                    <GroupIcon id={group.id} color={active ? Colors.onPrimary : Colors.primary} />
+                    <Text
+                      style={{
+                        fontFamily: Fonts.baloo.bold,
+                        fontSize: moderateScale(13),
+                        color: active ? Colors.onPrimary : Colors.onSurface,
+                      }}
+                      maxFontSizeMultiplier={1.2}
+                    >
+                      {group.label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+          </View>
 
-            {groups.map((group, gi) => (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingHorizontal: Spacing.lg,
+              paddingTop: Spacing.lg,
+              paddingBottom: moderateScale(40) + insets.bottom,
+              gap: moderateScale(10),
+            }}
+          >
+            {current?.items.map((item) => (
               <View
-                key={group.id}
+                key={item.id}
                 style={{
-                  marginBottom: gi === groups.length - 1 ? 0 : moderateScale(28),
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: Spacing.md,
+                  backgroundColor: Colors.surfaceContainerLowest,
+                  borderRadius: Radius.lg,
+                  paddingVertical: Spacing.lg,
+                  paddingHorizontal: Spacing.lg,
+                  borderWidth: 1,
+                  borderColor: Colors.hairline,
                 }}
               >
-                {/* Group label */}
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: moderateScale(10),
-                    marginBottom: moderateScale(14),
-                    paddingHorizontal: Spacing.xs,
-                  }}
-                >
-                  <View
-                    style={{
-                      width: moderateScale(28),
-                      height: moderateScale(28),
-                      borderRadius: Radius.sm,
-                      backgroundColor: Colors.surfaceContainerHigh,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <GroupIcon id={group.id} />
-                  </View>
+                <View style={{ flex: 1 }}>
+                  {/* English hero (Amendment C — English-first) */}
                   <Text
                     style={{
-                      fontFamily: Fonts.dmSans.bold,
-                      fontSize: moderateScale(12),
-                      letterSpacing: 2,
-                      color: Colors.tertiary,
-                      textTransform: 'uppercase',
+                      fontFamily: Fonts.baloo.bold,
+                      fontSize: moderateScale(20),
+                      lineHeight: moderateScale(27),
+                      color: Colors.onSurface,
+                      letterSpacing: -0.2,
                     }}
+                    maxFontSizeMultiplier={1.3}
                   >
-                    {group.label}
+                    {item.meaning}
+                  </Text>
+                  {item.transliteration ? (
+                    <Text
+                      style={{
+                        fontFamily: Fonts.dmSans.bold,
+                        fontSize: moderateScale(15),
+                        lineHeight: moderateScale(21),
+                        color: Colors.primary,
+                        marginTop: moderateScale(3),
+                      }}
+                      maxFontSizeMultiplier={1.3}
+                    >
+                      {item.transliteration}
+                    </Text>
+                  ) : null}
+                  <Text
+                    style={{
+                      fontFamily: Fonts.notoSansKannada.regular,
+                      fontSize: moderateScale(13),
+                      lineHeight: moderateScale(20),
+                      color: Colors.tertiary,
+                      marginTop: moderateScale(3),
+                      opacity: 0.7,
+                    }}
+                    maxFontSizeMultiplier={1.3}
+                  >
+                    {item.kannada}
                   </Text>
                 </View>
-
-                {/* Phrase rows — tonal surface, no border */}
-                <View
-                  style={{
-                    backgroundColor: Colors.surfaceContainerHighest,
-                    borderRadius: Radius.lg,
-                    overflow: 'hidden',
-                  }}
-                >
-                  {group.items.map((item, idx) => (
-                    <View
-                      key={item.id}
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        paddingVertical: moderateScale(14),
-                        paddingHorizontal: Spacing.lg,
-                        // surface shift acts as separator (§2 No-Line)
-                        backgroundColor:
-                          idx % 2 === 0
-                            ? Colors.surfaceContainerHighest
-                            : Colors.surfaceContainerHigh,
-                      }}
-                    >
-                      <View style={{ flex: 1, paddingRight: moderateScale(14) }}>
-                        {item.transliteration ? (
-                          <Text
-                            style={{
-                              fontFamily: Fonts.lora.italic,
-                              fontSize: moderateScale(20),
-                              lineHeight: moderateScale(28),
-                              color: Colors.onSurface,
-                              marginBottom: moderateScale(2),
-                            }}
-                            maxFontSizeMultiplier={1.3}
-                          >
-                            {item.transliteration}
-                          </Text>
-                        ) : null}
-                        <Text
-                          style={{
-                            fontFamily: Fonts.dmSans.medium,
-                            fontSize: moderateScale(14),
-                            color: Colors.tertiary,
-                            lineHeight: moderateScale(19),
-                          }}
-                          maxFontSizeMultiplier={1.4}
-                        >
-                          {item.meaning}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Fonts.notoSansKannada.regular,
-                            fontSize: moderateScale(13),
-                            color: Colors.tertiary,
-                            lineHeight: moderateScale(20),
-                            marginTop: moderateScale(4),
-                            opacity: 0.7,
-                          }}
-                          maxFontSizeMultiplier={1.4}
-                        >
-                          {item.kannada}
-                        </Text>
-                      </View>
-                      <Pressable
-                        onPress={() => play(item.audioUrl ?? item.kannada)}
-                        accessibilityRole="button"
-                        accessibilityLabel={`Listen: ${item.meaning}`}
-                        hitSlop={8}
-                        style={({ pressed }) => ({
-                          width: moderateScale(44),
-                          height: moderateScale(44),
-                          borderRadius: Radius.full,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          opacity: pressed ? 0.6 : 1,
-                        })}
-                      >
-                        <Icons.audio size={18} color={Colors.secondary} />
-                      </Pressable>
-                    </View>
-                  ))}
-                </View>
+                <AudioOrb
+                  size={44}
+                  playing={playingId === item.id}
+                  onPress={() => play(item.id, item.audioUrl ?? item.kannada)}
+                  accessibilityLabel={`Listen: ${item.meaning}`}
+                />
               </View>
             ))}
 
             <Text
               style={{
-                fontFamily: Fonts.dmSans.regular,
+                fontFamily: Fonts.dmSans.bold,
                 fontSize: moderateScale(12),
                 color: Colors.tertiary,
                 textAlign: 'center',
-                marginTop: moderateScale(28),
+                marginTop: moderateScale(18),
               }}
+              maxFontSizeMultiplier={1.3}
             >
-              Audio uses your device&apos;s voice.
+              Audio uses your device&apos;s voice · romanisation pending review.
             </Text>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </>
       )}
     </View>
   );
+}
+
+function GroupIcon({ id, color }: { id: string; color: string }) {
+  if (id === 'auto') return <Icons.emAuto size={moderateScale(16)} color={color} />;
+  if (id === 'trouble') return <Icons.emHelp size={moderateScale(16)} color={color} />;
+  return <Icons.emBasic size={moderateScale(16)} color={color} />;
 }

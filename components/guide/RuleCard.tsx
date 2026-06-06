@@ -54,7 +54,7 @@ export function RuleCard({ title, description, examples }: RuleCardProps) {
           >
             <Text
               style={{
-                fontFamily: Fonts.lora.mediumItalic,
+                fontFamily: Fonts.dmSans.bold,
                 fontSize: moderateScale(15),
                 color: Colors.onSurface,
                 minWidth: moderateScale(72),

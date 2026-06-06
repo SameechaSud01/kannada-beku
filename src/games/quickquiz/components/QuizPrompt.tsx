@@ -50,7 +50,7 @@ const QuizPrompt: React.FC<Props> = ({ question }) => {
       {question.promptSub ? (
         <Text
           style={{
-            fontFamily: Fonts.lora.italic,
+            fontFamily: Fonts.dmSans.bold,
             fontSize: moderateScale(16),
             color: Colors.tertiary,
             textAlign: 'center',

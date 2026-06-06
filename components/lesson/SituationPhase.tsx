@@ -1,10 +1,12 @@
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
+import { Icons } from '../../constants/icons';
 import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
+import { LipButton } from '../ui/LipButton';
 import type { Lesson } from '../../constants/lessons/types';
 
 interface SituationPhaseProps {
@@ -39,10 +41,10 @@ export function SituationPhase({ lesson, onAdvance }: SituationPhaseProps) {
         >
           <Text
             style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(13),
-              color: Colors.tertiary,
-              letterSpacing: 1,
+              fontFamily: Fonts.dmSans.bold,
+              fontSize: moderateScale(11),
+              color: Colors.onSecondaryContainer,
+              letterSpacing: 1.6,
               textTransform: 'uppercase',
               marginBottom: Spacing.sm,
             }}
@@ -51,12 +53,13 @@ export function SituationPhase({ lesson, onAdvance }: SituationPhaseProps) {
           </Text>
           <Text
             style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(18),
+              fontFamily: Fonts.baloo.bold,
+              fontSize: moderateScale(20),
               color: Colors.onSecondaryContainer,
               textAlign: 'center',
-              lineHeight: moderateScale(26),
+              lineHeight: moderateScale(28),
             }}
+            maxFontSizeMultiplier={1.2}
           >
             {lesson.title}
           </Text>
@@ -64,12 +67,14 @@ export function SituationPhase({ lesson, onAdvance }: SituationPhaseProps) {
 
         <Text
           style={{
-            fontFamily: Fonts.dmSans.bold,
+            fontFamily: Fonts.baloo.extrabold,
             fontSize: moderateScale(24),
             color: Colors.onSurface,
-            lineHeight: moderateScale(32),
+            lineHeight: moderateScale(34),
+            letterSpacing: -0.3,
             marginBottom: Spacing.md,
           }}
+          maxFontSizeMultiplier={1.2}
         >
           {lesson.title}
         </Text>
@@ -87,30 +92,12 @@ export function SituationPhase({ lesson, onAdvance }: SituationPhaseProps) {
       </ScrollView>
 
       <View style={{ padding: Spacing.lg, paddingBottom: insets.bottom + Spacing.lg }}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Start the lesson"
+        <LipButton
+          label="Let's start"
           onPress={onAdvance}
-          style={({ pressed }) => ({
-            backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
-            borderRadius: Radius.md,
-            paddingVertical: Spacing.md + moderateScale(2),
-            alignItems: 'center',
-            transform: [{ scale: pressed ? 0.96 : 1 }],
-            minHeight: moderateScale(44),
-            justifyContent: 'center',
-          })}
-        >
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(15),
-              color: Colors.onPrimary,
-            }}
-          >
-            Let's start
-          </Text>
-        </Pressable>
+          accessibilityLabel="Start the lesson"
+          icon={Icons.forward}
+        />
       </View>
     </View>
   );

@@ -15,6 +15,7 @@
     "postinstall": "node scripts/postinstall.js"
   },
   "dependencies": {
+    "@expo-google-fonts/baloo-tamma-2": "^0.4.2",
     "@expo-google-fonts/dm-sans": "^0.4.2",
     "@expo-google-fonts/lora": "^0.4.2",
     "@expo-google-fonts/noto-sans-kannada": "^0.4.3",
@@ -37,6 +38,7 @@
     "expo-device": "~8.0.10",
     "expo-font": "~14.0.11",
     "expo-haptics": "~15.0.8",
+    "expo-linear-gradient": "~15.0.8",
     "expo-linking": "~8.0.12",
     "expo-notifications": "~0.32.17",
     "expo-router": "~6.0.23",

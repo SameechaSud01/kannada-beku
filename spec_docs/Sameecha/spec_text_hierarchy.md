@@ -36,7 +36,7 @@ This extends the already-locked lesson-runner hierarchy from [spec_lesson_redesi
 | Lesson — TeachPhrasesPhase phrase card | [components/lesson/TeachPhrasesPhase.tsx](../../components/lesson/TeachPhrasesPhase.tsx) | ✅ aligned | unchanged |
 | Lesson — PracticePhrasesPhase say card | [components/lesson/PracticePhrasesPhase.tsx](../../components/lesson/PracticePhrasesPhase.tsx) | ✅ aligned | unchanged |
 | Lesson — SummaryPhase rows | [components/lesson/SummaryPhase.tsx](../../components/lesson/SummaryPhase.tsx) | ✅ aligned | unchanged |
-| Emergency screen rows | [app/emergency.tsx](../../app/emergency.tsx) | kn → tr·meaning | tr / en / kn |
+| Emergency screen rows | [app/emergency.tsx](../../app/emergency.tsx) | kn → tr·meaning | **en / tr / kn** — see §4 Emergency exception |
 | Opposites — QuestionCard | [src/games/opposites/components/QuestionCard.tsx](../../src/games/opposites/components/QuestionCard.tsx) | kn → tr → (meaning) | tr / meaning / kn |
 | Opposites — OptionButton | [src/games/opposites/components/OptionButton.tsx](../../src/games/opposites/components/OptionButton.tsx) | kn → en | tr / en / kn |
 | ImageMatch — QuestionCard (word-to-picture) | [src/games/imagematch/components/QuestionCard.tsx](../../src/games/imagematch/components/QuestionCard.tsx) | kn → tr → (hint en) | tr / en / kn |
@@ -55,7 +55,21 @@ For every surface listed in §2:
 - No surface in §2 renders Kannada script as hero text.
 - If transliteration is missing from the data, English becomes the de-facto primary (the kannada-first inversion is still avoided).
 
-## 4. Out of scope (intentionally unchanged)
+## 4. Exceptions and out of scope
+
+### Emergency screen — English-first exception
+
+`[LOCKED]` — added 2026-06-04 per [spec_playful_redesign.md](spec_playful_redesign.md) Amendment C (option C-1), owner sign-off.
+
+On [app/emergency.tsx](../../app/emergency.tsx), the hierarchy **inverts** to:
+
+1. **Primary** (largest, top) — **English meaning**. `Fonts.baloo`, ~20pt.
+2. **Secondary** (below) — transliteration, "say it like this". `Fonts.lora.italic`, `Colors.primary`.
+3. **Tertiary** (small, muted) — Kannada script. `Fonts.notoSansKannada`, ~70% opacity.
+
+**Why this is an exception, not a violation:** Emergency is a **panic tool**, not a vocabulary-acquisition surface. A non-speaker reaching for it under stress (auto, shop, street) must scan the *meaning* fastest to find the right phrase; pronunciation is the second step once the right card is found. This mirrors the Beginners' Guide Kannada-first exception (§ below): the rule bends where the surface's job differs from "learn to say this vocabulary item." Every learning surface (lessons, games, phrase sheet) keeps transliteration-first per §1.
+
+### Out of scope (intentionally unchanged)
 
 `[OPEN]`
 

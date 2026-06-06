@@ -64,7 +64,7 @@ const WordTile: React.FC<Props> = ({ item, state, onPress }) => {
       >
         {item.ph ? (
           <Text
-            style={{ fontFamily: Fonts.lora.italic, fontSize: moderateScale(16), color: Colors.onSurface }}
+            style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onSurface }}
             numberOfLines={1}
             maxFontSizeMultiplier={1.3}
           >
