@@ -207,6 +207,12 @@ function AppGate() {
 
     const inAuthGroup = segments[0] === '(auth)';
     const inOnboarding = segments[0] === 'onboarding';
+    const inResetPassword = inAuthGroup && (segments as string[])[1] === 'reset-password';
+
+    // While completing a password reset, the recovery session must NOT trigger
+    // any redirect — the user stays on reset-password to set a new password,
+    // then the screen routes itself. (spec_password_reset.md)
+    if (session && inResetPassword) return;
 
     if (!session && !inAuthGroup) {
       router.replace('/(auth)/login');

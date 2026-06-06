@@ -77,6 +77,40 @@ export const Toasts = {
     });
   },
 
+  socialSignInFailed() {
+    Toast.show({
+      kind: 'error',
+      id: 'signIn.socialFailed',
+      title: "Couldn't sign you in",
+      subtitle: 'Please try again, or use email and password',
+    });
+  },
+
+  resetEmailSent() {
+    Toast.show({
+      kind: 'success',
+      id: 'reset.emailSent',
+      title: 'Check your email for a reset link',
+    });
+  },
+
+  resetLinkInvalid() {
+    Toast.show({
+      kind: 'error',
+      id: 'reset.linkInvalid',
+      title: 'That reset link is invalid or expired',
+      subtitle: 'Request a new one to continue',
+    });
+  },
+
+  passwordUpdated() {
+    Toast.show({
+      kind: 'success',
+      id: 'reset.passwordUpdated',
+      title: 'Password updated',
+    });
+  },
+
   sessionLost() {
     Toast.show({
       kind: 'error',

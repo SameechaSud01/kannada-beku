@@ -69,5 +69,9 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,
+    // PKCE is required so the password-reset email link's `?code=` can be
+    // exchanged for a session (spec_password_reset.md). We still handle the
+    // inbound URL manually in (auth)/reset-password — RN has no window.location.
+    flowType: 'pkce',
   },
 });

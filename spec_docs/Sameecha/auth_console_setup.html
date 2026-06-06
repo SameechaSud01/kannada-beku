@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auth console setup — Google, Apple & password reset (Kannada Beku)</title>
+<style>
+  :root{
+    --bg:#fbfaf5; --card:#ffffff; --ink:#23211c; --muted:#6c685d;
+    --line:#e7e3d6; --accent:#2f7d4f; --accent-soft:#e8f3ec;
+    --warn:#9a5b00; --warn-soft:#fdf2dd; --danger:#9a2f2f; --danger-soft:#fbe9e7;
+    --code-bg:#f4f1e8; --pill:#efece2;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:40px 24px 96px}
+  header.intro{margin-bottom:8px}
+  h1{font-size:30px; line-height:1.2; margin:0 0 6px}
+  .sub{color:var(--muted); font-size:15px; margin:0 0 28px}
+  h2{font-size:22px; margin:44px 0 4px; padding-top:18px; border-top:1px solid var(--line)}
+  h2 .num{display:inline-block; min-width:30px; color:var(--accent); font-variant-numeric:tabular-nums}
+  h3{font-size:17px; margin:26px 0 8px}
+  p{margin:10px 0}
+  ol,ul{margin:10px 0 10px; padding-left:22px}
+  li{margin:6px 0}
+  code{background:var(--code-bg); padding:1px 6px; border-radius:5px; font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace; font-size:13.5px}
+  pre{background:var(--code-bg); border:1px solid var(--line); border-radius:10px; padding:14px 16px; overflow:auto; font-size:13px; line-height:1.5}
+  pre code{background:none; padding:0}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:4px 20px; margin:14px 0}
+  .note,.warn,.danger{border-radius:10px; padding:12px 16px; margin:14px 0; font-size:14.5px}
+  .note{background:var(--accent-soft); border:1px solid #cfe6d8}
+  .warn{background:var(--warn-soft); border:1px solid #f0dcae}
+  .danger{background:var(--danger-soft); border:1px solid #f2c9c3}
+  .note b,.warn b,.danger b{color:inherit}
+  .tag{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:2px 8px; border-radius:999px; background:var(--pill); color:var(--muted); vertical-align:middle; margin-left:6px}
+  .tag.ios{background:#e7eefc; color:#27508f}
+  .tag.android{background:#e6f4ea; color:#1f7a3f}
+  .tag.both{background:#efe7fb; color:#5b3f8f}
+  table{border-collapse:collapse; width:100%; margin:14px 0; font-size:14px}
+  th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+  th{background:var(--pill); font-weight:600}
+  kbd{background:#fff; border:1px solid var(--line); border-bottom-width:2px; border-radius:5px; padding:1px 6px; font-size:12.5px; font-family:inherit}
+  .toc{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 20px; margin:20px 0 8px}
+  .toc ol{margin:6px 0 0; padding-left:22px}
+  .toc a{color:var(--accent); text-decoration:none}
+  .toc a:hover{text-decoration:underline}
+  .val{font-family:"SF Mono",ui-monospace,Menlo,monospace; font-size:13px}
+  .check li{list-style:none; margin-left:-22px; padding-left:26px; position:relative}
+  .check li::before{content:"☐"; position:absolute; left:4px; color:var(--accent); font-size:16px}
+  .small{font-size:13px; color:var(--muted)}
+  hr{border:none; border-top:1px solid var(--line); margin:30px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="intro">
+  <h1>Auth console setup</h1>
+  <p class="sub">External console + dashboard prerequisites for <b>Google login</b>, <b>Apple login</b>, and <b>password reset</b>. This is the "step 3" companion to <span class="val">spec_social_login.md</span> and <span class="val">spec_password_reset.md</span>. None of this is app code — it is the configuration the code talks to. Do it before (or alongside) implementation; the features cannot be <i>verified</i> until it exists.</p>
+</header>
+
+<div class="note">
+  <b>The model we chose</b> is the <b>native id-token flow</b> (you build with EAS, not Expo Go). Google and Apple's native SDKs hand the app a signed identity token, which we pass to <code>supabase.auth.signInWithIdToken(...)</code>. There is <b>no browser redirect and no OAuth callback URL</b> for sign-in. The only deep link in this whole guide is the <i>password-reset</i> link.
+</div>
+
+<div class="toc">
+  <b>What you'll set up</b>
+  <ol>
+    <li><a href="#values">Project values you'll paste everywhere</a></li>
+    <li><a href="#google">Google login — Google Cloud + Supabase</a></li>
+    <li><a href="#apple">Apple login — Apple Developer + Supabase</a></li>
+    <li><a href="#reset">Password reset — Supabase redirect URL</a></li>
+    <li><a href="#appjson">app.json / env changes (the bridge to code)</a></li>
+    <li><a href="#eas">EAS dev build (required to test any of it)</a></li>
+    <li><a href="#secrets">What's a secret vs. what's public</a></li>
+    <li><a href="#checklist">Final checklist</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================= -->
+<h2 id="values"><span class="num">0</span> Project values you'll paste everywhere</h2>
+<p>Keep these handy — every console asks for one of them.</p>
+<table>
+  <tr><th>Thing</th><th>Value</th><th>Source</th></tr>
+  <tr><td>iOS bundle ID</td><td class="val">com.samsud01.kannadabeku</td><td><code>app.json → ios.bundleIdentifier</code></td></tr>
+  <tr><td>Android package</td><td class="val">com.samsud01.kannadabeku</td><td><code>app.json → android.package</code></td></tr>
+  <tr><td>App scheme</td><td class="val">kannada-beku</td><td><code>app.json → scheme</code></td></tr>
+  <tr><td>EAS project ID</td><td class="val">adccfc42-2b05-4f37-bffb-d785e3ed8dc3</td><td><code>app.json → extra.eas.projectId</code></td></tr>
+  <tr><td>Supabase project ref</td><td class="val">fhhzrzmmulqgmfwmeodq</td><td><b>Confirm</b> against <code>.env → EXPO_PUBLIC_SUPABASE_URL</code></td></tr>
+  <tr><td>Supabase OAuth callback<br><span class="small">(needed by some provider forms even in native mode)</span></td><td class="val">https://fhhzrzmmulqgmfwmeodq.supabase.co/auth/v1/callback</td><td>Derived from project ref</td></tr>
+</table>
+<div class="warn"><b>Verify the project ref first.</b> Open your <code>.env</code> and read <code>EXPO_PUBLIC_SUPABASE_URL</code>. The part before <code>.supabase.co</code> is your real ref. If it isn't <span class="val">fhhzrzmmulqgmfwmeodq</span>, substitute your value everywhere below.</div>
+
+<!-- ============================================================= -->
+<h2 id="google"><span class="num">1</span> Google login <span class="tag both">iOS + Android</span></h2>
+<p>You create <b>three</b> OAuth client IDs in Google Cloud (Web, iOS, Android), then tell both the Supabase dashboard and the app about them.</p>
+
+<h3>1a. Google Cloud — OAuth consent screen</h3>
+<ol>
+  <li>Go to <a href="https://console.cloud.google.com/">console.cloud.google.com</a> → create or select a project (e.g. "Kannada Beku").</li>
+  <li><b>APIs &amp; Services → OAuth consent screen.</b> Pick <b>External</b>. Fill app name, support email, developer email. Add yourself as a <b>Test user</b> while in "Testing" status (otherwise only you can sign in until you publish).</li>
+</ol>
+
+<h3>1b. Google Cloud — create the three clients</h3>
+<p><b>APIs &amp; Services → Credentials → Create credentials → OAuth client ID</b>, three times:</p>
+<table>
+  <tr><th>Client type</th><th>What to enter</th><th>What it gives you</th></tr>
+  <tr><td><b>Web application</b></td><td>Name it "Supabase / web". No redirect URIs needed for native, but add the Supabase callback <span class="val">https://fhhzrzmmulqgmfwmeodq.supabase.co/auth/v1/callback</span> for completeness.</td><td><b>Web client ID</b> + <b>secret</b> → both go into Supabase. The Web client ID is <i>also</i> the <code>webClientId</code> the app uses.</td></tr>
+  <tr><td><b>iOS</b></td><td>Bundle ID: <span class="val">com.samsud01.kannadabeku</span></td><td><b>iOS client ID</b> + its <b>reversed</b> form (<code>com.googleusercontent.apps.…</code>) used as the iOS URL scheme.</td></tr>
+  <tr><td><b>Android</b></td><td>Package: <span class="val">com.samsud01.kannadabeku</span> + SHA-1 fingerprint (see 1c).</td><td><b>Android client ID</b>.</td></tr>
+</table>
+
+<h3>1c. Get the Android SHA-1 from EAS <span class="tag android">Android</span></h3>
+<p>The Android OAuth client needs the signing-certificate SHA-1. For EAS-managed credentials:</p>
+<pre><code>eas credentials
+# choose: Android → (your build profile) → Keystore → "Download credentials" / view
+# copy the SHA-1 Fingerprint</code></pre>
+<div class="note"><b>Two SHA-1s eventually.</b> The EAS <i>upload/dev</i> keystore SHA-1 covers internal builds. If you later ship via Google Play, also add the <b>Play App Signing</b> SHA-1 (Play Console → your app → Setup → App integrity) as a second Android OAuth client / SHA-1, or Google sign-in breaks in production.</div>
+
+<h3>1d. Supabase — enable Google</h3>
+<ol>
+  <li>Supabase dashboard → <b>Authentication → Providers → Google</b> → toggle <b>Enable</b>.</li>
+  <li><b>Client ID</b> / <b>Client Secret</b>: paste the <b>Web</b> client's ID and secret.</li>
+  <li><b>Authorized Client IDs</b> (the field for native id-token validation): paste <b>all three</b> client IDs, comma-separated — Web, iOS, Android. This is what lets <code>signInWithIdToken</code> accept tokens minted by the native SDKs.</li>
+  <li>If your dashboard shows a <b>"Skip nonce check"</b> option for Google, leave it at the default; <code>@react-native-google-signin</code> does not send a nonce for the basic flow, and Supabase tolerates this when the client ID is authorized.</li>
+  <li>Save.</li>
+</ol>
+<div class="warn"><b>Audience must match.</b> The id-token's audience is the <b>Web client ID</b> you pass to <code>GoogleSignin.configure({ webClientId })</code> in the app. If sign-in fails with an "audience"/"invalid token" error, the app's <code>webClientId</code> and Supabase's Authorized Client IDs are out of sync.</div>
+
+<!-- ============================================================= -->
+<h2 id="apple"><span class="num">2</span> Apple login <span class="tag ios">iOS only</span></h2>
+<p>Requires a <b>paid Apple Developer membership</b> ($99/yr). The button is shown only on iOS; never on Android.</p>
+
+<h3>2a. Enable the capability on your App ID</h3>
+<ol>
+  <li><a href="https://developer.apple.com/account/resources/identifiers/list">developer.apple.com → Certificates, IDs &amp; Profiles → Identifiers</a>.</li>
+  <li>Select (or create) the App ID <span class="val">com.samsud01.kannadabeku</span>.</li>
+  <li>Tick <b>Sign In with Apple</b> in the capabilities list → <b>Save</b>.</li>
+</ol>
+<div class="note">For a <b>pure native iOS</b> sign-in, this capability plus the app.json change in §4 is often all Apple needs — the identity token's audience is your <b>bundle ID</b>. Steps 2b–2c (Services ID + key) are only required if you also want the web/OAuth Apple flow or if your Supabase version insists on a secret. Do 2b–2c if in doubt; it's harmless.</div>
+
+<h3>2b. Create a Sign in with Apple key <span class="small">(for the Supabase secret)</span></h3>
+<ol>
+  <li><b>Keys → +</b> → name it, tick <b>Sign In with Apple</b>, configure it to your primary App ID → <b>Continue → Register</b>.</li>
+  <li><b>Download the <code>.p8</code> key file once</b> (you cannot re-download it). Note the <b>Key ID</b> and your <b>Team ID</b> (top-right of the developer portal).</li>
+</ol>
+
+<h3>2c. (If using the web flow) create a Services ID</h3>
+<ol>
+  <li><b>Identifiers → + → Services IDs</b> → e.g. <span class="val">com.samsud01.kannadabeku.web</span>.</li>
+  <li>Enable <b>Sign In with Apple</b> → Configure → add the Supabase callback <span class="val">https://fhhzrzmmulqgmfwmeodq.supabase.co/auth/v1/callback</span> as a Return URL and your <span class="val">fhhzrzmmulqgmfwmeodq.supabase.co</span> domain.</li>
+</ol>
+
+<h3>2d. Supabase — enable Apple</h3>
+<ol>
+  <li>Supabase → <b>Authentication → Providers → Apple</b> → <b>Enable</b>.</li>
+  <li><b>Authorized Client IDs</b>: add your bundle ID <span class="val">com.samsud01.kannadabeku</span> (this is the audience of the native identity token). If you made a Services ID, add it too.</li>
+  <li>If the form requires a <b>Secret Key</b>: Supabase will generate the client-secret JWT from your <b>Team ID</b>, <b>Key ID</b>, <b>Services/Client ID</b>, and the <b>.p8</b> contents — paste those fields. (Native-only setups can sometimes leave this blank; fill it if the toggle won't save without it.)</li>
+  <li>Save.</li>
+</ol>
+<div class="warn"><b>"Hide My Email" creates a separate account.</b> When a user picks Apple's relay-email option, that verified address differs from any Gmail/email-password account they have, so it will <b>not</b> auto-link — it's a distinct account. This is expected Apple behavior (documented in <span class="val">spec_social_login.md</span>), not something to fix here.</div>
+
+<!-- ============================================================= -->
+<h2 id="reset"><span class="num">3</span> Password reset — redirect URL <span class="tag both">iOS + Android</span></h2>
+<p>The only deep link in this guide. The reset email contains a link the app must be allowed to receive.</p>
+<ol>
+  <li>Supabase → <b>Authentication → URL Configuration</b>.</li>
+  <li>Under <b>Redirect URLs</b>, add: <span class="val">kannada-beku://reset-password</span></li>
+  <li>Optionally also add a wildcard for dev builds: <span class="val">kannada-beku://**</span></li>
+  <li>Save.</li>
+</ol>
+<div class="note"><b>Capture the exact value during implementation.</b> The app computes the redirect with <code>Linking.createURL('reset-password')</code>. In a standalone/dev-client build this resolves to <span class="val">kannada-beku://reset-password</span>, but the implementer should <code>console.log</code> it once and confirm it matches what you allow-listed here. (Per the <span class="val">[DECIDED — capture during impl]</span> note in the reset spec.)</li></div>
+<p><b>Email template (optional):</b> Authentication → <b>Email Templates → Reset Password</b> — the default action-link macro works; rebrand the copy later if you like.</p>
+<p>Confirm <b>"Confirm email"</b> stays <b>OFF</b> (Authentication → Providers → Email), matching the assumption the auth specs are built on.</p>
+
+<!-- ============================================================= -->
+<h2 id="appjson"><span class="num">4</span> app.json / env changes <span class="small">(the bridge — this part touches the repo)</span></h2>
+<p>These are config edits, allowed in <code>app.json</code> (not the native <code>ios/</code>/<code>android/</code> folders). They'll land with the code, but here's what they are so the picture is complete.</p>
+
+<h3>4a. Plugins + Apple capability in <code>app.json</code></h3>
+<pre><code>"ios": {
+  "supportsTablet": true,
+  "usesAppleSignIn": true,            // ← adds the Apple entitlement
+  "bundleIdentifier": "com.samsud01.kannadabeku",
+  "infoPlist": { /* unchanged */ }
+},
+"plugins": [
+  "expo-router",
+  "expo-secure-store",
+  "expo-font",
+  "@react-native-community/datetimepicker",
+  "expo-notifications",
+  "expo-apple-authentication",                      // ← new
+  [
+    "@react-native-google-signin/google-signin",
+    { "iosUrlScheme": "com.googleusercontent.apps.XXXXXXXX-XXXX" }  // ← reversed iOS client ID
+  ]
+]</code></pre>
+<p class="small">The <code>iosUrlScheme</code> is the <b>reversed iOS client ID</b> from §1b. It's a public value, so hard-coding it in <code>app.json</code> is fine (it is not a secret).</p>
+
+<h3>4b. Client IDs via env / expo-constants <span class="small">(locked decision)</span></h3>
+<p>The spec locks "client IDs come from <code>expo-constants</code> extra, sourced from env." Add the public client IDs to <code>.env</code> (and <code>.env.example</code> as placeholders):</p>
+<pre><code># Google OAuth client IDs (public — safe as EXPO_PUBLIC_*)
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=xxxx.apps.googleusercontent.com
+EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=yyyy.apps.googleusercontent.com</code></pre>
+<p>The app reads these (e.g. <code>GoogleSignin.configure({ webClientId, iosClientId })</code>). Because the static <code>app.json</code> can't read env, the implementer may convert it to <code>app.config.ts</code> to inject <code>iosUrlScheme</code> from env — or just hard-code that one public string. That's an implementation detail, flagged in the spec.</p>
+<div class="danger"><b>Never put these in the app:</b> the Google Web client <b>secret</b> and the Apple <b>.p8</b> key. Those are real secrets and live <b>only</b> in the Supabase dashboard. See §6.</div>
+
+<!-- ============================================================= -->
+<h2 id="eas"><span class="num">5</span> EAS dev build <span class="small">(you can't test any of this in Expo Go)</span></h2>
+<p>Native Google/Apple sign-in modules and custom-scheme deep links don't exist in Expo Go. You need a <b>development build</b>. Your <code>eas.json</code> already has a <code>development</code> profile (<code>developmentClient: true</code>) and <code>eas-cli</code> 20 is installed.</p>
+<pre><code>eas login                       # once
+eas build --profile development --platform ios       # iOS dev client
+eas build --profile development --platform android   # Android dev client</code></pre>
+<ul>
+  <li><b>iOS:</b> EAS will prompt to manage Apple credentials (sign in with your Apple Developer account). Register your test device first if needed: <code>eas device:create</code>, then install the build from the link EAS prints.</li>
+  <li><b>Android:</b> download and install the APK from the build link. This is also where the keystore SHA-1 (from §1c) comes from.</li>
+  <li>After installing the dev client, run the JS: <code>npx expo start --dev-client</code>.</li>
+</ul>
+<div class="warn"><b>Rebuild after native changes.</b> Adding the three native packages and the §4 plugins changes native code, so you must run a <b>new</b> EAS build — hot-reload won't pick them up. Rebuild once the implementer has added the deps.</div>
+
+<!-- ============================================================= -->
+<h2 id="secrets"><span class="num">6</span> Secret vs. public — don't mix them up</h2>
+<table>
+  <tr><th>Value</th><th>Secret?</th><th>Lives in</th></tr>
+  <tr><td>Google Web / iOS / Android <b>client IDs</b></td><td>Public</td><td>App (env), Supabase Authorized Client IDs</td></tr>
+  <tr><td>Reversed iOS client ID (URL scheme)</td><td>Public</td><td>app.json plugin</td></tr>
+  <tr><td>Google Web client <b>secret</b></td><td><b>SECRET</b></td><td>Supabase only</td></tr>
+  <tr><td>Apple <b>.p8</b> key + Key ID + Team ID</td><td><b>SECRET</b></td><td>Supabase only</td></tr>
+  <tr><td>Supabase anon key</td><td>Public (already in <code>.env</code>)</td><td>App</td></tr>
+</table>
+<p class="small">Client IDs are identifiers, not credentials — Google/Apple publish them in tokens. Only the Web secret and the Apple key can authorize token exchange, so only those need to stay out of the repo.</p>
+
+<!-- ============================================================= -->
+<h2 id="checklist"><span class="num">7</span> Final checklist</h2>
+<div class="card">
+<p><b>Google</b></p>
+<ul class="check">
+  <li>OAuth consent screen configured; you're a Test user</li>
+  <li>Web, iOS, Android OAuth clients created in Google Cloud</li>
+  <li>Android SHA-1 (EAS keystore) added to the Android client</li>
+  <li>Supabase Google provider enabled; Web ID+secret set; all 3 IDs in Authorized Client IDs</li>
+</ul>
+<p><b>Apple</b> <span class="tag ios">iOS</span></p>
+<ul class="check">
+  <li>Paid Apple Developer membership active</li>
+  <li>"Sign In with Apple" capability enabled on <span class="val">com.samsud01.kannadabeku</span></li>
+  <li>(If needed) .p8 key + Services ID created; Team ID / Key ID noted</li>
+  <li>Supabase Apple provider enabled; bundle ID in Authorized Client IDs; secret filled if required</li>
+</ul>
+<p><b>Password reset</b></p>
+<ul class="check">
+  <li><span class="val">kannada-beku://reset-password</span> added to Supabase Redirect URLs</li>
+  <li>"Confirm email" confirmed OFF</li>
+</ul>
+<p><b>Build</b></p>
+<ul class="check">
+  <li><code>app.json</code> plugins + <code>usesAppleSignIn</code> added (lands with code)</li>
+  <li>Public client IDs in <code>.env</code> / <code>.env.example</code></li>
+  <li>Secrets (Web secret, .p8) in Supabase only — not in repo</li>
+  <li>New EAS dev build installed on a real iOS device + an Android device</li>
+</ul>
+</div>
+
+<div class="note"><b>Suggested order.</b> Do <b>§3 (reset redirect URL)</b> first — it's a one-line dashboard entry and unblocks shipping password reset, which has no other external dependency. Then Google (§1), then Apple (§2, gated on the developer account). Build (§5) last, once the implementer has added the native deps.</div>
+
+<hr>
+<p class="small">Companion to <span class="val">spec_social_login.md</span> and <span class="val">spec_password_reset.md</span>. Field names in the Supabase dashboard can shift between versions — if a label here doesn't match exactly, follow the in-dashboard hint for the equivalent field. Nothing in this guide is app source code; it's the configuration the code in those specs depends on.</p>
+
+</div>
+</body>
+</html>

@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, TextInput, Pressable, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
+import { useRouter } from 'expo-router';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import { signInWithGoogle, signInWithApple } from '../../services/api/auth';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { supabase } from '../../services/api/supabase';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
+import { GoogleGLogo } from '../../components/auth/GoogleGLogo';
 
 const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
@@ -29,6 +33,26 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState<Mode>('login');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [appleAvailable, setAppleAvailable] = useState(false);
+
+  useEffect(() => {
+    if (Platform.OS !== 'ios') return;
+    AppleAuthentication.isAvailableAsync()
+      .then(setAppleAvailable)
+      .catch(() => setAppleAvailable(false));
+  }, []);
+
+  const handleSocial = async (provider: 'google' | 'apple') => {
+    setLoading(true);
+    const res = await (provider === 'google' ? signInWithGoogle() : signInWithApple());
+    setLoading(false);
+    // signedIn → AppGate routes away; cancelled → no-op.
+    if (res.status === 'error') {
+      console.warn(`[auth] ${provider} sign-in failed`, res.error);
+      Toasts.socialSignInFailed();
+    }
+  };
 
   const isSignUp = mode === 'signup';
   const copy = COPY[mode];
@@ -190,6 +214,26 @@ export default function LoginScreen() {
           placeholderTextColor={Colors.tertiary}
         />
 
+        {/* Forgot password — login mode only */}
+        {!isSignUp && (
+          <Pressable
+            onPress={() => router.push('/(auth)/forgot-password')}
+            accessibilityRole="button"
+            hitSlop={10}
+            style={{ alignSelf: 'flex-end', marginTop: -Spacing.md, marginBottom: Spacing.lg }}
+          >
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.medium,
+                fontSize: moderateScale(13),
+                color: Colors.primary,
+              }}
+            >
+              Forgot password?
+            </Text>
+          </Pressable>
+        )}
+
         {/* Submit */}
         <Pressable
           onPress={handleAuth}
@@ -214,6 +258,62 @@ export default function LoginScreen() {
             {loading ? 'Please wait...' : copy.cta}
           </Text>
         </Pressable>
+
+        {/* Social sign-in (spec_social_login.md) */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: Spacing.xl }}>
+          <View style={{ flex: 1, height: moderateScale(0.5), backgroundColor: Colors.outlineVariant }} />
+          <Text
+            style={{
+              marginHorizontal: Spacing.md,
+              fontFamily: Fonts.dmSans.regular,
+              fontSize: moderateScale(12),
+              color: Colors.tertiary,
+            }}
+          >
+            or continue with
+          </Text>
+          <View style={{ flex: 1, height: moderateScale(0.5), backgroundColor: Colors.outlineVariant }} />
+        </View>
+
+        <Pressable
+          onPress={() => handleSocial('google')}
+          disabled={loading}
+          accessibilityRole="button"
+          accessibilityLabel="Continue with Google"
+          style={({ pressed }) => ({
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: Colors.surfaceContainerHighest,
+            borderWidth: moderateScale(0.5),
+            borderColor: Colors.outlineVariant,
+            borderRadius: Radius.md,
+            paddingVertical: Spacing.md + moderateScale(2),
+            opacity: loading ? 0.7 : pressed ? 0.85 : 1,
+          })}
+        >
+          <GoogleGLogo size={18} />
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.bold,
+              fontSize: moderateScale(14),
+              color: Colors.onSurface,
+              marginLeft: Spacing.sm,
+            }}
+          >
+            Continue with Google
+          </Text>
+        </Pressable>
+
+        {Platform.OS === 'ios' && appleAvailable && (
+          <AppleAuthentication.AppleAuthenticationButton
+            buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+            cornerRadius={moderateScale(8)}
+            style={{ height: moderateScale(48), marginTop: Spacing.md }}
+            onPress={() => handleSocial('apple')}
+          />
+        )}
       </View>
     </KeyboardAvoidingView>
   );
