@@ -9,6 +9,7 @@ import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { supabase } from '../../services/api/supabase';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
+import { GoogleGLogo } from '../../components/auth/GoogleGLogo';
 
 const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
@@ -291,11 +292,13 @@ export default function LoginScreen() {
             opacity: loading ? 0.7 : pressed ? 0.85 : 1,
           })}
         >
+          <GoogleGLogo size={18} />
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
               fontSize: moderateScale(14),
               color: Colors.onSurface,
+              marginLeft: Spacing.sm,
             }}
           >
             Continue with Google
