@@ -31,6 +31,13 @@ interface ProgressState {
   streak: number;
   lastActiveDate: string;
   completedLessons: string[];
+  /**
+   * Completed lesson sub-parts, as `"<slug>:<partKey>"` (e.g. "greetings:1a").
+   * Drives the sequential sub-part chooser. Client-only by design — a fully
+   * completed lesson backfills all its parts from `completedLessons`, so this
+   * only needs to remember *partial* progress between sessions.
+   */
+  completedParts: string[];
   lessonProgress: Record<string, number>;
   xp: number;
   totalPhrasesLearned: number;
@@ -46,6 +53,8 @@ interface ProgressState {
   isHydrated: boolean;
 
   updateLessonProgress: (lessonId: string, phraseIndex: number) => void;
+  /** Mark one lesson sub-part complete (idempotent). */
+  completePart: (slug: string, partKey: string) => void;
   completeLesson: (
     lessonId: string,
     score: number,
@@ -77,6 +86,7 @@ export const useProgressStore = create<ProgressState>()(
       streak: 0,
       lastActiveDate: '',
       completedLessons: [],
+      completedParts: [],
       lessonProgress: {},
       xp: 0,
       totalPhrasesLearned: 0,
@@ -94,6 +104,13 @@ export const useProgressStore = create<ProgressState>()(
             [lessonId]: phraseIndex,
           },
         })),
+
+      completePart: (slug, partKey) =>
+        set((state) => {
+          const key = `${slug}:${partKey}`;
+          if (state.completedParts.includes(key)) return state;
+          return { completedParts: [...state.completedParts, key] };
+        }),
 
       completeLesson: (lessonId, score, phrasesLearned, minutesPracticed) =>
         set((state) => {
@@ -156,6 +173,7 @@ export const useProgressStore = create<ProgressState>()(
           streak: 0,
           lastActiveDate: '',
           completedLessons: [],
+          completedParts: [],
           lessonProgress: {},
           xp: 0,
           totalPhrasesLearned: 0,

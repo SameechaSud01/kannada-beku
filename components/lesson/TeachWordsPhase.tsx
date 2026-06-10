@@ -19,10 +19,12 @@ import type { Word } from '../../constants/lessons/types';
 interface TeachWordsPhaseProps {
   words: Word[];
   wordIndex: number;
+  /** Sub-part name (e.g. "Saying hello"); shown on the progress label when split. */
+  sectionLabel?: string;
   onAdvance: () => void;
 }
 
-export function TeachWordsPhase({ words, wordIndex, onAdvance }: TeachWordsPhaseProps) {
+export function TeachWordsPhase({ words, wordIndex, sectionLabel, onAdvance }: TeachWordsPhaseProps) {
   const insets = useSafeAreaInsets();
   const word = words[wordIndex];
   const total = words.length;
@@ -56,7 +58,7 @@ export function TeachWordsPhase({ words, wordIndex, onAdvance }: TeachWordsPhase
         <LessonProgressBar
           current={wordIndex + 1}
           total={total}
-          label={`Word ${wordIndex + 1} of ${total}`}
+          label={`${sectionLabel ? `${sectionLabel} · ` : ''}Word ${wordIndex + 1} of ${total}`}
         />
       </View>
 
