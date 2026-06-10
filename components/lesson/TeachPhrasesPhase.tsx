@@ -20,6 +20,8 @@ interface TeachPhrasesPhaseProps {
   phrases: Phrase[];
   words: Word[];
   phraseIndex: number;
+  /** Sub-part name; shown on the progress label when the lesson is split. */
+  sectionLabel?: string;
   onAdvance: () => void;
 }
 
@@ -33,6 +35,7 @@ export function TeachPhrasesPhase({
   phrases,
   words,
   phraseIndex,
+  sectionLabel,
   onAdvance,
 }: TeachPhrasesPhaseProps) {
   const insets = useSafeAreaInsets();
@@ -84,7 +87,7 @@ export function TeachPhrasesPhase({
         <LessonProgressBar
           current={phraseIndex + 1}
           total={total}
-          label={`Phrase ${phraseIndex + 1} of ${total}`}
+          label={`${sectionLabel ? `${sectionLabel} · ` : ''}Phrase ${phraseIndex + 1} of ${total}`}
         />
       </View>
 

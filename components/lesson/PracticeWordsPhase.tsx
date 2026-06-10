@@ -19,16 +19,20 @@ interface PracticeWordsPhaseProps {
   words: Word[];
   practiceWordIndex: number;
   step: 'listen' | 'say';
+  /** Sub-part name; shown on the progress label when the lesson is split. */
+  sectionLabel?: string;
+  /** Pool to draw wrong answers from (full lesson vocab); defaults to `words`. */
+  distractorPool?: Word[];
   onAdvance: () => void;
 }
 
 const CORRECT_DELAY_MS = 800;
 const WRONG_DELAY_MS = 1000;
 
-function pickDistractors(words: Word[], currentIndex: number): Word[] {
-  const pool = words.filter((_, i) => i !== currentIndex);
-  if (pool.length === 0) return [];
-  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+function pickDistractors(pool: Word[], current: Word): Word[] {
+  const candidates = pool.filter((w) => w !== current);
+  if (candidates.length === 0) return [];
+  const shuffled = [...candidates].sort(() => Math.random() - 0.5);
   const picks: Word[] = [];
   for (let i = 0; i < 2; i++) {
     picks.push(shuffled[i % shuffled.length]);
@@ -40,6 +44,8 @@ export function PracticeWordsPhase({
   words,
   practiceWordIndex,
   step,
+  sectionLabel,
+  distractorPool,
   onAdvance,
 }: PracticeWordsPhaseProps) {
   const insets = useSafeAreaInsets();
@@ -50,7 +56,7 @@ export function PracticeWordsPhase({
   const [picked, setPicked] = useState<number | null>(null);
   const options = useMemo<Word[]>(() => {
     if (!word) return [];
-    const distractors = pickDistractors(words, practiceWordIndex);
+    const distractors = pickDistractors(distractorPool ?? words, word);
     const all = [word, ...distractors];
     return all.sort(() => Math.random() - 0.5);
     // re-shuffle on each new word + step entry
@@ -100,7 +106,7 @@ export function PracticeWordsPhase({
         <LessonProgressBar
           current={practiceWordIndex + 1}
           total={total}
-          label={`Word ${practiceWordIndex + 1} of ${total} — ${step === 'listen' ? 'Listen' : 'Say it'}`}
+          label={`${sectionLabel ? `${sectionLabel} · ` : ''}Word ${practiceWordIndex + 1} of ${total} — ${step === 'listen' ? 'Listen' : 'Say it'}`}
         />
       </View>
 

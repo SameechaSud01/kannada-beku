@@ -19,16 +19,20 @@ interface PracticePhrasesPhaseProps {
   phrases: Phrase[];
   practicePhrasesIndex: number;
   step: 'listen' | 'say';
+  /** Sub-part name; shown on the progress label when the lesson is split. */
+  sectionLabel?: string;
+  /** Pool to draw wrong answers from (full lesson phrases); defaults to `phrases`. */
+  distractorPool?: Phrase[];
   onAdvance: () => void;
 }
 
 const CORRECT_DELAY_MS = 800;
 const WRONG_DELAY_MS = 1000;
 
-function pickDistractors(phrases: Phrase[], currentIndex: number): Phrase[] {
-  const pool = phrases.filter((_, i) => i !== currentIndex);
-  if (pool.length === 0) return [];
-  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+function pickDistractors(pool: Phrase[], current: Phrase): Phrase[] {
+  const candidates = pool.filter((ph) => ph !== current);
+  if (candidates.length === 0) return [];
+  const shuffled = [...candidates].sort(() => Math.random() - 0.5);
   const picks: Phrase[] = [];
   for (let i = 0; i < 2; i++) {
     picks.push(shuffled[i % shuffled.length]);
@@ -40,6 +44,8 @@ export function PracticePhrasesPhase({
   phrases,
   practicePhrasesIndex,
   step,
+  sectionLabel,
+  distractorPool,
   onAdvance,
 }: PracticePhrasesPhaseProps) {
   const insets = useSafeAreaInsets();
@@ -50,7 +56,7 @@ export function PracticePhrasesPhase({
 
   const options = useMemo<Phrase[]>(() => {
     if (!phrase) return [];
-    const distractors = pickDistractors(phrases, practicePhrasesIndex);
+    const distractors = pickDistractors(distractorPool ?? phrases, phrase);
     return [phrase, ...distractors].sort(() => Math.random() - 0.5);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [practicePhrasesIndex, step]);
@@ -98,7 +104,7 @@ export function PracticePhrasesPhase({
         <LessonProgressBar
           current={practicePhrasesIndex + 1}
           total={total}
-          label={`Phrase ${practicePhrasesIndex + 1} of ${total} — ${step === 'listen' ? 'Listen' : 'Say it'}`}
+          label={`${sectionLabel ? `${sectionLabel} · ` : ''}Phrase ${practicePhrasesIndex + 1} of ${total} — ${step === 'listen' ? 'Listen' : 'Say it'}`}
         />
       </View>
 

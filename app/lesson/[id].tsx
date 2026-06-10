@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -6,8 +6,10 @@ import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing } from '../../constants/spacing';
+import { flattenSections, type Lesson } from '../../constants/lessons/types';
 import { useDbLesson } from '../../hooks/useLessons';
 import { useLessonRunner } from '../../hooks/useLessonRunner';
+import { useProgressStore } from '../../stores/progressStore';
 import { SituationPhase } from '../../components/lesson/SituationPhase';
 import { TeachWordsPhase } from '../../components/lesson/TeachWordsPhase';
 import { PracticeWordsPhase } from '../../components/lesson/PracticeWordsPhase';
@@ -16,15 +18,42 @@ import { PracticePhrasesPhase } from '../../components/lesson/PracticePhrasesPha
 import { SummaryPhase } from '../../components/lesson/SummaryPhase';
 import { RealWorldPhase } from '../../components/lesson/RealWorldPhase';
 import { DoneCard } from '../../components/lesson/DoneCard';
+import { PartDoneCard } from '../../components/lesson/PartDoneCard';
+import { LessonPartChooser } from '../../components/lesson/LessonPartChooser';
 import { PhaseBackButton } from '../../components/lesson/PhaseBackButton';
 import { ExitBackButton } from '../../components/ui/ExitBackButton';
 
 export default function LessonScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, part } = useLocalSearchParams<{ id: string; part?: string }>();
   const router = useRouter();
   const lessonQuery = useDbLesson(id);
   const lesson = lessonQuery.data ?? null;
-  const runner = useLessonRunner(lesson);
+  const completePart = useProgressStore((s) => s.completePart);
+
+  // A split lesson opened without a chosen part shows the chooser; otherwise we
+  // run a single sub-part. `partIndex < 0` means whole-lesson run (un-split
+  // lessons, or a malformed part param falling back gracefully).
+  const partIndex = lesson ? lesson.sections.findIndex((s) => s.key === part) : -1;
+  const isPartRun = !!part && partIndex >= 0 && !!lesson && lesson.sections.length > 1;
+
+  // The slice the runner actually plays: one section for a part run, else all.
+  const runLesson = useMemo<Lesson | null>(() => {
+    if (!lesson) return null;
+    if (!isPartRun) return lesson;
+    const section = lesson.sections[partIndex];
+    return { ...lesson, sections: [section], ...flattenSections([section]) };
+  }, [lesson, isPartRun, partIndex]);
+
+  // Part runs skip the lesson-level intro/outro (shown by the chooser + final
+  // done card) so they aren't repeated once per sub-part.
+  const runner = useLessonRunner(runLesson, { intro: !isPartRun, outro: !isPartRun });
+
+  // Record sub-part completion as soon as its run reaches `done` (idempotent).
+  useEffect(() => {
+    if (runner.phase === 'done' && isPartRun && lesson && part) {
+      completePart(lesson.slug, part);
+    }
+  }, [runner.phase, isPartRun, lesson, part, completePart]);
 
   if (lessonQuery.isLoading) {
     return <LessonLoading />;
@@ -33,6 +62,29 @@ export default function LessonScreen() {
   if (!lesson) {
     return <LessonNotFound onBack={() => router.back()} />;
   }
+
+  // Split lesson, no part chosen yet → sub-part chooser.
+  if (!part && lesson.sections.length > 1) {
+    return (
+      <View style={{ flex: 1 }}>
+        <LessonPartChooser
+          lesson={lesson}
+          onSelectPart={(key) => router.push(`/lesson/${lesson.slug}?part=${key}`)}
+        />
+        <ExitBackButton skipConfirm />
+      </View>
+    );
+  }
+
+  const active = runLesson ?? lesson;
+  const isLastPart = isPartRun && partIndex === lesson.sections.length - 1;
+  const nextSection = isPartRun ? lesson.sections[partIndex + 1] : undefined;
+  const currentPartLabel = isPartRun ? lesson.sections[partIndex]?.label ?? '' : '';
+
+  // Sub-part label rides on the progress bar only during a part run.
+  const sectionLabel = isPartRun ? runner.sectionLabel : undefined;
+  const sectionWords = runner.section?.words ?? [];
+  const sectionPhrases = runner.section?.phrases ?? [];
 
   let phaseEl: ReactNode = null;
   switch (runner.phase) {
@@ -43,8 +95,9 @@ export default function LessonScreen() {
     case 'teach_words':
       phaseEl = (
         <TeachWordsPhase
-          words={lesson.words}
+          words={sectionWords}
           wordIndex={runner.wordIndex}
+          sectionLabel={sectionLabel}
           onAdvance={runner.advance}
         />
       );
@@ -52,9 +105,11 @@ export default function LessonScreen() {
     case 'practice_words':
       phaseEl = (
         <PracticeWordsPhase
-          words={lesson.words}
+          words={sectionWords}
           practiceWordIndex={runner.practiceWordIndex}
           step={runner.practiceWordStep}
+          sectionLabel={sectionLabel}
+          distractorPool={lesson.words}
           onAdvance={runner.advance}
         />
       );
@@ -62,9 +117,12 @@ export default function LessonScreen() {
     case 'teach_phrases':
       phaseEl = (
         <TeachPhrasesPhase
-          phrases={lesson.phrases}
+          phrases={sectionPhrases}
+          // Full lesson vocab so chips for words taught in earlier sub-parts
+          // still resolve their audio.
           words={lesson.words}
           phraseIndex={runner.phraseIndex}
+          sectionLabel={sectionLabel}
           onAdvance={runner.advance}
         />
       );
@@ -72,18 +130,21 @@ export default function LessonScreen() {
     case 'practice_phrases':
       phaseEl = (
         <PracticePhrasesPhase
-          phrases={lesson.phrases}
+          phrases={sectionPhrases}
           practicePhrasesIndex={runner.practicePhrasesIndex}
           step={runner.practicePhrasesStep}
+          sectionLabel={sectionLabel}
+          distractorPool={lesson.phrases}
           onAdvance={runner.advance}
         />
       );
       break;
     case 'summary':
+      // Recap just the sub-part that was played (whole lesson for un-split).
       phaseEl = (
         <SummaryPhase
-          words={lesson.words}
-          phrases={lesson.phrases}
+          words={active.words}
+          phrases={active.phrases}
           onAdvance={runner.advance}
         />
       );
@@ -98,6 +159,18 @@ export default function LessonScreen() {
       );
       break;
     case 'done':
+      // Intermediate sub-part → light "continue" card, no server completion.
+      if (isPartRun && !isLastPart && nextSection) {
+        return (
+          <PartDoneCard
+            partLabel={currentPartLabel}
+            nextLabel={nextSection.label}
+            onContinue={() => router.replace(`/lesson/${lesson.slug}?part=${nextSection.key}`)}
+            onBack={() => router.back()}
+          />
+        );
+      }
+      // Final sub-part (or whole lesson) → full completion + celebration.
       return <DoneCard lesson={lesson} runner={runner} onClose={() => router.back()} />;
   }
 
