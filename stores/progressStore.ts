@@ -38,6 +38,13 @@ interface ProgressState {
    * only needs to remember *partial* progress between sessions.
    */
   completedParts: string[];
+  /**
+   * Completed game sub-parts, as `"<gameKey>:<sectionKey>"` (e.g.
+   * "opposites:1a"). Drives the sequential per-game part chooser
+   * (spec_game_subsection_split). Section keys embed the lesson number, so they
+   * are unique across lessons. Client-only, mirroring `completedParts`.
+   */
+  completedGameParts: string[];
   lessonProgress: Record<string, number>;
   xp: number;
   totalPhrasesLearned: number;
@@ -55,6 +62,8 @@ interface ProgressState {
   updateLessonProgress: (lessonId: string, phraseIndex: number) => void;
   /** Mark one lesson sub-part complete (idempotent). */
   completePart: (slug: string, partKey: string) => void;
+  /** Mark one game sub-part complete (idempotent). */
+  completeGamePart: (gameKey: string, sectionKey: string) => void;
   completeLesson: (
     lessonId: string,
     score: number,
@@ -87,6 +96,7 @@ export const useProgressStore = create<ProgressState>()(
       lastActiveDate: '',
       completedLessons: [],
       completedParts: [],
+      completedGameParts: [],
       lessonProgress: {},
       xp: 0,
       totalPhrasesLearned: 0,
@@ -110,6 +120,13 @@ export const useProgressStore = create<ProgressState>()(
           const key = `${slug}:${partKey}`;
           if (state.completedParts.includes(key)) return state;
           return { completedParts: [...state.completedParts, key] };
+        }),
+
+      completeGamePart: (gameKey, sectionKey) =>
+        set((state) => {
+          const key = `${gameKey}:${sectionKey}`;
+          if (state.completedGameParts.includes(key)) return state;
+          return { completedGameParts: [...state.completedGameParts, key] };
         }),
 
       completeLesson: (lessonId, score, phrasesLearned, minutesPracticed) =>
@@ -174,6 +191,7 @@ export const useProgressStore = create<ProgressState>()(
           lastActiveDate: '',
           completedLessons: [],
           completedParts: [],
+          completedGameParts: [],
           lessonProgress: {},
           xp: 0,
           totalPhrasesLearned: 0,

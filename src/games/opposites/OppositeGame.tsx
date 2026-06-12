@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -6,6 +6,10 @@ import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { Spacing, Radius } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
+import { GAMES } from '@/constants/games';
+import { useProgressStore } from '@/stores/progressStore';
+import { useGameSplit } from '@/src/games/shared/parts';
+import { GamePartChooser } from '@/components/games/GamePartChooser';
 import { useOppositesItems, useRecordOppositesAttempt } from '../../../hooks/games/opposites';
 import { useGameState } from './hooks/useGameState';
 import ProgressBar from './components/ProgressBar';
@@ -18,7 +22,7 @@ import { ExitBackButton } from '@/components/ui/ExitBackButton';
 import type { QuestionPair } from './types';
 import type { OppositesItem } from '../../../services/api/games/opposites';
 
-type Props = { lessonNo: number };
+type Props = { lessonNo: number; section?: string };
 
 function toPair(item: OppositesItem): QuestionPair {
   return {
@@ -31,13 +35,17 @@ function toPair(item: OppositesItem): QuestionPair {
   };
 }
 
-const OppositeGame: React.FC<Props> = ({ lessonNo }) => {
+const OppositeGame: React.FC<Props> = ({ lessonNo, section }) => {
+  const router = useRouter();
   const { data: items, isLoading, isError, refetch } = useOppositesItems(lessonNo);
-
-  const pairs = useMemo<QuestionPair[]>(
-    () => (items ?? []).map(toPair),
-    [items],
+  const { parts, showChooser, playItems, activeSection } = useGameSplit(
+    'opposites',
+    lessonNo,
+    items,
+    section ?? null,
   );
+
+  const pairs = useMemo<QuestionPair[]>(() => playItems.map(toPair), [playItems]);
 
   if (isLoading) {
     return <CenteredLoading />;
@@ -45,14 +53,33 @@ const OppositeGame: React.FC<Props> = ({ lessonNo }) => {
   if (isError) {
     return <ErrorState onRetry={() => refetch()} />;
   }
+  if (showChooser) {
+    return (
+      <GamePartChooser
+        title={GAMES.opposites.title}
+        lessonNo={lessonNo}
+        parts={parts}
+        onSelectPart={(key) => router.push(`/opposites/${lessonNo}?part=${key}`)}
+      />
+    );
+  }
   if (pairs.length === 0) {
     return <EmptyState lessonNo={lessonNo} />;
   }
-  return <OppositeGameInner pairs={pairs} />;
+  return <OppositeGameInner pairs={pairs} gameKey="opposites" sectionKey={activeSection} />;
 };
 
-function OppositeGameInner({ pairs }: { pairs: QuestionPair[] }) {
+function OppositeGameInner({
+  pairs,
+  gameKey,
+  sectionKey,
+}: {
+  pairs: QuestionPair[];
+  gameKey: string;
+  sectionKey: string | null;
+}) {
   const recordAttempt = useRecordOppositesAttempt();
+  const completeGamePart = useProgressStore((s) => s.completeGamePart);
 
   const {
     currentQuestion,
@@ -79,6 +106,12 @@ function OppositeGameInner({ pairs }: { pairs: QuestionPair[] }) {
   });
 
   useAnswerHaptics(answerState);
+
+  // Finishing the round marks this sub-part done, so the chooser unlocks the
+  // next one (spec_game_subsection_split). Idempotent in the store.
+  useEffect(() => {
+    if (phase === 'result' && sectionKey) completeGamePart(gameKey, sectionKey);
+  }, [phase, sectionKey, gameKey, completeGamePart]);
 
   if (phase === 'result') {
     return (

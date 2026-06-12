@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kannada Beku — Non-Negotiables Specification</title>
+<style>
+  :root{
+    --green:#1f7a4d; --green-deep:#13593a; --green-soft:#e7f3ec;
+    --gold:#d9a521; --gold-soft:#fbf3dc;
+    --red:#9e2b25; --red-soft:#f7e7e6;
+    --ink:#1c2421; --muted:#5c6b64; --faint:#8a988f;
+    --line:#e2e8e3; --bg:#fdfcf7; --card:#ffffff;
+    --mono:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --radius:14px; --shadow:0 1px 3px rgba(20,40,30,.06),0 8px 24px rgba(20,40,30,.05);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.62;font-size:16px;-webkit-font-smoothing:antialiased}
+  a{color:var(--green);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{font-family:var(--mono);font-size:.86em;background:var(--green-soft);color:var(--green-deep);padding:1px 6px;border-radius:5px;white-space:nowrap}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+
+  /* Header */
+  header.hero{background:linear-gradient(135deg,var(--green-deep),var(--green));color:#fff;padding:54px 0 46px;position:relative;overflow:hidden}
+  header.hero::after{content:"ಕ";position:absolute;right:-10px;top:-40px;font-size:340px;line-height:1;color:rgba(255,255,255,.06);font-weight:700}
+  .hero .wrap{position:relative;z-index:1}
+  .eyebrow{letter-spacing:.18em;text-transform:uppercase;font-size:12px;font-weight:700;color:var(--gold-soft);opacity:.95}
+  header.hero h1{font-size:40px;line-height:1.1;margin:10px 0 12px;font-weight:800;letter-spacing:-.5px}
+  header.hero p.lede{font-size:18px;max-width:760px;margin:0;color:rgba(255,255,255,.92)}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+  .chip{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);padding:6px 13px;border-radius:999px;font-size:13px;font-weight:600}
+  .chip b{color:var(--gold-soft);font-weight:700}
+
+  /* Layout with sticky nav */
+  .shell{display:grid;grid-template-columns:240px 1fr;gap:40px;padding:40px 0 80px}
+  nav.toc{position:sticky;top:24px;align-self:start;font-size:14px;max-height:calc(100vh - 48px);overflow:auto}
+  nav.toc h4{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:var(--faint);margin:18px 0 8px}
+  nav.toc a{display:block;padding:5px 11px;border-radius:8px;color:var(--muted);font-weight:500;border-left:2px solid transparent}
+  nav.toc a:hover{background:var(--green-soft);text-decoration:none;color:var(--green-deep)}
+  main{min-width:0}
+
+  /* Sections */
+  section{margin-bottom:46px;scroll-margin-top:24px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--line);padding-bottom:12px;margin-bottom:22px}
+  .sec-num{font-family:var(--mono);font-size:13px;font-weight:700;color:#fff;background:var(--green);width:30px;height:30px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .sec-head h2{font-size:25px;margin:0;font-weight:800;letter-spacing:-.3px}
+  h3{font-size:18px;font-weight:700;margin:30px 0 10px;color:var(--green-deep)}
+  h4{font-size:15px;font-weight:700;margin:20px 0 6px}
+  p{margin:10px 0}
+
+  /* Cards & callouts */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);margin:16px 0}
+  .why{background:var(--gold-soft);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 18px;margin:14px 0;font-size:14.5px}
+  .why b{color:#8a6a10}
+  .danger{background:var(--red-soft);border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:12px 18px;margin:14px 0;font-size:14.5px}
+  .danger b{color:var(--red)}
+  .note{background:var(--green-soft);border-left:4px solid var(--green);border-radius:0 10px 10px 0;padding:12px 18px;margin:14px 0;font-size:14.5px}
+
+  /* Tables */
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;background:var(--card);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+  th{background:var(--green-deep);color:#fff;text-align:left;padding:10px 13px;font-weight:600;font-size:12.5px;letter-spacing:.02em}
+  td{padding:9px 13px;border-top:1px solid var(--line);vertical-align:top}
+  tr:nth-child(even) td{background:#fbfcfb}
+  td code{white-space:normal}
+
+  /* Badges */
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;letter-spacing:.03em;vertical-align:middle}
+  .b-lock{background:var(--green);color:#fff}
+  .b-silent{background:var(--red);color:#fff}
+  .b-loud{background:#46627a;color:#fff}
+  .b-open{background:var(--gold);color:#3a2c05}
+  .b-target{background:#5b4b8a;color:#fff}
+
+  /* Checklist */
+  .checklist{list-style:none;padding:0;margin:14px 0}
+  .checklist li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px 12px 44px;margin:8px 0;position:relative;font-size:14.5px}
+  .checklist li::before{content:"";position:absolute;left:14px;top:14px;width:16px;height:16px;border:2px solid var(--green);border-radius:4px}
+  .checklist li b{color:var(--green-deep)}
+
+  ul.tight{margin:8px 0;padding-left:22px}
+  ul.tight li{margin:5px 0}
+  .kv{font-family:var(--mono);font-size:13px}
+
+  footer{border-top:1px solid var(--line);padding:26px 0 60px;color:var(--muted);font-size:13.5px}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;margin:18px 0;padding:14px 18px;background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+
+  @media(max-width:900px){
+    .shell{grid-template-columns:1fr;gap:0}
+    nav.toc{display:none}
+    header.hero h1{font-size:30px}
+  }
+  @media print{
+    header.hero::after{display:none}
+    nav.toc{display:none}
+    .shell{display:block}
+    body{font-size:12px}
+    .card,table{box-shadow:none}
+    section{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Kannada Beku · Foundation Audit</div>
+    <h1>Non-Negotiables Specification</h1>
+    <p class="lede">The load-bearing contracts of the app — data models, critical flows, integrations, and reliability thresholds — and the specific changes that would <em>silently</em> break them without throwing an error.</p>
+    <div class="meta-row">
+      <span class="chip">Branch <b>main</b> @ bee7079</span>
+      <span class="chip">Generated <b>2026-06-10</b></span>
+      <span class="chip">Expo SDK <b>54</b> · RN <b>0.81.5</b> · React <b>19.1</b></span>
+      <span class="chip">Stack <b>Expo Router · Zustand · Supabase · TanStack Query</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap shell">
+
+  <nav class="toc">
+    <h4>Contents</h4>
+    <a href="#how">How to use this doc</a>
+    <h4>The Five Pillars</h4>
+    <a href="#models">1 · Data models &amp; invariants</a>
+    <a href="#flows">2 · Critical user flows</a>
+    <a href="#integrations">3 · Integration points</a>
+    <a href="#thresholds">4 · Performance &amp; reliability</a>
+    <a href="#breaking">5 · Silent-breakage map</a>
+    <h4>Operations</h4>
+    <a href="#checklist">Audit checklist</a>
+    <a href="#known">Known live gaps</a>
+  </nav>
+
+  <main>
+
+  <!-- HOW TO USE -->
+  <section id="how">
+    <div class="sec-head"><span class="sec-num">§</span><h2>How to use this document</h2></div>
+    <p>This is a <strong>defensive contract</strong>, not a design doc. Every item below is something the app currently <em>depends on</em>. Most failures here are dangerous precisely because they are <strong>silent</strong>: no exception, no red screen — just wrong data, lost progress, or muted audio that surfaces only in production.</p>
+    <p>It is grounded in and subordinate to the locked foundation docs in <a href="../foundation/">docs/foundation/</a> (<code>STATE.md</code>, <code>NAVIGATION.md</code>, <code>CONTENT.md</code>, <code>CONTRADICTIONS.md</code>). Where the live code on <code>main</code> diverges from those docs, this audit reports the <em>code</em> as the source of truth and flags the divergence.</p>
+    <div class="legend">
+      <span><span class="badge b-lock">LOCKED</span> decided; change needs a spec PR + owner sign-off</span>
+      <span><span class="badge b-silent">SILENT</span> breaks with no error thrown</span>
+      <span><span class="badge b-loud">LOUD</span> breaks visibly (crash/throw)</span>
+      <span><span class="badge b-open">OPEN</span> undecided / not yet wired</span>
+      <span><span class="badge b-target">TARGET</span> proposed threshold, not yet enforced</span>
+    </div>
+    <div class="why"><b>Reading guide:</b> the <b>Why</b> blocks (gold) explain the rationale behind each invariant — delete the rationale and someone <em>will</em> reopen the decision. The <b>red</b> blocks are the silent-failure tripwires.</div>
+  </section>
+
+  <!-- PILLAR 1 -->
+  <section id="models">
+    <div class="sec-head"><span class="sec-num">1</span><h2>Core data models &amp; their invariants</h2></div>
+    <p>Three layers hold state: <strong>Zustand stores</strong> (client), the <strong>Supabase schema</strong> (server), and the <strong>API/RPC contracts</strong> that bridge them. Each has invariants that must never break.</p>
+
+    <h3>1.1 — Zustand stores <span class="badge b-lock">LOCKED</span></h3>
+    <p>Three stores, one per concern, in <a href="../../stores/">stores/</a>. <code>useAuthStore</code> is in-memory only; the other two persist to AsyncStorage.</p>
+    <table>
+      <tr><th>Store</th><th>Persisted?</th><th>Storage key (literal)</th><th>Source of truth</th></tr>
+      <tr><td><code>useAuthStore</code></td><td>No (in-memory)</td><td>n/a — Supabase client persists the session via <code>expo-secure-store</code></td><td>Supabase session</td></tr>
+      <tr><td><code>useUserStore</code></td><td>Yes · AsyncStorage</td><td><code>user_prefs</code></td><td>Server <code>public.users</code> hydrates it on each auth event</td></tr>
+      <tr><td><code>useProgressStore</code></td><td>Yes · AsyncStorage</td><td><code>kannada-beku-progress</code> <span class="kv">(migrates legacy <code>kannada-baa-progress</code>)</span></td><td>Client-first; <code>completedLessons</code> is a hydrated cache of server truth</td></tr>
+    </table>
+
+    <div class="danger"><b>INVARIANT — Storage keys are permanent.</b> The literals <code>user_prefs</code> and <code>kannada-beku-progress</code> must never change. Renaming a key does not throw — it points the store at an empty slot, so <strong>every existing user silently loses all preferences and progress</strong> on their next launch. The legacy-key migration adapter in <a href="../../stores/progressStore.ts">progressStore.ts</a> (copies <code>kannada-baa-progress</code> → new key on first read, then deletes the old key) is one-shot and must stay until well past the rebrand cohort.</div>
+
+    <h4>useProgressStore — the numeric invariants</h4>
+    <table>
+      <tr><th>Invariant</th><th>Rule (as coded)</th><th>If broken</th></tr>
+      <tr><td><b>Completion idempotency</b> <span class="badge b-lock">LOCKED</span></td><td><code>completeLesson()</code> early-returns if <code>completedLessons.includes(lessonId)</code></td><td>Replaying a lesson re-inflates XP / phrase / minute counts <span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td><b>XP threshold</b></td><td><code>score &gt;= 80 ? 20 : 10</code> XP</td><td>Quietly re-scales all future XP awards <span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td><b>Streak idempotency</b></td><td><code>updateStreak()</code> no-ops if <code>lastActiveDate === today</code>; +1 if yesterday; else reset to 1</td><td>Multiple lessons/day double-count, or streaks never reset <span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td><b>Today-minutes rollover</b></td><td>carry only if <code>todayMinutesDate === today</code>, else reset to 0</td><td>Daily-goal celebration mis-fires <span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td><b>Server-completion merge</b></td><td><code>hydrateFromServerCompletions()</code> is a deduped <em>union</em>, completion-only</td><td>Touching <code>xp/streak</code> here would let server hydration overwrite client scalars <span class="badge b-silent">SILENT</span></td></tr>
+    </table>
+    <div class="why"><b>Why idempotent:</b> users frequently replay lessons. If completion incremented streak/XP on every replay, the metrics become meaningless. The streak answers <em>"did you practice today?"</em>, not <em>"how many times did you tap Done?"</em> This contract is pinned by <a href="../../__tests__/stores/progressStore.test.ts">progressStore.test.ts</a> (resolved C6) — those tests are themselves non-negotiable.</div>
+
+    <h4>User-switch isolation — the cross-account firewall</h4>
+    <p><code>AppGate</code> compares <code>session.user.id</code> against <code>useUserStore.userId</code> on every auth change. First bind (stored id <code>null</code>) just records the id. A <em>mismatch</em> fires <code>resetForUser(newId)</code> + <code>useProgressStore.reset()</code>, and routing waits one tick for the reset to land.</p>
+    <div class="danger"><b>INVARIANT — scope partitioning of <code>resetForUser</code>.</b> It must clear <em>per-user</em> fields (<code>hasCompletedOnboarding</code>, <code>displayName</code>, <code>learningMode</code>, <code>motivations</code>, <code>dailyGoalMinutes</code>, <code>dailyReminderTime</code>, <code>ttsRate</code>, <code>autoReplay</code>, <code>hasSeenBasicsGuide</code>) and <em>keep</em> install-scoped flags (<code>mode</code>, <code>hasSeenTtsWarning</code>, <code>hasSeenBasicsHomeNudge</code>, <code>permissionDenials</code>, <code>isHydrated</code>). Mis-bucketing a field here is silent: clear too much and you re-prompt device-level things every login; clear too little and <strong>a new user inherits the previous user's onboarding state and skips onboarding</strong>, or sees their progress.</div>
+
+    <h4>Hydration gate</h4>
+    <p>Both <code>useUserStore.isHydrated</code> AND <code>useProgressStore.isHydrated</code> must be <code>true</code> (set in each store's <code>onRehydrateStorage</code> callback) before <code>AppGate</code> renders a routing decision.</p>
+    <div class="why"><b>Why gate first:</b> the persisted onboarding flag chooses the redirect target. Route before hydration resolves and an onboarded user briefly flashes the login screen, or the routing loops. Removing either <code>setHydrated(true)</code> callback means routing <em>never unblocks</em> — a permanent splash hang. <span class="badge b-silent">SILENT</span></div>
+
+    <h3>1.2 — Supabase schema <span class="badge b-lock">LOCKED</span></h3>
+    <p>Client: <a href="../../services/api/supabase.ts">supabase.ts</a> — a singleton reading <code>EXPO_PUBLIC_SUPABASE_URL</code> / <code>EXPO_PUBLIC_SUPABASE_ANON_KEY</code> (throws at module load if absent). Three table families are read/written by app code today; the rest are scaffolded.</p>
+    <table>
+      <tr><th>Table</th><th>Role</th><th>Load-bearing columns</th></tr>
+      <tr><td><code>users</code></td><td>Identity + onboarding answers + per-user prefs</td><td><code>id</code>(PK→auth), <code>email</code>, <code>name</code>, <code>learning_mode</code>, <code>motivations[]</code>, <code>daily_goal_minutes</code>, <code>onboarding_completed_at</code>, <code>daily_reminder_time</code>, <code>tts_rate</code>, <code>auto_replay</code></td></tr>
+      <tr><td><code>lessons</code></td><td>Reference rows + completion anchor</td><td><code>id</code>(uuid PK), <code>lesson_no</code>(unique, ordering), <code>slug</code>(unique — bridge to string IDs), <code>content_json</code>(jsonb: <code>reference.words/phrases</code>)</td></tr>
+      <tr><td><code>user_lesson_progress</code></td><td>"Did I finish X?" + best score</td><td>(<code>user_id</code>,<code>lesson_id</code>) composite PK, <code>completed_at</code>, <code>score</code>(0–100 check)</td></tr>
+      <tr><td><code>*_items</code> / <code>*_progress</code></td><td>Per-game content + per-item personal-best</td><td>items: <code>lesson_id</code>, <code>sort_order</code>; progress: (<code>user_id</code>,<code>item_id</code>) PK, <code>is_correct</code>, <code>attempts</code>, <code>last_played</code></td></tr>
+      <tr><td><code>user_overall_progress</code></td><td>Trigger-maintained aggregate (read-only to client)</td><td><code>user_id</code>(PK), <code>total_score</code>, <code>progress_pct</code>, <code>recomputed_at</code></td></tr>
+      <tr><td><code>emergency_phrases</code> · <code>karnataka_fun_facts</code></td><td>Server-backed content surfaces</td><td>emergency: <code>category</code>∈{auto,trouble,basics}; facts: <code>fact_no</code>(unique)</td></tr>
+    </table>
+    <div class="danger"><b>INVARIANT — column names are an API.</b> The client selects columns by literal name (e.g. <code>USER_SELECT</code> in <a href="../../services/api/users.ts">users.ts</a>). A Supabase column rename does not break the build — TypeScript can't see the DB — and PostgREST returns the remaining columns happily, so the field just arrives <code>undefined</code>. Renames of <code>slug</code>, <code>lesson_no</code>, <code>content_json</code>, <code>completed_at</code>, <code>score</code>, <code>is_correct</code>, <code>sort_order</code>, or any prefs column are <strong>silent data loss</strong>. <span class="badge b-silent">SILENT</span></div>
+
+    <h4>RLS is part of the contract</h4>
+    <p>For the active tables: <code>users</code> = select/update own row only (insert via the <code>on_auth_user_created</code> trigger, never the client). <code>lessons</code>/<code>*_items</code>/<code>emergency_phrases</code>/<code>karnataka_fun_facts</code> = select for any authenticated user, no client writes (seed-only). <code>*_progress</code> = select/insert/update own, no delete — writes go <em>only</em> through the <code>record_*</code> RPCs.</p>
+    <div class="note"><b>Scaffolded tables are a tripwire.</b> <code>conversation_*</code> and <code>quick_quiz_*</code> exist in the DB. Wiring any of them from a chat prompt without first applying the <code>ulp_*_own</code> RLS pattern is a security hole. Per STATE.md, each needs its own spec, accessor, RLS pass, and registered query/mutation keys before the first client read/write.</div>
+
+    <h3>1.3 — API &amp; RPC contracts <span class="badge b-lock">LOCKED</span></h3>
+    <p>All progress writes flow through <code>SECURITY INVOKER</code> RPCs with personal-best UPSERT semantics. The function names and <em>parameter names</em> are matched by string.</p>
+    <table>
+      <tr><th>RPC</th><th>Params (exact)</th><th>Personal-best semantic</th></tr>
+      <tr><td><code>record_lesson_completion</code></td><td><code>p_lesson_id</code> uuid, <code>p_score</code> int</td><td><code>score = GREATEST(old,new)</code>; <code>completed_at = COALESCE(old,new)</code></td></tr>
+      <tr><td><code>record_opposites_attempt</code><br><code>record_dictation_attempt</code><br><code>record_image_match_attempt</code></td><td><code>p_item_id</code> uuid, <code>p_is_correct</code> bool</td><td><code>is_correct</code> OR-merges (once true, stays true); <code>attempts</code>++; <code>last_played</code> = now. Each fires the overall-progress recompute trigger.</td></tr>
+      <tr><td><code>recompute_overall_progress</code></td><td><code>p_user_id</code> uuid (trigger-driven, <code>SECURITY DEFINER</code>)</td><td>See formula below</td></tr>
+    </table>
+    <div class="danger"><b>INVARIANT — RPC signatures.</b> <code>supabase.rpc('name', {p_x: ...})</code> resolves both the function name and the named args at runtime. Rename the SQL function or any <code>p_*</code> parameter and the call returns a PostgREST error the app mostly swallows into a "couldn't save" toast — progress silently stops persisting. <span class="badge b-silent">SILENT / soft-LOUD</span></div>
+
+    <h4>The overall-progress formula <span class="badge b-lock">LOCKED</span></h4>
+    <p class="kv">progress_pct = 50·(lessons_done/8) + (50/3)·(opposites_done/8) + (50/3)·(dictation_done/8) + (50/3)·(image_match_done/8)</p>
+    <ul class="tight">
+      <li><code>lessons_done</code> = completed lessons (<code>completed_at IS NOT NULL</code>), capped at 8.</li>
+      <li>A game is "done" for a lesson when <strong>≥80% of that lesson's items</strong> have <code>is_correct = true</code> lifetime (<code>correct/total &gt;= 0.8</code>), capped at 8 lessons.</li>
+      <li>The split is hard-coded: <strong>50% lessons + 50% games over exactly 3 games.</strong></li>
+    </ul>
+    <div class="why"><b>Why it's frozen at 3 games:</b> the formula is locked across client and DB (see memory note <em>"overall-progress formula locked to 3 games"</em>). Changing the 80% threshold, the 8-lesson cap, or the 3-way split silently re-bases every user's headline percentage — and there is no migration that recomputes historical rows unless triggered. Any change is a LOCKED-decision change, not a refactor.</div>
+    <div class="danger"><b>Live consequence (C13):</b> Image Match is hidden from Practice but still counts as 1 of the 3 games. With no UI path to accumulate <code>image_match_progress</code>, <strong>overall progress can never reach 100%</strong> while the game is hidden. Treat the cap as known until C13 is resolved.</div>
+  </section>
+
+  <!-- PILLAR 2 -->
+  <section id="flows">
+    <div class="sec-head"><span class="sec-num">2</span><h2>Critical user flows</h2></div>
+
+    <h3>2.1 — Authentication &amp; session <span class="badge b-lock">LOCKED</span></h3>
+    <table>
+      <tr><th>Flow</th><th>Call</th><th>Non-negotiable</th></tr>
+      <tr><td>Email/password</td><td><code>signUp</code> / <code>signInWithPassword</code> (email trimmed + lowercased)</td><td>Session live → <code>AppGate</code> routes to onboarding or tabs</td></tr>
+      <tr><td>Google</td><td><code>GoogleSignin.signIn()</code> → <code>signInWithIdToken({provider:'google'})</code></td><td>Needs <code>EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID</code> + <code>..._IOS_CLIENT_ID</code></td></tr>
+      <tr><td>Apple</td><td>hashed nonce → <code>signInWithIdToken({provider:'apple', nonce: rawNonce})</code></td><td>Raw nonce to Supabase, SHA-256 nonce to Apple — must not be swapped</td></tr>
+      <tr><td>Password reset</td><td><code>resetPasswordForEmail</code> → deep link → <code>exchangeCodeForSession</code></td><td>PKCE flow; <code>detectSessionInUrl:false</code>; AppGate early-returns on reset-password route</td></tr>
+      <tr><td>Sign-out</td><td><code>supabase.auth.signOut()</code></td><td>Does <em>not</em> wipe persisted user/progress — same-user re-login restores; cross-user handled by <code>resetForUser</code></td></tr>
+    </table>
+    <div class="danger"><b>INVARIANT — chunked session storage.</b> Supabase sessions exceed the iOS Keychain 2048-byte item limit, so <a href="../../services/api/supabase.ts">supabase.ts</a> wraps <code>expo-secure-store</code> in a <code>ChunkedSecureStoreAdapter</code> (1500-byte chunks + a <code>_meta</code> count key). Removing or "simplifying" this adapter back to a plain secure-store call means the session write silently truncates/fails and <strong>users are logged out on every cold start</strong>. <span class="badge b-silent">SILENT</span></div>
+    <div class="danger"><b>INVARIANT — reset-password exception.</b> While the user is on <code>(auth)/reset-password</code> with an active <em>recovery</em> session, <code>AppGate</code> must early-return (no redirect). Remove that guard and the recovery session bounces the user into the app before they set a password — the reset flow becomes uncompletable. <span class="badge b-silent">SILENT</span></div>
+
+    <h3>2.2 — Lesson progression</h3>
+    <div class="note"><b>Code-vs-doc divergence (report):</b> The foundation docs describe a <code>scenario→intake→drill→output→done</code> machine with <code>fill_blank</code> drill types (C7). The live <code>main</code> runner is a fixed phase sequence — <code>idle → situation → teach_words → practice_words → teach_phrases → practice_phrases → summary → real_world → done</code> — with no drill-type dispatch. C7's <code>fill_blank</code> placeholder is effectively resolved-by-removal. <strong>The phase enum is the contract now;</strong> the doc-described drill engine is not present.</div>
+    <ul class="tight">
+      <li><b>Unlock rule</b> (linear): lesson <code>N</code> unlocks when <code>completedLessons.length &gt;= N-1</code>. Lesson 1 always open. An off-by-one here silently locks or unlocks the wrong lesson.</li>
+      <li><b>Completion is server-first:</b> <code>useCompleteLessonMutation</code> calls <code>recordLessonCompletion(lessonId, 100)</code> <em>first</em>, and only on success runs <code>completeLesson() → updateStreak() → recordActivity()</code>, then invalidates <code>['lesson-completions',userId]</code> + <code>['overall-progress',userId]</code>.</li>
+      <li><b>Score is hard-coded</b> to <code>COMPLETION_SCORE = 100</code>; <code>minutesPracticed</code> is a placeholder <code>ESTIMATED_MIN_PER_LESSON = 5</code> until per-lesson timing is wired.</li>
+      <li><b>Slug bridge:</b> the client persists/compares lesson <em>slugs</em>; the DB keys on UUID. <code>fetchLessonIdBySlug</code> (cached in <a href="../../services/api/lessons.ts">lessons.ts</a>) is the join. A lesson row missing its <code>slug</code> raises <code>LessonNotRegisteredError</code> → "not registered on server" — the one place this failure is <em>loud</em>.</li>
+    </ul>
+    <div class="why"><b>Why server-first:</b> if the store mutated before the DB write, a failed/retried write would let the local idempotency guard mark the lesson done while the server never recorded it — progress that survives reinstall on one device but vanishes on another. Server-first keeps the DB as the canonical completion ledger.</div>
+
+    <h3>2.3 — Audio playback</h3>
+    <p>MVP audio is device TTS via <a href="../../services/audio/deviceTtsAudioService.ts">deviceTtsAudioService.ts</a> (<code>expo-speech</code>). <code>expo-av</code> handles audio-mode globals, mic recording, and recorded-file playback.</p>
+    <table>
+      <tr><th>Invariant</th><th>Value / location</th><th>If broken (silent)</th></tr>
+      <tr><td>Kannada language code</td><td><code>DEFAULT_LANGUAGE = 'kn-IN'</code></td><td>Audio plays in the wrong language / a wrong-accent fallback voice</td></tr>
+      <tr><td>iOS silent-switch override</td><td><code>playsInSilentModeIOS:true</code> (set at boot in <code>_layout.tsx</code>)</td><td>All audio muted when the iPhone ring switch is off — looks like "TTS broken"</td></tr>
+      <tr><td>Voice probe filter</td><td><code>v.language.toLowerCase().startsWith('kn')</code></td><td>Tightening to exact match rejects regional Kannada voices → false "unavailable"</td></tr>
+      <tr><td>Interrupt-on-replay</td><td><code>Speech.stop()</code> before every <code>Speech.speak()</code></td><td>Overlapping voices on rapid taps</td></tr>
+      <tr><td>Rate clamp</td><td><code>resolveRate()</code> clamps to <code>[0.5, 1.5]</code>, default <code>1.0</code></td><td>OS-unsafe rates, or user's <code>tts_rate</code> preference ignored if the store isn't consulted</td></tr>
+      <tr><td>Recording → mode reset</td><td><code>startRecording</code> flips <code>allowsRecordingIOS:true</code></td><td>If not restored after recording, later TTS playback is silenced</td></tr>
+    </table>
+    <div class="why"><b>Why a boot probe:</b> Kannada TTS voices are not guaranteed installed on every device. The one-time <code>TtsProbe</code> (gated on <code>hasSeenTtsWarning</code>) surfaces a "install a voice" dialog rather than letting the whole app fail mutely. If the probe never runs (because <code>userHydrated</code> never flips), a device with no Kannada voice fails every <code>play()</code> with only a console warning.</div>
+    <div class="note"><b>Inconsistency to preserve intentionally:</b> the Emergency screen logs audio failures silently; lesson phases surface a retry toast (<code>Toasts.audioFailed</code>). This is deliberate — don't "unify" them into duplicate toasts without checking the Emergency UX.</div>
+
+    <h3>2.4 — State persistence &amp; boot order</h3>
+    <ol class="tight">
+      <li><code>SplashScreen.preventAutoHideAsync()</code> at module scope.</li>
+      <li><code>useFonts()</code> loads 11 variants (DM Sans, Noto Sans Kannada, Baloo Tamma 2). <strong>Render is blocked</strong> — <code>if (!fontsLoaded) return null</code> — until they resolve.</li>
+      <li>Fonts ready → <code>SplashScreen.hideAsync()</code> + <code>Audio.setAudioModeAsync()</code> + TTS probe (effects, non-blocking).</li>
+      <li>Stores rehydrate from AsyncStorage → each sets <code>isHydrated</code>.</li>
+      <li><code>AppGate</code> waits for <code>!authLoading &amp;&amp; userHydrated &amp;&amp; progressHydrated</code>, runs the user-switch firewall, then routes with <code>router.replace</code>.</li>
+    </ol>
+    <div class="danger"><b>INVARIANT — Kannada is rendered by Noto Sans Kannada.</b> Kannada glyphs use <code>Fonts.notoSansKannada.*</code>. If that family fails to load, or a teaching component reaches for <code>Fonts.dmSans</code>/<code>Fonts.baloo</code> for Kannada text, the script renders as tofu boxes (□□□) — no error, just unreadable lessons. Latin-only Baloo/DM Sans fonts do not cover the Kannada block. <span class="badge b-silent">SILENT</span></div>
+  </section>
+
+  <!-- PILLAR 3 -->
+  <section id="integrations">
+    <div class="sec-head"><span class="sec-num">3</span><h2>Integration points</h2></div>
+
+    <h3>3.1 — Expo SDK &amp; native runtime</h3>
+    <ul class="tight">
+      <li><b>Expo SDK 54 / RN 0.81.5 / React 19.1</b>, <code>newArchEnabled:true</code> (Fabric/TurboModules). A version bump that drops New Architecture support, or mismatches Reanimated 4 / Worklets 0.5, breaks gesture &amp; animation at runtime.</li>
+      <li><b>Expo Router 6</b>, file-based. The route tree <em>is</em> the navigation contract: group folders <code>(auth)</code>, <code>(tabs)</code>, <code>(games)</code>, <code>onboarding</code> drive <code>AppGate</code>'s <code>segments[]</code> checks. Renaming a group folder silently changes which redirect rule matches.</li>
+      <li><b>Config plugins</b> in <a href="../../app.json">app.json</a>: <code>expo-router</code>, <code>expo-secure-store</code>, <code>expo-font</code>, <code>expo-notifications</code>, <code>@react-native-google-signin</code> (with the literal <code>iosUrlScheme</code>), <code>expo-apple-authentication</code>. The Google <code>iosUrlScheme</code> must stay in lockstep with <code>EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID</code> (it's the reversed form).</li>
+      <li><b>Deep-link scheme</b> <code>kannada-beku</code> — the password-recovery link is the only deep-link handler. Changing the scheme without updating the Supabase allow-list silently kills password reset.</li>
+      <li><b>Bundle identifiers</b> <code>com.samsud01.kannadabeku</code> (iOS + Android) anchor OAuth redirect URIs and push tokens — never change casually.</li>
+    </ul>
+
+    <h3>3.2 — expo-av &amp; expo-speech</h3>
+    <p>Covered as flow 2.3. The integration-level invariant: <strong>expo-speech is TTS-only; expo-av owns the audio-mode globals.</strong> They share the iOS audio session, so the <code>setAudioModeAsync</code> contract (silent-mode override on, recording off by default, no background audio) governs both. <code>expo-av</code> is on a 16.x line — its <code>Audio.Sound</code>/<code>Audio.Recording</code> API is slated to move to <code>expo-audio</code>/<code>expo-video</code> in a future SDK; a migration there must re-verify the silent-mode flag and the recording-mode reset.</p>
+
+    <h3>3.3 — Google Stitch &amp; Claude Design outputs</h3>
+    <div class="note"><b>The contract: design artifacts are reference-only, never imported.</b> The redesign handoff under <a href="../../spec_docs/Sameecha/playful_redesign_handoff/">spec_docs/Sameecha/playful_redesign_handoff/</a> contains <code>.jsx</code> and <code>.html</code> design references (Google Stitch / Claude Design exports: <code>pl-home.jsx</code>, <code>pl-lesson.jsx</code>, <code>pl-auth.jsx</code>, the Playful HTML mockups, etc.). <strong>No app code imports these files</strong> — they are visual specs that humans translate into the app's component system.</div>
+    <p>The translation must conform to the app's <em>own</em> styling contract, not the artifact's:</p>
+    <ul class="tight">
+      <li><b>Inline styles + design tokens only.</b> No NativeWind, no <code>className=</code>. Tokens live in <code>constants/</code> (<code>colors.ts</code>, <code>fonts.ts</code>, <code>spacing.ts</code>, <code>radius.ts</code>). A Stitch/Claude export will arrive full of Tailwind classes or raw hex — porting those verbatim violates the locked DESIGN.md approach (this is exactly what bit the Opposites game in C1).</li>
+      <li><b>Token fidelity over pixel fidelity.</b> Map exported colors to <code>Colors.*</code>, type to <code>Fonts.*</code>/<code>TypeScale.*</code>. Hard-coded values that bypass tokens silently drift from the brand system and break theming.</li>
+      <li><b>Kannada always renders via Noto Sans Kannada</b>, regardless of what font a design export specifies (see 2.4).</li>
+      <li>The README still references NativeWind in two stale lines (C9) — that is documentation rot, not a dependency; do not reintroduce NativeWind on its authority.</li>
+    </ul>
+    <div class="why"><b>Why reference-only:</b> design tools optimize for a flat web mockup; the app is a New-Architecture RN tree with a token system, a custom floating <code>TabBar</code>, and Reanimated micro-interactions. Treating an export as importable code would smuggle web idioms (CSS classes, DOM elements, web fonts) into a native runtime where they silently no-op or mis-render.</div>
+
+    <h3>3.4 — Supabase &amp; TanStack Query</h3>
+    <p>Covered in §1.2–1.3. Integration-level: the <code>QueryClient</code> is created in <a href="../../app/_layout.tsx">_layout.tsx</a>; query/mutation keys are a locked convention (<code>['lesson-completions',userId]</code>, <code>['overall-progress',userId]</code>, <code>['&lt;game&gt;-items',lessonNo]</code>, etc.). Mutations invalidate by exact key — a typo in an invalidation key is a silent stale-cache bug, not an error.</p>
+  </section>
+
+  <!-- PILLAR 4 -->
+  <section id="thresholds">
+    <div class="sec-head"><span class="sec-num">4</span><h2>Performance &amp; reliability thresholds</h2></div>
+    <p>The codebase does not currently <em>enforce</em> numeric SLOs, so the values below are <span class="badge b-target">TARGET</span> proposals grounded in how the boot path and audio path actually behave. Adopt them as the bar future changes must not regress.</p>
+    <table>
+      <tr><th>Metric</th><th>Target</th><th>Grounding / how to measure</th></tr>
+      <tr><td><b>Cold start to first interactive</b></td><td><span class="badge b-target">TARGET</span> &lt; 2.5 s on iPhone SE (2nd gen)</td><td>Gated by <code>useFonts</code> (11 variants) + store rehydrate. Measure splash-visible duration from <code>preventAutoHideAsync</code> to first routed paint.</td></tr>
+      <tr><td><b>Warm start</b></td><td><span class="badge b-target">TARGET</span> &lt; 1.0 s</td><td>Fonts cached by Expo; only hydration + auth probe remain.</td></tr>
+      <tr><td><b>Routing decision after hydration</b></td><td><span class="badge b-target">TARGET</span> &lt; 1 frame visible flicker</td><td>Both stores hydrated before any <code>router.replace</code>; uses <code>replace</code> not <code>navigate</code> to keep the stack clean.</td></tr>
+      <tr><td><b>TTS audio latency (tap → speech)</b></td><td><span class="badge b-target">TARGET</span> &lt; 250 ms</td><td><code>Speech.stop()</code> + <code>Speech.speak()</code> are effectively synchronous to the OS engine; latency is dominated by the OS voice. No app-side debounce.</td></tr>
+      <tr><td><b>Recorded-file playback setup</b></td><td><span class="badge b-target">TARGET</span> &lt; 400 ms</td><td><code>Audio.Sound.createAsync</code> unloads the prior sound first; measure create→<code>playAsync</code>.</td></tr>
+      <tr><td><b>Crash-free sessions</b></td><td><span class="badge b-target">TARGET</span> ≥ 99.5%</td><td>No crash-reporter wired today — <em>adopting one (e.g. Sentry) is a prerequisite to enforcing this</em>. Until then this is aspirational.</td></tr>
+      <tr><td><b>Progress-write success rate</b></td><td><span class="badge b-target">TARGET</span> ≥ 99% of completions persist server-side</td><td>Server-first mutation means a failed RPC shows a retry toast; track RPC error rate in Supabase logs.</td></tr>
+      <tr><td><b>Kannada-voice availability fallback</b></td><td>100% of no-voice devices see the probe dialog</td><td>Reliability, not speed: the probe must fire once per install when <code>!hasSeenTtsWarning</code>.</td></tr>
+    </table>
+    <div class="why"><b>Why these and not tighter numbers:</b> the app is content-light (no large media bundles, TTS not recorded audio) and the dominant cost is font loading + first network round-trip for the user row. The honest gap is observability — there is no crash reporter or analytics SDK in <code>package.json</code>, so the crash-free and write-success targets cannot be <em>verified</em> yet. Wiring telemetry is the first reliability task, not picking a stricter percentage.</div>
+    <div class="danger"><b>Reliability tripwire — fonts are a single point of failure for first paint.</b> Because <code>RootLayout</code> returns <code>null</code> until all fonts load, a font that fails to fetch/cache (e.g. a removed <code>@expo-google-fonts</code> package or a corrupted asset) hangs the app on the splash screen with no timeout and no error UI. Consider a font-load timeout fallback before raising the startup SLO.</div>
+  </section>
+
+  <!-- PILLAR 5 -->
+  <section id="breaking">
+    <div class="sec-head"><span class="sec-num">5</span><h2>Silent-breakage map</h2></div>
+    <p>The consolidated list of changes that compile, pass type-check, and ship — yet break the app with no thrown error. This is the highest-value section for code review.</p>
+    <table>
+      <tr><th>Change</th><th>Surface</th><th>Silent effect</th><th>Class</th></tr>
+      <tr><td>Rename <code>user_prefs</code> or <code>kannada-beku-progress</code> storage key</td><td>Zustand persist</td><td>Every user loses prefs/progress on next launch</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Remove the legacy-key migration adapter</td><td>progressStore</td><td>Pre-rebrand users lose progress on upgrade</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Drop the <code>completeLesson</code> idempotency early-return</td><td>progressStore</td><td>Replays re-inflate XP / phrases / minutes</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Mis-bucket a field in <code>resetForUser</code></td><td>useUserStore</td><td>New user skips onboarding or inherits prior progress</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Remove a <code>setHydrated(true)</code> callback</td><td>store rehydrate</td><td>Routing never unblocks → permanent splash</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Rename any selected DB column (<code>slug</code>, <code>score</code>, <code>is_correct</code>…)</td><td>Supabase</td><td>Field arrives <code>undefined</code>; feature quietly degrades</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Rename an RPC function or <code>p_*</code> param</td><td>API contract</td><td>Progress stops persisting; only a soft "couldn't save" toast</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Change the 80% threshold / 8-cap / 3-game split</td><td>overall-progress SQL</td><td>Headline % re-bases; no historical recompute</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Set <code>playsInSilentModeIOS:false</code></td><td>audio mode</td><td>All audio muted when iPhone ring switch is off</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Change <code>DEFAULT_LANGUAGE</code> off <code>kn-IN</code></td><td>TTS</td><td>Wrong-language speech</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Use a Latin-only font for Kannada text</td><td>typography</td><td>Tofu boxes (□□□) in lessons</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Simplify away the <code>ChunkedSecureStoreAdapter</code></td><td>session storage</td><td>Logged out on every cold start (Keychain 2KB limit)</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Remove the reset-password <code>AppGate</code> early-return</td><td>auth gating</td><td>Password reset becomes uncompletable</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Rename a route group folder</td><td>Expo Router</td><td>Wrong redirect rule matches</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Port a Stitch/Claude export with Tailwind <code>className</code></td><td>styling</td><td>Classes no-op on native; unstyled or mis-rendered UI</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Off-by-one in the lesson unlock predicate</td><td>useLessons</td><td>Wrong lesson locked/unlocked</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Mutate <code>xp/streak</code> inside <code>hydrateFromServerCompletions</code></td><td>progressStore</td><td>Server hydration overwrites client scalars</td><td><span class="badge b-silent">SILENT</span></td></tr>
+      <tr><td>Missing <code>EXPO_PUBLIC_SUPABASE_*</code> env var</td><td>client boot</td><td>App throws at launch (this one is <em>loud</em> — by design)</td><td><span class="badge b-loud">LOUD</span></td></tr>
+      <tr><td>Lesson row missing its <code>slug</code></td><td>completion</td><td><code>LessonNotRegisteredError</code> → explicit toast</td><td><span class="badge b-loud">LOUD</span></td></tr>
+    </table>
+    <div class="why"><b>Design principle to extend:</b> note the two <span class="badge b-loud">LOUD</span> rows — the env-var throw and the <code>LessonNotRegisteredError</code>. They are the model. Where a silent failure above is high-impact, the long-term fix is to <em>make it loud</em>: assert storage keys at startup, validate the user-row shape after fetch, add a dev-mode warning when a Kannada string is rendered with a non-Kannada font. Converting silent failures to loud ones is the single highest-leverage reliability investment.</div>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section id="checklist">
+    <div class="sec-head"><span class="sec-num">✓</span><h2>Future-audit checklist</h2></div>
+    <p>Run this before merging anything that touches stores, the schema, auth, audio, or the boot path. Each box maps to an invariant above.</p>
+
+    <h3>Data &amp; persistence</h3>
+    <ul class="checklist">
+      <li><b>Storage keys unchanged:</b> <code>user_prefs</code> and <code>kannada-beku-progress</code> still literal; legacy migration adapter intact.</li>
+      <li><b>Idempotency tests pass:</b> <a href="../../__tests__/stores/progressStore.test.ts">progressStore.test.ts</a> still asserts no XP/streak double-count on replay.</li>
+      <li><b><code>resetForUser</code> / <code>reset</code> scoping</b> matches the per-user vs install-scoped table in §1.1 — no field moved buckets.</li>
+      <li><b>Both stores still call <code>setHydrated(true)</code></b> in <code>onRehydrateStorage</code>.</li>
+      <li><b>No new schema column rename</b> without updating the matching <code>*_SELECT</code> / accessor and this doc.</li>
+    </ul>
+
+    <h3>API &amp; server</h3>
+    <ul class="checklist">
+      <li><b>RPC names + <code>p_*</code> params</b> unchanged, or every call site updated in the same PR.</li>
+      <li><b>Overall-progress formula</b> (80% / cap 8 / 50-50-over-3) untouched, or owner-signed as a LOCKED change with a recompute migration.</li>
+      <li><b>RLS applied</b> before any scaffolded table (<code>conversation_*</code>, <code>quick_quiz_*</code>) gets its first client read/write.</li>
+      <li><b>New query/mutation keys</b> follow the <code>[resource, …scope]</code> convention and invalidate correctly.</li>
+      <li><b>Chunked secure-store adapter</b> still wraps the Supabase auth storage.</li>
+    </ul>
+
+    <h3>Flows &amp; runtime</h3>
+    <ul class="checklist">
+      <li><b>AppGate decision matrix</b> intact, including the reset-password early-return and the user-switch one-tick wait.</li>
+      <li><b>Lesson completion is server-first</b> (RPC before store mutation) and the unlock predicate is off-by-one-safe.</li>
+      <li><b>Phase enum</b> changes update <em>both</em> the runner transitions and the <code>app/lesson/[id].tsx</code> switch.</li>
+      <li><b>Audio invariants:</b> <code>kn-IN</code>, <code>playsInSilentModeIOS:true</code>, <code>startsWith('kn')</code> probe, <code>Speech.stop()</code> before speak, rate clamp <code>[0.5,1.5]</code>, recording-mode reset.</li>
+    </ul>
+
+    <h3>Integrations &amp; design</h3>
+    <ul class="checklist">
+      <li><b>No NativeWind / <code>className=</code></b> reintroduced (grep returns zero outside <code>node_modules</code>).</li>
+      <li><b>Stitch/Claude exports ported to tokens</b> — inline styles backed by <code>constants/</code>, Kannada on Noto Sans Kannada.</li>
+      <li><b>Google <code>iosUrlScheme</code></b> still matches <code>EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID</code>; deep-link scheme <code>kannada-beku</code> unchanged or Supabase allow-list updated.</li>
+      <li><b>expo-av / expo-speech</b> SDK bump re-verifies silent-mode flag + recording reset (watch for the <code>expo-audio</code> migration).</li>
+    </ul>
+
+    <h3>Observability (the standing gap)</h3>
+    <ul class="checklist">
+      <li><b>Crash reporter wired</b> before claiming the ≥99.5% crash-free target as measured.</li>
+      <li><b>Cold-start &amp; TTS-latency</b> spot-checked on iPhone SE after any boot-path or font change.</li>
+      <li><b>Startup assertions:</b> consider failing loud on missing storage keys / malformed user row / wrong-script font in dev.</li>
+    </ul>
+  </section>
+
+  <!-- KNOWN GAPS -->
+  <section id="known">
+    <div class="sec-head"><span class="sec-num">!</span><h2>Known live gaps (carry forward)</h2></div>
+    <p>Active divergences from <a href="../foundation/CONTRADICTIONS.md">CONTRADICTIONS.md</a> and this audit that a future engineer must not "fix" by accident:</p>
+    <table>
+      <tr><th>Ref</th><th>Gap</th><th>Status</th></tr>
+      <tr><td><b>C3</b></td><td><code>rowdy/classic</code> voice system still wired (<code>useUserStore.mode</code>, <code>useCopy</code>) but locked for removal</td><td><span class="badge b-open">OPEN</span> — owner picks surviving voice first</td></tr>
+      <tr><td><b>C13</b></td><td>Image Match hidden from Practice but still 1 of 3 games in the locked formula → overall progress caps below 100%</td><td><span class="badge b-open">OPEN</span></td></tr>
+      <tr><td><b>Runner</b></td><td>Docs describe a <code>drill</code> engine + <code>fill_blank</code> (C7); live code is the fixed phase machine with no drills</td><td>Code is truth; doc lag</td></tr>
+      <tr><td><b>Observability</b></td><td>No crash reporter or analytics SDK in <code>package.json</code></td><td><span class="badge b-target">TARGET</span> — wire before enforcing SLOs</td></tr>
+      <tr><td><b>C9</b></td><td>README still names NativeWind (code is clean)</td><td>Doc rot — do not act on it</td></tr>
+      <tr><td><b>C14/C15</b></td><td>Playful redesign + font swap (Baloo, DM Sans translit) shipped on <code>app_redesign</code>, pending on-device verification</td><td>Not on <code>main</code> at audit time</td></tr>
+    </table>
+  </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p><strong>Kannada Beku — Non-Negotiables Specification.</strong> Generated 2026-06-10 from branch <code>main</code> @ bee7079. Verified against the live code in <code>stores/</code>, <code>services/api/</code>, <code>services/audio/</code>, and <code>app/</code>, and cross-checked with the locked foundation docs. Where this audit and a foundation doc disagree, the code on <code>main</code> was treated as the source of truth and the divergence flagged.</p>
+    <p>This document records contracts, not aspirations. Change a <span class="badge b-lock">LOCKED</span> item only via a spec PR with owner sign-off. Treat every <span class="badge b-silent">SILENT</span> row as a code-review gate.</p>
+  </div>
+</footer>
+
+</body>
+</html>

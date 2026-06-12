@@ -8,6 +8,7 @@ export type QuickQuizItem = {
   kannada: string;
   transliteration: string | null;
   meaning: string;
+  section: string | null;
 };
 
 type Row = {
@@ -17,6 +18,7 @@ type Row = {
   kannada: string;
   transliteration: string | null;
   meaning: string;
+  section: string | null;
 };
 
 // Module-level cache for lesson_no -> lesson_id. Mirrors the cache in the
@@ -49,6 +51,7 @@ function mapRow(row: Row, lessonNo: number): QuickQuizItem {
     kannada: row.kannada,
     transliteration: row.transliteration,
     meaning: row.meaning,
+    section: row.section,
   };
 }
 
@@ -60,7 +63,7 @@ export async function fetchQuickQuizItemsByLessonNo(
 
   const { data, error } = await supabase
     .from('quick_quiz_items')
-    .select('id, lesson_id, sort_order, kannada, transliteration, meaning')
+    .select('id, lesson_id, sort_order, kannada, transliteration, meaning, section')
     .eq('lesson_id', lessonId)
     .gt('sort_order', 0)
     .order('sort_order', { ascending: true });
