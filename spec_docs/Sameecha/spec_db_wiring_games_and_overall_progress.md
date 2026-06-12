@@ -237,7 +237,7 @@ PR1 is reversible (migrations alone). PR2 introduces the first user-facing depen
 
 ## Locked decisions (2026-05-27)
 
-- [x] **`user_overall_progress` weighting formula** — **50% lessons / 50% games (split 3 ways equal)**. Lessons completed ÷ 8 contributes 50%; each of opposites / dictation / image_match contributes ~16.67% (subgames-cleared ÷ 8 per game).
+- [x] **`user_overall_progress` weighting formula** — ~~**50% lessons / 50% games (split 3 ways equal)**~~ **AMENDED 2026-06-10 (C13): 50% lessons / 50% games split across 2 games — opposites + dictation, 25% each. image_match dropped** (it has no UI entry, so it capped progress below 100%; see [2026-06-10_c13_drop_image_match_from_overall.sql](../../services/api/migrations/2026-06-10_c13_drop_image_match_from_overall.sql)). Lessons completed ÷ 8 contributes 50%; opposites and dictation each contribute 25% (subgames-cleared ÷ 8 per game).
 - [x] **Subgame "complete" threshold for the overall recompute** — **≥80% of that lesson's items have `is_correct = true` (personal-best, ever)**. Once a subgame crosses the threshold, future wrong answers do not un-complete it.
 - [x] **L7, L8 subgame UX** — **"locked: complete Lesson N first"** (consistency with lesson chrome). The locked state and the "no items yet" empty state share visual treatment.
 - [x] **Image Match emoji column** — **add `emoji text`** to `image_match_items`. Runner prefers `image_url` when present, falls back to `emoji`.

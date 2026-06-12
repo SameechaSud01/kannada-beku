@@ -14,7 +14,11 @@ import ConversationGame from '@/src/games/conversations';
 
 export default function GameRunnerScreen() {
   const router = useRouter();
-  const { game: gameParam, n: nParam } = useLocalSearchParams<{ game: string; n: string }>();
+  const { game: gameParam, n: nParam, part } = useLocalSearchParams<{
+    game: string;
+    n: string;
+    part?: string;
+  }>();
 
   if (!gameParam || !isGameKey(gameParam)) {
     return <NotFound onBack={() => router.replace('/practice')} />;
@@ -27,15 +31,15 @@ export default function GameRunnerScreen() {
 
   switch (gameParam as GameKey) {
     case 'opposites':
-      return <OppositeGame lessonNo={lessonNo} />;
+      return <OppositeGame lessonNo={lessonNo} section={part} />;
     case 'dictation':
-      return <DictationGame lessonNo={lessonNo} />;
+      return <DictationGame lessonNo={lessonNo} section={part} />;
     case 'image-match':
       return <ImageMatchGame lessonNo={lessonNo} />;
     case 'quiz':
-      return <QuickQuizGame lessonNo={lessonNo} />;
+      return <QuickQuizGame lessonNo={lessonNo} section={part} />;
     case 'conversations':
-      return <ConversationGame lessonNo={lessonNo} />;
+      return <ConversationGame lessonNo={lessonNo} section={part} />;
   }
 }
 

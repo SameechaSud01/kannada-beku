@@ -21,6 +21,7 @@ export type ConversationScenario = {
   id: string;
   sortOrder: number;
   title: string;
+  section: string | null;
   turns: ConversationTurn[];
 };
 
@@ -28,6 +29,7 @@ type ScenarioRow = {
   id: string;
   sort_order: number;
   title: string;
+  section: string | null;
 };
 
 type ItemRow = {
@@ -72,7 +74,7 @@ export async function fetchConversationScenariosByLessonNo(
 
   const { data: scenarioData, error: scenarioErr } = await supabase
     .from('conversation_scenarios')
-    .select('id, sort_order, title')
+    .select('id, sort_order, title, section')
     .eq('lesson_id', lessonId)
     .order('sort_order', { ascending: true });
 
@@ -111,6 +113,7 @@ export async function fetchConversationScenariosByLessonNo(
       id: s.id,
       sortOrder: s.sort_order,
       title: s.title,
+      section: s.section,
       turns: turnsByScenario.get(s.id) ?? [],
     }))
     .filter((s) => s.turns.length > 0);

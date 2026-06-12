@@ -9,6 +9,7 @@ export type DictationItem = {
   acceptedSpellings: string[];
   phonetic: string | null;
   audioUrl: string | null;
+  section: string | null;
 };
 
 type Row = {
@@ -19,6 +20,7 @@ type Row = {
   accepted_json: string[] | null;
   phonetic: string | null;
   audio_url: string | null;
+  section: string | null;
 };
 
 const lessonNoToId = new Map<number, string>();
@@ -47,6 +49,7 @@ function mapRow(row: Row, lessonNo: number): DictationItem {
     acceptedSpellings: row.accepted_json ?? [],
     phonetic: row.phonetic,
     audioUrl: row.audio_url,
+    section: row.section,
   };
 }
 
@@ -58,7 +61,7 @@ export async function fetchDictationItemsByLessonNo(
 
   const { data, error } = await supabase
     .from('dictation_items')
-    .select('id, lesson_id, sort_order, expected_answer, accepted_json, phonetic, audio_url')
+    .select('id, lesson_id, sort_order, expected_answer, accepted_json, phonetic, audio_url, section')
     .eq('lesson_id', lessonId)
     .gt('sort_order', 0)
     .order('sort_order', { ascending: true });

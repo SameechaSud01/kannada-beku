@@ -552,3 +552,13 @@ export const TS_LESSONS: Lesson[] = AUTHORED.map((l) => ({
 export const TS_LESSONS_BY_SLUG: Record<string, Lesson> = Object.fromEntries(
   TS_LESSONS.map((l) => [l.slug, l]),
 );
+
+/**
+ * Section keys + labels for a lesson, in order — the canonical taxonomy the
+ * games reuse to label their sub-parts (spec_game_subsection_split). Returns
+ * [] for an unknown lesson number.
+ */
+export function lessonSectionsByNo(lessonNo: number): { key: string; label: string }[] {
+  const lesson = TS_LESSONS.find((l) => l.lessonNo === lessonNo);
+  return lesson ? lesson.sections.map((s) => ({ key: s.key, label: s.label })) : [];
+}

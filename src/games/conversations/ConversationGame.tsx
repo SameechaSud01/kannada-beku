@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -7,6 +7,10 @@ import { Colors } from '@/constants/colors';
 import { Spacing, Radius } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
 import { Icons } from '@/constants/icons';
+import { GAMES } from '@/constants/games';
+import { useProgressStore } from '@/stores/progressStore';
+import { useGameSplit } from '@/src/games/shared/parts';
+import { GamePartChooser } from '@/components/games/GamePartChooser';
 import { ExitBackButton } from '@/components/ui/ExitBackButton';
 import { useConversationScenarios, useRecordConversationAttempt } from '../../../hooks/games/conversations';
 import { useConversation } from './hooks/useConversation';
@@ -18,7 +22,7 @@ import FeedbackBanner from '../shared/FeedbackBanner';
 import { useAnswerHaptics } from '../shared/haptics';
 import type { ConversationScenario } from './types';
 
-type Props = { lessonNo: number };
+type Props = { lessonNo: number; section?: string };
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -29,22 +33,53 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-const ConversationGame: React.FC<Props> = ({ lessonNo }) => {
+const ConversationGame: React.FC<Props> = ({ lessonNo, section }) => {
+  const router = useRouter();
   const scenarios = useConversationScenarios(lessonNo);
+  const { parts, showChooser, playItems, activeSection } = useGameSplit(
+    'conversations',
+    lessonNo,
+    scenarios.data,
+    section ?? null,
+  );
 
   if (scenarios.isLoading) return <CenteredLoading />;
   if (scenarios.isError) return <ErrorState onRetry={() => scenarios.refetch()} />;
-  if (!scenarios.data || scenarios.data.length === 0) return <EmptyState lessonNo={lessonNo} />;
+  if (showChooser) {
+    return (
+      <GamePartChooser
+        title={GAMES.conversations.title}
+        lessonNo={lessonNo}
+        parts={parts}
+        onSelectPart={(key) => router.push(`/conversations/${lessonNo}?part=${key}`)}
+      />
+    );
+  }
+  if (playItems.length === 0) return <EmptyState lessonNo={lessonNo} />;
 
-  return <ConversationFlow scenarios={scenarios.data} />;
+  return <ConversationFlow scenarios={playItems} gameKey="conversations" sectionKey={activeSection} />;
 };
 
-function ConversationFlow({ scenarios }: { scenarios: ConversationScenario[] }) {
+function ConversationFlow({
+  scenarios,
+  gameKey,
+  sectionKey,
+}: {
+  scenarios: ConversationScenario[];
+  gameKey: string;
+  sectionKey: string | null;
+}) {
+  const completeGamePart = useProgressStore((s) => s.completeGamePart);
   // Shuffle the scenario order once, play through sequentially, then surface an
   // "all caught up" end state instead of cycling the same dialogues forever.
   const [order, setOrder] = useState<ConversationScenario[]>(() => shuffle(scenarios));
   const [scenarioIndex, setScenarioIndex] = useState(0);
   const [allDone, setAllDone] = useState(false);
+
+  // The sub-part is done once every scenario in it has been played through.
+  useEffect(() => {
+    if (allDone && sectionKey) completeGamePart(gameKey, sectionKey);
+  }, [allDone, sectionKey, gameKey, completeGamePart]);
 
   const advance = () => {
     if (scenarioIndex + 1 >= order.length) setAllDone(true);

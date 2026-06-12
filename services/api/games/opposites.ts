@@ -15,6 +15,7 @@ export type OppositesItem = {
   opposite: string;
   transliteration: string | null;
   meaning: string | null;
+  section: string | null;
   options: OppositesOption[];
 };
 
@@ -26,6 +27,7 @@ type Row = {
   opposite: string;
   transliteration: string | null;
   meaning: string | null;
+  section: string | null;
   options_json: OppositesOption[] | null;
 };
 
@@ -61,6 +63,7 @@ function mapRow(row: Row, lessonNo: number): OppositesItem {
     opposite: row.opposite,
     transliteration: row.transliteration,
     meaning: row.meaning,
+    section: row.section,
     options: row.options_json ?? [],
   };
 }
@@ -73,7 +76,7 @@ export async function fetchOppositesItemsByLessonNo(
 
   const { data, error } = await supabase
     .from('opposites_items')
-    .select('id, lesson_id, sort_order, word, opposite, transliteration, meaning, options_json')
+    .select('id, lesson_id, sort_order, word, opposite, transliteration, meaning, section, options_json')
     .eq('lesson_id', lessonId)
     .gt('sort_order', 0)
     .order('sort_order', { ascending: true });

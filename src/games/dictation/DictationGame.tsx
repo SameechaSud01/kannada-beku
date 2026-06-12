@@ -6,6 +6,10 @@ import { useRouter } from 'expo-router';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Radius, Spacing } from '../../../constants/spacing';
+import { GAMES } from '../../../constants/games';
+import { useProgressStore } from '../../../stores/progressStore';
+import { useGameSplit } from '../shared/parts';
+import { GamePartChooser } from '../../../components/games/GamePartChooser';
 import { useDictationItems, useRecordDictationAttempt } from '../../../hooks/games/dictation';
 import { useDictationGame } from './hooks/useDictationGame';
 import ProgressBar from './components/ProgressBar';
@@ -20,7 +24,7 @@ import { ExitBackButton } from '../../../components/ui/ExitBackButton';
 import type { DictationWord } from './types';
 import type { DictationItem } from '../../../services/api/games/dictation';
 
-type Props = { lessonNo: number };
+type Props = { lessonNo: number; section?: string };
 
 function toWord(item: DictationItem): DictationWord {
   return {
@@ -31,19 +35,45 @@ function toWord(item: DictationItem): DictationWord {
   };
 }
 
-export default function DictationGame({ lessonNo }: Props) {
+export default function DictationGame({ lessonNo, section }: Props) {
+  const router = useRouter();
   const { data: items, isLoading, isError, refetch } = useDictationItems(lessonNo);
+  const { parts, showChooser, playItems, activeSection } = useGameSplit(
+    'dictation',
+    lessonNo,
+    items,
+    section ?? null,
+  );
 
-  const bank = useMemo<DictationWord[]>(() => (items ?? []).map(toWord), [items]);
+  const bank = useMemo<DictationWord[]>(() => playItems.map(toWord), [playItems]);
 
   if (isLoading) return <CenteredLoading />;
   if (isError) return <ErrorState onRetry={() => refetch()} />;
+  if (showChooser) {
+    return (
+      <GamePartChooser
+        title={GAMES.dictation.title}
+        lessonNo={lessonNo}
+        parts={parts}
+        onSelectPart={(key) => router.push(`/dictation/${lessonNo}?part=${key}`)}
+      />
+    );
+  }
   if (bank.length === 0) return <EmptyState lessonNo={lessonNo} />;
-  return <DictationGameInner bank={bank} />;
+  return <DictationGameInner bank={bank} gameKey="dictation" sectionKey={activeSection} />;
 }
 
-function DictationGameInner({ bank }: { bank: DictationWord[] }) {
+function DictationGameInner({
+  bank,
+  gameKey,
+  sectionKey,
+}: {
+  bank: DictationWord[];
+  gameKey: string;
+  sectionKey: string | null;
+}) {
   const recordAttempt = useRecordDictationAttempt();
+  const completeGamePart = useProgressStore((s) => s.completeGamePart);
 
   const {
     currentWord,
@@ -81,6 +111,10 @@ function DictationGameInner({ bank }: { bank: DictationWord[] }) {
   useEffect(() => {
     setInputText('');
   }, [currentIndex]);
+
+  useEffect(() => {
+    if (phase === 'result' && sectionKey) completeGamePart(gameKey, sectionKey);
+  }, [phase, sectionKey, gameKey, completeGamePart]);
 
   if (phase === 'result') {
     return (

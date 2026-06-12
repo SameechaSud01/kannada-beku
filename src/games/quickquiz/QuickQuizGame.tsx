@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -6,6 +6,10 @@ import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { Spacing, Radius } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
+import { GAMES } from '@/constants/games';
+import { useProgressStore } from '@/stores/progressStore';
+import { useGameSplit } from '@/src/games/shared/parts';
+import { GamePartChooser } from '@/components/games/GamePartChooser';
 import { ExitBackButton } from '@/components/ui/ExitBackButton';
 import { useQuickQuizItems, useRecordQuickQuizAttempt } from '../../../hooks/games/quickQuiz';
 import { useQuickQuiz, PER_QUESTION_SECONDS } from './hooks/useQuickQuiz';
@@ -19,7 +23,7 @@ import ProgressBar from '../imagematch/components/ProgressBar';
 import type { QuizVocab } from './types';
 import type { QuickQuizItem } from '../../../services/api/games/quickQuiz';
 
-type Props = { lessonNo: number };
+type Props = { lessonNo: number; section?: string };
 
 function toVocab(item: QuickQuizItem): QuizVocab {
   return {
@@ -30,18 +34,25 @@ function toVocab(item: QuickQuizItem): QuizVocab {
   };
 }
 
-const QuickQuizGame: React.FC<Props> = ({ lessonNo }) => {
+const QuickQuizGame: React.FC<Props> = ({ lessonNo, section }) => {
+  const router = useRouter();
   // Like Image Match, pull neighbour lessons so sparse lessons still have
   // enough vocab for 3 distractors per question.
   const target = useQuickQuizItems(lessonNo);
   const neighbor1 = useQuickQuizItems(lessonNo > 1 ? lessonNo - 1 : null);
   const neighbor2 = useQuickQuizItems(lessonNo > 2 ? lessonNo - 2 : null);
 
-  const targetBank = useMemo<QuizVocab[]>(
-    () => (target.data ?? []).map(toVocab),
-    [target.data],
+  const { parts, showChooser, playItems, activeSection } = useGameSplit(
+    'quiz',
+    lessonNo,
+    target.data,
+    section ?? null,
   );
 
+  // The questions asked are only the active sub-part's words…
+  const targetBank = useMemo<QuizVocab[]>(() => playItems.map(toVocab), [playItems]);
+
+  // …but distractors may still draw on the whole lesson + neighbours.
   const distractorBank = useMemo<QuizVocab[]>(() => {
     const all = [...(target.data ?? []), ...(neighbor1.data ?? []), ...(neighbor2.data ?? [])];
     const seen = new Set<string>();
@@ -56,19 +67,41 @@ const QuickQuizGame: React.FC<Props> = ({ lessonNo }) => {
 
   if (target.isLoading) return <CenteredLoading />;
   if (target.isError) return <ErrorState onRetry={() => target.refetch()} />;
+  if (showChooser) {
+    return (
+      <GamePartChooser
+        title={GAMES.quiz.title}
+        lessonNo={lessonNo}
+        parts={parts}
+        onSelectPart={(key) => router.push(`/quiz/${lessonNo}?part=${key}`)}
+      />
+    );
+  }
   if (targetBank.length === 0) return <EmptyState lessonNo={lessonNo} />;
 
-  return <QuickQuizGameInner targetBank={targetBank} distractorBank={distractorBank} />;
+  return (
+    <QuickQuizGameInner
+      targetBank={targetBank}
+      distractorBank={distractorBank}
+      gameKey="quiz"
+      sectionKey={activeSection}
+    />
+  );
 };
 
 function QuickQuizGameInner({
   targetBank,
   distractorBank,
+  gameKey,
+  sectionKey,
 }: {
   targetBank: QuizVocab[];
   distractorBank: QuizVocab[];
+  gameKey: string;
+  sectionKey: string | null;
 }) {
   const recordAttempt = useRecordQuickQuizAttempt();
+  const completeGamePart = useProgressStore((s) => s.completeGamePart);
 
   const {
     currentQuestion,
@@ -92,6 +125,10 @@ function QuickQuizGameInner({
   });
 
   useAnswerHaptics(answerState);
+
+  useEffect(() => {
+    if (phase === 'result' && sectionKey) completeGamePart(gameKey, sectionKey);
+  }, [phase, sectionKey, gameKey, completeGamePart]);
 
   if (phase === 'result') {
     return (
