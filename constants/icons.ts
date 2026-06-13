@@ -30,12 +30,15 @@ import {
   IconCar,
   IconCheck,
   IconChevronRight,
+  IconCircle,
   IconCircleCheck,
   IconCircleX,
   IconFlame,
   IconHeadphones,
   IconHelpCircle,
   IconClock,
+  IconEye,
+  IconEyeOff,
   IconHome,
   IconInfoCircle,
   IconLock,
@@ -96,6 +99,12 @@ export const Icons = {
   setReminders: IconBell,
   setAudio: IconVolume,
   setHelp: IconHelpCircle,
+
+  // Password field show/hide toggle + requirement checklist
+  eye: IconEye,
+  eyeOff: IconEyeOff,
+  ruleMet: IconCircleCheck,
+  ruleUnmet: IconCircle,
 
   // Onboarding
   info: IconInfoCircle,

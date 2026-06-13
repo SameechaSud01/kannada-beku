@@ -10,8 +10,29 @@ import { Spacing, Radius } from '../../constants/spacing';
 import { supabase } from '../../services/api/supabase';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { GoogleGLogo } from '../../components/auth/GoogleGLogo';
+import { Icons } from '../../constants/icons';
+
+// Shared input chrome for the email + password fields.
+const INPUT_STYLE = {
+  fontFamily: Fonts.dmSans.regular,
+  fontSize: moderateScale(15),
+  backgroundColor: Colors.surfaceContainerHighest,
+  borderWidth: moderateScale(0.5),
+  borderColor: Colors.outlineVariant,
+  borderRadius: Radius.md,
+  paddingHorizontal: Spacing.lg,
+  paddingVertical: Spacing.md,
+  color: Colors.onSurface,
+} as const;
 
 const EMAIL_RE = /^\S+@\S+\.\S+$/;
+
+// Sign-up password policy: 8+ chars, at least one uppercase letter and one special character.
+const PW_UPPER_RE = /[A-Z]/;
+const PW_SPECIAL_RE = /[^A-Za-z0-9]/;
+const PW_MIN_LEN = 8;
+const isStrongPassword = (pw: string) =>
+  pw.length >= PW_MIN_LEN && PW_UPPER_RE.test(pw) && PW_SPECIAL_RE.test(pw);
 
 type Mode = 'login' | 'signup';
 
@@ -31,6 +52,7 @@ const COPY: Record<Mode, { title: string; subtitle: string; cta: string }> = {
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [mode, setMode] = useState<Mode>('login');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -57,11 +79,34 @@ export default function LoginScreen() {
   const isSignUp = mode === 'signup';
   const copy = COPY[mode];
 
+  const switchMode = (next: Mode) => {
+    setMode(next);
+    setPassword('');
+    setConfirm('');
+  };
+
+  // Live requirement checklist shown under the password fields in sign-up mode.
+  const passwordRules = [
+    { label: 'At least 8 characters', met: password.length >= PW_MIN_LEN },
+    { label: 'One uppercase letter', met: PW_UPPER_RE.test(password) },
+    { label: 'One special character (e.g. ! ? @ #)', met: PW_SPECIAL_RE.test(password) },
+    { label: 'Passwords match', met: confirm.length > 0 && password === confirm },
+  ];
+
   const handleAuth = async () => {
     const normalizedEmail = email.trim().toLowerCase();
 
-    const minPasswordLength = isSignUp ? 8 : 6;
-    if (!EMAIL_RE.test(normalizedEmail) || password.length < minPasswordLength) {
+    if (!EMAIL_RE.test(normalizedEmail)) {
+      Toasts.invalidCredentials();
+      return;
+    }
+
+    if (isSignUp) {
+      if (!isStrongPassword(password) || password !== confirm) {
+        Toasts.invalidCredentials();
+        return;
+      }
+    } else if (password.length < 6) {
       Toasts.invalidCredentials();
       return;
     }
@@ -140,12 +185,12 @@ export default function LoginScreen() {
           <SegmentButton
             label="Log in"
             active={mode === 'login'}
-            onPress={() => setMode('login')}
+            onPress={() => switchMode('login')}
           />
           <SegmentButton
             label="Sign up"
             active={mode === 'signup'}
-            onPress={() => setMode('signup')}
+            onPress={() => switchMode('signup')}
           />
         </View>
 
@@ -179,40 +224,55 @@ export default function LoginScreen() {
           onChangeText={setEmail}
           autoCapitalize="none"
           keyboardType="email-address"
-          style={{
-            fontFamily: Fonts.dmSans.regular,
-            fontSize: moderateScale(15),
-            backgroundColor: Colors.surfaceContainerHighest,
-            borderWidth: moderateScale(0.5),
-            borderColor: Colors.outlineVariant,
-            borderRadius: Radius.md,
-            paddingHorizontal: Spacing.lg,
-            paddingVertical: Spacing.md,
-            marginBottom: Spacing.md,
-            color: Colors.onSurface,
-          }}
+          style={[INPUT_STYLE, { marginBottom: Spacing.md }]}
           placeholderTextColor={Colors.tertiary}
         />
 
-        <TextInput
-          placeholder={isSignUp ? 'Password (min 8 characters)' : 'Password'}
+        <PasswordInput
+          placeholder="Password"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry
-          style={{
-            fontFamily: Fonts.dmSans.regular,
-            fontSize: moderateScale(15),
-            backgroundColor: Colors.surfaceContainerHighest,
-            borderWidth: moderateScale(0.5),
-            borderColor: Colors.outlineVariant,
-            borderRadius: Radius.md,
-            paddingHorizontal: Spacing.lg,
-            paddingVertical: Spacing.md,
-            marginBottom: Spacing.xl,
-            color: Colors.onSurface,
-          }}
-          placeholderTextColor={Colors.tertiary}
+          marginBottom={isSignUp ? Spacing.md : Spacing.xl}
         />
+
+        {/* Confirm password + requirement checklist — sign-up mode only */}
+        {isSignUp && (
+          <>
+            <PasswordInput
+              placeholder="Confirm password"
+              value={confirm}
+              onChangeText={setConfirm}
+              onSubmitEditing={handleAuth}
+              marginBottom={Spacing.md}
+            />
+
+            <View style={{ marginBottom: Spacing.xl, gap: Spacing.xs }}>
+              {passwordRules.map((rule) => {
+                const RuleIcon = rule.met ? Icons.ruleMet : Icons.ruleUnmet;
+                return (
+                  <View
+                    key={rule.label}
+                    style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }}
+                  >
+                    <RuleIcon
+                      size={moderateScale(15)}
+                      color={rule.met ? Colors.primaryContainer : Colors.textFaint}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: Fonts.dmSans.regular,
+                        fontSize: moderateScale(12.5),
+                        color: rule.met ? Colors.onSurface : Colors.textFaint,
+                      }}
+                    >
+                      {rule.label}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          </>
+        )}
 
         {/* Forgot password — login mode only */}
         {!isSignUp && (
@@ -316,6 +376,56 @@ export default function LoginScreen() {
         )}
       </View>
     </KeyboardAvoidingView>
+  );
+}
+
+type PasswordInputProps = {
+  placeholder: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  marginBottom: number;
+  onSubmitEditing?: () => void;
+};
+
+function PasswordInput({
+  placeholder,
+  value,
+  onChangeText,
+  marginBottom,
+  onSubmitEditing,
+}: PasswordInputProps) {
+  const [visible, setVisible] = useState(false);
+  const EyeIcon = visible ? Icons.eyeOff : Icons.eye;
+
+  return (
+    <View style={{ position: 'relative', marginBottom }}>
+      <TextInput
+        placeholder={placeholder}
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={!visible}
+        autoCapitalize="none"
+        autoCorrect={false}
+        onSubmitEditing={onSubmitEditing}
+        style={[INPUT_STYLE, { paddingRight: moderateScale(48) }]}
+        placeholderTextColor={Colors.tertiary}
+      />
+      <Pressable
+        onPress={() => setVisible((v) => !v)}
+        accessibilityRole="button"
+        accessibilityLabel={visible ? 'Hide password' : 'Show password'}
+        hitSlop={10}
+        style={{
+          position: 'absolute',
+          right: Spacing.lg,
+          top: 0,
+          bottom: 0,
+          justifyContent: 'center',
+        }}
+      >
+        <EyeIcon size={moderateScale(20)} color={Colors.tertiary} />
+      </Pressable>
+    </View>
   );
 }
 
