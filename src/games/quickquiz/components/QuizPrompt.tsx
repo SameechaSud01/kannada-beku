@@ -15,8 +15,12 @@ const QuizPrompt: React.FC<Props> = ({ question }) => {
   return (
     <Animated.View
       style={{
-        backgroundColor: Colors.surfaceContainerHighest,
-        borderRadius: Radius.xl,
+        backgroundColor: '#ffffff',
+        borderRadius: Radius.chunky,
+        borderWidth: 1,
+        borderColor: Colors.hairline,
+        borderBottomWidth: 4,
+        borderBottomColor: Colors.cardLip,
         paddingVertical: Spacing.xl,
         paddingHorizontal: Spacing.lg,
         alignItems: 'center',
@@ -28,7 +32,7 @@ const QuizPrompt: React.FC<Props> = ({ question }) => {
         style={{
           fontFamily: Fonts.dmSans.bold,
           fontSize: moderateScale(11),
-          letterSpacing: 1.5,
+          letterSpacing: 1.4,
           textTransform: 'uppercase',
           color: Colors.tertiary,
         }}
@@ -38,8 +42,11 @@ const QuizPrompt: React.FC<Props> = ({ question }) => {
       </Text>
       <Text
         style={{
-          fontFamily: isKn ? Fonts.notoSansKannada.bold : Fonts.dmSans.bold,
-          fontSize: moderateScale(28),
+          fontFamily: Fonts.baloo.extrabold,
+          fontSize: moderateScale(38),
+          // Kannada ottaksharas (subscript consonants) drop well below the
+          // baseline + vowel signs rise above, so the glyph box needs ~1.6×.
+          lineHeight: moderateScale(isKn ? 60 : 48),
           color: Colors.onSurface,
           textAlign: 'center',
         }}
@@ -50,8 +57,8 @@ const QuizPrompt: React.FC<Props> = ({ question }) => {
       {question.promptSub ? (
         <Text
           style={{
-            fontFamily: Fonts.dmSans.bold,
-            fontSize: moderateScale(16),
+            fontFamily: Fonts.dmSans.medium,
+            fontSize: moderateScale(14),
             color: Colors.tertiary,
             textAlign: 'center',
           }}

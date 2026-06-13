@@ -1,8 +1,7 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
-import { Colors } from '../../../constants/colors';
-import { Fonts } from '../../../constants/fonts';
-import { Button, ButtonStack } from '../../ui/Button';
+import { LipButton } from '../../ui/LipButton';
+import { DialogBody, DialogTitle } from './_dialogChrome';
 
 export interface SignOutDialogProps {
   onConfirm: () => void;
@@ -10,46 +9,26 @@ export interface SignOutDialogProps {
 }
 
 /**
- * Destructive confirm (MODALS §6.2). Stacked layout (primary on top) — the user
+ * Destructive confirm (chunky_v3 §11). Stacked (primary on top) — the user
  * tapped Sign out on purpose, so we add friction without feeling adversarial.
+ * The destructive confirm stays red; "Stay signed in" is the secondary tan rung.
  */
 export function SignOutDialog({ onConfirm, onCancel }: SignOutDialogProps) {
   return (
     <View style={{ gap: moderateScale(14) }}>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(20),
-          letterSpacing: -0.3,
-          color: Colors.onSurface,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.3}
-      >
-        Sign out of Kannada Beku?
-      </Text>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.regular,
-          fontSize: moderateScale(14),
-          lineHeight: moderateScale(20),
-          color: Colors.tertiary,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.4}
-      >
+      <DialogTitle>Sign out of Kannada Beku?</DialogTitle>
+      <DialogBody>
         Your streak, lessons and phrases are saved to your account. Sign back in anytime.
-      </Text>
-      <ButtonStack>
-        <Button
+      </DialogBody>
+      <View style={{ gap: moderateScale(10), marginTop: moderateScale(2) }}>
+        <LipButton
           label="Sign out"
           variant="primary"
           onPress={onConfirm}
-          destructive
-          accessibilityHint="Signs you out of your account."
+          accessibilityLabel="Sign out. Destructive."
         />
-        <Button label="Stay signed in" variant="ghost" onPress={onCancel} />
-      </ButtonStack>
+        <LipButton label="Stay signed in" variant="secondary" onPress={onCancel} />
+      </View>
     </View>
   );
 }

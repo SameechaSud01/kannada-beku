@@ -5,7 +5,7 @@ import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 
-export type WatermarkMotif = 'rangoli' | 'glyphs' | 'rays';
+export type WatermarkMotif = 'rangoli' | 'glyphs' | 'rays' | 'kolamGrid';
 
 export type WatermarkProps = {
   motif?: WatermarkMotif;
@@ -75,6 +75,24 @@ export function Watermark({ motif = 'rangoli', on = true, color = Colors.seconda
           {[60, 120, 180, 240, 300, 360, 420].map((radius) => (
             <Circle key={radius} cx="100%" cy={0} r={radius} stroke={color} strokeWidth={1.5} fill="none" />
           ))}
+        </Svg>
+      </View>
+    );
+  }
+
+  if (motif === 'kolamGrid') {
+    // Chunky kit v3 — a faint ink kolam dot grid over the cream page bg
+    // (dots rgba(27,29,14,0.05), 1.2px radius, 24px grid). The dot colour
+    // carries its own alpha, so the layer opacity stays at 1.
+    return (
+      <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+        <Svg width="100%" height="100%">
+          <Defs>
+            <Pattern id="kolamGrid" width={24} height={24} patternUnits="userSpaceOnUse">
+              <Circle cx={1.2} cy={1.2} r={1.2} fill="rgba(27,29,14,0.05)" />
+            </Pattern>
+          </Defs>
+          <Rect width="100%" height="100%" fill="url(#kolamGrid)" />
         </Svg>
       </View>
     );

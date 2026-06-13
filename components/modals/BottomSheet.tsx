@@ -6,7 +6,6 @@ import GorhomBottomSheet, {
   type BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet';
 import { Colors } from '../../constants/colors';
-import { Radius } from '../../constants/spacing';
 import { Shadows } from '../../constants/shadows';
 
 export interface BottomSheetHandle {
@@ -63,20 +62,20 @@ export const BottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(
         onChange={handleChange}
         backdropComponent={renderBackdrop}
         backgroundStyle={{
-          backgroundColor: Colors.surfaceContainerLow,
-          borderTopLeftRadius: Radius.xl,
-          borderTopRightRadius: Radius.xl,
+          backgroundColor: '#ffffff',
+          borderTopLeftRadius: moderateScale(24),
+          borderTopRightRadius: moderateScale(24),
           ...Shadows.modal,
         }}
         handleStyle={{
-          paddingTop: moderateScale(10),
+          paddingTop: moderateScale(12),
           paddingBottom: moderateScale(8),
         }}
         handleIndicatorStyle={{
-          width: moderateScale(38),
+          width: moderateScale(40),
           height: moderateScale(5),
           borderRadius: moderateScale(3),
-          backgroundColor: Colors.surfaceDim,
+          backgroundColor: Colors.hairline,
         }}
         accessible
         accessibilityLabel="Bottom sheet"

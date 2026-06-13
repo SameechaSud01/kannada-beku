@@ -8,6 +8,7 @@ import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { useCompletedLessons } from '../../hooks/progress';
+import { useStreakCelebration } from '../../hooks/useStreakCelebration';
 import { useDbLessons } from '../../hooks/useLessons';
 import {
   PLANNED_LESSON_SLOTS,
@@ -18,6 +19,9 @@ import { LessonLockedDialog } from '../../components/modals/instances/LessonLock
 import { LessonInfoDialog } from '../../components/modals/instances/LessonInfoDialog';
 import { BasicsCard } from '../../components/guide/BasicsCard';
 import { Watermark } from '../../components/ui/Watermark';
+import { TopBar } from '../../components/ui/TopBar';
+import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
+import { LockTile } from '../../components/ui/LockTile';
 
 const ESTIMATED_MIN_PER_LESSON = 5;
 
@@ -39,6 +43,7 @@ export default function LearnScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const completedLessons = useCompletedLessons();
+  const { streak, onStreakPress } = useStreakCelebration();
   const modal = useModal();
   const lessonsQuery = useDbLessons();
   const dbLessons = lessonsQuery.data ?? [];
@@ -129,57 +134,51 @@ export default function LearnScreen() {
     <Animated.View
       style={{
         flex: 1,
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.surfaceCream,
         opacity: fadeAnim,
         transform: [{ translateY: slideAnim }],
       }}
     >
-      <Watermark motif="rangoli" />
+      <Watermark motif="kolamGrid" />
 
-      {/* Header — "Your journey" + subtitle line + hairline */}
-      <View
-        style={{
-          paddingTop: insets.top + Spacing.sm,
-          paddingBottom: Spacing.md,
-          paddingHorizontal: Spacing.lg,
-          borderBottomWidth: 1,
-          borderBottomColor: Colors.hairline,
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: Fonts.baloo.extrabold,
-            fontSize: moderateScale(25),
-            color: Colors.onSurface,
-            letterSpacing: -0.4,
-            lineHeight: moderateScale(38),
-          }}
-          maxFontSizeMultiplier={1.2}
-        >
-          Your journey
-        </Text>
-        <Text
-          style={{
-            fontFamily: Fonts.dmSans.bold,
-            fontSize: moderateScale(13),
-            color: Colors.tertiary,
-            marginTop: moderateScale(1),
-          }}
-          maxFontSizeMultiplier={1.4}
-        >
-          Swalpa swalpa — one step at a time.
-        </Text>
-      </View>
+      <TopBar streak={streak} onStreakPress={onStreakPress} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
       >
+        {/* Page title */}
+        <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg }}>
+          <Text
+            style={{
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(32),
+              color: Colors.onSurface,
+              letterSpacing: -0.5,
+              lineHeight: moderateScale(45),
+            }}
+            maxFontSizeMultiplier={1.2}
+          >
+            Lessons
+          </Text>
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.medium,
+              fontSize: moderateScale(15),
+              color: Colors.tertiary,
+              marginTop: moderateScale(2),
+            }}
+            maxFontSizeMultiplier={1.4}
+          >
+            {TOTAL_LESSON_SLOTS} steps to speaking.
+          </Text>
+        </View>
+
         <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg, marginBottom: moderateScale(14) }}>
           <BasicsCard />
         </View>
 
-        <View style={{ paddingHorizontal: Spacing.lg, gap: moderateScale(9) }}>
+        <View style={{ paddingHorizontal: Spacing.lg, gap: moderateScale(11) }}>
           {rows.map((row) => (
             <LessonRowView
               key={`slot-${row.slot}`}
@@ -207,87 +206,52 @@ function LessonRowView({
   const isDone = row.state === 'done';
   const isActive = row.state === 'active';
 
-  // Tile colours per state (done = gold-wash, active = red, locked = dim).
-  const tileBg = isDone ? Colors.secondaryFixed : isActive ? Colors.primary : Colors.surfaceContainerHigh;
-  const glyphColor = isDone ? Colors.onSecondaryContainer : isActive ? Colors.onPrimary : Colors.textFaint;
+  const titleColor = isLocked ? Colors.textFaint : Colors.onSurface;
+  const subColor = isLocked ? Colors.textFaint : Colors.tertiary;
 
-  return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={
-        isLocked
-          ? `Locked. Complete ${row.prevTitle ?? 'the previous lesson'} to unlock.`
-          : `${row.slot}. ${row.title}${isDone ? ', completed' : ', start'}`
-      }
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: moderateScale(13),
-        borderRadius: Radius.xl,
-        padding: moderateScale(12),
-        opacity: isLocked ? 0.62 : 1,
-        // Active = white card with a 2px red ring + soft red shadow.
-        // Done/locked = tonal fill, no border (No-Line rule).
-        backgroundColor: isActive ? Colors.surfaceContainerLowest : isDone ? Colors.secondaryFixed : Colors.surfaceContainerLow,
-        ...(isActive
-          ? {
-              borderWidth: 2,
-              borderColor: Colors.primary,
-              shadowColor: Colors.primary,
-              shadowOffset: { width: 0, height: 8 },
-              shadowOpacity: 0.18,
-              shadowRadius: 16,
-              elevation: 4,
-            }
-          : null),
-        transform: [{ scale: pressed && !isLocked ? 0.98 : 1 }],
-      })}
-    >
-      <View
-        style={{
-          width: moderateScale(50),
-          height: moderateScale(50),
-          borderRadius: moderateScale(15),
-          backgroundColor: tileBg,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Text
+  const content = (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(13), padding: moderateScale(12) }}>
+      {/* Glyph tile / lock */}
+      {isLocked ? (
+        <LockTile size={50} radius={moderateScale(14)} />
+      ) : (
+        <View
           style={{
-            fontFamily: Fonts.notoSansKannada.bold,
-            fontSize: moderateScale(24),
-            lineHeight: moderateScale(36),
-            paddingTop: moderateScale(2),
-            color: glyphColor,
+            width: moderateScale(50),
+            height: moderateScale(50),
+            borderRadius: moderateScale(14),
+            backgroundColor: isActive ? Colors.primaryContainer : Colors.secondaryFixed,
+            borderBottomWidth: 3,
+            borderBottomColor: isActive ? Colors.redLip : Colors.goldLip,
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
-          maxFontSizeMultiplier={1.2}
         >
-          {row.char}
-        </Text>
-      </View>
+          <Text
+            style={{
+              fontFamily: Fonts.notoSansKannada.bold,
+              fontSize: moderateScale(24),
+              lineHeight: moderateScale(36),
+              paddingTop: moderateScale(2),
+              color: isActive ? Colors.onPrimary : Colors.onSecondaryContainer,
+            }}
+            maxFontSizeMultiplier={1.2}
+          >
+            {row.char}
+          </Text>
+        </View>
+      )}
 
       <View style={{ flex: 1 }}>
         <Text
-          style={{
-            fontFamily: Fonts.baloo.bold,
-            fontSize: moderateScale(17),
-            color: Colors.onSurface,
-            letterSpacing: -0.2,
-          }}
+          style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(17), color: titleColor, letterSpacing: -0.2 }}
           maxFontSizeMultiplier={1.3}
           numberOfLines={1}
         >
           {row.title}
         </Text>
         <Text
-          style={{
-            fontFamily: Fonts.dmSans.medium,
-            fontSize: moderateScale(12.5),
-            color: Colors.tertiary,
-            marginTop: moderateScale(1),
-          }}
+          style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12.5), color: subColor, marginTop: moderateScale(1) }}
           maxFontSizeMultiplier={1.3}
           numberOfLines={2}
         >
@@ -305,51 +269,79 @@ function LessonRowView({
         <Icons.info size={moderateScale(18)} color={Colors.tertiary} />
       </Pressable>
 
-      <View
-        style={{
-          marginLeft: moderateScale(4),
-          width: moderateScale(32),
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        {isDone ? (
-          <View
-            style={{
-              width: moderateScale(26),
-              height: moderateScale(26),
-              borderRadius: Radius.full,
-              backgroundColor: Colors.secondary,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Icons.check size={moderateScale(15)} color={Colors.onPrimary} strokeWidth={2.6} />
-          </View>
-        ) : isActive ? (
-          <View
-            style={{
-              width: moderateScale(32),
-              height: moderateScale(32),
-              borderRadius: Radius.full,
-              backgroundColor: Colors.primary,
-              alignItems: 'center',
-              justifyContent: 'center',
-              ...{
-                shadowColor: Colors.primary,
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.4,
-                shadowRadius: 10,
-                elevation: 6,
-              },
-            }}
-          >
-            <Icons.play size={moderateScale(15)} color={Colors.onPrimary} />
-          </View>
-        ) : (
-          <Icons.locked size={moderateScale(17)} color={Colors.textFaint} />
-        )}
-      </View>
-    </Pressable>
+      {/* Trailing affordance */}
+      {isDone ? (
+        <View
+          style={{
+            width: moderateScale(26),
+            height: moderateScale(26),
+            borderRadius: Radius.full,
+            backgroundColor: Colors.secondaryContainer,
+            borderBottomWidth: 2,
+            borderBottomColor: Colors.goldLip,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Icons.check size={moderateScale(15)} color={Colors.onSecondaryContainer} strokeWidth={2.6} />
+        </View>
+      ) : isActive ? (
+        <View
+          style={{
+            width: moderateScale(42),
+            height: moderateScale(42),
+            borderRadius: Radius.full,
+            backgroundColor: Colors.primaryContainer,
+            borderBottomWidth: 3,
+            borderBottomColor: Colors.redLip,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Icons.play size={moderateScale(16)} color={Colors.onPrimary} />
+        </View>
+      ) : (
+        <View style={{ width: moderateScale(26) }} />
+      )}
+    </View>
+  );
+
+  const a11yLabel = isLocked
+    ? `Locked. Complete ${row.prevTitle ?? 'the previous lesson'} to unlock.`
+    : `${row.slot}. ${row.title}${isDone ? ', completed' : ', start'}`;
+
+  // Locked rows are de-emphasised and flat (no lip / no press-translate).
+  if (isLocked) {
+    return (
+      <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={a11yLabel}>
+        <View
+          style={{
+            backgroundColor: Colors.surfaceCreamLow,
+            borderRadius: Radius.chunky,
+            borderWidth: 1,
+            borderColor: 'rgba(217,123,58,0.30)',
+            opacity: 0.85,
+          }}
+        >
+          {content}
+        </View>
+      </Pressable>
+    );
+  }
+
+  return (
+    <ChunkyPressable
+      onPress={onPress}
+      accessibilityLabel={a11yLabel}
+      bg="#ffffff"
+      lip={isActive ? 5 : 4}
+      lipColor={isActive ? Colors.redLip : Colors.cardLip}
+      border
+      borderColor={isActive ? Colors.primaryContainer : Colors.hairline}
+      borderWidth={isActive ? 2 : 1}
+      radius={Radius.chunky}
+    >
+      {content}
+    </ChunkyPressable>
   );
 }

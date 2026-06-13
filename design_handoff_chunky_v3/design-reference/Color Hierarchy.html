@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kannada Baa — Colour Hierarchy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,400..800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --surface: #fcfcfa; --surfaceLow: #f4f4f0;
+    --red: #91001b; --red2: #be0027; --redLip: #6e0014; --redPale: #f3dada;
+    --gold: #fdc003; --goldHi: #ffd24d; --goldLip: #c98a00; --goldPale: #ffdf9e; --goldDeep: #785900;
+    --ink: #1b1d0e; --muted: #464646; --faint: #908d76; --hairline: rgba(27,29,14,0.08);
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body { background: var(--surface); color: var(--ink); font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 1080px; margin: 0 auto; padding: 52px 40px 120px; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: var(--red); }
+  h1 { font-family: 'Baloo Tamma 2', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.15; margin-top: 6px; }
+  .lede { font-size: 14.5px; font-weight: 500; color: var(--muted); margin-top: 8px; max-width: 620px; line-height: 1.55; text-wrap: pretty; }
+  h2 { font-family: 'Baloo Tamma 2', sans-serif; font-weight: 800; font-size: 22px; margin: 48px 0 4px; }
+  .sub { font-size: 13px; font-weight: 500; color: var(--faint); margin-bottom: 16px; }
+
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 12px; }
+  .sw { background: #fff; border: 1px solid var(--hairline); border-radius: 16px; overflow: hidden; box-shadow: 0 3px 0 rgba(27,29,14,0.08); }
+  .sw-chip { height: 76px; display: flex; align-items: flex-end; padding: 10px 14px; }
+  .sw-hex { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; font-weight: 600; opacity: 0.85; }
+  .sw-body { padding: 11px 14px 12px; }
+  .sw-name { font-family: 'Baloo Tamma 2', sans-serif; font-weight: 700; font-size: 14.5px; line-height: 1.2; }
+  .sw-role { font-size: 11.5px; font-weight: 500; color: var(--muted); margin-top: 3px; line-height: 1.45; }
+
+  .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .rule { background: #fff; border: 1px solid var(--hairline); border-radius: 16px; box-shadow: 0 3px 0 rgba(27,29,14,0.08); padding: 16px 18px; display: flex; gap: 14px; align-items: flex-start; }
+  .rule-n { font-family: 'Baloo Tamma 2', sans-serif; font-weight: 800; font-size: 20px; color: var(--goldLip); flex-shrink: 0; line-height: 1.2; }
+  .rule-t { font-family: 'Baloo Tamma 2', sans-serif; font-weight: 700; font-size: 15.5px; line-height: 1.25; }
+  .rule-d { font-size: 12.5px; font-weight: 500; color: var(--muted); margin-top: 3px; line-height: 1.5; text-wrap: pretty; }
+
+  .map { border-radius: 16px; overflow: hidden; border: 1px solid var(--hairline); box-shadow: 0 3px 0 rgba(27,29,14,0.08); }
+  .map-row { display: grid; grid-template-columns: 150px 1fr 1fr; background: #fff; }
+  .map-row + .map-row { border-top: 1px solid var(--hairline); }
+  .map-row.head { background: var(--surfaceLow); }
+  .map-cell { padding: 13px 16px; font-size: 12.5px; font-weight: 500; color: var(--muted); line-height: 1.5; }
+  .map-cell.screen { font-family: 'Baloo Tamma 2', sans-serif; font-weight: 700; font-size: 14.5px; color: var(--ink); }
+  .map-row.head .map-cell { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--faint); }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: baseline; }
+
+  .demo-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; background: #fff; border: 1px solid var(--hairline); border-radius: 16px; box-shadow: 0 3px 0 rgba(27,29,14,0.08); padding: 20px; }
+  .btn { font-family: 'Baloo Tamma 2', sans-serif; font-weight: 700; font-size: 15px; border: none; border-radius: 14px; padding: 14px 24px 12px; cursor: pointer; }
+  .btn.primary { background: var(--red2); color: #fff; box-shadow: 0 5px 0 var(--redLip); }
+  .btn.secondary { background: linear-gradient(180deg, var(--goldHi), var(--gold)); color: #6c5000; box-shadow: 0 5px 0 var(--goldLip); }
+  .btn.ghost { background: #fff; color: var(--ink); border: 1px solid var(--hairline); box-shadow: 0 4px 0 rgba(27,29,14,0.10); }
+  .chip-done { font-family: 'Baloo Tamma 2', sans-serif; font-weight: 700; font-size: 13px; color: var(--goldDeep); background: var(--goldPale); border-radius: 99px; padding: 9px 16px 7px; box-shadow: 0 3px 0 var(--goldLip); }
+  .chip-urgent { font-family: 'Baloo Tamma 2', sans-serif; font-weight: 700; font-size: 13px; color: var(--red); background: var(--redPale); border-radius: 99px; padding: 9px 16px 7px; box-shadow: 0 3px 0 rgba(145,0,27,0.25); }
+  .demo-note { font-size: 11.5px; color: var(--faint); font-weight: 500; width: 100%; }
+
+  @media (max-width: 720px) { .page { padding: 32px 18px 100px; } h1 { font-size: 30px; } .rules { grid-template-columns: 1fr; } .map-row { grid-template-columns: 110px 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="eyebrow">Kannada Baa · Chunky kit</div>
+    <h1>Colour hierarchy</h1>
+    <p class="lede">Two pigments, one ladder of neutrals. Red commands, gold rewards — and each colour family carries its own face, lip, pale surface and deep-text shade so combinations are never improvised.</p>
+  </header>
+
+  <section data-screen-label="Mysore Red">
+    <h2>Mysore Red — commands</h2>
+    <p class="sub">Red means "act now". The less of it on screen, the louder it speaks.</p>
+    <div class="swatches">
+      <div class="sw"><div class="sw-chip" style="background:var(--red2)"><span class="sw-hex" style="color:#fff">#BE0027 · primaryContainer</span></div><div class="sw-body"><div class="sw-name">Action red</div><div class="sw-role">The one primary CTA per screen, active tab circle, play orbs.</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--red)"><span class="sw-hex" style="color:#fff">#91001B · primary</span></div><div class="sw-body"><div class="sw-name">Brand red</div><div class="sw-role">Wordmark, gradient partner, urgent headings on pale red.</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--redLip)"><span class="sw-hex" style="color:#fff">#6E0014 · redLip</span></div><div class="sw-body"><div class="sw-name">Red lip</div><div class="sw-role">Only as the hard bottom edge under action red. Never a fill.</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--redPale)"><span class="sw-hex" style="color:var(--red)">#F3DADA · errorContainerLow</span></div><div class="sw-body"><div class="sw-name">Pale red</div><div class="sw-role">Urgent surfaces only — "Stuck right now?", error cards. Text on it: brand red.</div></div></div>
+    </div>
+  </section>
+
+  <section data-screen-label="Turmeric Gold">
+    <h2>Turmeric Gold — rewards</h2>
+    <p class="sub">Gold means "you're winning". Progress, streaks, completion — never a competing call to action.</p>
+    <div class="swatches">
+      <div class="sw"><div class="sw-chip" style="background:var(--gold)"><span class="sw-hex" style="color:#6c5000">#FDC003 · secondaryContainer</span></div><div class="sw-body"><div class="sw-name">Gold</div><div class="sw-role">Progress fills, streak medallion, secondary buttons (with goldHi gradient).</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--goldHi)"><span class="sw-hex" style="color:#6c5000">#FFD24D · goldBright</span></div><div class="sw-body"><div class="sw-name">Gold highlight</div><div class="sw-role">Top of gold gradients only — gives gold its chunky sheen.</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--goldLip)"><span class="sw-hex" style="color:#fff">#C98A00 · goldLip</span></div><div class="sw-body"><div class="sw-name">Gold lip</div><div class="sw-role">Hard edge under gold; also progress-ring stroke on white.</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--goldPale)"><span class="sw-hex" style="color:var(--goldDeep)">#FFDF9E · secondaryFixed</span></div><div class="sw-body"><div class="sw-name">Pale gold</div><div class="sw-role">Achievement surfaces — done lesson rows, selected chips, streak pill.</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--goldDeep)"><span class="sw-hex" style="color:#fff">#785900 · secondary</span></div><div class="sw-body"><div class="sw-name">Deep gold</div><div class="sw-role">Text and icons on gold surfaces. Never a background.</div></div></div>
+    </div>
+  </section>
+
+  <section data-screen-label="Neutrals">
+    <h2>Neutrals — the quiet ladder</h2>
+    <p class="sub">Everything that isn't a command or a reward. Hierarchy comes from surface steps and text tiers, not borders.</p>
+    <div class="swatches">
+      <div class="sw"><div class="sw-chip" style="background:var(--surface); border-bottom:1px solid var(--hairline)"><span class="sw-hex" style="color:var(--faint)">#FCFCFA · surface</span></div><div class="sw-body"><div class="sw-name">Page</div><div class="sw-role">Root background. Warm near-white, never pure white.</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#ffffff; border-bottom:1px solid var(--hairline)"><span class="sw-hex" style="color:var(--faint)">#FFFFFF · card</span></div><div class="sw-body"><div class="sw-name">Card</div><div class="sw-role">White face + hairline + hard lip = the default chunky card.</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--surfaceLow)"><span class="sw-hex" style="color:var(--faint)">#F4F4F0 · surfaceLow</span></div><div class="sw-body"><div class="sw-name">Recessed</div><div class="sw-role">Secondary zones — basics card, locked rows, icon wells.</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--ink)"><span class="sw-hex" style="color:#fff">#1B1D0E · onSurface</span></div><div class="sw-body"><div class="sw-name">Ink</div><div class="sw-role">Headings and primary text. Warm, near-black.</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--muted)"><span class="sw-hex" style="color:#fff">#464646 · tertiary</span></div><div class="sw-body"><div class="sw-name">Muted</div><div class="sw-role">Body copy, captions, sublabels.</div></div></div>
+      <div class="sw"><div class="sw-chip" style="background:var(--faint)"><span class="sw-hex" style="color:#fff">#908D76 · textFaint</span></div><div class="sw-body"><div class="sw-name">Faint</div><div class="sw-role">Hints, locked labels, inactive tab icons. Last text tier.</div></div></div>
+    </div>
+  </section>
+
+  <section data-screen-label="The rules">
+    <h2>The rules</h2>
+    <p class="sub">Six decisions that keep the screens readable.</p>
+    <div class="rules">
+      <div class="rule"><div class="rule-n">1</div><div><div class="rule-t">One red CTA per screen</div><div class="rule-d">Each screen gets exactly one action-red moment — the continue button, the play orb, the active tab. Everything else queues behind it.</div></div></div>
+      <div class="rule"><div class="rule-n">2</div><div><div class="rule-t">Gold never competes</div><div class="rule-d">Gold marks progress and reward (bars, rings, streaks, done states). A gold button is always a secondary action next to a red one.</div></div></div>
+      <div class="rule"><div class="rule-n">3</div><div><div class="rule-t">Pale tints are surfaces, not accents</div><div class="rule-d">Pale red and pale gold only ever appear as card fills, paired with their deep text shade — red on pale red, deep gold on pale gold.</div></div></div>
+      <div class="rule"><div class="rule-n">4</div><div><div class="rule-t">Lips match their face</div><div class="rule-d">Every chunky element sits on a lip one shade deeper than its fill: action red → red lip, gold → gold lip, white → ink at 10%.</div></div></div>
+      <div class="rule"><div class="rule-n">5</div><div><div class="rule-t">Pale red = urgent only</div><div class="rule-d">Pale red is reserved for emergency and error moments. If it isn't urgent, it isn't pink.</div></div></div>
+      <div class="rule"><div class="rule-n">6</div><div><div class="rule-t">Neutrals do the layout</div><div class="rule-d">Sectioning comes from surface steps and the hairline ("felt, not seen") — never from coloured borders or new hues. No blue, green, teal or coral.</div></div></div>
+    </div>
+  </section>
+
+  <section data-screen-label="In practice">
+    <h2>In practice</h2>
+    <p class="sub">The same hierarchy, live in the kit.</p>
+    <div class="demo-row">
+      <button class="btn primary">ಮುಂದೆ &nbsp;Next</button>
+      <button class="btn secondary">Practice</button>
+      <button class="btn ghost">Skip for now</button>
+      <span class="chip-done">✓ Lesson done</span>
+      <span class="chip-urgent">Stuck right now?</span>
+      <span class="demo-note">Red acts · gold rewards · white waits · pale gold celebrates · pale red rescues.</span>
+    </div>
+
+    <h2>Where each colour lives, per screen</h2>
+    <p class="sub">The single red moment and the gold moments on every current screen.</p>
+    <div class="map">
+      <div class="map-row head"><div class="map-cell">Screen</div><div class="map-cell">Red moment (one)</div><div class="map-cell">Gold moments</div></div>
+      <div class="map-row"><div class="map-cell screen">Home</div><div class="map-cell"><span class="dot" style="background:var(--red2)"></span>Stuck right now? card (urgent) + active tab</div><div class="map-cell"><span class="dot" style="background:var(--gold)"></span>Words-learnt banner, Speak ring</div></div>
+      <div class="map-row"><div class="map-cell screen">Lessons</div><div class="map-cell"><span class="dot" style="background:var(--red2)"></span>Play orb on the current lesson</div><div class="map-cell"><span class="dot" style="background:var(--goldPale)"></span>Done rows (pale gold + check), progress bar on current row</div></div>
+      <div class="map-row"><div class="map-cell screen">Games</div><div class="map-cell"><span class="dot" style="background:var(--red2)"></span>Quick-quiz play orb; Dictation &amp; Conversations card fills</div><div class="map-cell"><span class="dot" style="background:var(--gold)"></span>Featured Quick-quiz card, Opposites (pale gold)</div></div>
+      <div class="map-row"><div class="map-cell screen">Profile</div><div class="map-cell"><span class="dot" style="background:var(--red2)"></span>Streak flame + sign-out text</div><div class="map-cell"><span class="dot" style="background:var(--gold)"></span>Streak medallion, overall-progress band</div></div>
+      <div class="map-row"><div class="map-cell screen">Lesson player</div><div class="map-cell"><span class="dot" style="background:var(--red2)"></span>Replay orb + "Got it" CTA</div><div class="map-cell"><span class="dot" style="background:var(--gold)"></span>Progress bar, selected word chip</div></div>
+      <div class="map-row"><div class="map-cell screen">Emergency</div><div class="map-cell"><span class="dot" style="background:var(--red2)"></span>The whole header — this screen is the urgent one</div><div class="map-cell"><span class="dot" style="background:var(--faint)"></span>None. Gold would dilute the urgency.</div></div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

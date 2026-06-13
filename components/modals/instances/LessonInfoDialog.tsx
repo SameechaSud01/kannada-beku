@@ -4,7 +4,8 @@ import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing } from '../../../constants/spacing';
 import { Halo } from '../Halo';
-import { Button } from '../../ui/Button';
+import { LipButton } from '../../ui/LipButton';
+import { DialogBody, DialogEyebrow, DialogTitle } from './_dialogChrome';
 
 export interface LessonInfoDialogProps {
   lessonNumber: number;
@@ -37,54 +38,15 @@ export function LessonInfoDialog({
   return (
     <View style={{ gap: moderateScale(14) }}>
       <View style={{ alignItems: 'center' }}>
-        <Halo icon="info" iconSize={26} stroke={2} iconColor={Colors.secondary} />
+        <Halo icon="info" iconSize={26} stroke={2.2} iconColor={Colors.secondary} />
       </View>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(11),
-          letterSpacing: 1.4,
-          color: Colors.secondary,
-          textAlign: 'center',
-          textTransform: 'uppercase',
-        }}
-        maxFontSizeMultiplier={1.4}
-      >
-        Lesson {lessonNumber}
-      </Text>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(20),
-          letterSpacing: -0.3,
-          color: Colors.onSurface,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.3}
-      >
-        {lessonTitle}
-      </Text>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.regular,
-          fontSize: moderateScale(14),
-          lineHeight: moderateScale(20),
-          color: Colors.tertiary,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.4}
-      >
-        {description}
-      </Text>
-      <View
-        style={{
-          alignItems: 'center',
-          paddingVertical: Spacing.xs,
-        }}
-      >
+      <DialogEyebrow>Lesson {lessonNumber}</DialogEyebrow>
+      <DialogTitle>{lessonTitle}</DialogTitle>
+      <DialogBody>{description}</DialogBody>
+      <View style={{ alignItems: 'center', paddingVertical: Spacing.xs }}>
         <Text
           style={{
-            fontFamily: Fonts.dmSans.medium,
+            fontFamily: Fonts.dmSans.bold,
             fontSize: moderateScale(13),
             color: Colors.onSurface,
             textAlign: 'center',
@@ -95,24 +57,15 @@ export function LessonInfoDialog({
         </Text>
       </View>
       {locked && prevLessonNumber && prevLessonTitle ? (
-        <Text
-          style={{
-            fontFamily: Fonts.dmSans.regular,
-            fontSize: moderateScale(13),
-            lineHeight: moderateScale(19),
-            color: Colors.tertiary,
-            textAlign: 'center',
-          }}
-          maxFontSizeMultiplier={1.4}
-        >
+        <DialogBody>
           Complete{' '}
-          <Text style={{ fontFamily: Fonts.dmSans.bold, color: Colors.onSurface }}>
+          <DialogBody.Strong>
             Lesson {prevLessonNumber} · {prevLessonTitle}
-          </Text>{' '}
+          </DialogBody.Strong>{' '}
           to unlock.
-        </Text>
+        </DialogBody>
       ) : null}
-      <Button label="Got it" variant="primary" onPress={onDismiss} />
+      <LipButton label="Got it" variant="primary" onPress={onDismiss} />
     </View>
   );
 }

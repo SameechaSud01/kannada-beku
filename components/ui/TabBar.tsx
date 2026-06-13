@@ -1,4 +1,5 @@
-import { View, Pressable } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
@@ -15,14 +16,18 @@ const TAB_ICONS: Record<string, { icon: TablerIcon; label: string }> = {
   profile: { icon: Icons.tabProfile, label: 'Profile' },
 };
 
-const TAB_ICON_SIZE = 19; // DESIGN.md §TabBar
-const SLOT = moderateScale(48); // ≥44pt touch target
+const TAB_ICON_SIZE = 20;
+const SLOT = moderateScale(46); // icon-only slot
+const PILL_LIP = 4; // white pill bottom lip
+const ACTIVE_LIP = 3; // active red circle lip
+const SCRIM_HEIGHT = moderateScale(110);
 
 /**
- * Floating icon-only tab bar (DESIGN.md §TabBar, Amendment B). A centred
- * rounded-`full` pill that floats above the bottom inset; the active tab is a
- * solid red circle with a soft red glow. No labels. The surrounding strip uses
- * the page background so the pill reads as floating on the page.
+ * Floating chunky tab bar (chunky_v3 § TabBar). A white pill with a hairline
+ * border, a 4px bottom lip and a soft ambient shadow; the active tab is a solid
+ * red circle with a 3px redLip lip (replaces the old red glow). A bottom scrim
+ * gradient (transparent → page cream) sits behind the pill so page content
+ * fades out as it scrolls under the bar.
  */
 export function TabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
@@ -30,20 +35,30 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
   return (
     <View
       style={{
-        backgroundColor: Colors.surface,
         alignItems: 'center',
         paddingTop: Spacing.sm,
         paddingBottom: insets.bottom + Spacing.md,
       }}
     >
+      {/* Bottom scrim: content fades into the page cream behind the pill. */}
+      <LinearGradient
+        pointerEvents="none"
+        colors={['rgba(250,246,234,0)', Colors.surfaceCream]}
+        style={[StyleSheet.absoluteFill, { top: undefined, height: SCRIM_HEIGHT }]}
+      />
+
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          backgroundColor: Colors.surfaceContainerHigh,
+          backgroundColor: '#ffffff',
           borderRadius: Radius.full,
-          paddingHorizontal: Spacing.sm,
-          paddingVertical: Spacing.sm,
+          borderWidth: 1,
+          borderColor: Colors.hairline,
+          borderBottomWidth: PILL_LIP,
+          borderBottomColor: Colors.cardLip,
+          paddingHorizontal: moderateScale(7),
+          paddingVertical: moderateScale(7),
           gap: Spacing.xs,
           ...Shadows.floatingNav,
         }}
@@ -79,6 +94,8 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: isFocused ? Colors.primaryContainer : 'transparent',
+                borderBottomWidth: isFocused ? ACTIVE_LIP : 0,
+                borderBottomColor: isFocused ? Colors.redLip : 'transparent',
                 ...(isFocused ? Shadows.tabActive : null),
               }}
             >

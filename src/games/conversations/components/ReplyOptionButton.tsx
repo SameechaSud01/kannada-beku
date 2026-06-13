@@ -14,39 +14,36 @@ type Props = {
   onPress: () => void;
 };
 
+// chunky_v3: correct = goldPale + 2px goldLip border + gold check; wrong =
+// redPale + 2px primaryContainer border (wrong STAYS red).
 const BG: Record<OptionState, string> = {
-  default:  Colors.surface,
+  default:  '#ffffff',
   correct:  Colors.secondaryFixed,
   wrong:    Colors.errorContainerLow,
   reveal:   Colors.secondaryFixed,
-  disabled: Colors.surfaceContainerHigh,
+  disabled: '#ffffff',
 };
 
 const BORDER: Record<OptionState, string> = {
-  default:  Colors.outlineVariant,
-  correct:  Colors.secondary,
-  wrong:    Colors.primary,
-  reveal:   Colors.secondary,
-  disabled: Colors.surfaceDim,
+  default:  Colors.hairline,
+  correct:  Colors.goldLip,
+  wrong:    Colors.primaryContainer,
+  reveal:   Colors.goldLip,
+  disabled: Colors.hairline,
 };
 
 const ReplyOptionButton: React.FC<Props> = ({ option, state, onPress }) => {
   const isLifted = state === 'correct' || state === 'reveal';
   const translateX = useShake(state === 'wrong');
-  // Full-width stacked replies signal "correct" via shadow + gold fill +
-  // checkmark — no translate/scale, so rows stay evenly spaced.
   const { checkProgress, checkScale } = useCorrectLift(isLifted);
+
+  const borderW = state === 'default' || state === 'disabled' ? 1 : 2;
 
   return (
     <Animated.View
       style={{
         transform: [{ translateX }],
-        shadowColor: Colors.onSurface,
-        shadowOpacity: isLifted ? 0.18 : 0.06,
-        shadowOffset: { width: 0, height: isLifted ? moderateScale(6) : moderateScale(2) },
-        shadowRadius: isLifted ? moderateScale(10) : moderateScale(4),
-        elevation: isLifted ? 6 : 2,
-        borderRadius: Radius.xl,
+        borderRadius: Radius.chunky,
       }}
     >
       <Pressable
@@ -56,15 +53,17 @@ const ReplyOptionButton: React.FC<Props> = ({ option, state, onPress }) => {
         accessibilityLabel={`${option.tr || option.kn}, ${option.en}`}
         accessibilityState={{ selected: isLifted, disabled: state !== 'default' }}
         style={({ pressed }) => ({
-          borderRadius: Radius.xl,
-          borderWidth: 1.5,
+          borderRadius: Radius.chunky,
+          borderWidth: borderW,
+          borderBottomWidth: state === 'default' ? 4 : borderW,
+          borderBottomColor: state === 'default' ? Colors.cardLip : BORDER[state],
           paddingHorizontal: Spacing.lg,
           paddingVertical: Spacing.md,
           backgroundColor: BG[state],
           borderColor: BORDER[state],
           minHeight: moderateScale(56),
           justifyContent: 'center',
-          opacity: pressed && state === 'default' ? 0.8 : 1,
+          transform: [{ translateY: pressed && state === 'default' ? 2 : 0 }],
         })}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: Spacing.md }}>
@@ -105,9 +104,15 @@ const ReplyOptionButton: React.FC<Props> = ({ option, state, onPress }) => {
               right: Spacing.sm,
               opacity: checkProgress,
               transform: [{ scale: checkScale }],
+              width: moderateScale(20),
+              height: moderateScale(20),
+              borderRadius: Radius.full,
+              backgroundColor: Colors.secondaryContainer,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            <Icons.correct size={moderateScale(16)} color={Colors.secondary} />
+            <Icons.check size={moderateScale(13)} color={Colors.onSecondaryContainer} strokeWidth={3} />
           </Animated.View>
         )}
       </Pressable>

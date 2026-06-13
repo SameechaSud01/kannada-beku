@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { View, Text, ScrollView, Pressable, Animated } from 'react-native';
+import { View, Text, ScrollView, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -7,73 +7,72 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { useCompletedLessons } from '../../hooks/progress';
+import { useStreakCelebration } from '../../hooks/useStreakCelebration';
 import { Icons } from '../../constants/icons';
 import { Watermark } from '../../components/ui/Watermark';
+import { TopBar } from '../../components/ui/TopBar';
+import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
 import type { Icon as TablerIcon } from '@tabler/icons-react-native';
 
-type GameId = 'quiz' | 'image-match' | 'dictation' | 'conversations' | 'opposites';
+type GameId = 'quiz' | 'dictation' | 'conversations' | 'opposites';
 
 type GameDef = {
   id: GameId;
   title: string;
   subtitle: string;
   Icon: TablerIcon;
-  /** Card face, lip (hard bottom edge), text colour, decorative glyph. */
   bg: string;
   lip: string;
   fg: string;
   glyph: string;
+  /** Glyph watermark tint. */
+  glyphColor: string;
 };
 
-export const GAMES: GameDef[] = [
-  {
-    id: 'quiz',
-    title: 'Quick quiz',
-    subtitle: 'Test your speed.',
-    Icon: Icons.gameQuickQuiz,
-    bg: Colors.secondary,
-    lip: Colors.onSecondaryContainer,
-    fg: Colors.onPrimary,
-    glyph: 'ಪ',
-  },
-  // 'image-match' temporarily hidden from Practice (CONTRADICTIONS C13) — the
-  // tap-to-connect board needs a better mechanic. Game code + route stay intact.
+// 'image-match' stays hidden from Practice (CONTRADICTIONS C13). The featured
+// Quick quiz renders separately; these three fill the grid + wide row.
+const GRID_GAMES: GameDef[] = [
   {
     id: 'dictation',
     title: 'Dictation',
     subtitle: 'Hear it. Type it.',
     Icon: Icons.gameDictation,
-    bg: Colors.primary,
+    bg: Colors.primaryContainer,
     lip: Colors.redLip,
     fg: Colors.onPrimary,
     glyph: 'ಕ',
+    glyphColor: 'rgba(255,255,255,0.22)',
   },
   {
     id: 'conversations',
     title: 'Conversations',
     subtitle: 'Roleplay real scenes.',
     Icon: Icons.gameConversations,
-    bg: Colors.primaryContainer,
-    lip: Colors.redLip,
+    bg: Colors.primary,
+    lip: Colors.redLipDeep,
     fg: Colors.onPrimary,
     glyph: 'ಮ',
-  },
-  {
-    id: 'opposites',
-    title: 'Opposites',
-    subtitle: 'Match contrasts.',
-    Icon: Icons.gameOpposites,
-    bg: Colors.secondaryContainer,
-    lip: Colors.goldLip,
-    fg: Colors.onSecondaryContainer,
-    glyph: 'ವ',
+    glyphColor: 'rgba(255,255,255,0.22)',
   },
 ];
+
+const WIDE_GAME: GameDef = {
+  id: 'opposites',
+  title: 'Opposites',
+  subtitle: 'Match contrasts.',
+  Icon: Icons.gameOpposites,
+  bg: Colors.secondaryFixed,
+  lip: Colors.goldLip,
+  fg: Colors.onSecondaryContainer,
+  glyph: 'ವ',
+  glyphColor: 'rgba(120,89,0,0.20)',
+};
 
 export default function PracticeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const completedLessons = useCompletedLessons();
+  const { streak, onStreakPress } = useStreakCelebration();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(4)).current;
@@ -87,181 +86,238 @@ export default function PracticeScreen() {
 
   const completed = completedLessons.length;
   const hasUnlocked = completed > 0;
-
-  const bannerText = !hasUnlocked
-    ? 'Finish Lesson 1 to unlock your games.'
-    : completed === 1
-      ? 'Lesson 1 is ready to play with.'
-      : `Lessons 1–${completed} are ready to play with.`;
+  const go = (id: GameId) => router.push(`/${id}`);
 
   return (
     <Animated.View
       style={{
         flex: 1,
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.surfaceCream,
         opacity: fadeAnim,
         transform: [{ translateY: slideAnim }],
       }}
     >
-      <Watermark motif="rangoli" />
+      <Watermark motif="kolamGrid" />
 
-      {/* Header — "Practice" + line + hairline */}
-      <View
-        style={{
-          paddingTop: insets.top + Spacing.sm,
-          paddingBottom: Spacing.md,
-          paddingHorizontal: Spacing.lg,
-          borderBottomWidth: 1,
-          borderBottomColor: Colors.hairline,
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: Fonts.baloo.extrabold,
-            fontSize: moderateScale(25),
-            color: Colors.onSurface,
-            letterSpacing: -0.4,
-            lineHeight: moderateScale(38),
-          }}
-          maxFontSizeMultiplier={1.2}
-        >
-          Practice
-        </Text>
-        <Text
-          style={{
-            fontFamily: Fonts.dmSans.medium,
-            fontSize: moderateScale(13),
-            color: Colors.tertiary,
-            marginTop: moderateScale(1),
-          }}
-          maxFontSizeMultiplier={1.4}
-        >
-          Play with the phrases you&apos;ve met.
-        </Text>
-      </View>
+      <TopBar streak={streak} onStreakPress={onStreakPress} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
       >
-        {/* Phrase-pool banner */}
+        {/* Page title */}
         <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg, marginBottom: Spacing.lg }}>
-          <View
+          <Text
             style={{
-              backgroundColor: Colors.surfaceContainerLowest,
-              borderRadius: Radius.lg,
-              padding: Spacing.md,
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: Spacing.md,
-              borderWidth: 1,
-              borderColor: Colors.hairline,
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(32),
+              color: Colors.onSurface,
+              letterSpacing: -0.5,
+              lineHeight: moderateScale(45),
             }}
+            maxFontSizeMultiplier={1.2}
           >
-            <View
-              style={{
-                width: moderateScale(36),
-                height: moderateScale(36),
-                borderRadius: moderateScale(10),
-                backgroundColor: Colors.surfaceContainerHigh,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Icons.phrasePool size={moderateScale(18)} color={Colors.primary} />
-            </View>
-            <Text
-              style={{
-                flex: 1,
-                fontFamily: Fonts.dmSans.medium,
-                fontSize: moderateScale(12.5),
-                lineHeight: moderateScale(17),
-                color: Colors.tertiary,
-              }}
-              maxFontSizeMultiplier={1.4}
-            >
-              {bannerText}
-            </Text>
-          </View>
+            Games
+          </Text>
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.medium,
+              fontSize: moderateScale(15),
+              color: Colors.tertiary,
+              marginTop: moderateScale(2),
+            }}
+            maxFontSizeMultiplier={1.4}
+          >
+            Play with what you&apos;ve learned.
+          </Text>
         </View>
 
-        {/* Game grid — 2-up colour-coded cards with a lip */}
+        {/* Featured — Quick quiz */}
+        <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(11) }}>
+          <FeaturedQuiz locked={!hasUnlocked} onPress={() => go('quiz')} />
+        </View>
+
+        {/* 2-up grid */}
         <View
           style={{
             paddingHorizontal: Spacing.lg,
             flexDirection: 'row',
-            flexWrap: 'wrap',
             justifyContent: 'space-between',
-            rowGap: moderateScale(11),
           }}
         >
-          {GAMES.map((game) => (
+          {GRID_GAMES.map((game) => (
             <GameCard
               key={game.id}
               game={game}
-              completed={completed}
-              hasUnlocked={hasUnlocked}
-              onPress={() => router.push(`/${game.id}`)}
+              width="48%"
+              minHeight={150}
+              locked={!hasUnlocked}
+              onPress={() => go(game.id)}
             />
           ))}
         </View>
 
-        {hasUnlocked ? (
-          <Text
-            style={{
-              paddingHorizontal: Spacing.lg,
-              marginTop: moderateScale(16),
-              fontFamily: Fonts.dmSans.regular,
-              fontSize: moderateScale(12),
-              color: Colors.tertiary,
-              lineHeight: moderateScale(18),
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            Each game draws only from phrases you&apos;ve already learned.
-          </Text>
-        ) : null}
+        {/* Wide — Opposites */}
+        <View style={{ paddingHorizontal: Spacing.lg, marginTop: moderateScale(11) }}>
+          <GameCard game={WIDE_GAME} width="100%" minHeight={96} locked={!hasUnlocked} onPress={() => go('opposites')} />
+        </View>
+
+        <Text
+          style={{
+            paddingHorizontal: Spacing.lg,
+            marginTop: moderateScale(16),
+            fontFamily: Fonts.dmSans.regular,
+            fontSize: moderateScale(12),
+            color: Colors.tertiary,
+            lineHeight: moderateScale(18),
+          }}
+          maxFontSizeMultiplier={1.4}
+        >
+          {hasUnlocked
+            ? 'Each game draws only from phrases you’ve already learned.'
+            : 'Finish Lesson 1 on the Learn tab to unlock your games.'}
+        </Text>
       </ScrollView>
     </Animated.View>
   );
 }
 
+/** Small burnt-orange lock badge for a locked (colour-coded) game tile. */
+function LockBadge() {
+  return (
+    <View
+      style={{
+        position: 'absolute',
+        top: moderateScale(12),
+        left: moderateScale(12),
+        width: moderateScale(30),
+        height: moderateScale(30),
+        borderRadius: Radius.full,
+        backgroundColor: Colors.warningContainerLow,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Icons.locked size={moderateScale(16)} color={Colors.warningContainer} strokeWidth={2} />
+    </View>
+  );
+}
+
+function RedPlayOrb() {
+  return (
+    <View
+      style={{
+        width: moderateScale(46),
+        height: moderateScale(46),
+        borderRadius: Radius.full,
+        backgroundColor: Colors.primaryContainer,
+        borderBottomWidth: 3,
+        borderBottomColor: Colors.redLip,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Icons.play size={moderateScale(18)} color={Colors.onPrimary} />
+    </View>
+  );
+}
+
+function FeaturedQuiz({ locked, onPress }: { locked: boolean; onPress: () => void }) {
+  const inner = (
+    <View style={{ padding: moderateScale(18), overflow: 'hidden' }}>
+      <Text
+        aria-hidden
+        style={{
+          position: 'absolute',
+          top: moderateScale(-6),
+          right: moderateScale(6),
+          fontFamily: Fonts.notoSansKannada.bold,
+          fontSize: moderateScale(88),
+          lineHeight: moderateScale(96),
+          color: 'rgba(120,89,0,0.18)',
+        }}
+        maxFontSizeMultiplier={1}
+      >
+        ಪ
+      </Text>
+      {locked ? <LockBadge /> : null}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(14) }}>
+        <View style={{ flex: 1 }}>
+          <View
+            style={{
+              width: moderateScale(52),
+              height: moderateScale(52),
+              borderRadius: Radius.tile,
+              backgroundColor: 'rgba(255,255,255,0.45)',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: moderateScale(10),
+            }}
+          >
+            <Icons.gameQuickQuiz size={moderateScale(26)} color={Colors.secondary} strokeWidth={2.2} />
+          </View>
+          <Text
+            style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(21), color: Colors.onSecondaryContainer, letterSpacing: -0.3 }}
+            maxFontSizeMultiplier={1.2}
+          >
+            Quick quiz
+          </Text>
+          <Text
+            style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(13), color: Colors.onSecondaryContainer, marginTop: moderateScale(1) }}
+            maxFontSizeMultiplier={1.3}
+          >
+            Test your speed.
+          </Text>
+        </View>
+        {!locked ? <RedPlayOrb /> : null}
+      </View>
+    </View>
+  );
+
+  if (locked) {
+    return (
+      <View
+        style={{
+          borderRadius: Radius.chunky,
+          backgroundColor: Colors.secondaryContainer,
+          borderBottomWidth: 5,
+          borderBottomColor: Colors.goldLip,
+          opacity: 0.55,
+        }}
+      >
+        {inner}
+      </View>
+    );
+  }
+  return (
+    <ChunkyPressable
+      onPress={onPress}
+      accessibilityLabel="Quick quiz — test your speed."
+      bg={Colors.secondaryContainer}
+      lip={5}
+      lipColor={Colors.goldLip}
+      radius={Radius.chunky}
+    >
+      {inner}
+    </ChunkyPressable>
+  );
+}
+
 function GameCard({
   game,
-  completed,
-  hasUnlocked,
+  width,
+  minHeight,
+  locked,
   onPress,
 }: {
   game: GameDef;
-  completed: number;
-  hasUnlocked: boolean;
+  width: '48%' | '100%';
+  minHeight: number;
+  locked: boolean;
   onPress: () => void;
 }) {
-  return (
-    <Pressable
-      onPress={onPress}
-      disabled={!hasUnlocked}
-      accessibilityRole={hasUnlocked ? 'button' : 'text'}
-      accessibilityLabel={
-        hasUnlocked
-          ? `${game.title} — ${game.subtitle}. ${completed} lesson${completed === 1 ? '' : 's'} loaded.`
-          : `${game.title}, locked. Finish lesson 1 to unlock.`
-      }
-      style={({ pressed }) => ({
-        width: '48%',
-        minHeight: moderateScale(158),
-        borderRadius: Radius.xl,
-        backgroundColor: game.bg,
-        borderBottomWidth: 5,
-        borderBottomColor: game.lip,
-        overflow: 'hidden',
-        padding: moderateScale(16),
-        justifyContent: 'flex-end',
-        opacity: hasUnlocked ? 1 : 0.55,
-        transform: [{ scale: pressed && hasUnlocked ? 0.98 : 1 }],
-      })}
-    >
-      {/* Decorative glyph — fully visible, top-right */}
+  const inner = (
+    <View style={{ minHeight: moderateScale(minHeight), padding: moderateScale(16), justifyContent: 'flex-end', overflow: 'hidden' }}>
       <Text
         aria-hidden
         style={{
@@ -271,43 +327,57 @@ function GameCard({
           fontFamily: Fonts.notoSansKannada.bold,
           fontSize: moderateScale(64),
           lineHeight: moderateScale(72),
-          color: 'rgba(255,255,255,0.22)',
+          color: game.glyphColor,
         }}
         maxFontSizeMultiplier={1}
       >
         {game.glyph}
       </Text>
-
-      {!hasUnlocked ? (
-        <View style={{ position: 'absolute', top: moderateScale(12), left: moderateScale(12) }}>
-          <Icons.locked size={moderateScale(16)} color={game.fg} />
-        </View>
-      ) : null}
-
+      {locked ? <LockBadge /> : null}
       <Text
-        style={{
-          fontFamily: Fonts.baloo.bold,
-          fontSize: moderateScale(18),
-          color: game.fg,
-          letterSpacing: -0.2,
-        }}
+        style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(18), color: game.fg, letterSpacing: -0.2 }}
         maxFontSizeMultiplier={1.2}
         numberOfLines={1}
       >
         {game.title}
       </Text>
       <Text
-        style={{
-          fontFamily: Fonts.dmSans.medium,
-          fontSize: moderateScale(12),
-          color: game.fg,
-          marginTop: moderateScale(1),
-        }}
+        style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12), color: game.fg, marginTop: moderateScale(1) }}
         maxFontSizeMultiplier={1.3}
         numberOfLines={2}
       >
         {game.subtitle}
       </Text>
-    </Pressable>
+    </View>
+  );
+
+  if (locked) {
+    return (
+      <View
+        style={{
+          width,
+          borderRadius: Radius.chunky,
+          backgroundColor: game.bg,
+          borderBottomWidth: 5,
+          borderBottomColor: game.lip,
+          opacity: 0.55,
+        }}
+      >
+        {inner}
+      </View>
+    );
+  }
+  return (
+    <ChunkyPressable
+      onPress={onPress}
+      accessibilityLabel={`${game.title} — ${game.subtitle}`}
+      bg={game.bg}
+      lip={5}
+      lipColor={game.lip}
+      radius={Radius.chunky}
+      style={{ width }}
+    >
+      {inner}
+    </ChunkyPressable>
   );
 }

@@ -15,11 +15,13 @@ type Props = {
 
 type StateStyle = { borderColor: string; backgroundColor: string };
 
+// chunky_v3: correct/partial = goldPale (reward), wrong = redPale (error).
+// No green/teal — warm-only palette.
 const stateStyles: Record<AnswerState, StateStyle> = {
-  unanswered: { borderColor: Colors.surfaceDim,        backgroundColor: Colors.surface },
-  correct:    { borderColor: '#2d7a5f',                backgroundColor: '#edf7f3' },
-  partial:    { borderColor: '#b07d2a',                backgroundColor: '#fdf5e6' },
-  wrong:      { borderColor: Colors.primaryContainer,  backgroundColor: '#fdf0f2' },
+  unanswered: { borderColor: Colors.hairline,          backgroundColor: '#ffffff' },
+  correct:    { borderColor: Colors.goldLip,           backgroundColor: Colors.secondaryFixed },
+  partial:    { borderColor: Colors.goldLip,           backgroundColor: Colors.warningContainerLow },
+  wrong:      { borderColor: Colors.primaryContainer,  backgroundColor: Colors.errorContainerLow },
 };
 
 const AnswerInput: React.FC<Props> = ({ value, onChange, onSubmit, answerState, disabled }) => {
@@ -31,7 +33,7 @@ const AnswerInput: React.FC<Props> = ({ value, onChange, onSubmit, answerState, 
         borderWidth: 2,
         borderColor,
         backgroundColor,
-        borderRadius: Radius.lg,
+        borderRadius: Radius.chunky,
         paddingHorizontal: Spacing.lg,
         paddingVertical: Spacing.md,
       }}

@@ -18,18 +18,20 @@ type Props = {
   tone?: TileTone;
 };
 
+// chunky_v3: tray = white chunky; placed = goldPale; correct = goldPale +
+// goldLip; wrong = redPale + primaryContainer (error stays red).
 const BG: Record<TileTone, string> = {
-  tray: Colors.surfaceContainerHighest,
-  placed: Colors.surfaceContainerHigh,
+  tray: '#ffffff',
+  placed: Colors.secondaryFixed,
   correct: Colors.secondaryFixed,
   wrong: Colors.errorContainerLow,
 };
 
 const BORDER: Record<TileTone, string> = {
-  tray: Colors.outlineVariant,
-  placed: Colors.primary,
-  correct: Colors.secondary,
-  wrong: Colors.primary,
+  tray: Colors.hairline,
+  placed: Colors.goldLip,
+  correct: Colors.goldLip,
+  wrong: Colors.primaryContainer,
 };
 
 const AksharaTile: React.FC<Props> = ({ char, onPress, disabled, tone = 'tray' }) => (
@@ -42,13 +44,17 @@ const AksharaTile: React.FC<Props> = ({ char, onPress, disabled, tone = 'tray' }
       minWidth: moderateScale(48),
       minHeight: moderateScale(48),
       paddingHorizontal: Spacing.md,
-      borderRadius: Radius.md,
-      borderWidth: 1.5,
+      borderRadius: Radius.tile,
+      borderWidth: tone === 'tray' ? 1 : 2,
+      // Chunky lip on interactive tray tiles; flat for placed/result tones.
+      borderBottomWidth: tone === 'tray' && !disabled ? 4 : tone === 'tray' ? 1 : 2,
+      borderBottomColor: tone === 'tray' && !disabled ? Colors.cardLip : BORDER[tone],
       backgroundColor: BG[tone],
       borderColor: BORDER[tone],
       alignItems: 'center',
       justifyContent: 'center',
-      opacity: disabled ? 0.35 : pressed ? 0.8 : 1,
+      opacity: disabled ? 0.35 : 1,
+      transform: [{ translateY: pressed && tone === 'tray' && !disabled ? 2 : 0 }],
     })}
   >
     <Text

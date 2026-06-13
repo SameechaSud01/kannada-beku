@@ -20,6 +20,8 @@ export type AudioOrbProps = {
   size?: number;
   color?: string;
   iconColor?: string;
+  /** Hard bottom-edge ("lip") colour. Defaults to deep maroon (`redLip`). Use `goldLip` for the gold variant. */
+  lipColor?: string;
   icon?: TablerIcon;
   accessibilityLabel?: string;
   disabled?: boolean;
@@ -36,11 +38,13 @@ export function AudioOrb({
   size = 56,
   color = Colors.primaryContainer,
   iconColor = Colors.onPrimary,
+  lipColor = Colors.redLip,
   icon,
   accessibilityLabel = 'Play audio',
   disabled = false,
 }: AudioOrbProps) {
   const dim = moderateScale(size);
+  const lip = Math.max(2, Math.round(dim * 0.055)); // ~3px chunky lip at size 56
   const Icon: TablerIcon = icon ?? Icons.audio;
 
   const ping = useSharedValue(0);
@@ -99,6 +103,8 @@ export function AudioOrb({
           height: dim,
           borderRadius: dim / 2,
           backgroundColor: color,
+          borderBottomWidth: lip,
+          borderBottomColor: lipColor,
           alignItems: 'center',
           justifyContent: 'center',
         }}

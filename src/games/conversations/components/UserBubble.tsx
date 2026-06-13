@@ -17,11 +17,12 @@ const UserBubble: React.FC<Props> = ({ option, correct }) => (
     <View
       style={{
         maxWidth: '82%',
-        backgroundColor: correct ? Colors.secondaryFixed : Colors.surfaceDim,
-        borderTopLeftRadius: Radius.xl,
+        // Correct reply = goldPale reward; wrong = redPale error (chunky_v3).
+        backgroundColor: correct ? Colors.secondaryFixed : Colors.errorContainerLow,
+        borderTopLeftRadius: Radius.chunky,
         borderTopRightRadius: Radius.sm,
-        borderBottomRightRadius: Radius.xl,
-        borderBottomLeftRadius: Radius.xl,
+        borderBottomRightRadius: Radius.chunky,
+        borderBottomLeftRadius: Radius.chunky,
         paddingVertical: Spacing.md,
         paddingHorizontal: Spacing.lg,
         gap: moderateScale(2),

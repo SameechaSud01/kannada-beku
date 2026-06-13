@@ -11,6 +11,7 @@ import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioServic
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { LessonProgressBar } from './LessonProgressBar';
 import { LipButton } from '../ui/LipButton';
+import { AudioOrb } from '../ui/AudioOrb';
 import { useUserStore } from '../../stores/useUserStore';
 import { GlossTag } from '../ui/GlossTag';
 import { splitGloss } from '../../utils/gloss';
@@ -43,6 +44,7 @@ export function TeachPhrasesPhase({
   const total = phrases.length;
   const isLast = phraseIndex >= total - 1;
   const [highlightedChip, setHighlightedChip] = useState<number | null>(null);
+  const [playing, setPlaying] = useState(false);
   const autoReplay = useUserStore((s) => s.autoReplay);
 
   const chips = useMemo(() => {
@@ -68,10 +70,14 @@ export function TeachPhrasesPhase({
   const { text: englishText, tag } = splitGloss(phrase.english);
 
   const handleReplay = () => {
-    deviceTtsAudioService.play(phrase.kannada).catch((err) => {
-      console.warn('[teach_phrases] replay failed', err);
-      Toasts.audioFailed(handleReplay);
-    });
+    setPlaying(true);
+    deviceTtsAudioService
+      .play(phrase.kannada)
+      .catch((err) => {
+        console.warn('[teach_phrases] replay failed', err);
+        Toasts.audioFailed(handleReplay);
+      })
+      .finally(() => setPlaying(false));
   };
 
   const handleChipTap = (idx: number, kannadaText: string) => {
@@ -82,7 +88,7 @@ export function TeachPhrasesPhase({
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.surface }}>
+    <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <View style={{ paddingTop: insets.top + BACK_CHIP_TOP_RESERVE, paddingHorizontal: Spacing.lg }}>
         <LessonProgressBar
           current={phraseIndex + 1}
@@ -119,16 +125,17 @@ export function TeachPhrasesPhase({
                 accessibilityRole="button"
                 accessibilityLabel={`Hear ${c.chip}`}
                 style={({ pressed }) => ({
-                  backgroundColor: isHighlighted
-                    ? Colors.secondaryFixed
-                    : pressed
-                      ? Colors.surfaceContainerHigh
-                      : Colors.surfaceContainerHighest,
-                  borderRadius: Radius.md,
+                  backgroundColor: isHighlighted ? Colors.secondaryFixed : '#ffffff',
+                  borderRadius: Radius.tile,
+                  borderWidth: 1,
+                  borderColor: isHighlighted ? Colors.goldLip : Colors.hairline,
+                  borderBottomWidth: pressed ? 1 : 3,
+                  borderBottomColor: isHighlighted ? Colors.goldLip : Colors.cardLip,
                   paddingVertical: Spacing.sm,
                   paddingHorizontal: Spacing.md,
                   alignItems: 'center',
                   minWidth: moderateScale(64),
+                  transform: [{ translateY: pressed ? 2 : 0 }],
                 })}
               >
                 <Text
@@ -162,8 +169,10 @@ export function TeachPhrasesPhase({
         {/* Full phrase display */}
         <View
           style={{
-            backgroundColor: Colors.surfaceContainerLow,
-            borderRadius: Radius.xl,
+            backgroundColor: Colors.surfaceCreamLow,
+            borderRadius: Radius.chunky,
+            borderBottomWidth: 4,
+            borderBottomColor: Colors.cardLip,
             paddingVertical: Spacing.xxl,
             paddingHorizontal: Spacing.lg,
             alignItems: 'center',
@@ -203,11 +212,10 @@ export function TeachPhrasesPhase({
           <Text
             style={{
               fontFamily: Fonts.notoSansKannada.regular,
-              fontSize: moderateScale(12),
-              color: Colors.tertiary,
+              fontSize: moderateScale(13),
+              color: Colors.textFaint,
               textAlign: 'center',
               marginTop: Spacing.md,
-              opacity: 0.7,
             }}
             maxFontSizeMultiplier={1.3}
           >
@@ -216,23 +224,12 @@ export function TeachPhrasesPhase({
         </View>
 
         <View style={{ alignItems: 'center', marginTop: Spacing.xxl }}>
-          <Pressable
+          <AudioOrb
             onPress={handleReplay}
-            accessibilityRole="button"
+            playing={playing}
+            size={64}
             accessibilityLabel="Hear the full phrase again"
-            hitSlop={8}
-            style={({ pressed }) => ({
-              width: moderateScale(64),
-              height: moderateScale(64),
-              borderRadius: Radius.full,
-              backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
-              alignItems: 'center',
-              justifyContent: 'center',
-              transform: [{ scale: pressed ? 0.94 : 1 }],
-            })}
-          >
-            <Icons.audio size={moderateScale(26)} color={Colors.onPrimary} />
-          </Pressable>
+          />
         </View>
 
         <Text

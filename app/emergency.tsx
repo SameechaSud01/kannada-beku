@@ -11,7 +11,14 @@ import { deviceTtsAudioService } from '../services/audio/deviceTtsAudioService';
 import { useEmergencyPhrases } from '../hooks/useEmergencyPhrases';
 import { BrandGradient } from '../components/ui/BrandGradient';
 import { AudioOrb } from '../components/ui/AudioOrb';
+import { LipButton } from '../components/ui/LipButton';
 
+/**
+ * Emergency phrases (chunky_v3 §5). Intentionally all-red urgency — no
+ * warning-orange anywhere here. Red gradient header with a redLip lip, red lip
+ * category chips, and white chunky phrase cards with a 5px left accent in the
+ * group colour (gold for Auto/cab, red for In-trouble).
+ */
 export default function EmergencyScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -30,15 +37,17 @@ export default function EmergencyScreen() {
   const current = groups?.[activeGroup];
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.surface }}>
-      {/* Brand-gradient header — rounded bottom corners */}
+    <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
+      {/* Red gradient header — rounded bottom + redLip lip */}
       <BrandGradient
         style={{
           paddingTop: insets.top + Spacing.sm,
           paddingBottom: Spacing.xl,
           paddingHorizontal: Spacing.lg,
-          borderBottomLeftRadius: Radius.xl,
-          borderBottomRightRadius: Radius.xl,
+          borderBottomLeftRadius: Radius.chunky,
+          borderBottomRightRadius: Radius.chunky,
+          borderBottomWidth: 4,
+          borderBottomColor: Colors.redLip,
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(12) }}>
@@ -52,9 +61,11 @@ export default function EmergencyScreen() {
               height: moderateScale(40),
               borderRadius: Radius.full,
               backgroundColor: 'rgba(255,255,255,0.18)',
+              borderBottomWidth: pressed ? 0 : 3,
+              borderBottomColor: 'rgba(0,0,0,0.18)',
               alignItems: 'center',
               justifyContent: 'center',
-              transform: [{ scale: pressed ? 0.94 : 1 }],
+              transform: [{ translateY: pressed ? 3 : 0 }],
             })}
           >
             <Icons.back size={moderateScale(20)} color={Colors.onPrimary} />
@@ -69,7 +80,7 @@ export default function EmergencyScreen() {
             }}
             maxFontSizeMultiplier={1.2}
           >
-            Emergency Kannada
+            Emergency phrases
           </Text>
         </View>
         <Text
@@ -81,7 +92,7 @@ export default function EmergencyScreen() {
           }}
           maxFontSizeMultiplier={1.3}
         >
-          Tap a phrase to play it out loud · works offline.
+          Works offline · tap any card to hear it
         </Text>
       </BrandGradient>
 
@@ -91,32 +102,39 @@ export default function EmergencyScreen() {
         </View>
       ) : isError || !groups ? (
         <View
-          style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.md }}
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingHorizontal: Spacing.xxl,
+            gap: Spacing.md,
+          }}
         >
-          <Text style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(16), color: Colors.onSurface, textAlign: 'center' }}>
+          <Text
+            style={{
+              fontFamily: Fonts.baloo.bold,
+              fontSize: moderateScale(17),
+              color: Colors.onSurface,
+              textAlign: 'center',
+            }}
+          >
             Couldn&apos;t load phrases
           </Text>
-          <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary, textAlign: 'center' }}>
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.medium,
+              fontSize: moderateScale(13),
+              color: Colors.tertiary,
+              textAlign: 'center',
+            }}
+          >
             Check your connection and try again.
           </Text>
-          <Pressable
-            onPress={() => refetch()}
-            accessibilityRole="button"
-            accessibilityLabel="Retry"
-            style={({ pressed }) => ({
-              backgroundColor: Colors.primary,
-              borderRadius: Radius.lg,
-              paddingVertical: Spacing.md,
-              paddingHorizontal: Spacing.xl,
-              transform: [{ scale: pressed ? 0.97 : 1 }],
-            })}
-          >
-            <Text style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(14), color: Colors.onPrimary }}>Retry</Text>
-          </Pressable>
+          <LipButton label="Retry" variant="primary" onPress={() => refetch()} fullWidth={false} />
         </View>
       ) : (
         <>
-          {/* Category tabs — active = red lip pill */}
+          {/* Category chips — active = red pill w/ redLip lip, idle = white + hairline */}
           <View style={{ paddingTop: Spacing.lg }}>
             <ScrollView
               horizontal
@@ -136,18 +154,23 @@ export default function EmergencyScreen() {
                       flexDirection: 'row',
                       alignItems: 'center',
                       gap: moderateScale(6),
-                      backgroundColor: active ? Colors.primaryContainer : Colors.surfaceContainerHigh,
+                      backgroundColor: active ? Colors.primaryContainer : '#ffffff',
                       borderRadius: Radius.full,
                       paddingVertical: moderateScale(9),
                       paddingHorizontal: Spacing.lg,
-                      ...(active ? { borderBottomWidth: 3, borderBottomColor: Colors.redLip } : null),
+                      borderTopWidth: active ? 0 : 1,
+                      borderLeftWidth: active ? 0 : 1,
+                      borderRightWidth: active ? 0 : 1,
+                      borderColor: Colors.hairline,
+                      borderBottomWidth: 3,
+                      borderBottomColor: active ? Colors.redLip : Colors.hairline,
                     }}
                   >
                     <GroupIcon id={group.id} color={active ? Colors.onPrimary : Colors.primary} />
                     <Text
                       style={{
                         fontFamily: Fonts.baloo.bold,
-                        fontSize: moderateScale(13),
+                        fontSize: moderateScale(13.5),
                         color: active ? Colors.onPrimary : Colors.onSurface,
                       }}
                       maxFontSizeMultiplier={1.2}
@@ -169,71 +192,66 @@ export default function EmergencyScreen() {
               gap: moderateScale(10),
             }}
           >
-            {current?.items.map((item) => (
-              <View
-                key={item.id}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: Spacing.md,
-                  backgroundColor: Colors.surfaceContainerLowest,
-                  borderRadius: Radius.lg,
-                  paddingVertical: Spacing.lg,
-                  paddingHorizontal: Spacing.lg,
-                  borderWidth: 1,
-                  borderColor: Colors.hairline,
-                }}
-              >
-                <View style={{ flex: 1 }}>
-                  {/* English hero (Amendment C — English-first) */}
-                  <Text
-                    style={{
-                      fontFamily: Fonts.baloo.bold,
-                      fontSize: moderateScale(20),
-                      lineHeight: moderateScale(27),
-                      color: Colors.onSurface,
-                      letterSpacing: -0.2,
-                    }}
-                    maxFontSizeMultiplier={1.3}
-                  >
-                    {item.meaning}
-                  </Text>
-                  {item.transliteration ? (
+            {current?.items.map((item) => {
+              const accent = groupAccent(current.id);
+              const caption = [item.transliteration, item.meaning].filter(Boolean).join(' · ');
+              return (
+                <View
+                  key={item.id}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: Spacing.md,
+                    backgroundColor: '#ffffff',
+                    borderRadius: Radius.chunky,
+                    paddingVertical: Spacing.lg,
+                    paddingHorizontal: Spacing.lg,
+                    borderWidth: 1,
+                    borderColor: Colors.hairline,
+                    borderLeftWidth: 5,
+                    borderLeftColor: accent,
+                    borderBottomWidth: 4,
+                    borderBottomColor: Colors.cardLip,
+                  }}
+                >
+                  <View style={{ flex: 1 }}>
+                    {/* Kannada hero */}
                     <Text
                       style={{
-                        fontFamily: Fonts.dmSans.bold,
-                        fontSize: moderateScale(15),
-                        lineHeight: moderateScale(21),
-                        color: Colors.primary,
-                        marginTop: moderateScale(3),
+                        fontFamily: Fonts.baloo.bold,
+                        fontSize: moderateScale(17),
+                        lineHeight: moderateScale(25),
+                        color: Colors.onSurface,
+                        letterSpacing: -0.2,
                       }}
                       maxFontSizeMultiplier={1.3}
                     >
-                      {item.transliteration}
+                      {item.kannada}
                     </Text>
-                  ) : null}
-                  <Text
-                    style={{
-                      fontFamily: Fonts.notoSansKannada.regular,
-                      fontSize: moderateScale(13),
-                      lineHeight: moderateScale(20),
-                      color: Colors.tertiary,
-                      marginTop: moderateScale(3),
-                      opacity: 0.7,
-                    }}
-                    maxFontSizeMultiplier={1.3}
-                  >
-                    {item.kannada}
-                  </Text>
+                    {caption ? (
+                      <Text
+                        style={{
+                          fontFamily: Fonts.dmSans.medium,
+                          fontSize: moderateScale(13),
+                          lineHeight: moderateScale(19),
+                          color: Colors.tertiary,
+                          marginTop: moderateScale(3),
+                        }}
+                        maxFontSizeMultiplier={1.3}
+                      >
+                        {caption}
+                      </Text>
+                    ) : null}
+                  </View>
+                  <AudioOrb
+                    size={44}
+                    playing={playingId === item.id}
+                    onPress={() => play(item.id, item.audioUrl ?? item.kannada)}
+                    accessibilityLabel={`Listen: ${item.meaning}`}
+                  />
                 </View>
-                <AudioOrb
-                  size={44}
-                  playing={playingId === item.id}
-                  onPress={() => play(item.id, item.audioUrl ?? item.kannada)}
-                  accessibilityLabel={`Listen: ${item.meaning}`}
-                />
-              </View>
-            ))}
+              );
+            })}
 
             <Text
               style={{
@@ -252,6 +270,11 @@ export default function EmergencyScreen() {
       )}
     </View>
   );
+}
+
+/** Left-accent colour per group: gold for Auto/cab, red for everything else. */
+function groupAccent(id: string): string {
+  return id === 'auto' ? Colors.secondaryContainer : Colors.primaryContainer;
 }
 
 function GroupIcon({ id, color }: { id: string; color: string }) {

@@ -5,8 +5,8 @@ import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
 import { Icons } from '../../../constants/icons';
-import { RoundIconButton } from '../../ui/RoundIconButton';
-import { Button, ButtonRow } from '../../ui/Button';
+import { AudioOrb } from '../../ui/AudioOrb';
+import { LipButton } from '../../ui/LipButton';
 import { deviceTtsAudioService } from '../../../services/audio/deviceTtsAudioService';
 import { Toasts } from './toastCatalog';
 import type { Phrase } from '../../../constants/lessons/types';
@@ -21,8 +21,9 @@ function speakable(kannada: string): string {
 }
 
 /**
- * Bottom sheet showing a phrase's full breakdown (MODALS §6.4). Renders inside
- * <BottomSheet> — the parent provides drag handle, dynamic sizing, dismiss.
+ * Bottom sheet showing a phrase's full breakdown (chunky_v3 §11). Renders inside
+ * <BottomSheet> — the parent provides the 24px top radius, grab handle, dynamic
+ * sizing, and dismiss.
  */
 export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps) {
   const handlePlay = () => {
@@ -40,19 +41,13 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
         gap: moderateScale(16),
-        paddingTop: moderateScale(12),
+        paddingTop: moderateScale(8),
         paddingHorizontal: moderateScale(20),
         paddingBottom: moderateScale(36),
       }}
     >
-      {/* Header row — phrase + play button */}
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: moderateScale(16),
-        }}
-      >
+      {/* Header row — phrase + play orb */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(16) }}>
         <View style={{ flex: 1 }}>
           <Text
             style={{
@@ -93,9 +88,7 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
             {speakable(phrase.kannada) || phrase.kannada}
           </Text>
         </View>
-        <RoundIconButton
-          icon="play"
-          variant="primary"
+        <AudioOrb
           size={48}
           onPress={handlePlay}
           accessibilityLabel={`Hear: ${phrase.english}`}
@@ -110,8 +103,8 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
               <View
                 key={`${atom.atom}-${idx}`}
                 style={{
-                  backgroundColor: Colors.surfaceContainerHighest,
-                  borderRadius: Radius.lg,
+                  backgroundColor: Colors.surfaceCreamLow,
+                  borderRadius: Radius.tile,
                   padding: moderateScale(12),
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -166,16 +159,13 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
         <View
           style={{
             backgroundColor: Colors.secondaryFixed,
-            borderRadius: Radius.lg,
+            borderRadius: Radius.tile,
             padding: moderateScale(12),
             flexDirection: 'row',
             gap: moderateScale(10),
           }}
         >
-          <Icons.sparkle
-            size={moderateScale(16)}
-            color={Colors.onSecondaryContainer}
-          />
+          <Icons.sparkle size={moderateScale(16)} color={Colors.onSecondaryContainer} />
           <Text
             style={{
               flex: 1,
@@ -191,17 +181,14 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
         </View>
       ) : null}
 
-      <ButtonRow>
-        <Button
-          label="Save"
-          variant="ghost"
-          onPress={onDismiss}
-          disabled
-          accessibilityHint="Coming soon"
-          flex
-        />
-        <Button label="Got it" variant="primary" onPress={onDismiss} flex />
-      </ButtonRow>
+      <View style={{ flexDirection: 'row', gap: moderateScale(10) }}>
+        <View style={{ flex: 1 }}>
+          <LipButton label="Save" variant="secondary" disabled accessibilityLabel="Save. Coming soon." />
+        </View>
+        <View style={{ flex: 1 }}>
+          <LipButton label="Got it" variant="primary" onPress={onDismiss} />
+        </View>
+      </View>
       <View style={{ height: Spacing.sm }} />
     </BottomSheetScrollView>
   );
@@ -209,13 +196,7 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
 
 function GoldRule({ label }: { label: string }) {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: moderateScale(10),
-      }}
-    >
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(10) }}>
       <Dots />
       <Text
         style={{

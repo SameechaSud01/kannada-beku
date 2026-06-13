@@ -7,7 +7,6 @@ import {
   View,
 } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
-import { Colors } from '../../constants/colors';
 import { Radius } from '../../constants/spacing';
 import { Shadows } from '../../constants/shadows';
 
@@ -80,8 +79,8 @@ export function Dialog({ children, destructive, animate = true }: DialogProps) {
         importantForAccessibility="yes"
         style={{
           width,
-          backgroundColor: Colors.surfaceContainerLow,
-          borderRadius: Radius.xl,
+          backgroundColor: '#ffffff',
+          borderRadius: Radius.chunky,
           padding: moderateScale(22),
           ...Shadows.modal,
           opacity,

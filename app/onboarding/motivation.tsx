@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
-import { Spacing } from '../../constants/spacing';
+import { Spacing, Radius } from '../../constants/spacing';
+import { Icons } from '../../constants/icons';
 import { ProgressDots } from '../../components/onboarding/ProgressDots';
 import { OptionCard } from '../../components/onboarding/OptionCard';
+import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
+import { LipButton } from '../../components/ui/LipButton';
 import { useUserStore } from '../../stores/useUserStore';
 
 const MOTIVATIONS = [
@@ -76,7 +78,7 @@ export default function MotivationScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: Colors.surface }}
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View
@@ -110,9 +112,11 @@ export default function MotivationScreen() {
           </Text>
           <Text
             style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(28),
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(27),
               color: Colors.onSurface,
+              letterSpacing: -0.4,
+              lineHeight: moderateScale(38),
               marginBottom: Spacing.sm,
             }}
             maxFontSizeMultiplier={1.3}
@@ -150,37 +154,12 @@ export default function MotivationScreen() {
         </ScrollView>
 
         <View style={{ flexDirection: 'row', gap: Spacing.md, marginTop: Spacing.xl }}>
-          <Pressable
-            onPress={() => router.back()}
-            style={({ pressed }) => ({
-              flex: 1,
-              backgroundColor: Colors.surfaceContainerHighest,
-              borderRadius: moderateScale(16),
-              paddingVertical: moderateScale(18),
-              alignItems: 'center',
-              transform: [{ scale: pressed ? 0.97 : 1 }],
-            })}
-          >
-            <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onSurface }}>
-              Back
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={handleContinue}
-            disabled={!canContinue}
-            style={({ pressed }) => ({
-              flex: 2,
-              backgroundColor: canContinue ? (pressed ? Colors.primary : Colors.primaryContainer) : Colors.surfaceDim,
-              borderRadius: moderateScale(16),
-              paddingVertical: moderateScale(18),
-              alignItems: 'center',
-              transform: [{ scale: pressed && canContinue ? 0.97 : 1 }],
-            })}
-          >
-            <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onPrimary }}>
-              Continue
-            </Text>
-          </Pressable>
+          <View style={{ flex: 1 }}>
+            <LipButton label="Back" variant="secondary" onPress={() => router.back()} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <LipButton label="Continue" variant="primary" disabled={!canContinue} icon={Icons.forward} onPress={handleContinue} />
+          </View>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -196,22 +175,23 @@ interface OtherOptionCardProps {
 
 function OtherOptionCard({ checked, text, onToggle, onChangeText }: OtherOptionCardProps) {
   return (
-    <Pressable
+    <ChunkyPressable
       onPress={onToggle}
-      style={({ pressed }) => ({
-        backgroundColor: checked ? '#FFF5F5' : Colors.surfaceContainerLowest,
-        borderWidth: moderateScale(2),
-        borderColor: checked ? Colors.primaryContainer : '#E0DDD0',
-        borderRadius: moderateScale(16),
-        padding: moderateScale(18),
-        transform: [{ scale: pressed ? 0.97 : 1 }],
-      })}
+      accessibilityLabel={OTHER_LABEL}
+      bg={checked ? '#fff5f5' : '#ffffff'}
+      lip={checked ? 4 : 3}
+      lipColor={checked ? 'rgba(145,0,27,0.25)' : Colors.cardLip}
+      border
+      borderWidth={2}
+      borderColor={checked ? Colors.primaryContainer : 'rgba(27,29,14,0.10)'}
+      radius={Radius.chunky}
+      style={{ padding: moderateScale(18) }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <Text
           style={{
             flex: 1,
-            fontFamily: Fonts.dmSans.bold,
+            fontFamily: Fonts.baloo.bold,
             fontSize: moderateScale(16),
             color: Colors.onSurface,
             marginRight: Spacing.md,
@@ -223,23 +203,17 @@ function OtherOptionCard({ checked, text, onToggle, onChangeText }: OtherOptionC
         {checked && (
           <View
             style={{
-              width: moderateScale(24),
-              height: moderateScale(24),
-              borderRadius: moderateScale(12),
+              width: moderateScale(26),
+              height: moderateScale(26),
+              borderRadius: Radius.full,
               backgroundColor: Colors.primaryContainer,
+              borderBottomWidth: 2,
+              borderBottomColor: Colors.redLip,
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
-              <Path
-                d="M5 12l5 5L20 7"
-                stroke={Colors.onPrimary}
-                strokeWidth={3}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </Svg>
+            <Icons.check size={moderateScale(15)} color={Colors.onPrimary} strokeWidth={2.8} />
           </View>
         )}
       </View>
@@ -248,16 +222,16 @@ function OtherOptionCard({ checked, text, onToggle, onChangeText }: OtherOptionC
           value={text}
           onChangeText={onChangeText}
           placeholder="Tell us your reason…"
-          placeholderTextColor={Colors.tertiary}
+          placeholderTextColor={Colors.textFaint}
           autoCapitalize="sentences"
           autoCorrect
           maxLength={OTHER_MAX_LEN}
           accessibilityLabel="Your own reason"
           style={{
             marginTop: Spacing.md,
-            backgroundColor: Colors.surface,
+            backgroundColor: '#ffffff',
             borderWidth: moderateScale(1),
-            borderColor: '#E0DDD0',
+            borderColor: 'rgba(27,29,14,0.10)',
             borderRadius: moderateScale(10),
             paddingHorizontal: moderateScale(12),
             paddingVertical: moderateScale(10),
@@ -267,6 +241,6 @@ function OtherOptionCard({ checked, text, onToggle, onChangeText }: OtherOptionC
           }}
         />
       )}
-    </Pressable>
+    </ChunkyPressable>
   );
 }

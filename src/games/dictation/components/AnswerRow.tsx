@@ -53,11 +53,11 @@ const AnswerRow: React.FC<Props> = ({ tray, placed, aksharaCount, answerState, o
           style={{
             minWidth: moderateScale(48),
             minHeight: moderateScale(48),
-            borderRadius: Radius.md,
+            borderRadius: Radius.tile,
             borderWidth: 1.5,
             borderStyle: 'dashed',
-            borderColor: Colors.outlineVariant,
-            backgroundColor: Colors.surface,
+            borderColor: 'rgba(27,29,14,0.18)',
+            backgroundColor: Colors.surfaceCreamLow,
           }}
         />
       ))}

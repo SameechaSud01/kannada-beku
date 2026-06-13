@@ -23,8 +23,12 @@ const QuestionCard: React.FC<Props> = ({ word, tr, meaning, streak }) => {
   return (
   <View
     style={{
-      borderRadius: Radius.xl,
-      backgroundColor: Colors.surfaceContainerLow,
+      borderRadius: Radius.chunky,
+      backgroundColor: '#ffffff',
+      borderWidth: 1,
+      borderColor: Colors.hairline,
+      borderBottomWidth: 4,
+      borderBottomColor: Colors.cardLip,
       padding: Spacing.xxl,
       width: '100%',
       alignItems: 'center',
@@ -32,10 +36,10 @@ const QuestionCard: React.FC<Props> = ({ word, tr, meaning, streak }) => {
   >
     <Text
       style={{
-        fontFamily: Fonts.dmSans.medium,
-        fontSize: moderateScale(12),
+        fontFamily: Fonts.dmSans.bold,
+        fontSize: moderateScale(11),
         textTransform: 'uppercase',
-        letterSpacing: 2,
+        letterSpacing: 1.4,
         color: Colors.tertiary,
         marginBottom: Spacing.sm,
       }}
@@ -45,9 +49,9 @@ const QuestionCard: React.FC<Props> = ({ word, tr, meaning, streak }) => {
     {tr ? (
       <Text
         style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(40),
-          lineHeight: moderateScale(52),
+          fontFamily: Fonts.baloo.extrabold,
+          fontSize: moderateScale(38),
+          lineHeight: moderateScale(53),
           textAlign: 'center',
           color: Colors.onSurface,
         }}

@@ -6,6 +6,8 @@ import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
+import { ChunkyPressable } from '../ui/ChunkyPressable';
+import { LockTile } from '../ui/LockTile';
 import type { Lesson } from '../../constants/lessons/types';
 import { useLessonParts, type PartState } from '../../hooks/useLessonParts';
 
@@ -24,7 +26,7 @@ export function LessonPartChooser({ lesson, onSelectPart }: LessonPartChooserPro
   const doneCount = parts.filter((p) => p.done).length;
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.surface }}>
+    <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -88,83 +90,62 @@ export function LessonPartChooser({ lesson, onSelectPart }: LessonPartChooserPro
 
 function PartRow({ part, onPress }: { part: PartState; onPress: () => void }) {
   const locked = !part.unlocked;
-  const tileBg = part.done
-    ? Colors.secondaryFixed
-    : part.active
-      ? Colors.primary
-      : Colors.surfaceContainerHigh;
-  const numColor = part.done
-    ? Colors.onSecondaryContainer
-    : part.active
-      ? Colors.onPrimary
-      : Colors.textFaint;
+  const titleColor = locked ? Colors.textFaint : Colors.onSurface;
+  const subColor = locked ? Colors.textFaint : Colors.tertiary;
 
   const items: string[] = [];
   if (part.wordCount) items.push(`${part.wordCount} ${part.wordCount === 1 ? 'word' : 'words'}`);
   if (part.phraseCount)
     items.push(`${part.phraseCount} ${part.phraseCount === 1 ? 'phrase' : 'phrases'}`);
 
-  return (
-    <Pressable
-      onPress={onPress}
-      disabled={locked}
-      accessibilityRole="button"
-      accessibilityState={{ disabled: locked }}
-      accessibilityLabel={
-        locked
-          ? `${part.label}, locked. Finish the previous part to unlock.`
-          : `${part.label}${part.done ? ', done' : part.active ? ', continue' : ''}`
-      }
-      style={({ pressed }) => ({
+  const a11yLabel = locked
+    ? `${part.label}, locked. Finish the previous part to unlock.`
+    : `${part.label}${part.done ? ', done' : part.active ? ', continue' : ''}`;
+
+  const content = (
+    <View
+      style={{
         flexDirection: 'row',
         alignItems: 'center',
         gap: moderateScale(13),
-        borderRadius: Radius.xl,
         padding: moderateScale(12),
-        opacity: locked ? 0.55 : 1,
-        backgroundColor: part.active ? Colors.surfaceContainerLowest : Colors.surfaceContainerLow,
-        ...(part.active
-          ? {
-              borderWidth: 2,
-              borderColor: Colors.primary,
-              shadowColor: Colors.primary,
-              shadowOffset: { width: 0, height: 8 },
-              shadowOpacity: 0.18,
-              shadowRadius: 16,
-              elevation: 4,
-            }
-          : null),
-        transform: [{ scale: pressed && !locked ? 0.98 : 1 }],
-      })}
+      }}
     >
-      <View
-        style={{
-          width: moderateScale(46),
-          height: moderateScale(46),
-          borderRadius: moderateScale(14),
-          backgroundColor: tileBg,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Text
+      {/* Number tile / lock */}
+      {locked ? (
+        <LockTile size={46} radius={moderateScale(14)} />
+      ) : (
+        <View
           style={{
-            fontFamily: Fonts.baloo.extrabold,
-            fontSize: moderateScale(18),
-            color: numColor,
+            width: moderateScale(46),
+            height: moderateScale(46),
+            borderRadius: moderateScale(14),
+            backgroundColor: part.active ? Colors.primaryContainer : Colors.secondaryFixed,
+            borderBottomWidth: 3,
+            borderBottomColor: part.active ? Colors.redLip : Colors.goldLip,
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
-          maxFontSizeMultiplier={1.2}
         >
-          {part.key}
-        </Text>
-      </View>
+          <Text
+            style={{
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(18),
+              color: part.active ? Colors.onPrimary : Colors.onSecondaryContainer,
+            }}
+            maxFontSizeMultiplier={1.2}
+          >
+            {part.key}
+          </Text>
+        </View>
+      )}
 
       <View style={{ flex: 1 }}>
         <Text
           style={{
             fontFamily: Fonts.baloo.bold,
             fontSize: moderateScale(16),
-            color: Colors.onSurface,
+            color: titleColor,
             letterSpacing: -0.2,
           }}
           maxFontSizeMultiplier={1.3}
@@ -176,7 +157,7 @@ function PartRow({ part, onPress }: { part: PartState; onPress: () => void }) {
           style={{
             fontFamily: Fonts.dmSans.medium,
             fontSize: moderateScale(12.5),
-            color: Colors.tertiary,
+            color: subColor,
             marginTop: moderateScale(1),
           }}
           maxFontSizeMultiplier={1.3}
@@ -186,32 +167,74 @@ function PartRow({ part, onPress }: { part: PartState; onPress: () => void }) {
         </Text>
       </View>
 
-      <View
-        style={{
-          width: moderateScale(30),
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      <View style={{ width: moderateScale(42), alignItems: 'center', justifyContent: 'center' }}>
         {part.done ? (
           <View
             style={{
               width: moderateScale(26),
               height: moderateScale(26),
               borderRadius: Radius.full,
-              backgroundColor: Colors.secondary,
+              backgroundColor: Colors.secondaryContainer,
+              borderBottomWidth: 2,
+              borderBottomColor: Colors.goldLip,
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <Icons.check size={moderateScale(15)} color={Colors.onPrimary} strokeWidth={2.6} />
+            <Icons.check size={moderateScale(15)} color={Colors.onSecondaryContainer} strokeWidth={2.6} />
           </View>
-        ) : locked ? (
-          <Icons.locked size={moderateScale(17)} color={Colors.textFaint} />
-        ) : (
-          <Icons.play size={moderateScale(16)} color={Colors.primary} />
-        )}
+        ) : part.active ? (
+          <View
+            style={{
+              width: moderateScale(42),
+              height: moderateScale(42),
+              borderRadius: Radius.full,
+              backgroundColor: Colors.primaryContainer,
+              borderBottomWidth: 3,
+              borderBottomColor: Colors.redLip,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Icons.play size={moderateScale(16)} color={Colors.onPrimary} />
+          </View>
+        ) : null}
       </View>
-    </Pressable>
+    </View>
+  );
+
+  // Locked rows are de-emphasised and flat (no lip / no press-translate).
+  if (locked) {
+    return (
+      <Pressable onPress={onPress} disabled accessibilityRole="button" accessibilityState={{ disabled: true }} accessibilityLabel={a11yLabel}>
+        <View
+          style={{
+            backgroundColor: Colors.surfaceCreamLow,
+            borderRadius: Radius.chunky,
+            borderWidth: 1,
+            borderColor: 'rgba(217,123,58,0.30)',
+            opacity: 0.85,
+          }}
+        >
+          {content}
+        </View>
+      </Pressable>
+    );
+  }
+
+  return (
+    <ChunkyPressable
+      onPress={onPress}
+      accessibilityLabel={a11yLabel}
+      bg={part.active ? '#ffffff' : Colors.secondaryFixed}
+      lip={part.active ? 5 : 4}
+      lipColor={part.active ? Colors.redLip : Colors.goldLip}
+      border={part.active}
+      borderColor={Colors.primaryContainer}
+      borderWidth={2}
+      radius={Radius.chunky}
+    >
+      {content}
+    </ChunkyPressable>
   );
 }

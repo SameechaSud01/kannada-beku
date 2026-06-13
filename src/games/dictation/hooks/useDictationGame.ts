@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { playWord, stopPlayback } from '../utils/audioPlayer';
 import { splitAksharas, isTileable } from '../utils/kannadaAkshara';
 import { useStreak } from '../../shared/useStreak';
+import { useProgressStore } from '../../../../stores/progressStore';
 import type { DictationWord, AnswerState, GamePhase } from '../types';
 
 type AttemptCallback = (args: { itemId: string; isCorrect: boolean }) => void;
@@ -136,6 +137,8 @@ export function useDictationGame(
       setAnswerState(isCorrect ? 'correct' : 'wrong');
       if (isCorrect) setScore((s) => s + 1);
       recordStreak(isCorrect);
+      // Daily-goal "Practice": one rep per answered word.
+      useProgressStore.getState().recordPractice();
       if (currentWord.id) {
         onAttemptRef.current?.({ itemId: currentWord.id, isCorrect });
       }

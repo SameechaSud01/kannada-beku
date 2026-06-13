@@ -28,21 +28,23 @@ const NpcBubble: React.FC<Props> = ({ kn, en, live = false }) => {
           width: moderateScale(30),
           height: moderateScale(30),
           borderRadius: Radius.full,
-          backgroundColor: Colors.surfaceContainerHigh,
+          backgroundColor: Colors.secondaryFixed,
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
-        <Icons.gameConversations size={moderateScale(16)} color={Colors.secondary} />
+        <Icons.gameConversations size={moderateScale(16)} color={Colors.onSecondaryContainer} />
       </View>
       <View
         style={{
           maxWidth: '82%',
-          backgroundColor: Colors.surfaceContainerHighest,
+          backgroundColor: '#ffffff',
+          borderWidth: 1,
+          borderColor: Colors.hairline,
           borderTopLeftRadius: Radius.sm,
-          borderTopRightRadius: Radius.xl,
-          borderBottomRightRadius: Radius.xl,
-          borderBottomLeftRadius: Radius.xl,
+          borderTopRightRadius: Radius.chunky,
+          borderBottomRightRadius: Radius.chunky,
+          borderBottomLeftRadius: Radius.chunky,
           paddingVertical: Spacing.md,
           paddingHorizontal: Spacing.lg,
           gap: moderateScale(4),

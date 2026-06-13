@@ -1,9 +1,10 @@
-import { Pressable, Text, View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import { Text, View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
-import { Spacing } from '../../constants/spacing';
+import { Spacing, Radius } from '../../constants/spacing';
+import { Icons } from '../../constants/icons';
+import { ChunkyPressable } from '../ui/ChunkyPressable';
 
 interface OptionCardProps {
   label: string;
@@ -12,30 +13,39 @@ interface OptionCardProps {
   onPress: () => void;
 }
 
+/**
+ * Chunky kit v3 option card.
+ * - selected: bg #fff5f5, 2px primaryContainer border, red check circle, lip 4 (red@25%)
+ * - idle:     white, 2px ink@10% border, lip 3 (ink@10%)
+ */
 export function OptionCard({ label, subtitle, selected, onPress }: OptionCardProps) {
   return (
-    <Pressable
+    <ChunkyPressable
       onPress={onPress}
-      style={({ pressed }) => ({
-        backgroundColor: selected ? Colors.errorContainerLow : Colors.surfaceContainerLowest,
-        borderWidth: moderateScale(2),
-        borderColor: selected ? Colors.primaryContainer : Colors.surfaceContainerHighest,
-        borderRadius: moderateScale(16),
+      accessibilityLabel={label}
+      bg={selected ? '#fff5f5' : '#ffffff'}
+      lip={selected ? 4 : 3}
+      lipColor={selected ? 'rgba(145,0,27,0.25)' : Colors.cardLip}
+      border
+      borderWidth={2}
+      borderColor={selected ? Colors.primaryContainer : 'rgba(27,29,14,0.10)'}
+      radius={Radius.chunky}
+      style={{
         padding: moderateScale(18),
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        transform: [{ scale: pressed ? 0.97 : 1 }],
-      })}
+      }}
     >
       <View style={{ flex: 1, marginRight: Spacing.md }}>
         <Text
           style={{
-            fontFamily: Fonts.dmSans.bold,
+            fontFamily: Fonts.baloo.bold,
             fontSize: moderateScale(16),
             color: Colors.onSurface,
             marginBottom: subtitle ? Spacing.xs : 0,
           }}
+          maxFontSizeMultiplier={1.4}
         >
           {label}
         </Text>
@@ -46,6 +56,7 @@ export function OptionCard({ label, subtitle, selected, onPress }: OptionCardPro
               fontSize: moderateScale(13),
               color: Colors.tertiary,
             }}
+            maxFontSizeMultiplier={1.4}
           >
             {subtitle}
           </Text>
@@ -54,25 +65,19 @@ export function OptionCard({ label, subtitle, selected, onPress }: OptionCardPro
       {selected && (
         <View
           style={{
-            width: moderateScale(24),
-            height: moderateScale(24),
-            borderRadius: moderateScale(12),
+            width: moderateScale(26),
+            height: moderateScale(26),
+            borderRadius: Radius.full,
             backgroundColor: Colors.primaryContainer,
+            borderBottomWidth: 2,
+            borderBottomColor: Colors.redLip,
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
-            <Path
-              d="M5 12l5 5L20 7"
-              stroke={Colors.onPrimary}
-              strokeWidth={3}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </Svg>
+          <Icons.check size={moderateScale(15)} color={Colors.onPrimary} strokeWidth={2.8} />
         </View>
       )}
-    </Pressable>
+    </ChunkyPressable>
   );
 }

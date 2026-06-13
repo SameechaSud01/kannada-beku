@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
-import { Spacing, Radius } from '@/constants/spacing';
+import { Spacing } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
 import { Icons } from '@/constants/icons';
 import { GAMES } from '@/constants/games';
@@ -16,10 +16,11 @@ import { useConversationScenarios, useRecordConversationAttempt } from '../../..
 import { useConversation } from './hooks/useConversation';
 import ChatTranscript from './components/ChatTranscript';
 import ReplyOptionGrid from './components/ReplyOptionGrid';
-import ProgressBar from '../imagematch/components/ProgressBar';
+import ProgressBar from '../opposites/components/ProgressBar';
 import ResultScreen from '../shared/ResultScreen';
 import FeedbackBanner from '../shared/FeedbackBanner';
 import { useAnswerHaptics } from '../shared/haptics';
+import { LipButton } from '@/components/ui/LipButton';
 import type { ConversationScenario } from './types';
 
 type Props = { lessonNo: number; section?: string };
@@ -132,7 +133,7 @@ function ConversationRound({
 
   if (phase === 'result') {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
         <ExitBackButton skipConfirm />
         <ResultScreen score={score} total={totalTurns} bestStreak={bestStreak} onReplay={onReplay} replayLabel="Next conversation ▸" />
       </SafeAreaView>
@@ -142,7 +143,7 @@ function ConversationRound({
   const answered = answerState !== 'unanswered';
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ScrollView
         ref={scrollRef}
         onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
@@ -161,10 +162,10 @@ function ConversationRound({
           }}
         >
           <ExitBackButton floating={false} variant="game" />
-          <Text style={{ fontSize: moderateScale(14), color: Colors.tertiary, fontFamily: Fonts.dmSans.regular }}>
+          <Text style={{ fontSize: moderateScale(14), color: Colors.tertiary, fontFamily: Fonts.dmSans.medium }} numberOfLines={1}>
             {scenario.title}
           </Text>
-          <Text style={{ fontSize: moderateScale(14), fontFamily: Fonts.dmSans.bold, color: Colors.onSurface }}>
+          <Text style={{ fontSize: moderateScale(14), fontFamily: Fonts.baloo.bold, color: Colors.onSurface, fontVariant: ['tabular-nums'] }}>
             Score {score}
           </Text>
         </View>
@@ -195,20 +196,11 @@ function ConversationRound({
         <FeedbackBanner state={answerState} streak={streak} />
 
         {answered && (
-          <Pressable
-            style={{
-              width: '100%',
-              backgroundColor: Colors.primary,
-              borderRadius: Radius.xl,
-              paddingVertical: moderateScale(14),
-              alignItems: 'center',
-            }}
+          <LipButton
+            label={currentIndex + 1 < totalTurns ? 'Next ▸' : 'See results'}
+            variant="primary"
             onPress={handleNext}
-          >
-            <Text style={{ color: Colors.onPrimary, fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16) }}>
-              {currentIndex + 1 < totalTurns ? 'Next →' : 'See results'}
-            </Text>
-          </Pressable>
+          />
         )}
       </ScrollView>
     </SafeAreaView>
@@ -218,11 +210,11 @@ function ConversationRound({
 function AllCaughtUp({ count, onRestart }: { count: number; onRestart: () => void }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ExitBackButton skipConfirm />
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.lg }}>
         <Icons.gameConversations size={moderateScale(24)} color={Colors.primary} />
-        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(20), color: Colors.onSurface, textAlign: 'center' }}>
+        <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(22), color: Colors.onSurface, textAlign: 'center' }}>
           All caught up!
         </Text>
         <Text
@@ -230,20 +222,10 @@ function AllCaughtUp({ count, onRestart }: { count: number; onRestart: () => voi
         >
           You&apos;ve played all {count} conversation{count === 1 ? '' : 's'} for this lesson. Go again for more practice?
         </Text>
-        <Pressable
-          onPress={onRestart}
-          accessibilityRole="button"
-          accessibilityLabel="Play again"
-          style={{ width: '100%', backgroundColor: Colors.primary, borderRadius: Radius.xl, paddingVertical: moderateScale(14), alignItems: 'center', marginTop: Spacing.sm }}
-        >
-          <Text style={{ color: Colors.onPrimary, fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16) }}>Play again ▸</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => router.replace('/(tabs)/practice')}
-          style={({ pressed }) => ({ width: '100%', backgroundColor: Colors.surfaceContainerHighest, borderRadius: Radius.lg, paddingVertical: moderateScale(14), alignItems: 'center', opacity: pressed ? 0.7 : 1 })}
-        >
-          <Text style={{ color: Colors.onSurface, fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(15) }}>Back to games</Text>
-        </Pressable>
+        <View style={{ width: '100%', gap: Spacing.md, marginTop: Spacing.sm }}>
+          <LipButton label="Play again ▸" variant="primary" onPress={onRestart} />
+          <LipButton label="Back to Practice" variant="secondary" onPress={() => router.replace('/(tabs)/practice')} />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -251,7 +233,7 @@ function AllCaughtUp({ count, onRestart }: { count: number; onRestart: () => voi
 
 function CenteredLoading() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
@@ -262,31 +244,16 @@ function CenteredLoading() {
 function ErrorState({ onRetry }: { onRetry: () => void }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.md }}>
-        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
+        <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
           Couldn&apos;t load this conversation
         </Text>
         <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(14), color: Colors.tertiary, textAlign: 'center', marginBottom: Spacing.md }}>
           Check your connection and try again.
         </Text>
-        <Pressable
-          onPress={onRetry}
-          accessibilityRole="button"
-          accessibilityLabel="Retry"
-          style={({ pressed }) => ({
-            backgroundColor: Colors.primary,
-            borderRadius: Radius.lg,
-            paddingVertical: Spacing.md,
-            paddingHorizontal: Spacing.xl,
-            transform: [{ scale: pressed ? 0.97 : 1 }],
-          })}
-        >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: Colors.onPrimary }}>Retry</Text>
-        </Pressable>
-        <Pressable onPress={() => router.back()} style={({ pressed }) => ({ paddingVertical: Spacing.sm, opacity: pressed ? 0.6 : 1 })}>
-          <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary }}>Back</Text>
-        </Pressable>
+        <LipButton label="Retry" variant="primary" fullWidth={false} onPress={onRetry} />
+        <LipButton label="Back" variant="tertiary" fullWidth={false} onPress={() => router.back()} />
       </View>
     </SafeAreaView>
   );
@@ -295,28 +262,15 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
 function EmptyState({ lessonNo }: { lessonNo: number }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.md }}>
-        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
+        <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
           Lesson {lessonNo} — coming soon
         </Text>
         <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(14), color: Colors.tertiary, textAlign: 'center', lineHeight: moderateScale(20), marginBottom: Spacing.md }}>
           No conversations have been written for this lesson yet. Try an earlier lesson.
         </Text>
-        <Pressable
-          onPress={() => router.back()}
-          accessibilityRole="button"
-          accessibilityLabel="Back to lessons"
-          style={({ pressed }) => ({
-            backgroundColor: Colors.primary,
-            borderRadius: Radius.lg,
-            paddingVertical: Spacing.md,
-            paddingHorizontal: Spacing.xl,
-            transform: [{ scale: pressed ? 0.97 : 1 }],
-          })}
-        >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: Colors.onPrimary }}>Back to lessons</Text>
-        </Pressable>
+        <LipButton label="Back to lessons" variant="primary" fullWidth={false} onPress={() => router.back()} />
       </View>
     </SafeAreaView>
   );

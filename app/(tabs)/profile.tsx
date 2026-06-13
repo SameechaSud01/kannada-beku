@@ -1,26 +1,26 @@
 import { useEffect, useRef } from 'react';
 import { View, Text, ScrollView, Pressable, Animated as RNAnimated } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { useRouter } from 'expo-router';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
-import { Shadows } from '../../constants/shadows';
 import { Icons } from '../../constants/icons';
 import type { Icon as TablerIcon } from '@tabler/icons-react-native';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useUserStore } from '../../stores/useUserStore';
-import { useStreak, useWordsLearned } from '../../hooks/progress';
+import { useWordsLearned, useCompletedLessons } from '../../hooks/progress';
+import { useStreakCelebration } from '../../hooks/useStreakCelebration';
 import { useOverallProgress } from '../../hooks/useOverallProgress';
 import { useFluencyMode } from '../../hooks/useFluencyMode';
 import { formatFirstName } from '../../utils/formatName';
 import { useModal } from '../../components/modals/ModalHost';
-import { Celebration } from '../../components/ui/Celebration';
-import { isStreakMilestone } from '../../components/modals/instances/StreakMilestoneTakeover';
-import { BrandGradient } from '../../components/ui/BrandGradient';
 import { Watermark } from '../../components/ui/Watermark';
-import { StreakPill } from '../../components/ui/StreakPill';
+import { TopBar } from '../../components/ui/TopBar';
+import { LipButton } from '../../components/ui/LipButton';
+import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { SignOutDialog } from '../../components/modals/instances/SignOutDialog';
 import { RemindersSheet } from '../../components/modals/instances/RemindersSheet';
@@ -29,8 +29,9 @@ import { GoalSummarySheet } from '../../components/modals/instances/GoalSummaryS
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const streak = useStreak();
+  const { streak, onStreakPress } = useStreakCelebration();
   const wordsLearned = useWordsLearned();
+  const lessonsDone = useCompletedLessons().length;
   const overall = useOverallProgress();
   const overallPct = Math.max(0, Math.min(100, Math.round(overall.data?.progressPct ?? 0)));
   const user = useAuthStore((s) => s.user);
@@ -39,18 +40,6 @@ export default function ProfileScreen() {
   const dailyGoalMinutes = useUserStore((s) => s.dailyGoalMinutes);
   const goal = useFluencyMode();
   const modal = useModal();
-
-  // Streak pill → flame wiggle; replays the streak Celebration only on a real
-  // milestone day (locked milestone copy — no fake milestones).
-  const handleStreakPress = () => {
-    if (isStreakMilestone(streak)) {
-      modal.show({
-        kind: 'takeover',
-        component: Celebration,
-        props: { kind: 'streak', streak, onClose: () => modal.dismiss() },
-      });
-    }
-  };
 
   const handleSignOutPress = () => {
     modal.show({
@@ -91,6 +80,8 @@ export default function ProfileScreen() {
     'Learner';
   const userName = formatFirstName(rawName, 'Learner');
 
+  const joinedLabel = formatJoined(user?.created_at);
+
   const goalLabel = goal === 'spoken' ? 'Spoken only' : goal === 'fluency' ? 'Complete fluency' : null;
   const dailyGoalLabel = dailyGoalMinutes ? `${dailyGoalMinutes} min / day` : null;
   const hasOnboardingSummary = !!(goalLabel || dailyGoalLabel || motivations.length);
@@ -123,127 +114,86 @@ export default function ProfileScreen() {
     <RNAnimated.View
       style={{
         flex: 1,
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.surfaceCream,
         opacity: fadeAnim,
         transform: [{ translateY: slideAnim }],
       }}
     >
-      <Watermark motif="rangoli" />
+      <Watermark motif="kolamGrid" />
 
-      {/* Top bar — wordmark + streak pill + hairline */}
-      <View
-        style={{
-          paddingTop: insets.top + Spacing.sm,
-          paddingBottom: Spacing.sm,
-          paddingHorizontal: Spacing.lg,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          borderBottomWidth: 1,
-          borderBottomColor: Colors.hairline,
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: Fonts.notoSansKannada.bold,
-            fontSize: moderateScale(22),
-            color: Colors.primary,
-            letterSpacing: -0.3,
-            lineHeight: moderateScale(34),
-          }}
-          maxFontSizeMultiplier={1.2}
-        >
-          ಕನ್ನಡ ಬೇಕು
-        </Text>
-        <StreakPill streak={streak} onPress={handleStreakPress} />
-      </View>
+      <TopBar streak={streak} onStreakPress={onStreakPress} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
       >
-        {/* Avatar + name */}
-        <View style={{ alignItems: 'center', paddingTop: Spacing.xxl, marginBottom: moderateScale(20) }}>
-          <View
-            style={{
-              width: moderateScale(84),
-              height: moderateScale(84),
-              borderRadius: Radius.full,
-              marginBottom: Spacing.md,
-              ...Shadows.tabActive,
-            }}
-          >
-            <BrandGradient
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: Radius.full,
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden',
-              }}
-            >
-              <Text
-                style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(36), color: Colors.onPrimary }}
-                maxFontSizeMultiplier={1.2}
-              >
-                {userName[0]?.toUpperCase()}
-              </Text>
-            </BrandGradient>
-          </View>
+        {/* Name block */}
+        <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.xl, marginBottom: moderateScale(18) }}>
           <Text
-            style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(24), color: Colors.onSurface, letterSpacing: -0.3 }}
-            maxFontSizeMultiplier={1.3}
+            style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(30), color: Colors.onSurface, letterSpacing: -0.5 }}
+            maxFontSizeMultiplier={1.2}
+            numberOfLines={1}
           >
             {userName}
           </Text>
-        </View>
-
-        {/* Overall progress band — gold-wash */}
-        <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(11) }}>
-          <View
-            style={{ backgroundColor: Colors.secondaryFixed, borderRadius: Radius.xl, padding: moderateScale(18) }}
-            accessibilityRole="progressbar"
-            accessibilityLabel={`Overall progress: ${overallPct} percent. Lessons and games combined.`}
-          >
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: Spacing.sm }}>
-              <Text
-                style={{
-                  fontFamily: Fonts.dmSans.bold,
-                  fontSize: moderateScale(11),
-                  letterSpacing: 1.4,
-                  color: Colors.onSecondaryContainer,
-                  textTransform: 'uppercase',
-                }}
-                maxFontSizeMultiplier={1.4}
-              >
-                Overall progress
-              </Text>
-              <Text
-                style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(22), color: Colors.onSurface }}
-                maxFontSizeMultiplier={1.3}
-              >
-                {overall.isLoading ? '—' : `${overallPct}%`}
-              </Text>
-            </View>
-            <View
-              style={{ height: moderateScale(9), backgroundColor: Colors.surfaceContainerHighest, borderRadius: Radius.full, overflow: 'hidden' }}
-            >
-              <View style={{ height: '100%', width: `${overallPct}%`, backgroundColor: Colors.goldLip, borderRadius: Radius.full }} />
-            </View>
+          {joinedLabel ? (
             <Text
-              style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12), color: Colors.onSecondaryContainer, marginTop: Spacing.sm }}
+              style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(13), color: Colors.tertiary, marginTop: moderateScale(2) }}
               maxFontSizeMultiplier={1.3}
             >
-              Lessons + games combined
+              Learning since {joinedLabel}
             </Text>
-          </View>
+          ) : null}
+        </View>
+
+        {/* Overall progress band — gold gradient, red bar */}
+        <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(11) }}>
+          <LinearGradient
+            colors={[Colors.goldBright, Colors.secondaryContainer]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{
+              borderRadius: Radius.chunky,
+              borderBottomWidth: 5,
+              borderBottomColor: Colors.goldLip,
+              padding: moderateScale(18),
+            }}
+          >
+            <View
+              accessibilityRole="progressbar"
+              accessibilityLabel={`Overall progress: ${overallPct} percent. Lessons and games combined.`}
+            >
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: Spacing.sm }}>
+                <Text
+                  style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(11), letterSpacing: 1.4, color: Colors.onSecondaryContainer, textTransform: 'uppercase' }}
+                  maxFontSizeMultiplier={1.4}
+                >
+                  Overall progress
+                </Text>
+                <Text
+                  style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(22), color: Colors.onSecondaryContainer, fontVariant: ['tabular-nums'] }}
+                  maxFontSizeMultiplier={1.3}
+                >
+                  {overall.isLoading ? '—' : `${overallPct}%`}
+                </Text>
+              </View>
+              <View style={{ height: moderateScale(9), backgroundColor: 'rgba(108,80,0,0.22)', borderRadius: Radius.full, overflow: 'hidden' }}>
+                <View style={{ height: '100%', width: `${overallPct}%`, backgroundColor: Colors.primaryContainer, borderRadius: Radius.full }} />
+              </View>
+              <Text
+                style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12), color: Colors.onSecondaryContainer, marginTop: Spacing.sm }}
+                maxFontSizeMultiplier={1.3}
+              >
+                Lessons + games combined
+              </Text>
+            </View>
+          </LinearGradient>
         </View>
 
         {/* Two stat cards */}
         <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(28) }}>
           <View style={{ flexDirection: 'row', gap: moderateScale(11) }}>
-            <StatCard Icon={Icons.streak} iconColor={Colors.primary} value={streak} label="Day streak" />
+            <StatCard Icon={Icons.lessonDone} iconColor={Colors.primaryContainer} value={lessonsDone} label="Lessons done" />
             <StatCard Icon={Icons.tabLearn} iconColor={Colors.secondary} value={wordsLearned} label="Words learned" />
           </View>
         </View>
@@ -252,30 +202,28 @@ export default function ProfileScreen() {
         {hasOnboardingSummary ? (
           <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(28) }}>
             <SectionLabel>Your goal</SectionLabel>
-            <Pressable
+            <ChunkyPressable
               onPress={() => modal.show({ kind: 'sheet', component: GoalSummarySheet })}
-              accessibilityRole="button"
               accessibilityLabel={`Your goal — ${goalLabel ?? 'view details'}`}
-              style={({ pressed }) => ({
+              bg="#ffffff"
+              lip={4}
+              border
+              radius={Radius.chunky}
+              style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 gap: Spacing.md,
-                backgroundColor: Colors.surfaceContainerLowest,
-                borderRadius: Radius.lg,
                 paddingVertical: moderateScale(14),
                 paddingHorizontal: Spacing.lg,
                 minHeight: moderateScale(56),
-                borderWidth: 1,
-                borderColor: Colors.hairline,
-                opacity: pressed ? 0.7 : 1,
-              })}
+              }}
             >
               <View
                 style={{
                   width: moderateScale(40),
                   height: moderateScale(40),
-                  borderRadius: moderateScale(12),
-                  backgroundColor: Colors.surfaceContainerHigh,
+                  borderRadius: Radius.tile,
+                  backgroundColor: Colors.secondaryFixed,
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
@@ -299,14 +247,24 @@ export default function ProfileScreen() {
                 ) : null}
               </View>
               <Icons.forward size={moderateScale(17)} color={Colors.textFaint} />
-            </Pressable>
+            </ChunkyPressable>
           </View>
         ) : null}
 
-        {/* Settings list — alternating tonal rows */}
-        <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(20) }}>
+        {/* Settings list — single white card, hairline-separated rows */}
+        <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(24) }}>
           <SectionLabel>Settings</SectionLabel>
-          <View style={{ borderRadius: Radius.lg, overflow: 'hidden', borderWidth: 1, borderColor: Colors.hairline }}>
+          <View
+            style={{
+              borderRadius: Radius.chunky,
+              overflow: 'hidden',
+              backgroundColor: '#ffffff',
+              borderWidth: 1,
+              borderColor: Colors.hairline,
+              borderBottomWidth: 4,
+              borderBottomColor: Colors.cardLip,
+            }}
+          >
             {settingsItems.map((item, idx) => (
               <Pressable
                 key={item.id}
@@ -320,11 +278,12 @@ export default function ProfileScreen() {
                   paddingVertical: moderateScale(14),
                   paddingHorizontal: Spacing.lg,
                   minHeight: moderateScale(56),
-                  backgroundColor: idx % 2 === 0 ? Colors.surfaceContainerLowest : Colors.surfaceContainerLow,
-                  opacity: pressed ? 0.7 : 1,
+                  borderTopWidth: idx === 0 ? 0 : 1,
+                  borderTopColor: Colors.hairline,
+                  opacity: pressed ? 0.6 : 1,
                 })}
               >
-                <item.Icon size={moderateScale(20)} color={Colors.primary} strokeWidth={2.1} />
+                <item.Icon size={moderateScale(20)} color={Colors.primaryContainer} strokeWidth={2.1} />
                 <Text
                   style={{ flex: 1, fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14.5), color: Colors.onSurface }}
                   maxFontSizeMultiplier={1.3}
@@ -337,25 +296,21 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        {/* Sign out */}
+        {/* Sign out — secondary (tan) button */}
         <View style={{ paddingHorizontal: Spacing.lg }}>
-          <Pressable
-            onPress={handleSignOutPress}
-            accessibilityRole="button"
-            accessibilityLabel="Sign out"
-            style={({ pressed }) => ({ paddingVertical: moderateScale(14), alignItems: 'center', minHeight: moderateScale(44), opacity: pressed ? 0.6 : 1 })}
-          >
-            <Text
-              style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(14), color: Colors.primary }}
-              maxFontSizeMultiplier={1.3}
-            >
-              Sign out
-            </Text>
-          </Pressable>
+          <LipButton label="Sign out" variant="secondary" onPress={handleSignOutPress} />
         </View>
       </ScrollView>
     </RNAnimated.View>
   );
+}
+
+/** Formats a Supabase ISO created_at into "Mon YYYY"; returns null if absent/invalid. */
+function formatJoined(createdAt?: string): string | null {
+  if (!createdAt) return null;
+  const d = new Date(createdAt);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
 }
 
 function SectionLabel({ children }: { children: string }) {
@@ -363,13 +318,7 @@ function SectionLabel({ children }: { children: string }) {
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(7), marginBottom: Spacing.md }}>
       <View style={{ width: moderateScale(4), height: moderateScale(13), borderRadius: 2, backgroundColor: Colors.secondary }} />
       <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(11),
-          letterSpacing: 1.4,
-          color: Colors.tertiary,
-          textTransform: 'uppercase',
-        }}
+        style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(11), letterSpacing: 1.4, color: Colors.tertiary, textTransform: 'uppercase' }}
         maxFontSizeMultiplier={1.4}
       >
         {children}
@@ -383,30 +332,25 @@ function StatCard({ Icon, iconColor, value, label }: { Icon: TablerIcon; iconCol
     <View
       style={{
         flex: 1,
-        backgroundColor: Colors.surfaceContainerLowest,
-        borderRadius: Radius.xl,
+        backgroundColor: '#ffffff',
+        borderRadius: Radius.chunky,
         padding: moderateScale(16),
         borderWidth: 1,
         borderColor: Colors.hairline,
+        borderBottomWidth: 4,
+        borderBottomColor: Colors.cardLip,
       }}
     >
       <Icon size={moderateScale(20)} color={iconColor} />
       <Text
-        style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(30), color: Colors.onSurface, letterSpacing: -0.8, marginTop: moderateScale(6), lineHeight: moderateScale(40) }}
+        style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(28), color: Colors.onSurface, letterSpacing: -0.8, marginTop: moderateScale(6), lineHeight: moderateScale(38), fontVariant: ['tabular-nums'] }}
         maxFontSizeMultiplier={1.2}
         numberOfLines={1}
       >
         {value}
       </Text>
       <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(10.5),
-          letterSpacing: 1.2,
-          color: Colors.textFaint,
-          textTransform: 'uppercase',
-          marginTop: moderateScale(5),
-        }}
+        style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(10.5), letterSpacing: 1.2, color: Colors.textFaint, textTransform: 'uppercase', marginTop: moderateScale(5) }}
         maxFontSizeMultiplier={1.4}
       >
         {label}
@@ -414,4 +358,3 @@ function StatCard({ Icon, iconColor, value, label }: { Icon: TablerIcon; iconCol
     </View>
   );
 }
-

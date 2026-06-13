@@ -49,15 +49,22 @@ export function StreakPill({ streak, onPress }: StreakPillProps) {
         paddingVertical: moderateScale(6),
         paddingLeft: moderateScale(9),
         paddingRight: moderateScale(12),
-        borderWidth: 1.5,
-        borderColor: Colors.secondaryContainer,
+        borderWidth: 1,
+        borderColor: Colors.goldLip,
+        borderBottomWidth: 3,
+        borderBottomColor: Colors.goldLip,
       }}
     >
       <Animated.View style={flameStyle}>
-        <Icons.streak size={moderateScale(17)} color={Colors.primary} />
+        <Icons.streak size={moderateScale(17)} color={Colors.primaryContainer} />
       </Animated.View>
       <Text
-        style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(16), color: Colors.onSurface }}
+        style={{
+          fontFamily: Fonts.baloo.extrabold,
+          fontSize: moderateScale(16),
+          color: Colors.secondary,
+          fontVariant: ['tabular-nums'],
+        }}
         maxFontSizeMultiplier={1.2}
       >
         {streak}

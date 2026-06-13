@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing } from '../../constants/spacing';
+import { Icons } from '../../constants/icons';
 import { ProgressDots } from '../../components/onboarding/ProgressDots';
+import { LipButton } from '../../components/ui/LipButton';
 import { useUserStore } from '../../stores/useUserStore';
 
 const MAX_LEN = 30;
@@ -30,7 +32,7 @@ export default function NameScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: Colors.surface }}
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View
@@ -59,9 +61,11 @@ export default function NameScreen() {
           </Text>
           <Text
             style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(28),
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(27),
               color: Colors.onSurface,
+              letterSpacing: -0.4,
+              lineHeight: moderateScale(38),
               marginBottom: Spacing.sm,
             }}
             maxFontSizeMultiplier={1.3}
@@ -87,19 +91,21 @@ export default function NameScreen() {
             onBlur={() => setFocused(false)}
             onSubmitEditing={handleContinue}
             placeholder="Your name"
-            placeholderTextColor={Colors.tertiary}
+            placeholderTextColor={Colors.textFaint}
             autoCapitalize="words"
             autoCorrect={false}
             maxLength={MAX_LEN}
             returnKeyType="done"
             accessibilityLabel="Your name"
             style={{
-              backgroundColor: Colors.surfaceContainerLowest,
+              backgroundColor: '#ffffff',
               borderWidth: moderateScale(2),
-              borderColor: focused ? Colors.primaryContainer : '#E0DDD0',
+              borderColor: focused ? Colors.primaryContainer : 'rgba(27,29,14,0.10)',
               borderRadius: moderateScale(16),
+              borderBottomWidth: moderateScale(4),
+              borderBottomColor: focused ? 'rgba(145,0,27,0.20)' : Colors.cardLip,
               paddingHorizontal: moderateScale(18),
-              paddingVertical: moderateScale(18),
+              paddingVertical: moderateScale(16),
               fontFamily: Fonts.dmSans.regular,
               fontSize: moderateScale(16),
               color: Colors.onSurface,
@@ -108,49 +114,12 @@ export default function NameScreen() {
         </View>
 
         <View style={{ flexDirection: 'row', gap: Spacing.md }}>
-          <Pressable
-            onPress={() => router.back()}
-            style={({ pressed }) => ({
-              flex: 1,
-              backgroundColor: Colors.surfaceContainerHighest,
-              borderRadius: moderateScale(16),
-              paddingVertical: moderateScale(18),
-              alignItems: 'center',
-              transform: [{ scale: pressed ? 0.97 : 1 }],
-            })}
-          >
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(16),
-                color: Colors.onSurface,
-              }}
-            >
-              Back
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={handleContinue}
-            disabled={!valid}
-            style={({ pressed }) => ({
-              flex: 2,
-              backgroundColor: valid ? (pressed ? Colors.primary : Colors.primaryContainer) : '#C8C4B0',
-              borderRadius: moderateScale(16),
-              paddingVertical: moderateScale(18),
-              alignItems: 'center',
-              transform: [{ scale: pressed && valid ? 0.97 : 1 }],
-            })}
-          >
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(16),
-                color: Colors.onPrimary,
-              }}
-            >
-              Continue
-            </Text>
-          </Pressable>
+          <View style={{ flex: 1 }}>
+            <LipButton label="Back" variant="secondary" onPress={() => router.back()} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <LipButton label="Continue" variant="primary" onPress={handleContinue} disabled={!valid} icon={Icons.forward} />
+          </View>
         </View>
       </View>
     </KeyboardAvoidingView>

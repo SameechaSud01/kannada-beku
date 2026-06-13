@@ -3,8 +3,10 @@ import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Radius } from '../../../constants/spacing';
+import { Icons } from '../../../constants/icons';
 import { Halo } from '../Halo';
-import { Button, ButtonRow } from '../../ui/Button';
+import { LipButton } from '../../ui/LipButton';
+import { DialogBody, DialogTitle } from './_dialogChrome';
 
 export interface TTSUnavailableDialogProps {
   onOpenSettings: () => void;
@@ -13,51 +15,24 @@ export interface TTSUnavailableDialogProps {
 
 /**
  * Boot-time warning shown once per install when the device has no Kannada TTS
- * voice (MODALS §6.9). Both buttons mark hasSeenTtsWarning so we don't repeat.
+ * voice (chunky_v3 §11). Both buttons mark hasSeenTtsWarning so we don't repeat.
  */
-export function TTSUnavailableDialog({
-  onOpenSettings,
-  onDismiss,
-}: TTSUnavailableDialogProps) {
+export function TTSUnavailableDialog({ onOpenSettings, onDismiss }: TTSUnavailableDialogProps) {
   return (
     <View style={{ gap: moderateScale(14) }}>
       <View style={{ alignItems: 'center' }}>
-        <Halo
-          icon="headphones"
-          iconSize={26}
-          stroke={2}
-          iconColor={Colors.primary}
-        />
+        <Halo icon="headphones" iconSize={26} stroke={2.2} iconColor={Colors.secondary} />
       </View>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(20),
-          letterSpacing: -0.3,
-          color: Colors.onSurface,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.3}
-      >
-        Kannada voice not installed
-      </Text>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.regular,
-          fontSize: moderateScale(14),
-          lineHeight: moderateScale(21),
-          color: Colors.tertiary,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.4}
-      >
-        Your phone doesn&apos;t have a Kannada text-to-speech voice yet. We can guide you — it&apos;s a one-time download in system settings.
-      </Text>
+      <DialogTitle>Kannada voice not installed</DialogTitle>
+      <DialogBody>
+        Your phone doesn&apos;t have a Kannada text-to-speech voice yet. We can guide you — it&apos;s a
+        one-time download in system settings.
+      </DialogBody>
       <View
         style={{
-          backgroundColor: Colors.surfaceContainerHigh,
-          borderRadius: Radius.lg,
-          padding: moderateScale(10),
+          backgroundColor: Colors.surfaceCreamLow,
+          borderRadius: Radius.tile,
+          padding: moderateScale(12),
         }}
       >
         <Text
@@ -76,16 +51,15 @@ export function TTSUnavailableDialog({
           install Kannada (kn-IN).
         </Text>
       </View>
-      <ButtonRow>
-        <Button label="Maybe later" variant="ghost" onPress={onDismiss} flex />
-        <Button
+      <View style={{ gap: moderateScale(10), marginTop: moderateScale(2) }}>
+        <LipButton
           label="Open settings"
           variant="primary"
           onPress={onOpenSettings}
-          trailingIcon="forward"
-          flex
+          icon={Icons.forward}
         />
-      </ButtonRow>
+        <LipButton label="Maybe later" variant="secondary" onPress={onDismiss} />
+      </View>
     </View>
   );
 }

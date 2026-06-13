@@ -1,9 +1,9 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
-import { Fonts } from '../../../constants/fonts';
 import { Halo } from '../Halo';
-import { Button, ButtonRow } from '../../ui/Button';
+import { LipButton } from '../../ui/LipButton';
+import { DialogBody, DialogTitle } from './_dialogChrome';
 
 export type ExitLessonVariant = 'lesson' | 'game';
 
@@ -27,55 +27,33 @@ const COPY: Record<ExitLessonVariant, { title: string; body: string; confirm: st
 };
 
 /**
- * Destructive confirm (MODALS §6.1). Renders inside <Dialog>.
- * Caller must trigger the actual `router.back()` from onConfirm.
+ * Destructive confirm (chunky_v3 §11). Renders inside <Dialog>. Caller triggers
+ * the actual `router.back()` from onConfirm. Red primary confirm (destructive) +
+ * secondary-tan Cancel; the well is redPale — this is a true loss, not a warning.
  */
-export function ExitLessonDialog({
-  variant = 'lesson',
-  onConfirm,
-  onCancel,
-}: ExitLessonDialogProps) {
+export function ExitLessonDialog({ variant = 'lesson', onConfirm, onCancel }: ExitLessonDialogProps) {
   const copy = COPY[variant];
   return (
-    <View style={{ gap: moderateScale(14), alignItems: 'stretch' }}>
+    <View style={{ gap: moderateScale(14) }}>
       <View style={{ alignItems: 'center' }}>
-        <Halo icon="x" iconColor={Colors.primary} />
+        <Halo
+          icon="x"
+          iconColor={Colors.primary}
+          bg={Colors.errorContainerLow}
+          stroke={2.4}
+        />
       </View>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(20),
-          letterSpacing: -0.3,
-          color: Colors.onSurface,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.3}
-      >
-        {copy.title}
-      </Text>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.regular,
-          fontSize: moderateScale(14),
-          lineHeight: moderateScale(20),
-          color: Colors.tertiary,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.4}
-      >
-        {copy.body}
-      </Text>
-      <ButtonRow>
-        <Button label="Cancel" variant="ghost" onPress={onCancel} flex />
-        <Button
+      <DialogTitle>{copy.title}</DialogTitle>
+      <DialogBody>{copy.body}</DialogBody>
+      <View style={{ gap: moderateScale(10), marginTop: moderateScale(2) }}>
+        <LipButton
           label={copy.confirm}
           variant="primary"
           onPress={onConfirm}
-          destructive
-          accessibilityHint="Loses your progress."
-          flex
+          accessibilityLabel={`${copy.confirm}. Loses your progress.`}
         />
-      </ButtonRow>
+        <LipButton label="Cancel" variant="secondary" onPress={onCancel} />
+      </View>
     </View>
   );
 }
