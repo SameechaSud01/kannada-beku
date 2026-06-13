@@ -35,7 +35,7 @@ export function GoalSummarySheet() {
     >
       <Text
         style={{
-          fontFamily: Fonts.dmSans.bold,
+          fontFamily: Fonts.baloo.extrabold,
           fontSize: moderateScale(22),
           color: Colors.onSurface,
           letterSpacing: -0.3,
@@ -82,8 +82,8 @@ export function GoalSummarySheet() {
               <View
                 key={m}
                 style={{
-                  backgroundColor: Colors.surfaceContainerHighest,
-                  borderRadius: Radius.md,
+                  backgroundColor: Colors.surfaceCreamLow,
+                  borderRadius: Radius.tile,
                   paddingVertical: moderateScale(12),
                   paddingHorizontal: Spacing.md,
                 }}

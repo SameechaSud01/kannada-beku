@@ -1,4 +1,4 @@
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
@@ -18,7 +18,7 @@ export function RealWorldPhase({ prompt, title, onAdvance }: RealWorldPhaseProps
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.surface }}>
+    <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
@@ -45,7 +45,9 @@ export function RealWorldPhase({ prompt, title, onAdvance }: RealWorldPhaseProps
         <View
           style={{
             backgroundColor: Colors.secondaryFixed,
-            borderRadius: Radius.xl,
+            borderRadius: Radius.chunky,
+            borderBottomWidth: 5,
+            borderBottomColor: Colors.goldLip,
             paddingVertical: Spacing.xxxl,
             paddingHorizontal: Spacing.xl,
           }}
@@ -72,29 +74,12 @@ export function RealWorldPhase({ prompt, title, onAdvance }: RealWorldPhaseProps
         }}
       >
         <LipButton label="I'll try this" onPress={onAdvance} icon={Icons.forward} />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Skip for now"
+        <LipButton
+          label="Skip for now"
+          variant="tertiary"
           onPress={onAdvance}
-          style={({ pressed }) => ({
-            backgroundColor: pressed ? Colors.surfaceContainerHigh : 'transparent',
-            borderRadius: Radius.md,
-            paddingVertical: Spacing.md,
-            minHeight: moderateScale(44),
-            alignItems: 'center',
-            justifyContent: 'center',
-          })}
-        >
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(13),
-              color: Colors.tertiary,
-            }}
-          >
-            Skip for now
-          </Text>
-        </Pressable>
+          accessibilityLabel="Skip for now"
+        />
       </View>
     </View>
   );

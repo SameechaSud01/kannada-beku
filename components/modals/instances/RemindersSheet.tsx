@@ -18,8 +18,11 @@ import {
 import { useModal } from '../ModalHost';
 import { PermissionDialog } from './PermissionDialog';
 import { Toasts } from './toastCatalog';
+import { LipButton } from '../../ui/LipButton';
 
 const DEFAULT_TIME = '19:00';
+/** Quick-pick presets (chunky_v3 §11 time chips). "Custom" opens the native picker. */
+const PRESET_TIMES = ['08:00', '13:00', '19:00', '21:00'] as const;
 
 function formatTime(time: string): string {
   const [hStr, mStr] = time.split(':');
@@ -76,10 +79,10 @@ export function RemindersSheet() {
     }
   }
 
-  async function enableReminder() {
+  /** Persist + (re)schedule a concrete time, requesting permission if needed. */
+  async function applyTime(time: string) {
     const granted = await hasNotificationPermission();
     if (granted) {
-      const time = reminderTime ?? DEFAULT_TIME;
       const saved = await persistTime(time);
       if (!saved) return;
       try {
@@ -103,7 +106,6 @@ export function RemindersSheet() {
             Toasts.notificationsDenied();
             return;
           }
-          const time = reminderTime ?? DEFAULT_TIME;
           const saved = await persistTime(time);
           if (!saved) return;
           try {
@@ -133,10 +135,15 @@ export function RemindersSheet() {
 
   function onToggle(next: boolean) {
     if (next) {
-      enableReminder();
+      applyTime(reminderTime ?? DEFAULT_TIME);
     } else {
       disableReminder();
     }
+  }
+
+  function onChipPress(time: string) {
+    if (time === reminderTime) return;
+    applyTime(time);
   }
 
   async function onPickerChange(event: DateTimePickerEvent, date?: Date) {
@@ -144,15 +151,11 @@ export function RemindersSheet() {
     if (event.type === 'dismissed' || !date) return;
     const next = timeStringFromDate(date);
     if (next === reminderTime) return;
-    const saved = await persistTime(next);
-    if (!saved) return;
-    try {
-      await scheduleDailyReminder(next);
-      Toasts.reminderSet(formatTime(next));
-    } catch (err) {
-      console.warn('[reminders] reschedule failed', err);
-    }
+    await applyTime(next);
   }
+
+  const selectedTime = reminderTime ?? DEFAULT_TIME;
+  const isCustom = enabled && !PRESET_TIMES.includes(selectedTime as (typeof PRESET_TIMES)[number]);
 
   return (
     <BottomSheetView
@@ -160,123 +163,114 @@ export function RemindersSheet() {
         paddingHorizontal: moderateScale(20),
         paddingTop: moderateScale(4),
         paddingBottom: moderateScale(28),
-        gap: moderateScale(14),
+        gap: moderateScale(16),
       }}
     >
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(20),
-          color: Colors.onSurface,
-          letterSpacing: -0.3,
-        }}
-        maxFontSizeMultiplier={1.3}
-      >
-        Reminders
-      </Text>
-
-      <View
-        style={{
-          backgroundColor: Colors.surfaceContainerHigh,
-          borderRadius: Radius.lg,
-          overflow: 'hidden',
-        }}
-      >
-        <View
+      <View style={{ gap: moderateScale(3) }}>
+        <Text
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingVertical: moderateScale(14),
-            paddingHorizontal: Spacing.lg,
-            minHeight: moderateScale(56),
-            gap: Spacing.md,
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(22),
+            color: Colors.onSurface,
+            letterSpacing: -0.3,
           }}
+          maxFontSizeMultiplier={1.3}
         >
-          <Text
-            style={{
-              flex: 1,
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(14),
-              color: Colors.onSurface,
-            }}
-            maxFontSizeMultiplier={1.3}
-          >
-            Daily lesson reminder
-          </Text>
-          <Switch
-            value={enabled}
-            onValueChange={onToggle}
-            trackColor={{ true: Colors.primary, false: Colors.surfaceContainerHighest }}
-            thumbColor={Colors.onPrimary}
-            accessibilityLabel="Daily lesson reminder"
-          />
-        </View>
-
-        {enabled ? (
-          <Pressable
-            onPress={() => setPickerOpen((v) => !v)}
-            accessibilityRole="button"
-            accessibilityLabel={`Reminder time, ${formatTime(reminderTime ?? DEFAULT_TIME)}`}
-            style={({ pressed }) => ({
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingVertical: moderateScale(14),
-              paddingHorizontal: Spacing.lg,
-              minHeight: moderateScale(56),
-              backgroundColor: Colors.surfaceContainerHighest,
-              opacity: pressed ? 0.7 : 1,
-            })}
-          >
-            <Text
-              style={{
-                flex: 1,
-                fontFamily: Fonts.dmSans.medium,
-                fontSize: moderateScale(14),
-                color: Colors.onSurface,
-              }}
-              maxFontSizeMultiplier={1.3}
-            >
-              Time
-            </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(14),
-                color: Colors.primary,
-              }}
-              maxFontSizeMultiplier={1.3}
-            >
-              {formatTime(reminderTime ?? DEFAULT_TIME)}
-            </Text>
-          </Pressable>
-        ) : null}
+          Reminders
+        </Text>
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.medium,
+            fontSize: moderateScale(13.5),
+            color: Colors.tertiary,
+          }}
+          maxFontSizeMultiplier={1.3}
+        >
+          One gentle nudge a day — never to shame you for missing one.
+        </Text>
       </View>
 
-      <Text
+      {/* Toggle row — gold track switch */}
+      <View
         style={{
-          fontFamily: Fonts.dmSans.regular,
-          fontSize: moderateScale(12),
-          lineHeight: moderateScale(18),
-          color: Colors.tertiary,
-          textAlign: 'center',
-          paddingHorizontal: Spacing.sm,
+          backgroundColor: '#ffffff',
+          borderRadius: Radius.chunky,
+          borderWidth: 1,
+          borderColor: Colors.hairline,
+          borderBottomWidth: 4,
+          borderBottomColor: Colors.cardLip,
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingVertical: moderateScale(14),
+          paddingHorizontal: Spacing.lg,
+          minHeight: moderateScale(56),
+          gap: Spacing.md,
         }}
-        maxFontSizeMultiplier={1.4}
       >
-        We&apos;ll send one nudge a day. Tap the time to change it.
-      </Text>
+        <Text
+          style={{
+            flex: 1,
+            fontFamily: Fonts.dmSans.bold,
+            fontSize: moderateScale(14.5),
+            color: Colors.onSurface,
+          }}
+          maxFontSizeMultiplier={1.3}
+        >
+          Daily lesson reminder
+        </Text>
+        <Switch
+          value={enabled}
+          onValueChange={onToggle}
+          trackColor={{ true: Colors.secondaryContainer, false: Colors.surfaceContainerHighest }}
+          thumbColor="#ffffff"
+          ios_backgroundColor={Colors.surfaceContainerHighest}
+          accessibilityLabel="Daily lesson reminder"
+        />
+      </View>
+
+      {enabled ? (
+        <View style={{ gap: moderateScale(10) }}>
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.bold,
+              fontSize: moderateScale(11),
+              letterSpacing: 1.4,
+              color: Colors.tertiary,
+              textTransform: 'uppercase',
+            }}
+            maxFontSizeMultiplier={1.4}
+          >
+            Time
+          </Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: moderateScale(8) }}>
+            {PRESET_TIMES.map((t) => (
+              <TimeChip
+                key={t}
+                label={formatTime(t)}
+                selected={enabled && selectedTime === t}
+                onPress={() => onChipPress(t)}
+              />
+            ))}
+            <TimeChip
+              label={isCustom ? formatTime(selectedTime) : 'Custom'}
+              selected={isCustom}
+              onPress={() => setPickerOpen((v) => !v)}
+            />
+          </View>
+        </View>
+      ) : null}
 
       {pickerOpen && enabled ? (
         <View
           style={{
-            backgroundColor: Colors.surfaceContainerHigh,
-            borderRadius: Radius.lg,
+            backgroundColor: Colors.surfaceCreamLow,
+            borderRadius: Radius.tile,
             paddingVertical: Spacing.md,
             alignItems: 'center',
           }}
         >
           <DateTimePicker
-            value={pickerDateFor(reminderTime ?? DEFAULT_TIME)}
+            value={pickerDateFor(selectedTime)}
             mode="time"
             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             onChange={onPickerChange}
@@ -306,6 +300,55 @@ export function RemindersSheet() {
           ) : null}
         </View>
       ) : null}
+
+      <LipButton
+        label="Save reminder"
+        variant="primary"
+        onPress={() => modal.dismiss()}
+        accessibilityLabel="Save reminder and close"
+      />
     </BottomSheetView>
+  );
+}
+
+/** Time preset chip — selected = goldPale fill + goldLip lip (chunky_v3). */
+function TimeChip({
+  label,
+  selected,
+  onPress,
+}: {
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+      accessibilityLabel={label}
+      style={{
+        paddingVertical: moderateScale(9),
+        paddingHorizontal: moderateScale(14),
+        borderRadius: Radius.full,
+        backgroundColor: selected ? Colors.secondaryFixed : '#ffffff',
+        borderWidth: selected ? 0 : 1,
+        borderColor: Colors.hairline,
+        borderBottomWidth: 3,
+        borderBottomColor: selected ? Colors.goldLip : Colors.cardLip,
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: Fonts.baloo.bold,
+          fontSize: moderateScale(13.5),
+          color: selected ? Colors.onSecondaryContainer : Colors.onSurface,
+          fontVariant: ['tabular-nums'],
+        }}
+        maxFontSizeMultiplier={1.3}
+      >
+        {label}
+      </Text>
+    </Pressable>
   );
 }

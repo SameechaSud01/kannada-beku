@@ -6,8 +6,9 @@ import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing } from '../../../constants/spacing';
 import { Shadows } from '../../../constants/shadows';
+import { Icons } from '../../../constants/icons';
 import { Takeover } from '../Takeover';
-import { Button } from '../../ui/Button';
+import { LipButton } from '../../ui/LipButton';
 
 export const STREAK_MILESTONES = [3, 7, 12, 30, 60, 100, 365] as const;
 export type StreakMilestone = (typeof STREAK_MILESTONES)[number];
@@ -141,14 +142,14 @@ export function StreakMilestoneTakeover({
             gap: moderateScale(10),
           }}
         >
-          <Button
+          <LipButton
             label="Keep going"
             variant="primary"
             onPress={onContinue}
-            trailingIcon="forward"
+            icon={Icons.forward}
           />
           {onShare ? (
-            <Button label="Share with a friend" variant="ghost" onPress={onShare} />
+            <LipButton label="Share with a friend" variant="tertiary" onPress={onShare} />
           ) : null}
         </View>
       </View>

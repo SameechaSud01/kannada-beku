@@ -21,6 +21,24 @@ type Props = {
   reserveTag?: boolean;
 };
 
+// chunky_v3: correct = goldPale + 2px goldLip border + gold check; wrong =
+// redPale + 2px primaryContainer border (wrong STAYS red).
+const FACE: Record<OptionState, string> = {
+  default:  '#ffffff',
+  correct:  Colors.secondaryFixed,
+  wrong:    Colors.errorContainerLow,
+  reveal:   Colors.secondaryFixed,
+  disabled: '#ffffff',
+};
+
+const BORDER: Record<OptionState, string> = {
+  default:  Colors.hairline,
+  correct:  Colors.goldLip,
+  wrong:    Colors.primaryContainer,
+  reveal:   Colors.goldLip,
+  disabled: Colors.hairline,
+};
+
 const OptionButton: React.FC<Props> = ({ option, state, onPress, reserveTag }) => {
   const isLifted = state === 'correct' || state === 'reveal';
   const isWrong = state === 'wrong';
@@ -28,18 +46,15 @@ const OptionButton: React.FC<Props> = ({ option, state, onPress, reserveTag }) =
   const { text: enText, tag } = splitGloss(option.en);
 
   const translateX = useShake(isWrong);
-  const { translateY, scale, checkProgress, checkScale } = useCorrectLift(isLifted);
+  const { checkProgress, checkScale } = useCorrectLift(isLifted);
+
+  const borderW = state === 'default' || state === 'disabled' ? 1 : 2;
 
   return (
     <Animated.View
       style={{
-        transform: [{ translateY }, { translateX }, { scale }],
-        shadowColor: Colors.onSurface,
-        shadowOpacity: isLifted ? 0.18 : 0.06,
-        shadowOffset: { width: 0, height: isLifted ? moderateScale(6) : moderateScale(2) },
-        shadowRadius: isLifted ? moderateScale(10) : moderateScale(4),
-        elevation: isLifted ? 6 : 2,
-        borderRadius: Radius.xl,
+        transform: [{ translateX }],
+        borderRadius: Radius.chunky,
       }}
     >
       <Pressable
@@ -49,16 +64,20 @@ const OptionButton: React.FC<Props> = ({ option, state, onPress, reserveTag }) =
         accessibilityRole="button"
         accessibilityLabel={`${option.tr || option.en}, ${option.en}`}
         accessibilityState={{ selected: isLifted, disabled: state !== 'default' }}
-        style={{
-          backgroundColor: Colors.surface,
-          borderWidth: 1,
-          borderColor: Colors.outlineVariant,
-          borderRadius: Radius.xl,
+        style={({ pressed }) => ({
+          backgroundColor: FACE[state],
+          borderWidth: borderW,
+          borderColor: BORDER[state],
+          // Chunky lip on interactive tiles; flat once answered.
+          borderBottomWidth: state === 'default' ? 4 : borderW,
+          borderBottomColor: state === 'default' ? Colors.cardLip : BORDER[state],
+          borderRadius: Radius.chunky,
           padding: Spacing.lg,
           alignItems: 'center',
           justifyContent: 'center',
           minHeight: moderateScale(88),
-        }}
+          transform: [{ translateY: pressed && state === 'default' ? 2 : 0 }],
+        })}
       >
         {option.tr ? (
           <Text
@@ -117,9 +136,15 @@ const OptionButton: React.FC<Props> = ({ option, state, onPress, reserveTag }) =
               right: Spacing.sm,
               opacity: checkProgress,
               transform: [{ scale: checkScale }],
+              width: moderateScale(20),
+              height: moderateScale(20),
+              borderRadius: Radius.full,
+              backgroundColor: Colors.secondaryContainer,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            <Icons.correct size={moderateScale(18)} color={Colors.secondary} />
+            <Icons.check size={moderateScale(13)} color={Colors.onSecondaryContainer} strokeWidth={3} />
           </Animated.View>
         )}
       </Pressable>

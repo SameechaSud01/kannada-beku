@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TextInput, Pressable, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { signInWithGoogle, signInWithApple } from '../../services/api/auth';
@@ -11,15 +12,20 @@ import { supabase } from '../../services/api/supabase';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { GoogleGLogo } from '../../components/auth/GoogleGLogo';
 import { Icons } from '../../constants/icons';
+import { LipButton } from '../../components/ui/LipButton';
+import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
 
-// Shared input chrome for the email + password fields.
+// Shared input chrome for the email + password fields (chunky kit v3):
+// white face, 1px ink@14% border, a 3px ink@6% bottom lip, radius 14.
 const INPUT_STYLE = {
   fontFamily: Fonts.dmSans.regular,
   fontSize: moderateScale(15),
-  backgroundColor: Colors.surfaceContainerHighest,
-  borderWidth: moderateScale(0.5),
-  borderColor: Colors.outlineVariant,
-  borderRadius: Radius.md,
+  backgroundColor: '#ffffff',
+  borderWidth: 1,
+  borderColor: 'rgba(27,29,14,0.14)',
+  borderBottomWidth: 3,
+  borderBottomColor: Colors.cardLip,
+  borderRadius: Radius.lg,
   paddingHorizontal: Spacing.lg,
   paddingVertical: Spacing.md,
   color: Colors.onSurface,
@@ -56,6 +62,7 @@ export default function LoginScreen() {
   const [mode, setMode] = useState<Mode>('login');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [appleAvailable, setAppleAvailable] = useState(false);
 
   useEffect(() => {
@@ -78,6 +85,10 @@ export default function LoginScreen() {
 
   const isSignUp = mode === 'signup';
   const copy = COPY[mode];
+
+  // Disable the CTA (formal disabled recipe) until required fields are present.
+  const canSubmit =
+    email.trim().length > 0 && password.length > 0 && (!isSignUp || confirm.length > 0);
 
   const switchMode = (next: Mode) => {
     setMode(next);
@@ -144,39 +155,48 @@ export default function LoginScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, backgroundColor: Colors.surface }}
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
     >
-      <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: Spacing.xxl }}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'center',
+          paddingHorizontal: Spacing.xxl,
+          paddingTop: insets.top + Spacing.xl,
+          paddingBottom: insets.bottom + Spacing.xxl,
+        }}
+      >
         {/* Hero */}
-        <View style={{ alignItems: 'center', marginBottom: Spacing.xxxl }}>
+        <View style={{ alignItems: 'center', marginBottom: Spacing.xl }}>
           <Text
             style={{
-              fontFamily: Fonts.notoSansKannada.bold,
-              fontSize: moderateScale(48),
+              fontFamily: Fonts.baloo.bold,
+              fontSize: moderateScale(34),
               color: Colors.primaryContainer,
-              lineHeight: moderateScale(72),
-              paddingTop: Spacing.sm,
               marginBottom: Spacing.sm,
-            }}
-          >
-            ಕನ್ನಡ ಬೇಕು
-          </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.baloo.medium,
-              fontSize: moderateScale(20),
-              color: Colors.primaryContainer,
             }}
           >
             Kannada Beku
           </Text>
+          <Text
+            style={{
+              fontFamily: Fonts.notoSansKannada.bold,
+              fontSize: moderateScale(18),
+              color: Colors.primaryContainer,
+              lineHeight: moderateScale(30),
+            }}
+          >
+            ಕನ್ನಡ ಬೇಕು
+          </Text>
         </View>
 
-        {/* Mode segmented toggle */}
+        {/* Mode segmented toggle — white active pill in an ink-tinted track */}
         <View
           style={{
             flexDirection: 'row',
-            backgroundColor: Colors.surfaceContainerHigh,
+            backgroundColor: 'rgba(27,29,14,0.06)',
             borderRadius: Radius.full,
             padding: moderateScale(4),
             marginBottom: Spacing.xl,
@@ -294,30 +314,13 @@ export default function LoginScreen() {
           </Pressable>
         )}
 
-        {/* Submit */}
-        <Pressable
+        {/* Submit — red primary; disabled recipe until required fields are present */}
+        <LipButton
+          label={loading ? 'Please wait…' : copy.cta}
           onPress={handleAuth}
-          disabled={loading}
-          style={({ pressed }) => ({
-            backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
-            borderRadius: Radius.md,
-            paddingVertical: Spacing.md + moderateScale(2),
-            alignItems: 'center',
-            opacity: loading ? 0.7 : 1,
-            transform: [{ scale: pressed ? 0.96 : 1 }],
-          })}
-        >
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(14),
-              color: Colors.onPrimary,
-              letterSpacing: 0.5,
-            }}
-          >
-            {loading ? 'Please wait...' : copy.cta}
-          </Text>
-        </Pressable>
+          variant="primary"
+          disabled={loading || !canSubmit}
+        />
 
         {/* Social sign-in (spec_social_login.md) */}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: Spacing.xl }}>
@@ -335,22 +338,24 @@ export default function LoginScreen() {
           <View style={{ flex: 1, height: moderateScale(0.5), backgroundColor: Colors.outlineVariant }} />
         </View>
 
-        <Pressable
+        {/* Google — secondary (tan) chunky button with the red G */}
+        <ChunkyPressable
           onPress={() => handleSocial('google')}
           disabled={loading}
-          accessibilityRole="button"
           accessibilityLabel="Continue with Google"
-          style={({ pressed }) => ({
+          bg="#ffffff"
+          lip={4}
+          lipColor={Colors.interactiveSecondaryLip}
+          border
+          borderColor={Colors.interactiveSecondary}
+          borderWidth={2}
+          radius={Radius.lg}
+          style={{
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: Colors.surfaceContainerHighest,
-            borderWidth: moderateScale(0.5),
-            borderColor: Colors.outlineVariant,
-            borderRadius: Radius.md,
             paddingVertical: Spacing.md + moderateScale(2),
-            opacity: loading ? 0.7 : pressed ? 0.85 : 1,
-          })}
+          }}
         >
           <GoogleGLogo size={18} />
           <Text
@@ -363,7 +368,7 @@ export default function LoginScreen() {
           >
             Continue with Google
           </Text>
-        </Pressable>
+        </ChunkyPressable>
 
         {Platform.OS === 'ios' && appleAvailable && (
           <AppleAuthentication.AppleAuthenticationButton
@@ -374,7 +379,7 @@ export default function LoginScreen() {
             onPress={() => handleSocial('apple')}
           />
         )}
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -443,17 +448,19 @@ function SegmentButton({ label, active, onPress }: SegmentButtonProps) {
       accessibilityState={{ selected: active }}
       style={{
         flex: 1,
-        backgroundColor: active ? Colors.primaryContainer : 'transparent',
+        backgroundColor: active ? '#ffffff' : 'transparent',
         borderRadius: Radius.full,
+        borderBottomWidth: active ? 2 : 0,
+        borderBottomColor: active ? 'rgba(27,29,14,0.12)' : 'transparent',
         paddingVertical: Spacing.sm + moderateScale(2),
         alignItems: 'center',
       }}
     >
       <Text
         style={{
-          fontFamily: active ? Fonts.dmSans.bold : Fonts.dmSans.regular,
+          fontFamily: active ? Fonts.dmSans.bold : Fonts.dmSans.medium,
           fontSize: moderateScale(14),
-          color: active ? Colors.onPrimary : Colors.tertiary,
+          color: active ? Colors.onSurface : Colors.tertiary,
           letterSpacing: 0.3,
         }}
       >

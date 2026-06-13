@@ -18,7 +18,7 @@ export function SituationPhase({ lesson, onAdvance }: SituationPhaseProps) {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.surface }}>
+    <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
@@ -30,13 +30,15 @@ export function SituationPhase({ lesson, onAdvance }: SituationPhaseProps) {
         <View
           style={{
             backgroundColor: Colors.secondaryFixed,
-            borderRadius: Radius.xl,
+            borderRadius: Radius.chunky,
+            borderBottomWidth: 5,
+            borderBottomColor: Colors.goldLip,
             paddingVertical: Spacing.xxxl + Spacing.md,
             paddingHorizontal: Spacing.lg,
             marginBottom: Spacing.xxl,
             alignItems: 'center',
             justifyContent: 'center',
-            minHeight: moderateScale(180),
+            minHeight: moderateScale(170),
           }}
         >
           <Text

@@ -1,10 +1,13 @@
 import * as Speech from 'expo-speech';
 import { Audio } from 'expo-av';
 import type { DictationWord } from '../types';
+import { useProgressStore } from '../../../../stores/progressStore';
 
 let currentSound: Audio.Sound | null = null;
 
 export async function playWord(word: DictationWord): Promise<void> {
+  // Daily-goal "Listen": dictation prompts use this path instead of the TTS service.
+  useProgressStore.getState().recordListen();
   try {
     if (word.audioFile !== undefined) {
       if (currentSound) {

@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useMemo } from 'react';
+import { useProgressStore } from '../../../../stores/progressStore';
 import type { QuestionPair, Option, AnswerState, GamePhase } from '../types';
 
 /**
@@ -89,6 +90,8 @@ export function useGameState(
         setStreak(0);
       }
 
+      // Daily-goal "Practice": one rep per answered question.
+      useProgressStore.getState().recordPractice();
       if (current.id) {
         onAttemptRef.current?.({ itemId: current.id, isCorrect });
       }

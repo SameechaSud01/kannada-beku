@@ -168,7 +168,7 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.surface }}>
+    <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
@@ -202,7 +202,7 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }}>
-            <Icons.tabLearn size={18} color={Colors.primary} />
+            <Icons.tabLearn size={18} color={Colors.primaryContainer} />
             <Text
               style={{
                 fontFamily: Fonts.dmSans.medium,
@@ -214,7 +214,7 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }}>
-            <Icons.tabPractice size={18} color={Colors.primary} />
+            <Icons.tabPractice size={18} color={Colors.primaryContainer} />
             <Text
               style={{
                 fontFamily: Fonts.dmSans.medium,
@@ -226,7 +226,7 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }}>
-            <Icons.mic size={18} color={Colors.primary} />
+            <Icons.mic size={18} color={Colors.primaryContainer} />
             <Text
               style={{
                 fontFamily: Fonts.dmSans.medium,
@@ -243,17 +243,19 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
         <View
           style={{
             backgroundColor: Colors.secondaryFixed,
-            borderRadius: Radius.xl,
+            borderRadius: Radius.chunky,
+            borderBottomWidth: 5,
+            borderBottomColor: Colors.goldLip,
             padding: Spacing.xxl,
             marginBottom: Spacing.xl,
           }}
         >
           <Text
             style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(12),
-              color: Colors.tertiary,
-              letterSpacing: 1,
+              fontFamily: Fonts.dmSans.bold,
+              fontSize: moderateScale(11),
+              color: Colors.onSecondaryContainer,
+              letterSpacing: 1.4,
               textTransform: 'uppercase',
               marginBottom: Spacing.sm,
             }}
@@ -276,7 +278,7 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
           <View
             style={{
               backgroundColor: Colors.secondaryFixed,
-              borderRadius: Radius.md,
+              borderRadius: Radius.tile,
               paddingVertical: Spacing.md,
               paddingHorizontal: Spacing.lg,
               alignItems: 'center',
@@ -285,9 +287,9 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
           >
             <Text
               style={{
-                fontFamily: Fonts.dmSans.medium,
+                fontFamily: Fonts.dmSans.bold,
                 fontSize: moderateScale(13),
-                color: Colors.primaryContainer,
+                color: Colors.onSecondaryContainer,
                 textAlign: 'center',
               }}
             >
@@ -337,6 +339,8 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
           fg={Colors.onPrimary}
         />
 
+        {/* Secondary (tan) "Back to lessons" — keeps a Pressable (not LipButton)
+            so it can show the saving spinner / retry copy from the mutation. */}
         <Pressable
           onPress={handleBackToLessons}
           disabled={mutation.isPending}
@@ -349,23 +353,33 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
                 : 'Back to lessons'
           }
           accessibilityState={{ disabled: mutation.isPending, busy: mutation.isPending }}
-          style={({ pressed }) => ({
-            backgroundColor: pressed ? Colors.surfaceContainerHigh : 'transparent',
-            borderRadius: Radius.md,
-            paddingVertical: Spacing.md,
-            minHeight: moderateScale(44),
-            alignItems: 'center',
-            justifyContent: 'center',
-            opacity: mutation.isPending ? 0.6 : 1,
-          })}
+          style={({ pressed }) => {
+            const isDisabled = mutation.isPending;
+            return {
+              backgroundColor: isDisabled ? Colors.surfaceContainerHighest : '#ffffff',
+              borderRadius: moderateScale(15),
+              borderTopWidth: isDisabled ? 0 : 2,
+              borderLeftWidth: isDisabled ? 0 : 2,
+              borderRightWidth: isDisabled ? 0 : 2,
+              borderColor: isDisabled ? undefined : Colors.interactiveSecondary,
+              borderBottomWidth: isDisabled ? 0 : pressed ? 2 : 4,
+              borderBottomColor: Colors.interactiveSecondaryLip,
+              paddingVertical: Spacing.md,
+              minHeight: moderateScale(48),
+              alignItems: 'center',
+              justifyContent: 'center',
+              transform: [{ translateY: !isDisabled && pressed ? 2 : 0 }],
+            };
+          }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }}>
-            {mutation.isPending && <ActivityIndicator size="small" color={Colors.tertiary} />}
+            {mutation.isPending && <ActivityIndicator size="small" color={Colors.textFaint} />}
             <Text
               style={{
-                fontFamily: Fonts.dmSans.medium,
-                fontSize: moderateScale(14),
-                color: Colors.tertiary,
+                fontFamily: Fonts.baloo.bold,
+                fontSize: moderateScale(15),
+                letterSpacing: 0.1,
+                color: mutation.isPending ? Colors.textFaint : Colors.onSurface,
               }}
             >
               {mutation.isPending
@@ -388,8 +402,12 @@ function GameRow({ game, onPlay }: { game: Game; onPlay: () => void }) {
         flexDirection: 'row',
         alignItems: 'center',
         gap: Spacing.md,
-        backgroundColor: Colors.surfaceContainerLow,
-        borderRadius: Radius.lg,
+        backgroundColor: '#ffffff',
+        borderRadius: Radius.chunky,
+        borderWidth: 1,
+        borderColor: Colors.hairline,
+        borderBottomWidth: 4,
+        borderBottomColor: Colors.cardLip,
         paddingVertical: Spacing.md,
         paddingHorizontal: Spacing.lg,
       }}
@@ -424,12 +442,15 @@ function GameRow({ game, onPlay }: { game: Game; onPlay: () => void }) {
         accessibilityRole="button"
         accessibilityLabel={`Play ${game.title}`}
         style={({ pressed }) => ({
-          backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
+          backgroundColor: Colors.primaryContainer,
           borderRadius: Radius.full,
+          borderBottomWidth: pressed ? 1 : 3,
+          borderBottomColor: Colors.redLip,
           paddingVertical: Spacing.sm,
           paddingHorizontal: Spacing.lg,
           minHeight: moderateScale(36),
           justifyContent: 'center',
+          transform: [{ translateY: pressed ? 2 : 0 }],
         })}
       >
         <Text

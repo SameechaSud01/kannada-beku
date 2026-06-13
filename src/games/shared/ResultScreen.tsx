@@ -1,18 +1,19 @@
 /**
- * Shared game result screen (spec_game_polish §2/§4).
+ * Shared game result screen (spec_game_polish §2/§4; chunky_v3 §9).
  *
  * Replaces the four near-duplicate per-game ResultScreens. Animates in on
  * mount, embeds the generative rangoli, fires the completion haptic, and
  * optionally shows a best-streak line.
  */
 import React, { useEffect } from 'react';
-import { Animated, View, Text, Pressable } from 'react-native';
+import { Animated, View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '@/constants/colors';
 import { Spacing, Radius } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
 import { Icons } from '@/constants/icons';
+import { LipButton } from '@/components/ui/LipButton';
 import Rangoli from './Rangoli';
 import { useEntrance } from './animations';
 import { haptics } from './haptics';
@@ -69,10 +70,10 @@ const ResultScreen: React.FC<Props> = ({
       }}
     >
       <Rangoli ratio={ratioOf(score, total)} />
-      <Text style={{ fontSize: moderateScale(20), fontFamily: Fonts.dmSans.bold, color: Colors.onSurface }}>
+      <Text style={{ fontSize: moderateScale(22), fontFamily: Fonts.baloo.extrabold, color: Colors.onSurface }}>
         {getTitle(score, total)}
       </Text>
-      <Text style={{ fontSize: moderateScale(48), fontFamily: Fonts.dmSans.bold, color: Colors.primary }}>
+      <Text style={{ fontSize: moderateScale(52), fontFamily: Fonts.baloo.extrabold, color: Colors.primaryContainer }}>
         {score}
       </Text>
       <Text style={{ fontSize: moderateScale(14), color: Colors.tertiary, fontFamily: Fonts.dmSans.regular }}>
@@ -83,11 +84,11 @@ const ResultScreen: React.FC<Props> = ({
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            gap: moderateScale(4),
+            gap: moderateScale(5),
             backgroundColor: Colors.secondaryFixed,
             borderRadius: Radius.full,
             paddingHorizontal: Spacing.md,
-            paddingVertical: moderateScale(4),
+            paddingVertical: moderateScale(5),
           }}
         >
           <Icons.streak size={moderateScale(14)} color={Colors.onSecondaryContainer} />
@@ -96,52 +97,14 @@ const ResultScreen: React.FC<Props> = ({
           </Text>
         </View>
       ) : null}
-      <Pressable
-        style={{
-          width: '100%',
-          backgroundColor: Colors.primary,
-          borderRadius: Radius.xl,
-          paddingVertical: moderateScale(14),
-          alignItems: 'center',
-          marginTop: Spacing.md,
-        }}
-        onPress={onReplay}
-      >
-        <Text style={{ color: Colors.onPrimary, fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16) }}>
-          {replayLabel}
-        </Text>
-      </Pressable>
-      <View style={{ flexDirection: 'row', gap: Spacing.md, width: '100%' }}>
-        <Pressable
+
+      <View style={{ width: '100%', gap: Spacing.md, marginTop: Spacing.md }}>
+        <LipButton label={replayLabel} variant="primary" onPress={onReplay} />
+        <LipButton
+          label="Back to Practice"
+          variant="secondary"
           onPress={() => router.replace('/(tabs)/practice')}
-          style={({ pressed }) => ({
-            flex: 1,
-            backgroundColor: Colors.surfaceContainerHighest,
-            borderRadius: Radius.lg,
-            paddingVertical: moderateScale(14),
-            alignItems: 'center',
-            opacity: pressed ? 0.7 : 1,
-          })}
-        >
-          <Text style={{ color: Colors.onSurface, fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(15) }}>
-            Back to games
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => router.replace('/(tabs)/')}
-          style={({ pressed }) => ({
-            flex: 1,
-            backgroundColor: Colors.surfaceContainerHighest,
-            borderRadius: Radius.lg,
-            paddingVertical: moderateScale(14),
-            alignItems: 'center',
-            opacity: pressed ? 0.7 : 1,
-          })}
-        >
-          <Text style={{ color: Colors.onSurface, fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(15) }}>
-            Back home
-          </Text>
-        </Pressable>
+        />
       </View>
     </Animated.View>
   );

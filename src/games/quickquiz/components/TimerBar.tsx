@@ -49,21 +49,23 @@ const TimerBar: React.FC<Props> = ({ secondsLeft, total, frozen }) => {
     inputRange: [0, 1],
     outputRange: ['0%', '100%'],
   });
-  const barColor = low ? Colors.primary : Colors.secondary;
+  // 8px gold bar (chunky_v3 §9); turns red when time runs low (today's behaviour).
+  const barColor = low ? Colors.primaryContainer : Colors.secondaryContainer;
+  const iconColor = low ? Colors.primaryContainer : Colors.goldLip;
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }}>
       <Animated.View style={{ opacity: low ? pulse : 1 }}>
-        <Icons.clock size={moderateScale(16)} color={barColor} />
+        <Icons.clock size={moderateScale(16)} color={iconColor} />
       </Animated.View>
       <View
         accessibilityRole="progressbar"
         accessibilityLabel={`${secondsLeft} seconds left`}
         style={{
           flex: 1,
-          height: moderateScale(6),
+          height: moderateScale(8),
           borderRadius: Radius.full,
-          backgroundColor: Colors.surfaceContainerHigh,
+          backgroundColor: 'rgba(27,29,14,0.10)',
           overflow: 'hidden',
         }}
       >
@@ -80,9 +82,10 @@ const TimerBar: React.FC<Props> = ({ secondsLeft, total, frozen }) => {
         style={{
           fontFamily: Fonts.dmSans.bold,
           fontSize: moderateScale(13),
-          color: barColor,
+          color: iconColor,
           minWidth: moderateScale(18),
           textAlign: 'right',
+          fontVariant: ['tabular-nums'],
         }}
         maxFontSizeMultiplier={1.2}
       >

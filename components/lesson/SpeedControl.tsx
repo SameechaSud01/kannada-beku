@@ -24,6 +24,8 @@ export function SpeedControl({ onRateChange }: SpeedControlProps) {
     onRateChange?.();
   };
 
+  // Active speed reads as a goldPale "selected" pill (goldLip border + 3px lip),
+  // matching the redesign's chip recipe (chunky_v3 §6).
   return (
     <Pressable
       onPress={handlePress}
@@ -32,20 +34,24 @@ export function SpeedControl({ onRateChange }: SpeedControlProps) {
       hitSlop={8}
       style={({ pressed }) => ({
         minWidth: moderateScale(54),
-        minHeight: moderateScale(44),
-        paddingHorizontal: Spacing.md,
+        minHeight: moderateScale(40),
+        paddingHorizontal: Spacing.lg,
         borderRadius: Radius.full,
-        backgroundColor: Colors.surfaceContainerHighest,
+        backgroundColor: Colors.secondaryFixed,
+        borderWidth: 1,
+        borderColor: Colors.goldLip,
+        borderBottomWidth: pressed ? 1 : 3,
+        borderBottomColor: Colors.goldLip,
         alignItems: 'center',
         justifyContent: 'center',
-        transform: [{ scale: pressed ? 0.96 : 1 }],
+        transform: [{ translateY: pressed ? 2 : 0 }],
       })}
     >
       <Text
         style={{
           fontFamily: Fonts.dmSans.bold,
           fontSize: moderateScale(13),
-          color: Colors.primary,
+          color: Colors.onSecondaryContainer,
         }}
         maxFontSizeMultiplier={1.3}
       >

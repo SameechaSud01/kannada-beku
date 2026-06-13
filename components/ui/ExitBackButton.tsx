@@ -80,7 +80,7 @@ export function ExitBackButton({
         transform: [{ scale: pressed ? 0.94 : 1 }],
       })}
     >
-      <Icons.back size={20} color={Colors.primary} />
+      <Icons.close size={20} color={Colors.primary} />
     </Pressable>
   );
 }

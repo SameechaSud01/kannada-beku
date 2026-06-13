@@ -1,9 +1,9 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
-import { Fonts } from '../../../constants/fonts';
 import { Halo } from '../Halo';
-import { Button } from '../../ui/Button';
+import { LipButton } from '../../ui/LipButton';
+import { DialogBody, DialogEyebrow, DialogTitle } from './_dialogChrome';
 
 export interface LearningTimeInfoDialogProps {
   minutes: 5 | 10 | 20;
@@ -27,7 +27,7 @@ const COPY: Record<5 | 10 | 20, { title: string; body: string }> = {
 
 /**
  * Informational dialog explaining what a daily-time choice unlocks
- * (spec_onboarding_tweaks §commitment). Non-destructive, backdrop-tap dismisses.
+ * (chunky_v3 §11). Non-destructive, backdrop-tap dismisses.
  */
 export function LearningTimeInfoDialog({ minutes, onDismiss }: LearningTimeInfoDialogProps) {
   const { title, body } = COPY[minutes];
@@ -35,46 +35,12 @@ export function LearningTimeInfoDialog({ minutes, onDismiss }: LearningTimeInfoD
   return (
     <View style={{ gap: moderateScale(14) }}>
       <View style={{ alignItems: 'center' }}>
-        <Halo icon="clock" iconSize={26} stroke={2} iconColor={Colors.secondary} />
+        <Halo icon="clock" iconSize={26} stroke={2.2} iconColor={Colors.secondary} />
       </View>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(11),
-          letterSpacing: 1.4,
-          color: Colors.secondary,
-          textAlign: 'center',
-          textTransform: 'uppercase',
-        }}
-        maxFontSizeMultiplier={1.4}
-      >
-        Daily goal
-      </Text>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(20),
-          letterSpacing: -0.3,
-          color: Colors.onSurface,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.3}
-      >
-        {title}
-      </Text>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.regular,
-          fontSize: moderateScale(14),
-          lineHeight: moderateScale(20),
-          color: Colors.tertiary,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.4}
-      >
-        {body}
-      </Text>
-      <Button label="Got it" variant="primary" onPress={onDismiss} />
+      <DialogEyebrow>Daily goal</DialogEyebrow>
+      <DialogTitle>{title}</DialogTitle>
+      <DialogBody>{body}</DialogBody>
+      <LipButton label="Got it" variant="primary" onPress={onDismiss} />
     </View>
   );
 }

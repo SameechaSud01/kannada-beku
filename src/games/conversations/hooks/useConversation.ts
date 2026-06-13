@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import { useStreak } from '../../shared/useStreak';
+import { useProgressStore } from '../../../../stores/progressStore';
 import type { AnswerState, GamePhase, OptionState, ConversationTurn } from '../types';
 
 type AttemptCallback = (args: { itemId: string; isCorrect: boolean }) => void;
@@ -49,6 +50,8 @@ export function useConversation(
       setAnswerState(isCorrect ? 'correct' : 'wrong');
       if (isCorrect) setScore((s) => s + 1);
       recordStreak(isCorrect);
+      // Daily-goal "Practice": one rep per answered turn.
+      useProgressStore.getState().recordPractice();
       onAttemptRef.current?.({ itemId: turn.id, isCorrect });
     },
     [answerState, currentIndex, recordStreak],

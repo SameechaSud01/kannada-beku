@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing } from '../../constants/spacing';
+import { Icons } from '../../constants/icons';
 import { ProgressDots } from '../../components/onboarding/ProgressDots';
 import { OptionCard } from '../../components/onboarding/OptionCard';
+import { LipButton } from '../../components/ui/LipButton';
 import { useUserStore } from '../../stores/useUserStore';
 
 const GOALS = [
@@ -27,7 +29,7 @@ export default function GoalScreen() {
     <View
       style={{
         flex: 1,
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.surfaceCream,
         paddingTop: insets.top + Spacing.xl,
         paddingBottom: insets.bottom + Spacing.xl,
         paddingHorizontal: Spacing.xxl,
@@ -51,9 +53,11 @@ export default function GoalScreen() {
         </Text>
         <Text
           style={{
-            fontFamily: Fonts.dmSans.bold,
-            fontSize: moderateScale(28),
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(27),
             color: Colors.onSurface,
+            letterSpacing: -0.4,
+            lineHeight: moderateScale(38),
             marginBottom: Spacing.sm,
           }}
           maxFontSizeMultiplier={1.3}
@@ -86,41 +90,23 @@ export default function GoalScreen() {
       </View>
 
       <View style={{ flexDirection: 'row', gap: Spacing.md }}>
-        <Pressable
-          onPress={() => router.back()}
-          style={({ pressed }) => ({
-            flex: 1,
-            backgroundColor: Colors.surfaceContainerHighest,
-            borderRadius: moderateScale(16),
-            paddingVertical: moderateScale(18),
-            alignItems: 'center',
-            transform: [{ scale: pressed ? 0.97 : 1 }],
-          })}
-        >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onSurface }}>
-            Back
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => {
-            if (selected) {
-              useUserStore.getState().setLearningMode(selected);
-              router.push('/onboarding/motivation');
-            }
-          }}
-          style={({ pressed }) => ({
-            flex: 2,
-            backgroundColor: selected ? (pressed ? Colors.primary : Colors.primaryContainer) : Colors.surfaceDim,
-            borderRadius: moderateScale(16),
-            paddingVertical: moderateScale(18),
-            alignItems: 'center',
-            transform: [{ scale: pressed && selected ? 0.97 : 1 }],
-          })}
-        >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onPrimary }}>
-            Continue
-          </Text>
-        </Pressable>
+        <View style={{ flex: 1 }}>
+          <LipButton label="Back" variant="secondary" onPress={() => router.back()} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <LipButton
+            label="Continue"
+            variant="primary"
+            disabled={!selected}
+            icon={Icons.forward}
+            onPress={() => {
+              if (selected) {
+                useUserStore.getState().setLearningMode(selected);
+                router.push('/onboarding/motivation');
+              }
+            }}
+          />
+        </View>
       </View>
     </View>
   );

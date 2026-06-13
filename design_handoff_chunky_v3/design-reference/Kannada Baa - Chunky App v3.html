@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kannada Baa — Chunky kit v3 (rings home + kit pages)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400..800&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; height: 100%; }
+  body { font-family: 'DM Sans', sans-serif; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="ck-system.jsx"></script>
+<script type="text/babel" src="ck-home.jsx"></script>
+<script type="text/babel" src="ck-tabs.jsx"></script>
+<script type="text/babel" src="ck-flows.jsx"></script>
+<script type="text/babel" src="ck-onboarding.jsx"></script>
+<script type="text/babel" src="ck-lessonflow.jsx"></script>
+<script type="text/babel" src="ck-game.jsx"></script>
+<script type="text/babel" src="ck-auth-guide.jsx"></script>
+<script type="text/babel" src="ck-modals.jsx"></script>
+<script type="text/babel" src="ck-basics.jsx"></script>
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "radius": 16,
+  "lip": 4,
+  "accent": "#be0027",
+  "surfaces": ["#faf6ea", "#f3ecd9"],
+  "kolam": true
+}/*EDITMODE-END*/;
+
+function ChunkyAppV3() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const vars = {
+    '--surface': t.surfaces[0],
+    '--surfaceLow': t.surfaces[1],
+    '--wmA': t.kolam ? 0.05 : 0,
+    '--red': '#91001b',
+    '--red2': t.accent,
+    '--redLip': 'color-mix(in srgb, ' + t.accent + ' 72%, #000)',
+    '--redPale': '#f3dada',
+    '--gold': '#fdc003',
+    '--goldHi': '#ffd24d',
+    '--goldLip': '#c98a00',
+    '--goldPale': '#ffdf9e',
+    '--goldDeep': '#785900',
+    '--ink': '#1b1d0e',
+    '--muted': '#464646',
+    '--faint': '#908d76',
+    '--hairline': 'rgba(27,29,14,0.08)',
+    '--r': t.radius + 'px',
+    '--lip': t.lip,
+    height: '100%',
+  };
+  return (
+    <div style={vars}>
+      <DesignCanvas>
+        <DCSection id="tabs" title="Tabs — chunky kit" subtitle="The first chunky kit design — Home keeps the daily-goal rings; Lessons, Games and Profile in the same language.">
+          <DCArtboard id="home" label="Home" width={390} height={880}><PageHome /></DCArtboard>
+          <DCArtboard id="lessons" label="Lessons" width={390} height={1150}><PageLessons /></DCArtboard>
+          <DCArtboard id="practice" label="Games" width={390} height={950}><PageGames /></DCArtboard>
+          <DCArtboard id="profile" label="Profile" width={390} height={1010}><PageProfile /></DCArtboard>
+        </DCSection>
+        <DCSection id="onboarding" title="Onboarding flow" subtitle="app/onboarding/*.tsx — welcome → name → goal → motivation → commitment → basics primer, in the chunky kit.">
+          <DCArtboard id="ob-welcome" label="1 · Welcome" width={390} height={844}><CKOBWelcome /></DCArtboard>
+          <DCArtboard id="ob-name" label="2 · Name" width={390} height={844}><CKOBName /></DCArtboard>
+          <DCArtboard id="ob-goal" label="3 · Goal" width={390} height={844}><CKOBGoal /></DCArtboard>
+          <DCArtboard id="ob-motivation" label="4 · Motivation" width={390} height={1010}><CKOBMotivation /></DCArtboard>
+          <DCArtboard id="ob-commitment" label="5 · Commitment" width={390} height={844}><CKOBCommitment /></DCArtboard>
+          <DCArtboard id="ob-basics" label="6 · Basics primer" width={390} height={844}><CKOBBasics /></DCArtboard>
+        </DCSection>
+        <DCSection id="lessonflow" title="Lesson flow" subtitle="components/lesson/*.tsx — situation → teach → practice → summary → done card. Lesson 3 · Wanting.">
+          <DCArtboard id="lf-situation" label="1 · Situation" width={390} height={844}><CKLFSituation /></DCArtboard>
+          <DCArtboard id="lf-teach" label="2 · Teach word" width={390} height={844}><CKLFTeach /></DCArtboard>
+          <DCArtboard id="lf-practice" label="3 · Practice · listen" width={390} height={844}><CKLFPractice /></DCArtboard>
+          <DCArtboard id="lf-summary" label="4 · Summary" width={390} height={920}><CKLFSummary /></DCArtboard>
+          <DCArtboard id="lf-done" label="5 · Done" width={390} height={960}><CKLFDone /></DCArtboard>
+        </DCSection>
+        <DCSection id="auth-game" title="Auth · Games · Guide" subtitle="app/(auth)/login.tsx · app/(games)/[game]/* + src/games/quickquiz · app/guide.tsx — the flows that were missing.">
+          <DCArtboard id="auth-login" label="Log in / Sign up" width={390} height={844}><CKAuthLogin /></DCArtboard>
+          <DCArtboard id="game-selector" label="Game · lesson selector" width={390} height={844}><CKGSelector /></DCArtboard>
+          <DCArtboard id="game-round" label="Quick quiz · round" width={390} height={844}><CKGRound /></DCArtboard>
+          <DCArtboard id="game-result" label="Quick quiz · result" width={390} height={844}><CKGResult /></DCArtboard>
+          <DCArtboard id="guide" label="Beginners' guide (current)" width={390} height={844}><CKGuide /></DCArtboard>
+        </DCSection>
+        <DCSection id="basics" title="Kannada basics — gentler flow" subtitle="The guide, de-overwhelmed: reassurance + 3 takeaways first · vowels as short/long pairs · 34 consonants chunked into 5 mouth-position families · one reading rule, then straight to Lesson 1.">
+          <DCArtboard id="basics-start" label="1 · Three things" width={390} height={844}><CKBStart /></DCArtboard>
+          <DCArtboard id="basics-vowels" label="2 · Vowel pairs" width={390} height={844}><CKBVowels /></DCArtboard>
+          <DCArtboard id="basics-consonants" label="3 · Consonant families" width={390} height={920}><CKBConsonants /></DCArtboard>
+          <DCArtboard id="basics-reading" label="4 · Reading + try it" width={390} height={844}><CKBReading /></DCArtboard>
+        </DCSection>
+        <DCSection id="modals" title="Modals &amp; sheets" subtitle="components/modals/instances/* — lesson locked, sign out, reminders sheet, streak milestone takeover.">
+          <DCArtboard id="modal-locked" label="Lesson locked" width={390} height={844}><CKModalLocked /></DCArtboard>
+          <DCArtboard id="modal-signout" label="Sign out" width={390} height={844}><CKModalSignOut /></DCArtboard>
+          <DCArtboard id="modal-reminders" label="Reminders sheet" width={390} height={844}><CKModalReminders /></DCArtboard>
+          <DCArtboard id="modal-streak" label="Streak celebration" width={390} height={844}><CKModalStreak /></DCArtboard>
+        </DCSection>
+        <DCSection id="flows" title="Other flows" subtitle="Emergency phrases — works offline, the app's urgent surface.">
+          <DCArtboard id="emergency" label="Emergency phrases" width={390} height={844}><PageEmergency /></DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+      <TweaksPanel>
+        <TweakSection label="Kit" />
+        <TweakSlider label="Corner radius" value={t.radius} min={10} max={26} step={1} unit="px" onChange={(v) => setTweak('radius', v)} />
+        <TweakSlider label="Lip depth" value={t.lip} min={2} max={7} step={1} unit="px" onChange={(v) => setTweak('lip', v)} />
+        <TweakColor label="Accent red" value={t.accent} options={['#be0027', '#91001b', '#d90429']} onChange={(v) => setTweak('accent', v)} />
+        <TweakSection label="Background" />
+        <TweakColor label="Surface" value={t.surfaces}
+          options={[['#fcfcfa', '#f4f4f0'], ['#faf6ea', '#f3ecd9'], ['#f6f1e4', '#ece3cd']]}
+          onChange={(v) => setTweak('surfaces', v)} />
+        <TweakToggle label="Kolam dot grid" value={t.kolam} onChange={(v) => setTweak('kolam', v)} />
+      </TweaksPanel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<ChunkyAppV3 />);
+</script>
+</body>
+</html>

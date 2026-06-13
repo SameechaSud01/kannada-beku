@@ -27,6 +27,16 @@ const migratingStorage = {
   removeItem: (name: string) => AsyncStorage.removeItem(name),
 };
 
+/** Per-day activity tally for the daily-goal rings (see ProgressState.dailyActivity). */
+export interface DailyActivity {
+  date: string;
+  listen: number;
+  speak: number;
+  practice: number;
+}
+
+const EMPTY_DAILY_ACTIVITY: DailyActivity = { date: '', listen: 0, speak: 0, practice: 0 };
+
 interface ProgressState {
   streak: number;
   lastActiveDate: string;
@@ -55,6 +65,14 @@ interface ProgressState {
   /** Minutes practiced today — keyed by ISO date so it resets at midnight (MODALS §6.7). */
   todayMinutes: number;
   todayMinutesDate: string;
+  /**
+   * Per-day Listen/Speak/Practice activity counts for the daily-goal rings.
+   * Client-only by design: the DB has no per-day activity table, and Listen
+   * (audio plays) + Speak (practice reps) have no server footprint at all.
+   * `date` keys the counts to one ISO day so they reset at midnight — reads
+   * for any other day are treated as zero (see useDailyGoal).
+   */
+  dailyActivity: DailyActivity;
   /** Most recent date GoalCompleteDialog fired, to prevent repeat shows (MODALS §6.7). */
   lastGoalCelebrationDate: string | null;
   isHydrated: boolean;
@@ -72,6 +90,12 @@ interface ProgressState {
   ) => void;
   updateStreak: () => void;
   recordActivity: () => void;
+  /** +1 to today's Listen count (an in-app audio play). Resets at date rollover. */
+  recordListen: () => void;
+  /** +1 to today's Speak count (a practice-phase rep). Resets at date rollover. */
+  recordSpeak: () => void;
+  /** +1 to today's Practice count (a game question answered). Resets at date rollover. */
+  recordPractice: () => void;
   markGoalCelebrated: () => void;
   setHydrated: (hydrated: boolean) => void;
   /**
@@ -89,6 +113,19 @@ interface ProgressState {
 
 const getTodayISO = () => new Date().toISOString().split('T')[0];
 
+/**
+ * Increment one dimension of today's activity tally, rolling the counts over to
+ * a fresh day when the stored date is stale. Returns the partial state update.
+ */
+const bumpDaily = (
+  current: DailyActivity,
+  key: 'listen' | 'speak' | 'practice',
+): { dailyActivity: DailyActivity } => {
+  const today = getTodayISO();
+  const base = current.date === today ? current : { ...EMPTY_DAILY_ACTIVITY, date: today };
+  return { dailyActivity: { ...base, [key]: base[key] + 1 } };
+};
+
 export const useProgressStore = create<ProgressState>()(
   persist(
     (set, get) => ({
@@ -104,6 +141,7 @@ export const useProgressStore = create<ProgressState>()(
       weeklyActivity: {},
       todayMinutes: 0,
       todayMinutesDate: '',
+      dailyActivity: EMPTY_DAILY_ACTIVITY,
       lastGoalCelebrationDate: null,
       isHydrated: false,
 
@@ -173,6 +211,10 @@ export const useProgressStore = create<ProgressState>()(
         }));
       },
 
+      recordListen: () => set((state) => bumpDaily(state.dailyActivity, 'listen')),
+      recordSpeak: () => set((state) => bumpDaily(state.dailyActivity, 'speak')),
+      recordPractice: () => set((state) => bumpDaily(state.dailyActivity, 'practice')),
+
       markGoalCelebrated: () => set({ lastGoalCelebrationDate: getTodayISO() }),
 
       setHydrated: (isHydrated) => set({ isHydrated }),
@@ -199,6 +241,7 @@ export const useProgressStore = create<ProgressState>()(
           weeklyActivity: {},
           todayMinutes: 0,
           todayMinutesDate: '',
+          dailyActivity: EMPTY_DAILY_ACTIVITY,
           lastGoalCelebrationDate: null,
         }),
     }),

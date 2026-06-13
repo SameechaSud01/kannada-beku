@@ -56,14 +56,34 @@ export const Shadows = {
     elevation: 12,
   } satisfies ShadowToken,
 
-  // Active tab — solid red circle, soft red glow.
+  // Active tab — solid red circle (chunky_v3: depth comes from the redLip lip,
+  // not a glow). A tiny ambient lift keeps the circle reading as raised.
   tabActive: {
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    elevation: 8,
+    shadowColor: Colors.onSurface,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 4,
   } satisfies ShadowToken,
 } as const;
 
 export type ShadowName = keyof typeof Shadows;
+
+/**
+ * Chunky-kit "lip" presets (chunky_v3). RN can't render hard-offset box-shadows,
+ * so the lip is a `borderBottom` (face colour + lip colour + resting depth). On
+ * press the face drops `depth`px and the lip shrinks to keep the bottom edge put
+ * (see `ChunkyPressable` / `LipButton`). `disabled` is flat: no lip, no depth.
+ */
+export const Lips = {
+  primary:   { face: Colors.primaryContainer,     lip: Colors.redLip,                 depth: 5 },
+  red:       { face: Colors.primaryContainer,     lip: Colors.redLip,                 depth: 5 },
+  redDeep:   { face: Colors.primary,              lip: Colors.redLipDeep,             depth: 5 },
+  gold:      { face: Colors.secondaryContainer,   lip: Colors.goldLip,                depth: 5 },
+  secondary: { face: '#ffffff',                   lip: Colors.interactiveSecondaryLip, depth: 4 },
+  white:     { face: '#ffffff',                   lip: 'rgba(27,29,14,0.10)',         depth: 4 },
+  chip:      { face: '#ffffff',                   lip: 'rgba(27,29,14,0.10)',         depth: 3 },
+  disabled:  { face: Colors.surfaceContainerHighest, lip: 'transparent',             depth: 0 },
+} as const;
+
+export type LipName = keyof typeof Lips;

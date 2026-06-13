@@ -1,4 +1,5 @@
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { useState } from 'react';
+import { View, Text, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
@@ -7,6 +8,7 @@ import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
 import { LipButton } from '../ui/LipButton';
+import { AudioOrb } from '../ui/AudioOrb';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import type { Phrase, Word } from '../../constants/lessons/types';
 
@@ -20,7 +22,7 @@ export function SummaryPhase({ words, phrases, onAdvance }: SummaryPhaseProps) {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.surface }}>
+    <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
@@ -103,8 +105,13 @@ function SummaryRow({
   english: string;
   kannada: string;
 }) {
+  const [playing, setPlaying] = useState(false);
   const handlePlay = () => {
-    deviceTtsAudioService.play(kannada).catch(() => undefined);
+    setPlaying(true);
+    deviceTtsAudioService
+      .play(kannada)
+      .catch(() => undefined)
+      .finally(() => setPlaying(false));
   };
   return (
     <View
@@ -112,8 +119,12 @@ function SummaryRow({
         flexDirection: 'row',
         alignItems: 'center',
         gap: Spacing.md,
-        backgroundColor: Colors.surfaceContainerLow,
-        borderRadius: Radius.lg,
+        backgroundColor: '#ffffff',
+        borderRadius: Radius.chunky,
+        borderWidth: 1,
+        borderColor: Colors.hairline,
+        borderBottomWidth: 3,
+        borderBottomColor: Colors.cardLip,
         paddingVertical: Spacing.md,
         paddingHorizontal: Spacing.lg,
       }}
@@ -122,7 +133,7 @@ function SummaryRow({
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: moderateScale(15),
+            fontSize: moderateScale(14.5),
             color: Colors.onSurface,
           }}
           maxFontSizeMultiplier={1.3}
@@ -133,9 +144,8 @@ function SummaryRow({
           style={{
             fontFamily: Fonts.notoSansKannada.regular,
             fontSize: moderateScale(12),
-            color: Colors.tertiary,
+            color: Colors.textFaint,
             marginTop: moderateScale(2),
-            opacity: 0.7,
           }}
           maxFontSizeMultiplier={1.3}
         >
@@ -145,7 +155,7 @@ function SummaryRow({
       <Text
         style={{
           fontFamily: Fonts.dmSans.regular,
-          fontSize: moderateScale(13),
+          fontSize: moderateScale(12.5),
           color: Colors.tertiary,
           flexShrink: 1,
           textAlign: 'right',
@@ -156,22 +166,15 @@ function SummaryRow({
       >
         {english}
       </Text>
-      <Pressable
+      <AudioOrb
         onPress={handlePlay}
-        accessibilityRole="button"
+        playing={playing}
+        size={34}
+        color={Colors.secondaryFixed}
+        iconColor={Colors.secondary}
+        lipColor={Colors.goldLip}
         accessibilityLabel={`Hear ${english}`}
-        hitSlop={8}
-        style={({ pressed }) => ({
-          width: moderateScale(36),
-          height: moderateScale(36),
-          borderRadius: Radius.full,
-          backgroundColor: pressed ? Colors.surfaceContainerHigh : Colors.secondaryFixed,
-          alignItems: 'center',
-          justifyContent: 'center',
-        })}
-      >
-        <Icons.audio size={moderateScale(16)} color={Colors.onSecondaryContainer} />
-      </Pressable>
+      />
     </View>
   );
 }

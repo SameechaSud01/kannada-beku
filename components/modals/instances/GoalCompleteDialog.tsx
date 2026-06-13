@@ -5,7 +5,8 @@ import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Radius } from '../../../constants/spacing';
 import { Icons } from '../../../constants/icons';
-import { Button, ButtonRow } from '../../ui/Button';
+import { LipButton } from '../../ui/LipButton';
+import { DialogBody, DialogEyebrow, DialogTitle } from './_dialogChrome';
 
 export interface GoalCompleteDialogProps {
   goalMinutes: number;
@@ -15,8 +16,9 @@ export interface GoalCompleteDialogProps {
 }
 
 /**
- * Daily goal celebration dialog (MODALS §6.7). Lighter version of the streak
+ * Daily goal celebration dialog (chunky_v3 §11). Lighter version of the streak
  * takeover — fires the first time today the user crosses their minutes goal.
+ * Gold reward ring well; red primary "One more" + secondary-tan "I'm done".
  */
 export function GoalCompleteDialog({
   goalMinutes,
@@ -41,16 +43,12 @@ export function GoalCompleteDialog({
           accessibilityElementsHidden
           importantForAccessibility="no"
         >
-          <Svg
-            width={ringSize}
-            height={ringSize}
-            style={{ transform: [{ rotate: '-90deg' }] }}
-          >
+          <Svg width={ringSize} height={ringSize} style={{ transform: [{ rotate: '-90deg' }] }}>
             <Circle
               cx={ringSize / 2}
               cy={ringSize / 2}
               r={r}
-              stroke={Colors.surfaceContainerHigh}
+              stroke={Colors.secondaryFixed}
               strokeWidth={stroke}
               fill="transparent"
             />
@@ -65,88 +63,44 @@ export function GoalCompleteDialog({
             />
           </Svg>
           <View style={{ position: 'absolute' }}>
-            <Icons.check
-              size={moderateScale(36)}
-              color={Colors.secondary}
-              strokeWidth={3}
-            />
+            <Icons.check size={moderateScale(36)} color={Colors.secondary} strokeWidth={3} />
           </View>
         </View>
       </View>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(11),
-          letterSpacing: 1.4,
-          color: Colors.secondary,
-          textAlign: 'center',
-          textTransform: 'uppercase',
-        }}
-        maxFontSizeMultiplier={1.4}
-      >
-        Today&apos;s {goalMinutes} minutes
-      </Text>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(22),
-          letterSpacing: -0.4,
-          color: Colors.onSurface,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.3}
-      >
-        Done for today.
-      </Text>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(14),
-          lineHeight: moderateScale(20),
-          color: Colors.tertiary,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.4}
-      >
-        Proud of you — go eat some thindi.
-      </Text>
+      <DialogEyebrow>Today&apos;s {goalMinutes} minutes</DialogEyebrow>
+      <DialogTitle>Done for today.</DialogTitle>
+      <DialogBody>Proud of you — go eat some thindi.</DialogBody>
       <View
         style={{
+          alignSelf: 'center',
           backgroundColor: Colors.secondaryFixed,
-          borderRadius: Radius.lg,
-          paddingVertical: moderateScale(10),
-          paddingHorizontal: moderateScale(12),
+          borderRadius: Radius.full,
+          paddingVertical: moderateScale(8),
+          paddingHorizontal: moderateScale(14),
           flexDirection: 'row',
           alignItems: 'center',
-          gap: moderateScale(10),
+          gap: moderateScale(8),
+          borderBottomWidth: 3,
+          borderBottomColor: Colors.goldLip,
         }}
       >
-        <Icons.flame
-          size={moderateScale(16)}
-          color={Colors.secondary}
-          strokeWidth={2}
-        />
+        <Icons.flame size={moderateScale(15)} color={Colors.primaryContainer} strokeWidth={2} />
         <Text
           style={{
-            fontFamily: Fonts.dmSans.bold,
-            fontSize: moderateScale(12),
+            fontFamily: Fonts.baloo.bold,
+            fontSize: moderateScale(12.5),
             color: Colors.onSecondaryContainer,
+            fontVariant: ['tabular-nums'],
           }}
           maxFontSizeMultiplier={1.3}
         >
           {streakDays}-day streak still alive
         </Text>
       </View>
-      <ButtonRow>
-        <Button label="I'm done" variant="ghost" onPress={onDone} flex />
-        <Button
-          label="One more"
-          variant="secondary"
-          onPress={onOneMore}
-          trailingIcon="forward"
-          flex
-        />
-      </ButtonRow>
+      <View style={{ gap: moderateScale(10), marginTop: moderateScale(2) }}>
+        <LipButton label="One more" variant="primary" onPress={onOneMore} icon={Icons.forward} />
+        <LipButton label="I'm done" variant="secondary" onPress={onDone} />
+      </View>
     </View>
   );
 }

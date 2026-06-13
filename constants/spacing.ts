@@ -14,6 +14,9 @@ export const Radius = {
   sm: moderateScale(8),
   md: moderateScale(10),
   lg: moderateScale(14),
+  // Chunky kit v3 — default card/button radius (16) + inner tile radius (12).
+  chunky: moderateScale(16),
+  tile: moderateScale(12),
   xl: moderateScale(20),
   full: 999,
 };

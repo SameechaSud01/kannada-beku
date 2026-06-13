@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
@@ -12,7 +12,9 @@ import { LessonProgressBar } from './LessonProgressBar';
 import { SpeedControl } from './SpeedControl';
 import { AnswerOption } from './AnswerOption';
 import { LipButton } from '../ui/LipButton';
+import { AudioOrb } from '../ui/AudioOrb';
 import { useUserStore } from '../../stores/useUserStore';
+import { useProgressStore } from '../../stores/progressStore';
 import type { Phrase } from '../../constants/lessons/types';
 
 interface PracticePhrasesPhaseProps {
@@ -53,6 +55,7 @@ export function PracticePhrasesPhase({
   const total = phrases.length;
   const autoReplay = useUserStore((s) => s.autoReplay);
   const [picked, setPicked] = useState<number | null>(null);
+  const [playing, setPlaying] = useState(false);
 
   const options = useMemo<Phrase[]>(() => {
     if (!phrase) return [];
@@ -80,9 +83,13 @@ export function PracticePhrasesPhase({
   if (!phrase) return null;
 
   const handleReplay = () => {
-    deviceTtsAudioService.play(phrase.kannada).catch((err) => {
-      console.warn('[practice_phrases] replay failed', err);
-    });
+    setPlaying(true);
+    deviceTtsAudioService
+      .play(phrase.kannada)
+      .catch((err) => {
+        console.warn('[practice_phrases] replay failed', err);
+      })
+      .finally(() => setPlaying(false));
   };
 
   const handlePickOption = (idx: number) => {
@@ -95,11 +102,13 @@ export function PracticePhrasesPhase({
   };
 
   const handleISaidIt = () => {
+    // Daily-goal "Speak": one rep counted when the learner confirms they spoke it.
+    useProgressStore.getState().recordSpeak();
     onAdvance();
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.surface }}>
+    <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <View style={{ paddingTop: insets.top + BACK_CHIP_TOP_RESERVE, paddingHorizontal: Spacing.lg }}>
         <LessonProgressBar
           current={practicePhrasesIndex + 1}
@@ -112,35 +121,20 @@ export function PracticePhrasesPhase({
         <ScrollView
           contentContainerStyle={{
             flexGrow: 1,
+            justifyContent: 'center',
             paddingHorizontal: Spacing.lg,
             paddingTop: Spacing.xxl,
             paddingBottom: Spacing.lg,
           }}
         >
           <View style={{ alignItems: 'center', marginBottom: Spacing.xxl, gap: Spacing.md }}>
-            <Pressable
-              onPress={handleReplay}
-              accessibilityRole="button"
-              accessibilityLabel="Replay audio"
-              hitSlop={8}
-              style={({ pressed }) => ({
-                width: moderateScale(72),
-                height: moderateScale(72),
-                borderRadius: Radius.full,
-                backgroundColor: pressed ? Colors.primary : Colors.primaryContainer,
-                alignItems: 'center',
-                justifyContent: 'center',
-                transform: [{ scale: pressed ? 0.94 : 1 }],
-              })}
-            >
-              <Icons.audio size={moderateScale(30)} color={Colors.onPrimary} />
-            </Pressable>
+            <AudioOrb onPress={handleReplay} playing={playing} size={72} accessibilityLabel="Replay audio" />
             <SpeedControl onRateChange={handleReplay} />
           </View>
 
           <Text
             style={{
-              fontFamily: Fonts.baloo.bold,
+              fontFamily: Fonts.baloo.extrabold,
               fontSize: moderateScale(20),
               color: Colors.onSurface,
               textAlign: 'center',
@@ -168,6 +162,7 @@ export function PracticePhrasesPhase({
         <ScrollView
           contentContainerStyle={{
             flexGrow: 1,
+            justifyContent: 'center',
             paddingHorizontal: Spacing.lg,
             paddingTop: Spacing.xxl,
             paddingBottom: Spacing.lg,
@@ -175,7 +170,7 @@ export function PracticePhrasesPhase({
         >
           <Text
             style={{
-              fontFamily: Fonts.baloo.bold,
+              fontFamily: Fonts.baloo.extrabold,
               fontSize: moderateScale(18),
               color: Colors.onSurface,
               textAlign: 'center',
@@ -189,7 +184,9 @@ export function PracticePhrasesPhase({
           <View
             style={{
               backgroundColor: Colors.secondaryFixed,
-              borderRadius: Radius.xl,
+              borderRadius: Radius.chunky,
+              borderBottomWidth: 4,
+              borderBottomColor: Colors.goldLip,
               paddingVertical: Spacing.lg,
               paddingHorizontal: Spacing.lg,
               marginBottom: Spacing.xl,
@@ -197,7 +194,7 @@ export function PracticePhrasesPhase({
           >
             <Text
               style={{
-                fontFamily: Fonts.dmSans.medium,
+                fontFamily: Fonts.dmSans.bold,
                 fontSize: moderateScale(16),
                 color: Colors.onSecondaryContainer,
                 textAlign: 'center',
@@ -209,8 +206,10 @@ export function PracticePhrasesPhase({
 
           <View
             style={{
-              backgroundColor: Colors.surfaceContainerLow,
-              borderRadius: Radius.xl,
+              backgroundColor: Colors.surfaceCreamLow,
+              borderRadius: Radius.chunky,
+              borderBottomWidth: 4,
+              borderBottomColor: Colors.cardLip,
               paddingVertical: Spacing.xxl,
               paddingHorizontal: Spacing.lg,
               alignItems: 'center',
@@ -233,11 +232,10 @@ export function PracticePhrasesPhase({
             <Text
               style={{
                 fontFamily: Fonts.notoSansKannada.regular,
-                fontSize: moderateScale(12),
-                color: Colors.tertiary,
+                fontSize: moderateScale(13),
+                color: Colors.textFaint,
                 textAlign: 'center',
                 marginTop: Spacing.md,
-                opacity: 0.7,
               }}
             >
               {phrase.kannada}
@@ -245,22 +243,15 @@ export function PracticePhrasesPhase({
           </View>
 
           <View style={{ alignItems: 'center', marginTop: Spacing.xxl, gap: Spacing.md }}>
-            <Pressable
+            <AudioOrb
               onPress={handleReplay}
-              accessibilityRole="button"
+              playing={playing}
+              size={56}
+              color={Colors.secondaryFixed}
+              iconColor={Colors.secondary}
+              lipColor={Colors.goldLip}
               accessibilityLabel="Replay audio"
-              hitSlop={8}
-              style={({ pressed }) => ({
-                width: moderateScale(56),
-                height: moderateScale(56),
-                borderRadius: Radius.full,
-                backgroundColor: pressed ? Colors.surfaceContainerHigh : Colors.surfaceContainerHighest,
-                alignItems: 'center',
-                justifyContent: 'center',
-              })}
-            >
-              <Icons.audio size={moderateScale(24)} color={Colors.primary} />
-            </Pressable>
+            />
             <SpeedControl onRateChange={handleReplay} />
           </View>
         </ScrollView>

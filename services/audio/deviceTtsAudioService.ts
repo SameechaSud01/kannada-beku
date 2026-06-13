@@ -2,6 +2,7 @@ import * as Speech from 'expo-speech';
 import { Audio } from 'expo-av';
 import type { AudioService, PlayOptions } from './AudioService';
 import { useUserStore } from '../../stores/useUserStore';
+import { useProgressStore } from '../../stores/progressStore';
 
 const DEFAULT_LANGUAGE = 'kn-IN';
 const MIN_RATE = 0.5;
@@ -34,6 +35,8 @@ export const deviceTtsAudioService: AudioService = {
   async play(text: string, options?: PlayOptions) {
     const language = options?.language ?? DEFAULT_LANGUAGE;
     const rate = resolveRate(options?.rate);
+    // Daily-goal "Listen": every in-app content playback counts (auto-play included).
+    useProgressStore.getState().recordListen();
     Speech.stop();
     return new Promise<void>((resolve, reject) => {
       let settled = false;

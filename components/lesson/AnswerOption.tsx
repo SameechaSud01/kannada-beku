@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Pressable, Text } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -12,6 +12,7 @@ import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
+import { Icons } from '../../constants/icons';
 import { FeedbackTag } from './FeedbackTag';
 
 export type AnswerOptionProps = {
@@ -58,14 +59,26 @@ export function AnswerOption({ label, index, picked, correctIndex, onPick }: Ans
     transform: [{ scale: scale.value }, { translateX: shakeX.value }],
   }));
 
-  let bg = Colors.surfaceContainerHighest;
+  // Chunky white option card. On reveal:
+  //  - correct → goldPale fill + 2px goldLip border + a gold check circle
+  //  - wrong   → redPale fill + 2px red2 border (wrong stays red — it's an error)
+  const showCorrect = reveal && isCorrect;
+  const showWrong = reveal && isPicked && !isCorrect;
+
+  let bg = '#ffffff';
   let fg = Colors.onSurface;
-  if (reveal && isCorrect) {
-    bg = Colors.secondaryContainer;
+  let borderColor = Colors.hairline;
+  let borderWidth = 1;
+  if (showCorrect) {
+    bg = Colors.secondaryFixed;
     fg = Colors.onSecondaryContainer;
-  } else if (reveal && isPicked && !isCorrect) {
+    borderColor = Colors.goldLip;
+    borderWidth = 2;
+  } else if (showWrong) {
     bg = Colors.errorContainerLow;
     fg = Colors.primary;
+    borderColor = Colors.primaryContainer;
+    borderWidth = 2;
   }
 
   return (
@@ -76,24 +89,51 @@ export function AnswerOption({ label, index, picked, correctIndex, onPick }: Ans
         accessibilityRole="button"
         accessibilityLabel={label}
         style={({ pressed }) => ({
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: Spacing.md,
           backgroundColor: bg,
-          borderRadius: Radius.lg,
+          borderRadius: Radius.chunky,
+          borderWidth,
+          borderColor,
+          borderBottomWidth: 4,
+          borderBottomColor: showCorrect
+            ? Colors.goldLip
+            : showWrong
+              ? Colors.primaryContainer
+              : Colors.cardLip,
           paddingVertical: Spacing.lg,
           paddingHorizontal: Spacing.lg,
           minHeight: moderateScale(56),
-          alignItems: 'center',
-          justifyContent: 'center',
-          transform: [{ scale: pressed && !reveal ? 0.98 : 1 }],
+          transform: [{ translateY: pressed && !reveal ? 2 : 0 }],
         })}
       >
-        <Text
-          style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(15), color: fg, textAlign: 'center' }}
-          maxFontSizeMultiplier={1.3}
-        >
-          {label}
-        </Text>
-        {reveal && isCorrect ? <FeedbackTag kind="correct" /> : null}
-        {reveal && isPicked && !isCorrect ? <FeedbackTag kind="wrong" /> : null}
+        <View style={{ flex: 1 }}>
+          <Text
+            style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(15), color: fg }}
+            maxFontSizeMultiplier={1.3}
+          >
+            {label}
+          </Text>
+          {showCorrect ? <FeedbackTag kind="correct" /> : null}
+          {showWrong ? <FeedbackTag kind="wrong" /> : null}
+        </View>
+        {showCorrect ? (
+          <View
+            style={{
+              width: moderateScale(28),
+              height: moderateScale(28),
+              borderRadius: Radius.full,
+              backgroundColor: Colors.secondaryContainer,
+              borderBottomWidth: 2,
+              borderBottomColor: Colors.goldLip,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Icons.check size={moderateScale(16)} color={Colors.onSecondaryContainer} strokeWidth={2.6} />
+          </View>
+        ) : null}
       </Pressable>
     </Animated.View>
   );

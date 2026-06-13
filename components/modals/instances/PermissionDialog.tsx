@@ -4,7 +4,8 @@ import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Radius } from '../../../constants/spacing';
 import { Halo } from '../Halo';
-import { Button, ButtonStack } from '../../ui/Button';
+import { LipButton } from '../../ui/LipButton';
+import { DialogBody, DialogTitle } from './_dialogChrome';
 
 export type PermissionKind = 'notifications' | 'mic';
 
@@ -35,49 +36,24 @@ const COPY: Record<
 };
 
 /**
- * Pre-system explainer (MODALS §6.8). Always show this before triggering the
- * OS permission prompt, per the project rule.
+ * Pre-system explainer (chunky_v3 §11). Always show this before triggering the
+ * OS permission prompt, per the project rule. Red primary "Allow" + secondary
+ * tan "Not now".
  */
 export function PermissionDialog({ kind, onAllow, onDeny }: PermissionDialogProps) {
   const copy = COPY[kind];
   return (
     <View style={{ gap: moderateScale(14) }}>
       <View style={{ alignItems: 'center' }}>
-        <Halo
-          icon={copy.icon}
-          iconColor={Colors.secondary}
-          stroke={2}
-        />
+        <Halo icon={copy.icon} iconColor={Colors.secondary} stroke={2.2} />
       </View>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(20),
-          letterSpacing: -0.3,
-          color: Colors.onSurface,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.3}
-      >
-        {copy.title}
-      </Text>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.regular,
-          fontSize: moderateScale(14),
-          lineHeight: moderateScale(21),
-          color: Colors.tertiary,
-          textAlign: 'center',
-        }}
-        maxFontSizeMultiplier={1.4}
-      >
-        {copy.body}
-      </Text>
+      <DialogTitle>{copy.title}</DialogTitle>
+      <DialogBody>{copy.body}</DialogBody>
       {copy.preview ? <PreviewCard body={copy.preview} /> : null}
-      <ButtonStack>
-        <Button label={copy.allow} variant="primary" onPress={onAllow} />
-        <Button label="Not now" variant="ghost" onPress={onDeny} />
-      </ButtonStack>
+      <View style={{ gap: moderateScale(10), marginTop: moderateScale(2) }}>
+        <LipButton label={copy.allow} variant="primary" onPress={onAllow} />
+        <LipButton label="Not now" variant="secondary" onPress={onDeny} />
+      </View>
     </View>
   );
 }
@@ -86,8 +62,8 @@ function PreviewCard({ body }: { body: string }) {
   return (
     <View
       style={{
-        backgroundColor: Colors.surfaceContainerHighest,
-        borderRadius: Radius.lg,
+        backgroundColor: Colors.surfaceCreamLow,
+        borderRadius: Radius.tile,
         padding: moderateScale(12),
         flexDirection: 'row',
         alignItems: 'center',
@@ -99,7 +75,7 @@ function PreviewCard({ body }: { body: string }) {
           width: moderateScale(32),
           height: moderateScale(32),
           borderRadius: moderateScale(8),
-          backgroundColor: Colors.primary,
+          backgroundColor: Colors.primaryContainer,
           alignItems: 'center',
           justifyContent: 'center',
         }}

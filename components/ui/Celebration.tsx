@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AccessibilityInfo, Dimensions, StyleSheet, Text, View } from 'react-native';
 import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
   Easing,
   FadeInDown,
@@ -50,6 +51,8 @@ type Resolved = {
   title: string;
   sub: string;
   cta: string;
+  /** streak kind only: the day count shown inside the gold medallion. */
+  count?: number;
 };
 
 const RING = 132;
@@ -60,6 +63,12 @@ const CONFETTI_COLORS = [
   Colors.goldBright,
   Colors.primary,
   Colors.secondary,
+];
+// Streak takeover sits on a red gradient, so confetti is gold + white only.
+const STREAK_CONFETTI_COLORS = [
+  Colors.secondaryContainer,
+  Colors.goldBright,
+  '#ffffff',
 ];
 
 /**
@@ -86,13 +95,26 @@ export function Celebration(props: CelebrationProps) {
   }, []);
 
   const cfg = useMemo(() => resolve(props), [props]);
+  const isStreak = kind === 'streak';
 
   return (
     <View style={[StyleSheet.absoluteFill, { zIndex: 70 }]}>
-      <BlurView intensity={reduced ? 0 : 32} tint="dark" style={StyleSheet.absoluteFill} />
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(27,29,14,0.82)' }]} />
+      {isStreak ? (
+        // Full red urgency-free takeover — red2→red at ~160°.
+        <LinearGradient
+          colors={[Colors.primaryContainer, Colors.primary]}
+          start={{ x: 0.15, y: 0 }}
+          end={{ x: 0.85, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
+      ) : (
+        <>
+          <BlurView intensity={reduced ? 0 : 32} tint="dark" style={StyleSheet.absoluteFill} />
+          <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(27,29,14,0.82)' }]} />
+        </>
+      )}
 
-      {!reduced ? <Confetti /> : null}
+      {!reduced ? <Confetti streak={isStreak} /> : null}
 
       <View
         style={{
@@ -102,7 +124,7 @@ export function Celebration(props: CelebrationProps) {
           paddingHorizontal: Spacing.xxxl,
         }}
       >
-        <Badge cfg={cfg} reduced={reduced} />
+        {isStreak ? <Medallion cfg={cfg} reduced={reduced} /> : <Badge cfg={cfg} reduced={reduced} />}
 
         <RisingText reduced={reduced} delay={150}>
           <Text
@@ -125,8 +147,8 @@ export function Celebration(props: CelebrationProps) {
           <Text
             style={{
               fontFamily: Fonts.baloo.extrabold,
-              fontSize: moderateScale(30),
-              lineHeight: moderateScale(40),
+              fontSize: moderateScale(isStreak ? 28 : 30),
+              lineHeight: moderateScale(isStreak ? 36 : 40),
               color: Colors.onPrimary,
               textAlign: 'center',
               letterSpacing: -0.3,
@@ -144,7 +166,7 @@ export function Celebration(props: CelebrationProps) {
               fontFamily: Fonts.dmSans.medium,
               fontSize: moderateScale(14.5),
               lineHeight: moderateScale(21),
-              color: 'rgba(255,255,255,0.86)',
+              color: isStreak ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.86)',
               textAlign: 'center',
               marginTop: Spacing.md,
               maxWidth: moderateScale(280),
@@ -180,14 +202,16 @@ function resolve(props: CelebrationProps): Resolved {
     const copy = STREAK_MILESTONE_COPY[milestone];
     return {
       Icon: Icons.flame,
-      accent: Colors.primaryContainer,
-      ink: Colors.onPrimary,
-      lip: Colors.redLip,
-      ring: Colors.primaryContainer,
+      // streak takeover is a full red gradient; the medallion + CTA are gold.
+      accent: Colors.secondaryContainer,
+      ink: Colors.onSecondaryContainer,
+      lip: Colors.goldLip,
+      ring: Colors.secondaryContainer,
       eyebrow: props.eyebrow ?? `Streak · Day ${copy.word}`,
       title: props.title ?? copy.title,
       sub: props.sub ?? copy.body,
-      cta: props.cta ?? 'Keep going',
+      cta: props.cta ?? 'Keep it going',
+      count: milestone,
     };
   }
   if (kind === 'level') {
@@ -274,6 +298,75 @@ function Badge({ cfg, reduced }: { cfg: Resolved; reduced: boolean }) {
   );
 }
 
+/**
+ * Streak takeover badge — a 130px gold medallion (6px goldLip lip) with a flame
+ * glyph above the day count, bobbing gently. Sits on the full red gradient.
+ */
+function Medallion({ cfg, reduced }: { cfg: Resolved; reduced: boolean }) {
+  const bob = useSharedValue(0);
+  useEffect(() => {
+    if (reduced) return;
+    bob.value = withRepeat(
+      withSequence(
+        withTiming(-6, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
+      ),
+      -1,
+      false,
+    );
+  }, [reduced, bob]);
+
+  const discStyle = useAnimatedStyle(() => ({ transform: [{ translateY: bob.value }] }));
+  const size = moderateScale(130);
+
+  return (
+    <Animated.View
+      style={[
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          marginBottom: Spacing.xxl,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        discStyle,
+      ]}
+    >
+      <LinearGradient
+        colors={[Colors.goldBright, Colors.secondaryContainer]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderBottomWidth: 6,
+          borderBottomColor: Colors.goldLip,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <cfg.Icon size={moderateScale(30)} color={Colors.primaryContainer} strokeWidth={2} />
+        <Text
+          style={{
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(40),
+            lineHeight: moderateScale(56),
+            color: Colors.onSecondaryContainer,
+            fontVariant: ['tabular-nums'],
+            letterSpacing: -1,
+          }}
+          maxFontSizeMultiplier={1.1}
+          accessibilityLabel={`${cfg.count ?? ''} day streak`}
+        >
+          {cfg.count ?? ''}
+        </Text>
+      </LinearGradient>
+    </Animated.View>
+  );
+}
+
 /** Wraps children in a fade+rise entrance (skipped under reduce-motion). */
 function RisingText({
   children,
@@ -292,9 +385,10 @@ function RisingText({
   );
 }
 
-/** ~46 falling, rotating, fading confetti pieces in brand colours. */
-function Confetti() {
+/** ~46 falling, rotating, fading confetti pieces. Streak uses gold/white on red. */
+function Confetti({ streak = false }: { streak?: boolean }) {
   const bits = useMemo(() => {
+    const palette = streak ? STREAK_CONFETTI_COLORS : CONFETTI_COLORS;
     let s = 7;
     const rnd = () => {
       s = (s * 9301 + 49297) % 233280;
@@ -305,11 +399,11 @@ function Confetti() {
       delay: rnd() * 500,
       duration: 1500 + rnd() * 1400,
       size: moderateScale(6 + rnd() * 8),
-      color: CONFETTI_COLORS[Math.floor(rnd() * CONFETTI_COLORS.length)],
+      color: palette[Math.floor(rnd() * palette.length)],
       round: rnd() > 0.5,
       spin: rnd() > 0.5 ? 1 : -1,
     }));
-  }, []);
+  }, [streak]);
 
   return (
     <View pointerEvents="none" style={[StyleSheet.absoluteFill, { overflow: 'hidden' }]}>

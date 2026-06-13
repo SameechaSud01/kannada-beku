@@ -28,13 +28,17 @@ export function PhaseBackButton({ onPress }: PhaseBackButtonProps) {
         top: insets.top + Spacing.sm,
         left: Spacing.lg + moderateScale(40) + Spacing.sm,
         zIndex: 10,
-        width: moderateScale(40),
-        height: moderateScale(40),
+        width: moderateScale(38),
+        height: moderateScale(38),
         borderRadius: Radius.full,
-        backgroundColor: Colors.surfaceContainerHigh,
+        backgroundColor: '#ffffff',
+        borderWidth: 1,
+        borderColor: Colors.hairline,
+        borderBottomWidth: pressed ? 1 : 3,
+        borderBottomColor: Colors.cardLip,
         alignItems: 'center',
         justifyContent: 'center',
-        transform: [{ scale: pressed ? 0.94 : 1 }],
+        transform: [{ translateY: pressed ? 2 : 0 }],
       })}
     >
       <Icons.stepBack size={20} color={Colors.primary} />

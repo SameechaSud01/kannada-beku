@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
@@ -22,7 +22,7 @@ export function PartDoneCard({ partLabel, nextLabel, onContinue, onBack }: PartD
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.surface }}>
+    <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <View
         style={{
           flex: 1,
@@ -37,13 +37,15 @@ export function PartDoneCard({ partLabel, nextLabel, onContinue, onBack }: PartD
             width: moderateScale(72),
             height: moderateScale(72),
             borderRadius: Radius.full,
-            backgroundColor: Colors.secondary,
+            backgroundColor: Colors.secondaryContainer,
+            borderBottomWidth: 5,
+            borderBottomColor: Colors.goldLip,
             alignItems: 'center',
             justifyContent: 'center',
             marginBottom: Spacing.xl,
           }}
         >
-          <Icons.check size={moderateScale(38)} color={Colors.onPrimary} strokeWidth={2.6} />
+          <Icons.check size={moderateScale(38)} color={Colors.onSecondaryContainer} strokeWidth={2.6} />
         </View>
 
         <Text
@@ -52,7 +54,7 @@ export function PartDoneCard({ partLabel, nextLabel, onContinue, onBack }: PartD
             fontSize: moderateScale(24),
             color: Colors.onSurface,
             textAlign: 'center',
-            lineHeight: moderateScale(32),
+            lineHeight: moderateScale(34),
             letterSpacing: -0.3,
           }}
           maxFontSizeMultiplier={1.2}
@@ -86,29 +88,12 @@ export function PartDoneCard({ partLabel, nextLabel, onContinue, onBack }: PartD
           accessibilityLabel={`Continue to ${nextLabel}`}
           icon={Icons.forward}
         />
-        <Pressable
+        <LipButton
+          label="Back to parts"
+          variant="secondary"
           onPress={onBack}
-          accessibilityRole="button"
           accessibilityLabel="Back to parts"
-          style={({ pressed }) => ({
-            backgroundColor: pressed ? Colors.surfaceContainerHigh : 'transparent',
-            borderRadius: Radius.md,
-            paddingVertical: Spacing.md,
-            minHeight: moderateScale(44),
-            alignItems: 'center',
-            justifyContent: 'center',
-          })}
-        >
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(14),
-              color: Colors.tertiary,
-            }}
-          >
-            Back to parts
-          </Text>
-        </Pressable>
+        />
       </View>
     </View>
   );

@@ -12,6 +12,8 @@ import { Colors } from '../../constants/colors';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Fonts } from '../../constants/fonts';
 import { Icons } from '../../constants/icons';
+import { ChunkyPressable } from '../ui/ChunkyPressable';
+import { LockTile } from '../ui/LockTile';
 import type { Game } from '../../constants/games';
 import type { LessonSelectorItem as Lesson } from '../../hooks/useLessons';
 
@@ -31,7 +33,6 @@ type LessonPillProps = {
 function LessonPill({ lesson, index, onTap }: LessonPillProps) {
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(moderateScale(8));
-  const pressScale = useSharedValue(1);
   const { unlocked } = lesson;
 
   useEffect(() => {
@@ -48,102 +49,106 @@ function LessonPill({ lesson, index, onTap }: LessonPillProps) {
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
-    transform: [{ translateY: translateY.value }, { scale: pressScale.value }],
+    transform: [{ translateY: translateY.value }],
   }));
 
-  return (
-    <Animated.View style={animatedStyle}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`Lesson ${lesson.n}: ${lesson.theme}${unlocked ? '' : ', locked'}`}
-        accessibilityState={{ disabled: !unlocked }}
-        disabled={!unlocked}
-        onPress={unlocked ? () => onTap(lesson) : undefined}
-        onPressIn={() => {
-          if (!unlocked) return;
-          pressScale.value = withTiming(0.985, {
-            duration: 80,
-            easing: Easing.out(Easing.cubic),
-          });
-        }}
-        onPressOut={() => {
-          if (!unlocked) return;
-          pressScale.value = withTiming(1, {
-            duration: 80,
-            easing: Easing.out(Easing.cubic),
-          });
-        }}
-        android_ripple={{ color: 'transparent' }}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: Spacing.md,
-          paddingVertical: moderateScale(14),
-          paddingHorizontal: moderateScale(18),
-          backgroundColor: unlocked ? Colors.surfaceContainerLowest : Colors.surfaceDim,
-          borderRadius: Radius.xl,
-          opacity: unlocked ? 1 : 0.7,
-          ...(unlocked
-            ? {
-                shadowColor: Colors.outlineVariant,
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.6,
-                shadowRadius: 6,
-                elevation: 1.5,
-              }
-            : null),
-        }}
-      >
+  // Shared row contents (glyph/lock tile + title block + trailing chevron).
+  const row = (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: Spacing.md,
+        paddingVertical: moderateScale(14),
+        paddingHorizontal: moderateScale(16),
+      }}
+    >
+      {unlocked ? (
         <View
           style={{
             width: moderateScale(42),
             height: moderateScale(42),
-            borderRadius: Radius.lg,
-            backgroundColor: unlocked ? Colors.secondaryFixed : Colors.surfaceContainerHigh,
+            borderRadius: Radius.tile,
+            backgroundColor: Colors.secondaryFixed,
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          {unlocked ? (
-            <Text
-              style={{
-                fontFamily: Fonts.notoSansKannada.bold,
-                fontSize: moderateScale(22),
-                color: Colors.onSurface,
-              }}
-              maxFontSizeMultiplier={1.3}
-            >
-              {lesson.glyph}
-            </Text>
-          ) : null}
-        </View>
-        <View style={{ flex: 1 }}>
           <Text
             style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(14.5),
-              color: unlocked ? Colors.onSurface : Colors.tertiary,
+              fontFamily: Fonts.notoSansKannada.bold,
+              fontSize: moderateScale(22),
+              color: Colors.onSecondaryContainer,
             }}
             maxFontSizeMultiplier={1.3}
           >
-            Lesson {lesson.n}
-          </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.regular,
-              fontSize: moderateScale(12),
-              color: Colors.tertiary,
-              marginTop: moderateScale(1),
-            }}
-            maxFontSizeMultiplier={1.3}
-          >
-            {lesson.theme}
+            {lesson.glyph}
           </Text>
         </View>
-        {!unlocked ? (
-          <Icons.locked size={moderateScale(16)} color={Colors.tertiary} />
-        ) : null}
-      </Pressable>
+      ) : (
+        <LockTile size={42} iconSize={20} />
+      )}
+
+      <View style={{ flex: 1 }}>
+        <Text
+          style={{
+            fontFamily: Fonts.baloo.bold,
+            fontSize: moderateScale(16),
+            color: unlocked ? Colors.onSurface : Colors.textFaint,
+          }}
+          maxFontSizeMultiplier={1.3}
+        >
+          Lesson {lesson.n}
+        </Text>
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.regular,
+            fontSize: moderateScale(12.5),
+            color: unlocked ? Colors.tertiary : Colors.textFaint,
+            marginTop: moderateScale(1),
+          }}
+          maxFontSizeMultiplier={1.3}
+        >
+          {lesson.theme}
+        </Text>
+      </View>
+
+      {unlocked ? (
+        <Icons.forward size={moderateScale(20)} color={Colors.tertiary} />
+      ) : null}
+    </View>
+  );
+
+  return (
+    <Animated.View style={animatedStyle}>
+      {unlocked ? (
+        // Unlocked: white chunky card with a real lip-press.
+        <ChunkyPressable
+          onPress={() => onTap(lesson)}
+          accessibilityLabel={`Lesson ${lesson.n}: ${lesson.theme}`}
+          bg="#ffffff"
+          lip={4}
+          border
+          borderColor={Colors.hairline}
+          radius={Radius.chunky}
+        >
+          {row}
+        </ChunkyPressable>
+      ) : (
+        // Locked: §State-semantics recipe — tonal surfaceCreamLow @ ~65%, flat
+        // (no lip, no press-translate), opens nothing. textFaint title.
+        <View
+          accessibilityRole="button"
+          accessibilityLabel={`Lesson ${lesson.n}: ${lesson.theme}, locked`}
+          accessibilityState={{ disabled: true }}
+          style={{
+            borderRadius: Radius.chunky,
+            backgroundColor: Colors.surfaceCreamLow,
+          }}
+        >
+          {row}
+        </View>
+      )}
     </Animated.View>
   );
 }
@@ -154,9 +159,6 @@ export function LessonSelector({
   onSelectLesson,
   onBack,
 }: LessonSelectorProps) {
-  const unlockedCount = lessons.filter((l) => l.unlocked).length;
-  const totalCount = lessons.length;
-
   const headerOpacity = useSharedValue(0);
   useEffect(() => {
     headerOpacity.value = withTiming(1, {
@@ -168,7 +170,7 @@ export function LessonSelector({
 
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: Colors.surface }}
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
       contentContainerStyle={{
         paddingTop: moderateScale(26),
         paddingHorizontal: Spacing.xl,
@@ -177,89 +179,53 @@ export function LessonSelector({
       showsVerticalScrollIndicator={false}
     >
       <Animated.View style={headerStyle}>
-        <View
-          style={{
-            flexDirection: 'row',
+        {/* Back chip */}
+        <Pressable
+          onPress={onBack}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          hitSlop={12}
+          style={({ pressed }) => ({
+            width: moderateScale(38),
+            height: moderateScale(38),
+            borderRadius: Radius.full,
+            backgroundColor: '#ffffff',
+            borderWidth: 1,
+            borderColor: Colors.hairline,
             alignItems: 'center',
-            gap: Spacing.md,
+            justifyContent: 'center',
             marginBottom: Spacing.md,
-          }}
+            transform: [{ scale: pressed ? 0.94 : 1 }],
+          })}
         >
-          <Pressable
-            onPress={onBack}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-            hitSlop={12}
-            style={({ pressed }) => ({
-              width: moderateScale(44),
-              height: moderateScale(44),
-              borderRadius: Radius.full,
-              backgroundColor: Colors.surfaceContainerHighest,
-              alignItems: 'center',
-              justifyContent: 'center',
-              transform: [{ scale: pressed ? 0.94 : 1 }],
-            })}
-          >
-            <Icons.back size={moderateScale(20)} color={Colors.primary} />
-          </Pressable>
-          <Text
-            style={{
-              flex: 1,
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(26),
-              color: Colors.onSurface,
-              lineHeight: moderateScale(28.6),
-            }}
-            maxFontSizeMultiplier={1.3}
-            numberOfLines={1}
-          >
-            {game.title}
-          </Text>
-          <View
-            accessibilityLabel={`${unlockedCount} of ${totalCount} lessons unlocked`}
-            style={{
-              backgroundColor: Colors.secondaryFixed,
-              paddingVertical: moderateScale(6),
-              paddingHorizontal: moderateScale(11),
-              borderRadius: Radius.lg,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(12),
-                color: Colors.onSecondaryContainer,
-              }}
-              maxFontSizeMultiplier={1.3}
-            >
-              {unlockedCount}/{totalCount}
-            </Text>
-          </View>
-        </View>
+          <Icons.back size={moderateScale(20)} color={Colors.primary} />
+        </Pressable>
 
         <Text
           style={{
-            fontFamily: Fonts.dmSans.medium,
-            fontSize: moderateScale(13),
-            color: Colors.onSecondaryContainer,
-            marginBottom: Spacing.md,
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(28),
+            color: Colors.onSurface,
+            letterSpacing: -0.4,
+            lineHeight: moderateScale(39),
           }}
           maxFontSizeMultiplier={1.3}
+          numberOfLines={2}
         >
-          {game.tagline}
+          {game.title}
         </Text>
 
         <Text
           style={{
-            fontFamily: Fonts.dmSans.regular,
-            fontSize: moderateScale(13),
+            fontFamily: Fonts.dmSans.medium,
+            fontSize: moderateScale(14),
             color: Colors.tertiary,
-            lineHeight: moderateScale(19.5),
+            marginTop: moderateScale(2),
             marginBottom: Spacing.lg,
           }}
           maxFontSizeMultiplier={1.3}
         >
-          Tap a lesson to play. Complete lessons in the Lessons tab to unlock more.
+          Pick a lesson to play with.
         </Text>
       </Animated.View>
 
@@ -268,6 +234,19 @@ export function LessonSelector({
           <LessonPill key={lesson.n} lesson={lesson} index={idx} onTap={onSelectLesson} />
         ))}
       </View>
+
+      <Text
+        style={{
+          fontFamily: Fonts.dmSans.regular,
+          fontSize: moderateScale(12),
+          color: Colors.tertiary,
+          lineHeight: moderateScale(18),
+          marginTop: Spacing.lg,
+        }}
+        maxFontSizeMultiplier={1.4}
+      >
+        Finish a lesson on the Learn tab to unlock it here.
+      </Text>
     </ScrollView>
   );
 }

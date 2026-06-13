@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { useRouter } from 'expo-router';
@@ -21,6 +21,7 @@ import ResultScreen from '../shared/ResultScreen';
 import FeedbackBanner from '../shared/FeedbackBanner';
 import { useAnswerHaptics } from '../shared/haptics';
 import { ExitBackButton } from '../../../components/ui/ExitBackButton';
+import { LipButton } from '../../../components/ui/LipButton';
 import type { DictationWord } from './types';
 import type { DictationItem } from '../../../services/api/games/dictation';
 
@@ -118,7 +119,7 @@ function DictationGameInner({
 
   if (phase === 'result') {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
         <ExitBackButton skipConfirm />
         <ResultScreen
           score={score}
@@ -136,32 +137,36 @@ function DictationGameInner({
   const onCheck = () => (tileable ? check() : submitTyped(inputText));
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ScrollView contentContainerStyle={{ paddingHorizontal: Spacing.lg, paddingVertical: Spacing.lg, gap: Spacing.lg }}>
 
         {/* Header */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: Spacing.md }}>
           <ExitBackButton floating={false} variant="game" />
-          <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: 14, color: Colors.tertiary }}>
+          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 14, color: Colors.tertiary, fontVariant: ['tabular-nums'] }}>
             Word{' '}
-            <Text style={{ fontFamily: Fonts.dmSans.bold, color: Colors.onSurface }}>
+            <Text style={{ fontFamily: Fonts.baloo.bold, color: Colors.onSurface }}>
               {currentIndex + 1}
             </Text>
             {' '}/ {totalWords}
           </Text>
-          <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: 14, color: Colors.tertiary }}>
+          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 14, color: Colors.tertiary, fontVariant: ['tabular-nums'] }}>
             Score{' '}
-            <Text style={{ fontFamily: Fonts.dmSans.bold, color: Colors.onSurface }}>{score}</Text>
+            <Text style={{ fontFamily: Fonts.baloo.bold, color: Colors.onSurface }}>{score}</Text>
           </Text>
         </View>
 
         <ProgressBar current={currentIndex} total={totalWords} />
 
-        {/* Audio card */}
+        {/* Audio card — white chunky */}
         <View
           style={{
-            backgroundColor: Colors.surfaceContainerHighest,
-            borderRadius: Radius.xl,
+            backgroundColor: '#ffffff',
+            borderRadius: Radius.chunky,
+            borderWidth: 1,
+            borderColor: Colors.hairline,
+            borderBottomWidth: 4,
+            borderBottomColor: Colors.cardLip,
             padding: Spacing.xxl,
             alignItems: 'center',
             gap: Spacing.md,
@@ -210,54 +215,25 @@ function DictationGameInner({
           </View>
         )}
 
-        {/* Check / Next */}
+        {/* Check / Next — disabled uses the flat recipe (no opacity dim). */}
         {!answered ? (
-          <Pressable
-            onPress={onCheck}
+          <LipButton
+            label="Check answer"
+            variant="primary"
             disabled={!canSubmit}
-            style={({ pressed }) => ({
-              backgroundColor: Colors.primary,
-              borderRadius: Radius.lg,
-              paddingVertical: Spacing.lg,
-              alignItems: 'center',
-              opacity: !canSubmit ? 0.4 : pressed ? 0.88 : 1,
-            })}
-          >
-            <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 16, color: Colors.onPrimary }}>
-              check answer
-            </Text>
-          </Pressable>
+            onPress={onCheck}
+          />
         ) : (
-          <Pressable
+          <LipButton
+            label={currentIndex + 1 < totalWords ? 'Next word ▸' : 'See results'}
+            variant="primary"
             onPress={nextWord}
-            style={({ pressed }) => ({
-              backgroundColor: Colors.primary,
-              borderRadius: Radius.lg,
-              paddingVertical: Spacing.lg,
-              alignItems: 'center',
-              opacity: pressed ? 0.88 : 1,
-            })}
-          >
-            <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: 16, color: Colors.onPrimary }}>
-              {currentIndex + 1 < totalWords ? 'next word →' : 'see results'}
-            </Text>
-          </Pressable>
+          />
         )}
 
         {/* Skip */}
         {!answered && (
-          <Pressable onPress={skipWord} style={{ alignItems: 'center' }}>
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.regular,
-                fontSize: 12,
-                color: Colors.tertiary,
-                textDecorationLine: 'underline',
-              }}
-            >
-              skip this word
-            </Text>
-          </Pressable>
+          <LipButton label="Skip this word" variant="tertiary" onPress={skipWord} />
         )}
 
       </ScrollView>
@@ -267,7 +243,7 @@ function DictationGameInner({
 
 function CenteredLoading() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
@@ -278,31 +254,16 @@ function CenteredLoading() {
 function ErrorState({ onRetry }: { onRetry: () => void }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.md }}>
-        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
+        <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
           Couldn&apos;t load this round
         </Text>
         <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(14), color: Colors.tertiary, textAlign: 'center', marginBottom: Spacing.md }}>
           Check your connection and try again.
         </Text>
-        <Pressable
-          onPress={onRetry}
-          accessibilityRole="button"
-          accessibilityLabel="Retry"
-          style={({ pressed }) => ({
-            backgroundColor: Colors.primary,
-            borderRadius: Radius.lg,
-            paddingVertical: Spacing.md,
-            paddingHorizontal: Spacing.xl,
-            transform: [{ scale: pressed ? 0.97 : 1 }],
-          })}
-        >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: Colors.onPrimary }}>Retry</Text>
-        </Pressable>
-        <Pressable onPress={() => router.back()} style={({ pressed }) => ({ paddingVertical: Spacing.sm, opacity: pressed ? 0.6 : 1 })}>
-          <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary }}>Back</Text>
-        </Pressable>
+        <LipButton label="Retry" variant="primary" fullWidth={false} onPress={onRetry} />
+        <LipButton label="Back" variant="tertiary" fullWidth={false} onPress={() => router.back()} />
       </View>
     </SafeAreaView>
   );
@@ -311,28 +272,15 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
 function EmptyState({ lessonNo }: { lessonNo: number }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.md }}>
-        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
+        <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
           Lesson {lessonNo} — coming soon
         </Text>
         <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(14), color: Colors.tertiary, textAlign: 'center', lineHeight: moderateScale(20), marginBottom: Spacing.md }}>
           No dictation words have been authored for this lesson yet. Try an earlier lesson.
         </Text>
-        <Pressable
-          onPress={() => router.back()}
-          accessibilityRole="button"
-          accessibilityLabel="Back to lessons"
-          style={({ pressed }) => ({
-            backgroundColor: Colors.primary,
-            borderRadius: Radius.lg,
-            paddingVertical: Spacing.md,
-            paddingHorizontal: Spacing.xl,
-            transform: [{ scale: pressed ? 0.97 : 1 }],
-          })}
-        >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: Colors.onPrimary }}>Back to lessons</Text>
-        </Pressable>
+        <LipButton label="Back to lessons" variant="primary" fullWidth={false} onPress={() => router.back()} />
       </View>
     </SafeAreaView>
   );

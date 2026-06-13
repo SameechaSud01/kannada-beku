@@ -6,21 +6,22 @@ import { Radius } from '@/constants/spacing';
 
 type Props = { current: number; total: number };
 
+// chunky_v3: 8px gold fill on an ink@10% track.
 const ProgressBar: React.FC<Props> = ({ current, total }) => (
   <View
     style={{
-      height: moderateScale(6),
+      height: moderateScale(8),
       width: '100%',
       borderRadius: Radius.full,
-      backgroundColor: Colors.surfaceContainerHigh,
+      backgroundColor: 'rgba(27,29,14,0.10)',
     }}
   >
     <View
       style={{
         height: '100%',
         borderRadius: Radius.full,
-        backgroundColor: Colors.primary,
-        width: `${(current / total) * 100}%`,
+        backgroundColor: Colors.secondaryContainer,
+        width: `${total > 0 ? (current / total) * 100 : 0}%`,
       }}
     />
   </View>

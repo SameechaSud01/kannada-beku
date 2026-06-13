@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo } from 'react';
-import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
-import { Spacing, Radius } from '@/constants/spacing';
+import { Spacing } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
 import { GAMES } from '@/constants/games';
 import { useProgressStore } from '@/stores/progressStore';
@@ -19,6 +19,7 @@ import FeedbackBanner from '../shared/FeedbackBanner';
 import ResultScreen from '../shared/ResultScreen';
 import { useAnswerHaptics } from '../shared/haptics';
 import { ExitBackButton } from '@/components/ui/ExitBackButton';
+import { LipButton } from '@/components/ui/LipButton';
 import type { QuestionPair } from './types';
 import type { OppositesItem } from '../../../services/api/games/opposites';
 
@@ -115,7 +116,7 @@ function OppositeGameInner({
 
   if (phase === 'result') {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
         <ExitBackButton skipConfirm />
         <ResultScreen score={score} total={totalQuestions} onReplay={restart} />
       </SafeAreaView>
@@ -123,7 +124,7 @@ function OppositeGameInner({
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: Spacing.lg,
@@ -144,7 +145,8 @@ function OppositeGameInner({
             style={{
               fontSize: moderateScale(14),
               color: Colors.tertiary,
-              fontFamily: Fonts.dmSans.regular,
+              fontFamily: Fonts.dmSans.medium,
+              fontVariant: ['tabular-nums'],
             }}
           >
             Question {currentIndex + 1} / {totalQuestions}
@@ -152,8 +154,9 @@ function OppositeGameInner({
           <Text
             style={{
               fontSize: moderateScale(14),
-              fontFamily: Fonts.dmSans.bold,
+              fontFamily: Fonts.baloo.bold,
               color: Colors.onSurface,
+              fontVariant: ['tabular-nums'],
             }}
           >
             Score {score}
@@ -183,26 +186,11 @@ function OppositeGameInner({
         <FeedbackBanner state={answerState} streak={streak} />
 
         {answerState !== 'unanswered' && (
-          <Pressable
-            style={{
-              width: '100%',
-              backgroundColor: Colors.primary,
-              borderRadius: Radius.xl,
-              paddingVertical: moderateScale(14),
-              alignItems: 'center',
-            }}
+          <LipButton
+            label={currentIndex + 1 < totalQuestions ? 'Next ▸' : 'See results'}
+            variant="primary"
             onPress={handleNext}
-          >
-            <Text
-              style={{
-                color: Colors.onPrimary,
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(16),
-              }}
-            >
-              {currentIndex + 1 < totalQuestions ? 'Next →' : 'See results'}
-            </Text>
-          </Pressable>
+          />
         )}
       </ScrollView>
     </SafeAreaView>
@@ -211,7 +199,7 @@ function OppositeGameInner({
 
 function CenteredLoading() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
@@ -222,7 +210,7 @@ function CenteredLoading() {
 function ErrorState({ onRetry }: { onRetry: () => void }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
       <View
         style={{
           flex: 1,
@@ -234,7 +222,7 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
       >
         <Text
           style={{
-            fontFamily: Fonts.dmSans.bold,
+            fontFamily: Fonts.baloo.extrabold,
             fontSize: moderateScale(18),
             color: Colors.onSurface,
             textAlign: 'center',
@@ -253,35 +241,8 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
         >
           Check your connection and try again.
         </Text>
-        <Pressable
-          onPress={onRetry}
-          accessibilityRole="button"
-          accessibilityLabel="Retry"
-          style={({ pressed }) => ({
-            backgroundColor: Colors.primary,
-            borderRadius: Radius.lg,
-            paddingVertical: Spacing.md,
-            paddingHorizontal: Spacing.xl,
-            transform: [{ scale: pressed ? 0.97 : 1 }],
-          })}
-        >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: Colors.onPrimary }}>
-            Retry
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => router.back()}
-          accessibilityRole="button"
-          accessibilityLabel="Back"
-          style={({ pressed }) => ({
-            paddingVertical: Spacing.sm,
-            opacity: pressed ? 0.6 : 1,
-          })}
-        >
-          <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary }}>
-            Back
-          </Text>
-        </Pressable>
+        <LipButton label="Retry" variant="primary" fullWidth={false} onPress={onRetry} />
+        <LipButton label="Back" variant="tertiary" fullWidth={false} onPress={() => router.back()} />
       </View>
     </SafeAreaView>
   );
@@ -290,7 +251,7 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
 function EmptyState({ lessonNo }: { lessonNo: number }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }} edges={['top', 'bottom']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
       <View
         style={{
           flex: 1,
@@ -302,7 +263,7 @@ function EmptyState({ lessonNo }: { lessonNo: number }) {
       >
         <Text
           style={{
-            fontFamily: Fonts.dmSans.bold,
+            fontFamily: Fonts.baloo.extrabold,
             fontSize: moderateScale(18),
             color: Colors.onSurface,
             textAlign: 'center',
@@ -322,22 +283,7 @@ function EmptyState({ lessonNo }: { lessonNo: number }) {
         >
           No opposites items have been authored for this lesson yet. Try an earlier lesson.
         </Text>
-        <Pressable
-          onPress={() => router.back()}
-          accessibilityRole="button"
-          accessibilityLabel="Back to lessons"
-          style={({ pressed }) => ({
-            backgroundColor: Colors.primary,
-            borderRadius: Radius.lg,
-            paddingVertical: Spacing.md,
-            paddingHorizontal: Spacing.xl,
-            transform: [{ scale: pressed ? 0.97 : 1 }],
-          })}
-        >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: Colors.onPrimary }}>
-            Back to lessons
-          </Text>
-        </Pressable>
+        <LipButton label="Back to lessons" variant="primary" fullWidth={false} onPress={() => router.back()} />
       </View>
     </SafeAreaView>
   );
