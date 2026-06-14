@@ -10,10 +10,13 @@ import { Icons } from '../../constants/icons';
 import { useCompletedLessons } from '../../hooks/progress';
 import { useStreakCelebration } from '../../hooks/useStreakCelebration';
 import { useDbLessons } from '../../hooks/useLessons';
+import { useProgressStore } from '../../stores/progressStore';
 import {
   PLANNED_LESSON_SLOTS,
   TOTAL_LESSON_SLOTS,
 } from '../../constants/lessons/plannedLessons';
+import { TS_LESSONS_BY_SLUG } from '../../constants/lessons/lessonContent';
+import { computePartStates } from '../../constants/lessons/parts';
 import { useModal } from '../../components/modals/ModalHost';
 import { LessonLockedDialog } from '../../components/modals/instances/LessonLockedDialog';
 import { LessonInfoDialog } from '../../components/modals/instances/LessonInfoDialog';
@@ -21,6 +24,7 @@ import { BasicsCard } from '../../components/guide/BasicsCard';
 import { Watermark } from '../../components/ui/Watermark';
 import { TopBar } from '../../components/ui/TopBar';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
+import { ChunkyCircle, ChunkyLip } from '../../components/ui/ChunkyLip';
 import { LockTile } from '../../components/ui/LockTile';
 
 const ESTIMATED_MIN_PER_LESSON = 5;
@@ -37,12 +41,16 @@ type LessonRow = {
   realLessonSlug?: string;
   prevTitle?: string;
   prevSlug?: string;
+  /** Sub-part progress for the in-progress lesson (0 when not split / not active). */
+  partsDone: number;
+  partsTotal: number;
 };
 
 export default function LearnScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const completedLessons = useCompletedLessons();
+  const completedParts = useProgressStore((s) => s.completedParts);
   const { streak, onStreakPress } = useStreakCelebration();
   const modal = useModal();
   const lessonsQuery = useDbLessons();
@@ -70,6 +78,19 @@ export default function LearnScreen() {
     else if (n === completedCount + 1) state = 'active';
     else state = 'locked';
 
+    // Sub-part progress is only meaningful for the in-progress lesson that is
+    // actually split into sections (TS-canonical content).
+    let partsDone = 0;
+    let partsTotal = 0;
+    if (state === 'active' && real?.slug) {
+      const canonical = TS_LESSONS_BY_SLUG[real.slug];
+      if (canonical && canonical.sections.length > 1) {
+        const states = computePartStates(canonical, new Set(completedParts), false);
+        partsTotal = states.length;
+        partsDone = states.filter((p) => p.done).length;
+      }
+    }
+
     return {
       slot: n,
       state,
@@ -80,6 +101,8 @@ export default function LearnScreen() {
       realLessonSlug: real?.slug,
       prevTitle: idx > 0 ? (prevReal?.title ?? PLANNED_LESSON_SLOTS[idx - 1].title) : undefined,
       prevSlug: prevReal?.slug,
+      partsDone,
+      partsTotal,
     };
   });
 
@@ -207,7 +230,6 @@ function LessonRowView({
   const isActive = row.state === 'active';
 
   const titleColor = isLocked ? Colors.textFaint : Colors.onSurface;
-  const subColor = isLocked ? Colors.textFaint : Colors.tertiary;
 
   const content = (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(13), padding: moderateScale(12) }}>
@@ -215,17 +237,12 @@ function LessonRowView({
       {isLocked ? (
         <LockTile size={50} radius={moderateScale(14)} />
       ) : (
-        <View
-          style={{
-            width: moderateScale(50),
-            height: moderateScale(50),
-            borderRadius: moderateScale(14),
-            backgroundColor: isActive ? Colors.primaryContainer : Colors.secondaryFixed,
-            borderBottomWidth: 3,
-            borderBottomColor: isActive ? Colors.redLip : Colors.goldLip,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+        <ChunkyLip
+          size={moderateScale(50)}
+          radius={moderateScale(14)}
+          depth={moderateScale(3)}
+          bg={isActive ? Colors.primaryContainer : Colors.secondaryFixed}
+          lipColor={isActive ? Colors.redLip : Colors.goldLip}
         >
           <Text
             style={{
@@ -239,7 +256,7 @@ function LessonRowView({
           >
             {row.char}
           </Text>
-        </View>
+        </ChunkyLip>
       )}
 
       <View style={{ flex: 1 }}>
@@ -250,13 +267,9 @@ function LessonRowView({
         >
           {row.title}
         </Text>
-        <Text
-          style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12.5), color: subColor, marginTop: moderateScale(1) }}
-          maxFontSizeMultiplier={1.3}
-          numberOfLines={2}
-        >
-          {row.subtitle}
-        </Text>
+        {isActive && row.partsTotal > 1 ? (
+          <PartProgressBar done={row.partsDone} total={row.partsTotal} />
+        ) : null}
       </View>
 
       <Pressable
@@ -271,35 +284,23 @@ function LessonRowView({
 
       {/* Trailing affordance */}
       {isDone ? (
-        <View
-          style={{
-            width: moderateScale(26),
-            height: moderateScale(26),
-            borderRadius: Radius.full,
-            backgroundColor: Colors.secondaryContainer,
-            borderBottomWidth: 2,
-            borderBottomColor: Colors.goldLip,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+        <ChunkyCircle
+          size={moderateScale(26)}
+          depth={moderateScale(2)}
+          bg={Colors.secondaryContainer}
+          lipColor={Colors.goldLip}
         >
           <Icons.check size={moderateScale(15)} color={Colors.onSecondaryContainer} strokeWidth={2.6} />
-        </View>
+        </ChunkyCircle>
       ) : isActive ? (
-        <View
-          style={{
-            width: moderateScale(42),
-            height: moderateScale(42),
-            borderRadius: Radius.full,
-            backgroundColor: Colors.primaryContainer,
-            borderBottomWidth: 3,
-            borderBottomColor: Colors.redLip,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+        <ChunkyCircle
+          size={moderateScale(42)}
+          depth={moderateScale(3)}
+          bg={Colors.primaryContainer}
+          lipColor={Colors.redLip}
         >
           <Icons.play size={moderateScale(16)} color={Colors.onPrimary} />
-        </View>
+        </ChunkyCircle>
       ) : (
         <View style={{ width: moderateScale(26) }} />
       )}
@@ -343,5 +344,38 @@ function LessonRowView({
     >
       {content}
     </ChunkyPressable>
+  );
+}
+
+/**
+ * Segmented sub-part progress for the in-progress lesson card — one segment per
+ * section, filled in order as each section is completed.
+ */
+function PartProgressBar({ done, total }: { done: number; total: number }) {
+  return (
+    <View
+      style={{ flexDirection: 'row', gap: moderateScale(5), marginTop: moderateScale(7) }}
+      accessibilityRole="progressbar"
+      accessibilityLabel={`${done} of ${total} parts complete`}
+    >
+      {Array.from({ length: total }).map((_, i) => {
+        const filled = i < done;
+        return (
+          <View
+            key={i}
+            style={{
+              flex: 1,
+              height: moderateScale(7),
+              borderRadius: moderateScale(4),
+              backgroundColor: filled ? Colors.secondaryContainer : Colors.surfaceCreamLow,
+              borderBottomWidth: filled ? 2 : 0,
+              borderBottomColor: Colors.goldLip,
+              borderWidth: filled ? 0 : 1,
+              borderColor: 'rgba(201,138,0,0.25)',
+            }}
+          />
+        );
+      })}
+    </View>
   );
 }

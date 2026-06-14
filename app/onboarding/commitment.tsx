@@ -57,7 +57,7 @@ export default function CommitmentScreen() {
         paddingHorizontal: Spacing.xxl,
       }}
     >
-      <ProgressDots total={6} current={4} />
+      <ProgressDots total={5} current={3} />
 
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <Text
@@ -71,7 +71,7 @@ export default function CommitmentScreen() {
           }}
           maxFontSizeMultiplier={1.4}
         >
-          Step 4 of 5
+          Step 3 of 4
         </Text>
         <Text
           style={{

@@ -89,7 +89,7 @@ export default function MotivationScreen() {
           paddingHorizontal: Spacing.xxl,
         }}
       >
-        <ProgressDots total={6} current={3} />
+        <ProgressDots total={5} current={2} />
 
         <ScrollView
           style={{ flex: 1 }}
@@ -108,7 +108,7 @@ export default function MotivationScreen() {
             }}
             maxFontSizeMultiplier={1.4}
           >
-            Step 3 of 5
+            Step 2 of 4
           </Text>
           <Text
             style={{

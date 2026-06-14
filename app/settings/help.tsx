@@ -105,6 +105,17 @@ export default function HelpScreen() {
           gap: moderateScale(20),
         }}
       >
+        <SectionHeader label="Feedback" />
+        <View
+          style={{
+            backgroundColor: Colors.surfaceContainerLow,
+            borderRadius: Radius.lg,
+            overflow: 'hidden',
+          }}
+        >
+          <Row label="Send feedback" onPress={() => router.push('/settings/feedback')} idx={0} />
+        </View>
+
         {SUPPORT_EMAIL ? (
           <>
             <SectionHeader label="Contact" />

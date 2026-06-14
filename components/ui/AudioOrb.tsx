@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
@@ -11,6 +11,7 @@ import Animated, {
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Icons } from '../../constants/icons';
+import { ChunkyCircle } from './ChunkyLip';
 import type { Icon as TablerIcon } from '@tabler/icons-react-native';
 
 export type AudioOrbProps = {
@@ -97,20 +98,9 @@ export function AudioOrb({
           ringStyle,
         ]}
       />
-      <View
-        style={{
-          width: dim,
-          height: dim,
-          borderRadius: dim / 2,
-          backgroundColor: color,
-          borderBottomWidth: lip,
-          borderBottomColor: lipColor,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      <ChunkyCircle size={dim} depth={lip} bg={color} lipColor={lipColor}>
         <Icon size={moderateScale(size * 0.42)} color={iconColor} strokeWidth={2} />
-      </View>
+      </ChunkyCircle>
     </Pressable>
   );
 }

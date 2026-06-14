@@ -24,6 +24,8 @@ export async function fetchLessonIdBySlug(slug: string): Promise<string | null> 
 // Playable Lessons 1–8 are authored in TS (constants/lessons/lessonContent.ts);
 // the DB `lessons` rows stay the source of truth for uuids + progress, but are
 // no longer read for content. Lesson 0 (basics) keeps its different DB shape.
+// The authored `id` fields match the live DB uuids, so pre-seeding the cache
+// avoids a slug lookup round-trip on the completion path.
 for (const l of TS_LESSONS) slugToId.set(l.slug, l.id);
 
 export async function fetchAllLessons(): Promise<Lesson[]> {

@@ -167,6 +167,14 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
     setIntentMarked(true);
   };
 
+  // Primary CTA: record the real-life intent AND leave in one tap. Exit is
+  // gated by handleBackToLessons (no-ops while saving, retries on error), so a
+  // failed save still surfaces "Retry" on the secondary button below.
+  const handleCommitAndExit = () => {
+    handleMarkIntent();
+    handleBackToLessons();
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ScrollView
@@ -331,9 +339,9 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
         }}
       >
         <LipButton
-          label={intentMarked ? 'Committed! ✓' : "I'll try this in real life"}
-          onPress={handleMarkIntent}
-          accessibilityLabel="Commit to trying this in real life"
+          label="I'll try this in real life"
+          onPress={handleCommitAndExit}
+          accessibilityLabel="Commit to trying this in real life and return to lessons"
           color={intentMarked ? Colors.secondary : Colors.primaryContainer}
           lip={intentMarked ? Colors.onSecondaryContainer : Colors.redLip}
           fg={Colors.onPrimary}

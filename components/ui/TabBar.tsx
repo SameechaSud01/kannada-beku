@@ -6,6 +6,7 @@ import { Colors } from '../../constants/colors';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Shadows } from '../../constants/shadows';
 import { Icons } from '../../constants/icons';
+import { ChunkyCircle } from './ChunkyLip';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import type { Icon as TablerIcon } from '@tabler/icons-react-native';
 
@@ -90,20 +91,31 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
               style={{
                 width: SLOT,
                 height: SLOT,
-                borderRadius: Radius.full,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: isFocused ? Colors.primaryContainer : 'transparent',
-                borderBottomWidth: isFocused ? ACTIVE_LIP : 0,
-                borderBottomColor: isFocused ? Colors.redLip : 'transparent',
-                ...(isFocused ? Shadows.tabActive : null),
               }}
             >
-              <Icon
-                size={moderateScale(TAB_ICON_SIZE)}
-                color={isFocused ? Colors.onPrimary : Colors.tertiary}
-                strokeWidth={2}
-              />
+              {isFocused ? (
+                <ChunkyCircle
+                  size={SLOT}
+                  depth={ACTIVE_LIP}
+                  bg={Colors.primaryContainer}
+                  lipColor={Colors.redLip}
+                  faceStyle={Shadows.tabActive}
+                >
+                  <Icon
+                    size={moderateScale(TAB_ICON_SIZE)}
+                    color={Colors.onPrimary}
+                    strokeWidth={2}
+                  />
+                </ChunkyCircle>
+              ) : (
+                <Icon
+                  size={moderateScale(TAB_ICON_SIZE)}
+                  color={Colors.tertiary}
+                  strokeWidth={2}
+                />
+              )}
             </Pressable>
           );
         })}

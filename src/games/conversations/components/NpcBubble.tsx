@@ -54,25 +54,32 @@ const NpcBubble: React.FC<Props> = ({ kn, en, live = false }) => {
           <TypingIndicator />
         ) : (
           <>
+            {/* English meaning is the hero — NPC speaker lines carry no
+                transliteration, so English leads per the text-hierarchy rule
+                (Kannada script never primary). */}
             <Text
               style={{
-                fontFamily: Fonts.notoSansKannada.bold,
-                fontSize: moderateScale(20),
+                fontFamily: Fonts.dmSans.bold,
+                fontSize: moderateScale(16),
                 color: Colors.onSurface,
-                lineHeight: moderateScale(30),
+                lineHeight: moderateScale(22),
+              }}
+              maxFontSizeMultiplier={1.4}
+            >
+              {en}
+            </Text>
+            <Text
+              style={{
+                fontFamily: Fonts.notoSansKannada.regular,
+                fontSize: moderateScale(15),
+                color: Colors.tertiary,
+                lineHeight: moderateScale(23),
+                opacity: 0.7,
               }}
               maxFontSizeMultiplier={1.3}
             >
               {knText}
             </Text>
-            {showEn ? (
-              <Text
-                style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary }}
-                maxFontSizeMultiplier={1.4}
-              >
-                {en}
-              </Text>
-            ) : null}
           </>
         )}
       </View>

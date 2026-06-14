@@ -157,6 +157,14 @@ export const Toasts = {
     });
   },
 
+  feedbackSent() {
+    Toast.show({
+      kind: 'success',
+      id: 'feedback.sent',
+      title: 'Thanks — feedback sent!',
+    });
+  },
+
   basicsHomeNudge() {
     Toast.show({
       kind: 'success',
