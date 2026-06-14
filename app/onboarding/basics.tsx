@@ -26,13 +26,12 @@ export default function BasicsScreen() {
       return;
     }
 
-    const { displayName, learningMode, motivations, dailyGoalMinutes } =
+    const { displayName, motivations, dailyGoalMinutes } =
       useUserStore.getState();
 
-    if (!learningMode) {
-      router.replace('/onboarding/goal');
-      return;
-    }
+    // Learning-focus selection was removed — we only teach spoken Kannada now.
+    const learningMode = useUserStore.getState().learningMode ?? 'spoken';
+
     if (motivations.length === 0) {
       router.replace('/onboarding/motivation');
       return;

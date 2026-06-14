@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { View } from 'react-native';
 import type { ReactNode } from 'react';
-import Svg, { Circle } from 'react-native-svg';
+import Svg, { Circle, G, Defs, Filter, FeDropShadow } from 'react-native-svg';
 import Animated, {
   Easing,
   useAnimatedProps,
@@ -127,7 +127,7 @@ export function MultiProgressRing({
           const r = (dim - sw) / 2 - i * (sw + g);
           if (r <= 0) return null;
           return (
-            <MultiRing key={i} cx={dim / 2} cy={dim / 2} r={r} sw={sw} ring={ring} animated={animated} />
+            <MultiRing key={i} index={i} cx={dim / 2} cy={dim / 2} r={r} sw={sw} ring={ring} animated={animated} />
           );
         })}
       </Svg>
@@ -137,6 +137,7 @@ export function MultiProgressRing({
 }
 
 function MultiRing({
+  index,
   cx,
   cy,
   r,
@@ -144,6 +145,7 @@ function MultiRing({
   ring,
   animated,
 }: {
+  index: number;
   cx: number;
   cy: number;
   r: number;
@@ -167,6 +169,20 @@ function MultiRing({
     strokeDashoffset: circ * (1 - sweep.value),
   }));
 
+  // Leading-end "head" cap. The head lives in a group re-rotated +90° to cancel
+  // the parent SVG's -90°, so it sits in screen space and its drop shadow falls
+  // straight down. Angle is measured from screen 3-o'clock: -90° is 12-o'clock.
+  const headProps = useAnimatedProps(() => {
+    const theta = 2 * Math.PI * sweep.value - Math.PI / 2;
+    return {
+      cx: cx + r * Math.cos(theta),
+      cy: cy + r * Math.sin(theta),
+    };
+  });
+
+  const shadowId = `ringHeadShadow-${index}`;
+  const headR = sw / 2;
+
   return (
     <>
       <Circle cx={cx} cy={cy} r={r} stroke={`${ring.color}40`} strokeWidth={sw} fill="none" />
@@ -181,6 +197,27 @@ function MultiRing({
         strokeDasharray={circ}
         animatedProps={animatedProps}
       />
+      {clamped > 0 && (
+        <G transform={`rotate(90 ${cx} ${cy})`}>
+          <Defs>
+            <Filter id={shadowId} x="-75%" y="-75%" width="250%" height="250%">
+              <FeDropShadow
+                dx="0"
+                dy={moderateScale(1.5)}
+                stdDeviation={moderateScale(2)}
+                floodColor="#000000"
+                floodOpacity={0.28}
+              />
+            </Filter>
+          </Defs>
+          <AnimatedCircle
+            r={headR}
+            fill={ring.color}
+            filter={`url(#${shadowId})`}
+            animatedProps={headProps}
+          />
+        </G>
+      )}
     </>
   );
 }

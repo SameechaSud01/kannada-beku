@@ -25,6 +25,7 @@ import { useCompletedLessons, useWordsLearned, useDailyGoal } from '../../hooks/
 import { useStreakCelebration } from '../../hooks/useStreakCelebration';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
+import { ChunkyCircle, ChunkyLip } from '../../components/ui/ChunkyLip';
 import { MultiProgressRing } from '../../components/ui/ProgressRing';
 import { Watermark } from '../../components/ui/Watermark';
 import { TopBar } from '../../components/ui/TopBar';
@@ -152,18 +153,14 @@ export default function HomeScreen() {
               radius={Radius.chunky}
               style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.md, padding: moderateScale(16) }}
             >
-              <View
-                style={{
-                  width: moderateScale(44),
-                  height: moderateScale(44),
-                  borderRadius: Radius.full,
-                  backgroundColor: '#ffffff',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+              <ChunkyCircle
+                size={moderateScale(44)}
+                depth={moderateScale(3)}
+                bg="#ffffff"
+                lipColor={Colors.redLip}
               >
                 <Icons.play size={moderateScale(20)} color={Colors.primaryContainer} />
-              </View>
+              </ChunkyCircle>
               <View style={{ flex: 1 }}>
                 <Text
                   style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(17), color: Colors.onPrimary, letterSpacing: -0.2 }}
@@ -357,22 +354,16 @@ function StuckIcon() {
   }, [scale]);
   const style = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
   return (
-    <Animated.View
-      style={[
-        {
-          width: moderateScale(44),
-          height: moderateScale(44),
-          borderRadius: Radius.tile,
-          backgroundColor: Colors.primaryContainer,
-          borderBottomWidth: 3,
-          borderBottomColor: Colors.redLip,
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-        style,
-      ]}
-    >
-      <Icons.emergency size={moderateScale(23)} color={Colors.onPrimary} strokeWidth={2.3} />
+    <Animated.View style={style}>
+      <ChunkyLip
+        size={moderateScale(44)}
+        radius={Radius.tile}
+        depth={moderateScale(3)}
+        bg={Colors.primaryContainer}
+        lipColor={Colors.redLip}
+      >
+        <Icons.emergency size={moderateScale(23)} color={Colors.onPrimary} strokeWidth={2.3} />
+      </ChunkyLip>
     </Animated.View>
   );
 }

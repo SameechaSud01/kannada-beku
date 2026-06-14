@@ -26,8 +26,11 @@ export default function NameScreen() {
   const handleContinue = () => {
     if (!valid) return;
     useUserStore.getState().setDisplayName(trimmed);
+    // We only teach spoken Kannada now, so the learning-focus choice is gone —
+    // default everyone to 'spoken'.
+    useUserStore.getState().setLearningMode('spoken');
     Keyboard.dismiss();
-    router.push('/onboarding/goal');
+    router.push('/onboarding/motivation');
   };
 
   return (
@@ -43,7 +46,7 @@ export default function NameScreen() {
           paddingHorizontal: Spacing.xxl,
         }}
       >
-        <ProgressDots total={6} current={1} />
+        <ProgressDots total={5} current={1} />
 
         <View style={{ flex: 1, justifyContent: 'center' }}>
           <Text
@@ -57,7 +60,7 @@ export default function NameScreen() {
             }}
             maxFontSizeMultiplier={1.4}
           >
-            Step 1 of 5
+            Step 1 of 4
           </Text>
           <Text
             style={{

@@ -12,6 +12,7 @@ import { Icons } from '../../constants/icons';
 import { Watermark } from '../../components/ui/Watermark';
 import { TopBar } from '../../components/ui/TopBar';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
+import { ChunkyCircle } from '../../components/ui/ChunkyLip';
 import type { Icon as TablerIcon } from '@tabler/icons-react-native';
 
 type GameId = 'quiz' | 'dictation' | 'conversations' | 'opposites';
@@ -205,20 +206,14 @@ function LockBadge() {
 
 function RedPlayOrb() {
   return (
-    <View
-      style={{
-        width: moderateScale(46),
-        height: moderateScale(46),
-        borderRadius: Radius.full,
-        backgroundColor: Colors.primaryContainer,
-        borderBottomWidth: 3,
-        borderBottomColor: Colors.redLip,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+    <ChunkyCircle
+      size={moderateScale(46)}
+      depth={moderateScale(3)}
+      bg={Colors.primaryContainer}
+      lipColor={Colors.redLip}
     >
       <Icons.play size={moderateScale(18)} color={Colors.onPrimary} />
-    </View>
+    </ChunkyCircle>
   );
 }
 

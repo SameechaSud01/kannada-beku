@@ -128,6 +128,7 @@ export const Icons = {
   sparkle: IconSparkles,
   flame: IconFlame,
   lock: IconLock,
+  bolt: IconBolt, // streak-detail milestone nudge
 
   // Celebration overlay (spec_playful_redesign §Celebration)
   trophy: IconTrophy, // lesson complete

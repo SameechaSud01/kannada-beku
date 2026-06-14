@@ -6,6 +6,7 @@ import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { LipButton } from '../ui/LipButton';
+import { ChunkyCircle } from '../ui/ChunkyLip';
 
 interface PartDoneCardProps {
   partLabel: string;
@@ -32,21 +33,15 @@ export function PartDoneCard({ partLabel, nextLabel, onContinue, onBack }: PartD
           justifyContent: 'center',
         }}
       >
-        <View
-          style={{
-            width: moderateScale(72),
-            height: moderateScale(72),
-            borderRadius: Radius.full,
-            backgroundColor: Colors.secondaryContainer,
-            borderBottomWidth: 5,
-            borderBottomColor: Colors.goldLip,
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: Spacing.xl,
-          }}
+        <ChunkyCircle
+          size={moderateScale(72)}
+          depth={moderateScale(5)}
+          bg={Colors.secondaryContainer}
+          lipColor={Colors.goldLip}
+          style={{ marginBottom: Spacing.xl }}
         >
           <Icons.check size={moderateScale(38)} color={Colors.onSecondaryContainer} strokeWidth={2.6} />
-        </View>
+        </ChunkyCircle>
 
         <Text
           style={{

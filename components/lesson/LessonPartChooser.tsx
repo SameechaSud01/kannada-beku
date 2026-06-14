@@ -7,6 +7,7 @@ import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
 import { ChunkyPressable } from '../ui/ChunkyPressable';
+import { ChunkyCircle } from '../ui/ChunkyLip';
 import { LockTile } from '../ui/LockTile';
 import type { Lesson } from '../../constants/lessons/types';
 import { useLessonParts, type PartState } from '../../hooks/useLessonParts';
@@ -169,35 +170,23 @@ function PartRow({ part, onPress }: { part: PartState; onPress: () => void }) {
 
       <View style={{ width: moderateScale(42), alignItems: 'center', justifyContent: 'center' }}>
         {part.done ? (
-          <View
-            style={{
-              width: moderateScale(26),
-              height: moderateScale(26),
-              borderRadius: Radius.full,
-              backgroundColor: Colors.secondaryContainer,
-              borderBottomWidth: 2,
-              borderBottomColor: Colors.goldLip,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+          <ChunkyCircle
+            size={moderateScale(26)}
+            depth={moderateScale(2)}
+            bg={Colors.secondaryContainer}
+            lipColor={Colors.goldLip}
           >
             <Icons.check size={moderateScale(15)} color={Colors.onSecondaryContainer} strokeWidth={2.6} />
-          </View>
+          </ChunkyCircle>
         ) : part.active ? (
-          <View
-            style={{
-              width: moderateScale(42),
-              height: moderateScale(42),
-              borderRadius: Radius.full,
-              backgroundColor: Colors.primaryContainer,
-              borderBottomWidth: 3,
-              borderBottomColor: Colors.redLip,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+          <ChunkyCircle
+            size={moderateScale(42)}
+            depth={moderateScale(3)}
+            bg={Colors.primaryContainer}
+            lipColor={Colors.redLip}
           >
             <Icons.play size={moderateScale(16)} color={Colors.onPrimary} />
-          </View>
+          </ChunkyCircle>
         ) : null}
       </View>
     </View>

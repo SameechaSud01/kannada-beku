@@ -148,7 +148,7 @@ export default function WelcomeScreen() {
         }}
       >
         <View style={{ alignItems: 'center', marginBottom: Spacing.lg }}>
-          <ProgressDots total={6} current={0} />
+          <ProgressDots total={5} current={0} />
         </View>
         <Text
           style={{
