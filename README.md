@@ -44,7 +44,7 @@ If `typecheck` is clean, you're ready to run the app — see below.
 
 ## Environment variables
 
-`npm install` scaffolds a `.env` from `.env.example` for you. Open it and fill in these keys (values come from Samee — Slack/DM him):
+`npm install` scaffolds a `.env` from `.env.example` for you. Open it and fill in these keys:
 
 ```bash
 EXPO_PUBLIC_SUPABASE_URL=...
