@@ -29,6 +29,7 @@ import { ChunkyCircle, ChunkyLip } from '../../components/ui/ChunkyLip';
 import { MultiProgressRing } from '../../components/ui/ProgressRing';
 import { Watermark } from '../../components/ui/Watermark';
 import { TopBar } from '../../components/ui/TopBar';
+import { HomeSkeleton } from '../../components/states/skeletons/TabSkeletons';
 
 const ESTIMATED_MIN_PER_LESSON = 5;
 
@@ -97,6 +98,9 @@ export default function HomeScreen() {
   // Daily-goal rings now read real per-day activity counts (useDailyGoal):
   // Listen = audio played in-app, Speak = practice-phase reps, Practice = game
   // questions answered. Resets at midnight.
+
+  // First-load shimmer while lessons fetch — same chrome, no reflow on arrival.
+  if (lessonsQuery.isLoading) return <HomeSkeleton streak={streak} />;
 
   return (
     <RNAnimated.View

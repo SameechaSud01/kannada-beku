@@ -1,5 +1,5 @@
 import { useEffect, useMemo, type ReactNode } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { moderateScale } from 'react-native-size-matters';
@@ -22,6 +22,8 @@ import { PartDoneCard } from '../../components/lesson/PartDoneCard';
 import { LessonPartChooser } from '../../components/lesson/LessonPartChooser';
 import { PhaseBackButton } from '../../components/lesson/PhaseBackButton';
 import { ExitBackButton } from '../../components/ui/ExitBackButton';
+import { LoadingScreen } from '../../components/states/LoadingScreen';
+import { ErrorState } from '../../components/states/ErrorState';
 
 export default function LessonScreen() {
   const { id, part } = useLocalSearchParams<{ id: string; part?: string }>();
@@ -57,6 +59,19 @@ export default function LessonScreen() {
 
   if (lessonQuery.isLoading) {
     return <LessonLoading />;
+  }
+
+  // True fetch failure (vs. a lesson that genuinely doesn't exist) → red error
+  // with retry; back chip keeps the user from getting stuck.
+  if (lessonQuery.isError) {
+    return (
+      <ErrorState
+        back
+        onRetry={() => lessonQuery.refetch()}
+        onHelp={() => router.push('/settings/help')}
+        body="We couldn't load this lesson. Check your connection and give it another try."
+      />
+    );
   }
 
   if (!lesson) {
@@ -184,20 +199,8 @@ export default function LessonScreen() {
 }
 
 function LessonLoading() {
-  const insets = useSafeAreaInsets();
-  return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: Colors.surface,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: insets.top,
-      }}
-    >
-      <ActivityIndicator size="large" color={Colors.primary} />
-    </View>
-  );
+  // Branded red spinner + back chip so the user is never trapped on a slow load.
+  return <LoadingScreen back />;
 }
 
 function LessonNotFound({ onBack }: { onBack: () => void }) {

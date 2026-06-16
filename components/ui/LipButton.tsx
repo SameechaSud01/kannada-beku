@@ -25,8 +25,10 @@ export type LipButtonProps = {
   lip?: string;
   /** Override the variant's text/icon colour. */
   fg?: string;
-  /** Optional trailing icon (from the `Icons` map). */
+  /** Optional icon (from the `Icons` map). Trailing by default. */
   icon?: TablerIcon;
+  /** Render the icon before the label instead of after. */
+  iconLeading?: boolean;
   small?: boolean;
   disabled?: boolean;
   /** Stretch to the parent's width (default). Set false for a compact pill. */
@@ -79,6 +81,7 @@ export function LipButton({
   lip,
   fg,
   icon: Icon,
+  iconLeading = false,
   small = false,
   disabled = false,
   fullWidth = true,
@@ -126,6 +129,11 @@ export function LipButton({
         ];
       }}
     >
+      {Icon && iconLeading ? (
+        <View>
+          <Icon size={moderateScale(18)} color={fgColor} strokeWidth={2.4} />
+        </View>
+      ) : null}
       <Text
         maxFontSizeMultiplier={1.3}
         style={{
@@ -137,7 +145,7 @@ export function LipButton({
       >
         {label}
       </Text>
-      {Icon ? (
+      {Icon && !iconLeading ? (
         // View keeps the icon baseline aligned with the label text.
         <View>
           <Icon size={moderateScale(18)} color={fgColor} strokeWidth={2.4} />

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kannada Beku — System States</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400..800&family=Noto+Sans+Kannada:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; height: 100%; }
+  body { font-family: 'DM Sans', sans-serif; }
+
+  /* ── motion ───────────────────────────────────────────
+     Entrances are TRANSFORM-only (content stays opacity:1 at the
+     start frame) so the design reads correctly in static capture
+     AND live — only the resting end-state is ever held. */
+  @keyframes st-rise   { from { transform: translateY(12px); } to { transform: none; } }
+  @keyframes st-spin   { to { transform: rotate(360deg); } }
+  @keyframes st-shim   { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  @keyframes st-bounce { 0%, 80%, 100% { transform: translateY(0); opacity: .5; } 40% { transform: translateY(-6px); opacity: 1; } }
+  @keyframes st-float  { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+  @keyframes ka-in     { from { transform: scale(.86); } to { transform: scale(1); } }
+  @keyframes ka-steam  { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+  .st-rise  { animation: st-rise 480ms cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0ms); }
+  .st-spin  { animation: st-spin .9s linear infinite; transform-origin: center; }
+  .st-skel  { background: linear-gradient(100deg, var(--c1, #e8e4d8) 28%, var(--c2, #f4f1e8) 50%, var(--c1, #e8e4d8) 72%); background-size: 200% 100%; animation: st-shim 1.5s ease-in-out infinite; }
+  .st-dot   { animation: st-bounce 1.15s ease-in-out infinite; animation-delay: calc(var(--i) * .15s); }
+  .st-float { animation: st-float 3s ease-in-out infinite; animation-delay: calc(var(--i) * .35s); }
+
+  .ka-anim       { animation: ka-in 720ms cubic-bezier(.2,.9,.3,1) both; }
+  .ka-anim .ka-steam-grp { transform-box: fill-box; transform-origin: center bottom; animation: ka-steam 3.2s ease-in-out infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .st-rise, .st-float, .ka-anim, .ka-anim .ka-steam-grp { animation: none !important; transform: none !important; }
+    .st-dot { animation: none !important; opacity: 1 !important; }
+    .st-spin { animation: st-spin 1.1s linear infinite; } /* keep spinner — it IS the loading signal */
+  }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="ck-system.jsx"></script>
+<script type="text/babel" src="ck2-shared.jsx"></script>
+<script type="text/babel" src="st-shared.jsx"></script>
+<script type="text/babel" src="st-splash.jsx"></script>
+<script type="text/babel" src="st-loading.jsx"></script>
+<script type="text/babel" src="st-feedback.jsx"></script>
+<script type="text/babel" src="st-empty.jsx"></script>
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "tone": "Classic",
+  "accent": "#be0027",
+  "surfaces": ["#faf6ea", "#f3ecd9"],
+  "kolam": true
+}/*EDITMODE-END*/;
+
+function StatesApp() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const vars = {
+    '--surface': t.surfaces[0],
+    '--surfaceLow': t.surfaces[1],
+    '--surfaceHigh': '#e6e6e3',
+    '--wmA': t.kolam ? 0.05 : 0,
+    '--red': '#91001b',
+    '--red2': t.accent,
+    '--redLip': 'color-mix(in srgb, ' + t.accent + ' 72%, #000)',
+    '--redPale': '#f3dada',
+    '--gold': '#fdc003',
+    '--goldHi': '#ffd24d',
+    '--goldLip': '#c98a00',
+    '--goldPale': '#ffdf9e',
+    '--goldDeep': '#785900',
+    '--warn': '#d97b3a',
+    '--warnPale': '#f7e4d3',
+    '--onWarn': '#3a1d07',
+    '--interactiveSecondary': '#b8956a',
+    '--interactiveSecondaryLip': '#7e6440',
+    '--ink': '#1b1d0e',
+    '--muted': '#464646',
+    '--faint': '#908d76',
+    '--hairline': 'rgba(27,29,14,0.08)',
+    '--r': '16px',
+    '--lip': 4,
+    height: '100%',
+  };
+  React.useEffect(() => {
+    for (const [k, v] of Object.entries(vars)) {
+      if (k.startsWith('--')) document.documentElement.style.setProperty(k, String(v));
+    }
+  }, [JSON.stringify(vars)]);
+
+  const tone = t.tone === 'Rowdy' ? 'rowdy' : 'classic';
+
+  return (
+    <div style={vars}>
+      <ToneContext.Provider value={tone}>
+        <DesignCanvas>
+          <DCSection id="splash" title="Splash" subtitle="App launch. The shipped app icon + ಕನ್ನಡ ಬೇಕು wordmark, dressed with the Bengaluru sticker set — a landmark skyline and a playful scatter on cream — plus the immersive red brand reveal.">
+            <DCArtboard id="splash-skyline" label="A · Bengaluru skyline" width={390} height={844}><SplashSkyline /></DCArtboard>
+            <DCArtboard id="splash-scatter" label="B · Sticker scatter" width={390} height={844}><SplashScatter /></DCArtboard>
+            <DCArtboard id="splash-red" label="C · Red brand reveal" width={390} height={844}><SplashRedBrand /></DCArtboard>
+          </DCSection>
+
+          <DCSection id="loading" title="Loading" subtitle="A momentary spinner (keeps a back chip so the user is never trapped; also the lesson/guide load), plus skeleton screens that hold the real layout of each tab while data arrives.">
+            <DCArtboard id="load-spinner" label="Spinner" width={390} height={844}><LoadingSpinner /></DCArtboard>
+            <DCArtboard id="load-home" label="Home · skeleton" width={390} height={844}><LoadingHome /></DCArtboard>
+            <DCArtboard id="load-lessons" label="Learn · skeleton" width={390} height={844}><LoadingLessons /></DCArtboard>
+            <DCArtboard id="load-games" label="Games · skeleton" width={390} height={844}><LoadingGames /></DCArtboard>
+            <DCArtboard id="load-profile" label="Profile · skeleton" width={390} height={844}><LoadingProfile /></DCArtboard>
+          </DCSection>
+
+          <DCSection id="success" title="Success" subtitle="Top dark pill toast (gold check, 3 s auto-dismiss) for quiet confirmations; a full-screen gold reward moment for milestones.">
+            <DCArtboard id="success-toast" label="Toast · reminder set" width={390} height={844}><SuccessToast /></DCArtboard>
+            <DCArtboard id="success-full" label="Full · daily goal hit" width={390} height={844}><SuccessFull /></DCArtboard>
+          </DCSection>
+
+          <DCSection id="failure" title="Failure" subtitle="Bottom soft card toast (sticky, tap to retry) for transient errors. Full-screen: true errors stay red; offline is treated as caution (warm orange) — work is safe, not broken.">
+            <DCArtboard id="fail-toast" label="Toast · offline" width={390} height={844}><FailureToast /></DCArtboard>
+            <DCArtboard id="fail-full" label="Full · load error" width={390} height={844}><FailureFull /></DCArtboard>
+            <DCArtboard id="fail-offline" label="Full · offline" width={390} height={844}><FailureOffline /></DCArtboard>
+          </DCSection>
+
+          <DCSection id="empty" title="Empty" subtitle="No content yet — distinct from errors. Locked uses warm orange (“not yet”), rewards stay gold, and every empty screen offers the one action that fills it.">
+            <DCArtboard id="empty-games" label="Games · locked" width={390} height={844}><EmptyGames /></DCArtboard>
+            <DCArtboard id="empty-scores" label="Quiz · no scores" width={390} height={844}><EmptyScores /></DCArtboard>
+            <DCArtboard id="empty-streak" label="Profile · no streak" width={390} height={844}><EmptyStreak /></DCArtboard>
+            <DCArtboard id="empty-search" label="Search · no match" width={390} height={844}><EmptySearch /></DCArtboard>
+          </DCSection>
+        </DesignCanvas>
+
+        <TweaksPanel>
+          <TweakSection label="Copy" />
+          <TweakRadio label="Tone" value={t.tone} options={['Classic', 'Rowdy']} onChange={(v) => setTweak('tone', v)} />
+          <TweakSection label="Kit" />
+          <TweakColor label="Accent red" value={t.accent} options={['#be0027', '#91001b', '#d90429']} onChange={(v) => setTweak('accent', v)} />
+          <TweakColor label="Surface" value={t.surfaces}
+            options={[['#faf6ea', '#f3ecd9'], ['#fcfcfa', '#f4f4f0'], ['#f6f1e4', '#ece3cd']]}
+            onChange={(v) => setTweak('surfaces', v)} />
+          <TweakToggle label="Kolam dot grid" value={t.kolam} onChange={(v) => setTweak('kolam', v)} />
+        </TweaksPanel>
+      </ToneContext.Provider>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<StatesApp />);
+</script>
+</body>
+</html>

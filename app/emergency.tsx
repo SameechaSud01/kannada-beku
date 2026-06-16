@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -11,7 +11,8 @@ import { deviceTtsAudioService } from '../services/audio/deviceTtsAudioService';
 import { useEmergencyPhrases } from '../hooks/useEmergencyPhrases';
 import { BrandGradient } from '../components/ui/BrandGradient';
 import { AudioOrb } from '../components/ui/AudioOrb';
-import { LipButton } from '../components/ui/LipButton';
+import { BrandSpinner } from '../components/states/BrandSpinner';
+import { ErrorState } from '../components/states/ErrorState';
 
 /**
  * Emergency phrases (chunky_v3 §5). Intentionally all-red urgency — no
@@ -98,40 +99,14 @@ export default function EmergencyScreen() {
 
       {isLoading ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator size="large" color={Colors.primary} />
+          <BrandSpinner size={48} />
         </View>
       ) : isError || !groups ? (
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingHorizontal: Spacing.xxl,
-            gap: Spacing.md,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: Fonts.baloo.bold,
-              fontSize: moderateScale(17),
-              color: Colors.onSurface,
-              textAlign: 'center',
-            }}
-          >
-            Couldn&apos;t load phrases
-          </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(13),
-              color: Colors.tertiary,
-              textAlign: 'center',
-            }}
-          >
-            Check your connection and try again.
-          </Text>
-          <LipButton label="Retry" variant="primary" onPress={() => refetch()} fullWidth={false} />
-        </View>
+        <ErrorState
+          title="Couldn't load phrases"
+          body="Check your connection and give it another try."
+          onRetry={() => refetch()}
+        />
       ) : (
         <>
           {/* Category chips — active = red pill w/ redLip lip, idle = white + hairline */}

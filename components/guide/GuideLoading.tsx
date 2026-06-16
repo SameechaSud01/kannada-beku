@@ -1,10 +1,11 @@
-import { ActivityIndicator, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { Watermark } from '../ui/Watermark';
+import { BrandSpinner } from '../states/BrandSpinner';
 
 /**
  * Brief loading state for the Beginners' Guide while its content is fetched from
@@ -45,7 +46,7 @@ export function GuideLoading({ onBack }: { onBack: () => void }) {
         </Pressable>
       </View>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <BrandSpinner size={48} />
       </View>
     </View>
   );

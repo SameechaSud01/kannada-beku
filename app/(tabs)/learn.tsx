@@ -26,6 +26,7 @@ import { TopBar } from '../../components/ui/TopBar';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
 import { ChunkyCircle, ChunkyLip } from '../../components/ui/ChunkyLip';
 import { LockTile } from '../../components/ui/LockTile';
+import { LearnSkeleton } from '../../components/states/skeletons/TabSkeletons';
 
 const ESTIMATED_MIN_PER_LESSON = 5;
 
@@ -152,6 +153,9 @@ export default function LearnScreen() {
       dim: 0.4,
     });
   };
+
+  // First-load shimmer while lessons fetch — same chrome, no reflow on arrival.
+  if (lessonsQuery.isLoading) return <LearnSkeleton streak={streak} />;
 
   return (
     <Animated.View

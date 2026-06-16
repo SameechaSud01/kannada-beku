@@ -68,8 +68,8 @@ export function GoalCompleteDialog({
         </View>
       </View>
       <DialogEyebrow>Today&apos;s {goalMinutes} minutes</DialogEyebrow>
-      <DialogTitle>Done for today.</DialogTitle>
-      <DialogBody>Proud of you — go eat some thindi.</DialogBody>
+      <DialogTitle>You&apos;ve hit your daily goal!</DialogTitle>
+      <DialogBody>Your streak is safe — come back tomorrow to keep it alive.</DialogBody>
       <View
         style={{
           alignSelf: 'center',
@@ -98,8 +98,8 @@ export function GoalCompleteDialog({
         </Text>
       </View>
       <View style={{ gap: moderateScale(10), marginTop: moderateScale(2) }}>
-        <LipButton label="One more" variant="primary" onPress={onOneMore} icon={Icons.forward} />
-        <LipButton label="I'm done" variant="secondary" onPress={onDone} />
+        <LipButton label="Keep going" variant="primary" onPress={onOneMore} icon={Icons.forward} />
+        <LipButton label="Back to home" variant="secondary" onPress={onDone} />
       </View>
     </View>
   );

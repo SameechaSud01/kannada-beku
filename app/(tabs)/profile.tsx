@@ -25,6 +25,9 @@ import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { SignOutDialog } from '../../components/modals/instances/SignOutDialog';
 import { RemindersSheet } from '../../components/modals/instances/RemindersSheet';
 import { GoalSummarySheet } from '../../components/modals/instances/GoalSummarySheet';
+import { ProfileSkeleton } from '../../components/states/skeletons/TabSkeletons';
+import { NoStreakEmpty } from '../../components/states/empties/TabEmpties';
+import { useDbLessons } from '../../hooks/useLessons';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
@@ -34,6 +37,7 @@ export default function ProfileScreen() {
   const lessonsDone = useCompletedLessons().length;
   const overall = useOverallProgress();
   const overallPct = Math.max(0, Math.min(100, Math.round(overall.data?.progressPct ?? 0)));
+  const dbLessons = useDbLessons().data ?? [];
   const user = useAuthStore((s) => s.user);
   const displayName = useUserStore((s) => s.displayName);
   const motivations = useUserStore((s) => s.motivations);
@@ -88,6 +92,17 @@ export default function ProfileScreen() {
   const goalSub = [dailyGoalLabel, motivations.length ? `${motivations.length} reason${motivations.length === 1 ? '' : 's'}` : null]
     .filter(Boolean)
     .join(' · ');
+
+  // First-load shimmer while overall progress fetches — same chrome, no reflow.
+  if (overall.isLoading) return <ProfileSkeleton streak={streak} />;
+
+  // Brand-new learner (no lessons, no streak) → an encouraging empty whose one
+  // action starts their first lesson. Normal profile renders once any progress
+  // exists.
+  if (lessonsDone === 0 && streak === 0) {
+    const firstSlug = dbLessons.find((l) => l.lessonNo === 1)?.slug ?? dbLessons[0]?.slug;
+    return <NoStreakEmpty onStart={() => router.push(firstSlug ? `/lesson/${firstSlug}` : '/(tabs)/learn')} />;
+  }
 
   const settingsItems: Array<{ id: string; label: string; Icon: TablerIcon; onPress: () => void }> = [
     {

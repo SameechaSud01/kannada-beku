@@ -50,6 +50,7 @@ import {
   IconMoodSad,
   IconPhoto,
   IconPlayerPlayFilled,
+  IconRefresh,
   IconSparkles,
   IconStack2,
   IconStarFilled,
@@ -58,6 +59,7 @@ import {
   IconUrgent,
   IconUser,
   IconVolume,
+  IconWifiOff,
   IconX,
 } from '@tabler/icons-react-native';
 
@@ -133,6 +135,10 @@ export const Icons = {
   // Celebration overlay (spec_playful_redesign §Celebration)
   trophy: IconTrophy, // lesson complete
   star: IconStarFilled, // level up
+
+  // System states (failure full-screens)
+  refresh: IconRefresh, // "Try again" on error/offline screens
+  wifiOff: IconWifiOff, // full-screen offline caution well
 } as const;
 
 export type IconName = keyof typeof Icons;
