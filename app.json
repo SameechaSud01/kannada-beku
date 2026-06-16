@@ -21,7 +21,7 @@
         "ITSAppUsesNonExemptEncryption": false
       },
       "bundleIdentifier": "com.samsud01.kannadabeku",
-      "buildNumber": "3"
+      "buildNumber": "5"
     },
     "android": {
       "adaptiveIcon": {
@@ -35,7 +35,7 @@
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.samsud01.kannadabeku",
-      "versionCode": 3
+      "versionCode": 4
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -53,7 +53,18 @@
           "iosUrlScheme": "com.googleusercontent.apps.734110592411-t6ebm9jukos396u6beei30ccgasu2ejq"
         }
       ],
-      "expo-apple-authentication"
+      "expo-apple-authentication",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "extraPods": [
+              { "name": "GoogleUtilities", "modular_headers": true },
+              { "name": "RecaptchaInterop", "modular_headers": true }
+            ]
+          }
+        }
+      ]
     ],
     "extra": {
       "router": {},
