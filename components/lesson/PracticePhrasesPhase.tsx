@@ -28,9 +28,6 @@ interface PracticePhrasesPhaseProps {
   onAdvance: () => void;
 }
 
-const CORRECT_DELAY_MS = 800;
-const WRONG_DELAY_MS = 1000;
-
 function pickDistractors(pool: Phrase[], current: Phrase): Phrase[] {
   const candidates = pool.filter((ph) => ph !== current);
   if (candidates.length === 0) return [];
@@ -95,10 +92,6 @@ export function PracticePhrasesPhase({
   const handlePickOption = (idx: number) => {
     if (picked !== null) return;
     setPicked(idx);
-    const isCorrect = idx === correctIndex;
-    setTimeout(() => {
-      onAdvance();
-    }, isCorrect ? CORRECT_DELAY_MS : WRONG_DELAY_MS);
   };
 
   const handleISaidIt = () => {
@@ -157,6 +150,45 @@ export function PracticePhrasesPhase({
               />
             ))}
           </View>
+
+          {picked !== null ? (
+            <View
+              style={{
+                backgroundColor: Colors.surfaceCreamLow,
+                borderRadius: Radius.chunky,
+                borderBottomWidth: 4,
+                borderBottomColor: Colors.cardLip,
+                paddingVertical: Spacing.xl,
+                paddingHorizontal: Spacing.lg,
+                alignItems: 'center',
+                marginTop: Spacing.xl,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: Fonts.dmSans.bold,
+                  fontSize: moderateScale(20),
+                  lineHeight: moderateScale(28),
+                  color: Colors.onSurface,
+                  textAlign: 'center',
+                }}
+                maxFontSizeMultiplier={1.2}
+              >
+                {phrase.transliteration}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: Fonts.notoSansKannada.regular,
+                  fontSize: moderateScale(13),
+                  color: Colors.textFaint,
+                  textAlign: 'center',
+                  marginTop: Spacing.sm,
+                }}
+              >
+                {phrase.kannada}
+              </Text>
+            </View>
+          ) : null}
         </ScrollView>
       ) : (
         <ScrollView
@@ -255,6 +287,12 @@ export function PracticePhrasesPhase({
             <SpeedControl onRateChange={handleReplay} />
           </View>
         </ScrollView>
+      )}
+
+      {step === 'listen' && picked !== null && (
+        <View style={{ padding: Spacing.lg, paddingBottom: insets.bottom + Spacing.lg }}>
+          <LipButton label="Next" onPress={onAdvance} icon={Icons.forward} />
+        </View>
       )}
 
       {step === 'say' && (

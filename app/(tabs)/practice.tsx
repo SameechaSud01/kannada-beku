@@ -9,6 +9,8 @@ import { Spacing, Radius } from '../../constants/spacing';
 import { useCompletedLessons } from '../../hooks/progress';
 import { useProgressStore } from '../../stores/progressStore';
 import { useStreakCelebration } from '../../hooks/useStreakCelebration';
+import { useDbLessons } from '../../hooks/useLessons';
+import { GamesLockedEmpty } from '../../components/states/empties/TabEmpties';
 import { Icons } from '../../constants/icons';
 import { Watermark } from '../../components/ui/Watermark';
 import { TopBar } from '../../components/ui/TopBar';
@@ -76,6 +78,7 @@ export default function PracticeScreen() {
   const completedLessons = useCompletedLessons();
   const completedParts = useProgressStore((s) => s.completedParts);
   const { streak, onStreakPress } = useStreakCelebration();
+  const dbLessons = useDbLessons().data ?? [];
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(4)).current;
@@ -89,6 +92,18 @@ export default function PracticeScreen() {
 
   const hasUnlocked = completedParts.length > 0 || completedLessons.length > 0;
   const go = (id: GameId) => router.push(`/${id}`);
+
+  // Nothing unlocked yet → a single "Games unlock as you learn" empty whose one
+  // action starts Lesson 1 (falls back to the Learn tab if lessons aren't loaded).
+  if (!hasUnlocked) {
+    const firstSlug = dbLessons.find((l) => l.lessonNo === 1)?.slug ?? dbLessons[0]?.slug;
+    return (
+      <GamesLockedEmpty
+        streak={streak}
+        onStart={() => router.push(firstSlug ? `/lesson/${firstSlug}` : '/(tabs)/learn')}
+      />
+    );
+  }
 
   return (
     <Animated.View

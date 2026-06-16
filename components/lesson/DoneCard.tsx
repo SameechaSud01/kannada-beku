@@ -103,7 +103,10 @@ export function DoneCard({ lesson, games = DEFAULT_GAMES, onClose }: DoneCardPro
                   modal.dismiss();
                   router.push('/(tabs)/learn');
                 },
-                onDone: () => modal.dismiss(),
+                onDone: () => {
+                  modal.dismiss();
+                  router.push('/(tabs)');
+                },
               },
             });
           } else {

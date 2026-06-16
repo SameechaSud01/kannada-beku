@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import Animated, { FadeOut } from 'react-native-reanimated';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, DMSans_400Regular, DMSans_500Medium, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
@@ -29,6 +31,7 @@ import { Audio } from 'expo-av';
 import { isKannadaVoiceAvailable } from '../services/audio/deviceTtsAudioService';
 import { ModalHost, useModal } from '../components/modals/ModalHost';
 import { ToastHost } from '../components/modals/ToastHost';
+import { BrandSplash } from '../components/states/BrandSplash';
 import { TTSUnavailableDialog } from '../components/modals/instances/TTSUnavailableDialog';
 import {
   scheduleDailyReminder,
@@ -55,18 +58,24 @@ async function hydrateCompletions(userId: string) {
     .getState()
     .completedLessons.filter((slug) => !serverSet.has(slug));
 
-  for (const slug of localOnly) {
-    try {
-      const lessonId = await fetchLessonIdBySlug(slug);
-      if (!lessonId) {
-        console.warn('[progress] backfill skipped, no lesson for slug', slug);
-        continue;
+  // Backfill local-only slugs concurrently. Each slug keeps its own try/catch so
+  // one failure can't abort the rest; ordering is irrelevant because the union is
+  // merged below. record_lesson_completion is personal-best idempotent, so a
+  // concurrent write can never lower an existing score.
+  await Promise.all(
+    localOnly.map(async (slug) => {
+      try {
+        const lessonId = await fetchLessonIdBySlug(slug);
+        if (!lessonId) {
+          console.warn('[progress] backfill skipped, no lesson for slug', slug);
+          return;
+        }
+        await recordLessonCompletion(lessonId, null);
+      } catch (err) {
+        console.warn('[progress] backfill failed for slug', slug, err);
       }
-      await recordLessonCompletion(lessonId, null);
-    } catch (err) {
-      console.warn('[progress] backfill failed for slug', slug, err);
-    }
-  }
+    }),
+  );
 
   useProgressStore
     .getState()
@@ -229,7 +238,33 @@ function AppGate() {
     }
   }, [session, authLoading, segments, hasCompletedOnboarding, storedUserId, userHydrated, progressHydrated]);
 
-  return <Slot />;
+  // Animated brand splash (Splash C) covers the boot hydration window — the gap
+  // between the native splash hiding (fonts ready) and auth/stores resolving.
+  // It fades out once the boot gate is clear AND a minimum on-screen time has
+  // passed, so the reveal animation always gets to play (hydration is often
+  // near-instant on a warm start).
+  const MIN_SPLASH_MS = 3200;
+  const booting = authLoading || !userHydrated || !progressHydrated;
+  const [splashVisible, setSplashVisible] = useState(true);
+  const [minElapsed, setMinElapsed] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setMinElapsed(true), MIN_SPLASH_MS);
+    return () => clearTimeout(t);
+  }, []);
+  useEffect(() => {
+    if (!booting && minElapsed) setSplashVisible(false);
+  }, [booting, minElapsed]);
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Slot />
+      {splashVisible ? (
+        <Animated.View exiting={FadeOut.duration(350)} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}>
+          <BrandSplash />
+        </Animated.View>
+      ) : null}
+    </View>
+  );
 }
 
 export default function RootLayout() {
