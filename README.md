@@ -15,7 +15,7 @@ A mobile app for learning Kannada — built with Expo (SDK 54), Expo Router, Rea
 - **The Expo Go app** on your phone ([iOS](https://apps.apple.com/app/expo-go/id982107779) / [Android](https://play.google.com/store/apps/details?id=host.exp.exponent)) — the easiest way to run the app
 - *(Optional)* **Xcode** with an iOS simulator, and/or **Android Studio** with an emulator — only if you prefer simulators over a physical phone
 
-> **This app runs in Expo Go.** No native build, no Apple/Google account, no EAS setup — install the Expo Go app on your phone, start the dev server, and scan the QR code. Your phone and computer just need to be on the same Wi-Fi network.
+> **This app runs in Expo Go.** No native build, no Apple/Google account, no EAS setup — install the Expo Go app on your phone, start the dev server [(Running the app)](#running-the-app), and scan the QR code. Your phone and computer just need to be on the same Wi-Fi network.
 
 ---
 
@@ -24,6 +24,7 @@ A mobile app for learning Kannada — built with Expo (SDK 54), Expo Router, Rea
 ```bash
 # 1. Clone and enter the repo
 git clone <repo-url> "Kannada Beku"
+# Replace `<repo-url>` with the repository URL found under the green "code" button in github
 cd "Kannada Beku"
 
 # 2. Install dependencies. This also runs automatically on install:
@@ -91,31 +92,39 @@ Tips:
 ---
 
 ## Project layout
+#### App (`app/`)
 
-```
-app/                Expo Router screens — file-based routing
-  _layout.tsx       Root layout: fonts, auth gate, QueryClient
-  (auth)/           Login / signup flow
-  (tabs)/           Main tab navigator
-  onboarding/       First-run onboarding screens
-  lesson/           Lesson runner
-  heritage/         Heritage detail screens
-components/         Reusable components, grouped by domain
-constants/          colors, copy, fonts, spacing, lesson content
-data/               Static JSON: lessons.json, phrases.json
-hooks/              Custom React hooks
-services/           External integrations
-  api/              Supabase client
-  audio/            TTS / audio playback
-  text/             Text helpers (e.g. transliteration)
-stores/             Zustand stores (auth, user, progress)
-utils/              Small pure helpers
-assets/             Images, icons, splash
-scripts/            Local-only dev scripts (gitignored)
-```
+| Path | Purpose |
+| --- | --- |
+| `_layout.tsx` | Root layout: fonts, auth gate, QueryClient |
+| `(auth)/` | Login / signup flow |
+| `(tabs)/` | Main tab navigator |
+| `onboarding/` | First-run onboarding screens |
+| `lesson/` | Lesson runner |
+| `heritage/` | Heritage detail screens |
 
-One screen per file in `app/`. Route name = filename.
+Each screen has its own file inside the `app/` folder. Route taken by the screen is the file name.
 
+#### Core project directories
+
+| Directory | Purpose |
+| --- | --- |
+| `components/` | Reusable components, grouped by domain |
+| `constants/` | colors, copy, fonts, spacing, lesson content |
+| `data/` | Static JSON: lessons.json, phrases.json |
+| `hooks/` | Custom React hooks |
+| `stores/` | Zustand stores (auth, user, progress) |
+| `utils/` | Small pure helpers |
+| `assets/` | Images, icons, splash |
+| `scripts/` | Local-only dev scripts (gitignored) |
+
+#### Services (`services/`)
+
+| Path | Purpose |
+| --- | --- |
+| `api/` | Supabase client |
+| `audio/` | TTS / audio playback |
+| `text/` | Text helpers (e.g. transliteration) |
 ---
 
 ## Stack and conventions
