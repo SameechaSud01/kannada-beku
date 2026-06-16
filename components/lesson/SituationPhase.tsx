@@ -91,6 +91,31 @@ export function SituationPhase({ lesson, onAdvance }: SituationPhaseProps) {
         >
           {lesson.situation}
         </Text>
+
+        {lesson.registerNote ? (
+          <View
+            style={{
+              backgroundColor: Colors.surface,
+              borderRadius: Radius.lg,
+              borderLeftWidth: 4,
+              borderLeftColor: Colors.goldLip,
+              paddingVertical: Spacing.md,
+              paddingHorizontal: Spacing.lg,
+              marginTop: Spacing.xl,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.regular,
+                fontSize: moderateScale(14),
+                color: Colors.tertiary,
+                lineHeight: moderateScale(21),
+              }}
+            >
+              {lesson.registerNote}
+            </Text>
+          </View>
+        ) : null}
       </ScrollView>
 
       <View style={{ padding: Spacing.lg, paddingBottom: insets.bottom + Spacing.lg }}>

@@ -1,12 +1,13 @@
 import { useMemo } from 'react';
-import { lessonSectionsByNo } from '@/constants/lessons/lessonContent';
+import { lessonSectionsByNo, lessonSlugByNo } from '@/constants/lessons/lessonContent';
 import { useProgressStore } from '@/stores/progressStore';
 
 /**
- * Shared game sub-part logic (spec_game_subsection_split). A game is split into
- * the same sub-sections as its lesson (1a / 1b / 1c …); each game item carries a
- * `section` key that ties it to one. Parts unlock sequentially, mirroring the
- * lesson sub-part chooser.
+ * Shared game sub-part logic (spec_game_subsection_split / spec_fix_games_flow).
+ * A game is split into the same sub-sections as its lesson (1a / 1b / 1c …); each
+ * game item carries a `section` key that ties it to one. A game part `Nx` unlocks
+ * 1:1 with its *lesson* part — once the learner has finished lesson part `Nx` (or
+ * the whole lesson), the matching game part is playable.
  */
 
 export interface GamePartState {
@@ -48,12 +49,13 @@ function availableSections(
 
 function computePartStates(
   sections: { key: string; label: string; count: number }[],
-  doneKeys: ReadonlySet<string>,
+  playedKeys: ReadonlySet<string>, // completedGameParts → `done`
+  unlockedKeys: ReadonlySet<string>, // lesson parts done → `unlocked`
 ): GamePartState[] {
   let activeAssigned = false;
   return sections.map((s, i, arr) => {
-    const done = doneKeys.has(s.key);
-    const unlocked = i === 0 || doneKeys.has(arr[i - 1].key);
+    const done = playedKeys.has(s.key);
+    const unlocked = unlockedKeys.has(s.key); // 1:1 with the lesson part
     const active = unlocked && !done && !activeAssigned;
     if (active) activeAssigned = true;
     return {
@@ -91,7 +93,9 @@ export function useGameSplit<T extends Sectioned>(
   items: T[] | undefined,
   section: string | null,
 ): GameSplit<T> {
-  const completed = useProgressStore((s) => s.completedGameParts);
+  const completedGameParts = useProgressStore((s) => s.completedGameParts);
+  const completedParts = useProgressStore((s) => s.completedParts);
+  const completedLessons = useProgressStore((s) => s.completedLessons);
 
   const sections = useMemo(
     () => availableSections(lessonNo, (items ?? []).map((i) => i.section)),
@@ -99,12 +103,29 @@ export function useGameSplit<T extends Sectioned>(
   );
 
   const parts = useMemo(() => {
-    const prefix = `${gameKey}:`;
-    const doneKeys = new Set(
-      completed.filter((k) => k.startsWith(prefix)).map((k) => k.slice(prefix.length)),
+    const slug = lessonSlugByNo(lessonNo);
+    const lessonComplete = !!slug && completedLessons.includes(slug);
+    const gamePrefix = `${gameKey}:`;
+    const played = new Set(
+      completedGameParts
+        .filter((k) => k.startsWith(gamePrefix))
+        .map((k) => k.slice(gamePrefix.length)),
     );
-    return computePartStates(sections, doneKeys);
-  }, [sections, completed, gameKey]);
+    // A whole-lesson completion backfills every section as unlocked; otherwise a
+    // section is unlocked once its lesson part is complete (1:1, not the game's
+    // own sequence). Single-section lessons land in `completedLessons`, so they
+    // unlock through the lessonComplete path.
+    const unlocked = new Set(
+      lessonComplete
+        ? sections.map((s) => s.key)
+        : slug
+          ? completedParts
+              .filter((k) => k.startsWith(`${slug}:`))
+              .map((k) => k.slice(slug.length + 1))
+          : [],
+    );
+    return computePartStates(sections, played, unlocked);
+  }, [sections, completedGameParts, completedParts, completedLessons, gameKey, lessonNo]);
 
   const multi = parts.length > 1;
   const showChooser = multi && !section;

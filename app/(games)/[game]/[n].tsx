@@ -8,7 +8,6 @@ import { Fonts } from '@/constants/fonts';
 import { isGameKey, type GameKey } from '@/constants/games';
 import OppositeGame from '@/src/games/opposites';
 import DictationGame from '@/src/games/dictation';
-import ImageMatchGame from '@/src/games/imagematch';
 import QuickQuizGame from '@/src/games/quickquiz';
 import ConversationGame from '@/src/games/conversations';
 
@@ -20,7 +19,9 @@ export default function GameRunnerScreen() {
     part?: string;
   }>();
 
-  if (!gameParam || !isGameKey(gameParam)) {
+  // Image Match's runner is dead (dropped DB table, spec_fix_games_flow Phase B);
+  // treat the route as not-found until the full removal lands.
+  if (!gameParam || !isGameKey(gameParam) || gameParam === 'image-match') {
     return <NotFound onBack={() => router.replace('/practice')} />;
   }
 
@@ -34,8 +35,6 @@ export default function GameRunnerScreen() {
       return <OppositeGame lessonNo={lessonNo} section={part} />;
     case 'dictation':
       return <DictationGame lessonNo={lessonNo} section={part} />;
-    case 'image-match':
-      return <ImageMatchGame lessonNo={lessonNo} />;
     case 'quiz':
       return <QuickQuizGame lessonNo={lessonNo} section={part} />;
     case 'conversations':

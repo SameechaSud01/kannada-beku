@@ -6,7 +6,7 @@
 -- (2026-05-20_lessons_content.sql). Same `verified: false` caveat applies —
 -- none of this Kannada has been audited by a native speaker.
 --
--- Coverage: L1 8, L2 8, L3 8, L4 6, L5 8, L6 8. L7/L8 empty (no lesson
+-- Coverage: L1 7, L2 8, L3 8, L4 6, L5 8, L6 8. L7/L8 empty (no lesson
 -- content authored yet) — the runner shows the existing empty state there.
 
 insert into public.quick_quiz_items
@@ -14,8 +14,9 @@ insert into public.quick_quiz_items
 select l.id, s.sort_order, s.kannada, s.transliteration, s.meaning
 from (values
   -- ---- L1 Greetings
+  -- namaskāra is the single standard greeting; the former namaste entry
+  -- (sort 2) was dropped — see 2026-06-16_standardize_namaskara_greeting.sql.
   (1, 1, 'ನಮಸ್ಕಾರ',          'namaskāra',      'Hello / greetings'),
-  (1, 2, 'ನಮಸ್ತೆ',            'namaste',        'Hello'),
   (1, 3, 'ಹೇಗಿದ್ದೀರ?',         'hēgiddīra?',     'How are you? (respectful)'),
   (1, 4, 'ಹೇಗಿದ್ದೀಯ?',         'hēgiddīya?',     'How are you? (neutral)'),
   (1, 5, 'ಚೆನ್ನಾಗಿದ್ದೇನೆ',      'chennāgiddēne',  'I am fine'),

@@ -3,13 +3,14 @@ import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
-import { BASIC_PRINCIPLES, GUIDE_INTRO_BLURB } from '../../constants/guide';
+import { GUIDE_INTRO_BLURB, type BasicPrinciple } from '../../constants/guide';
 
 /**
  * Step 1 — "Three things — that's it". A reassurance paragraph + three numbered
- * cards with gold number circles (chunky_v3 §8).
+ * cards with gold number circles (chunky_v3 §8). Principles are DB-sourced; the
+ * heading + intro blurb are fixed UI chrome.
  */
-export function StepThings() {
+export function StepThings({ principles }: { principles: BasicPrinciple[] }) {
   return (
     <View>
       <Text
@@ -39,7 +40,7 @@ export function StepThings() {
       </Text>
 
       <View style={{ gap: moderateScale(12) }}>
-        {BASIC_PRINCIPLES.map((p, idx) => (
+        {principles.map((p, idx) => (
           <View
             key={p.title}
             style={{

@@ -49,8 +49,10 @@ export function buildQuiz(
     return {
       itemId: target.id,
       direction,
-      prompt: direction === 'kn-to-en' ? target.kannada : target.meaning,
-      promptSub: direction === 'kn-to-en' ? target.transliteration : '',
+      // kn→en leads with the English transliteration (Kannada script can clip at
+      // the large prompt size); the Kannada word rides along as a small subtitle.
+      prompt: direction === 'kn-to-en' ? (target.transliteration || target.kannada) : target.meaning,
+      promptSub: direction === 'kn-to-en' && target.transliteration ? target.kannada : '',
       answerId: target.id,
       options,
     };

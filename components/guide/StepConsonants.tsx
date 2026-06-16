@@ -6,7 +6,7 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
-import { CONSONANT_FAMILIES, type ConsonantFamily } from '../../constants/guide';
+import { type ConsonantFamily } from '../../constants/guide';
 
 if (
   Platform.OS === 'android' &&
@@ -16,6 +16,8 @@ if (
 }
 
 interface StepConsonantsProps {
+  /** The place-of-articulation families (DB-sourced). */
+  families: ConsonantFamily[];
   /** Open the full 34-letter chart reference screen. */
   onOpenChart: () => void;
 }
@@ -25,11 +27,11 @@ interface StepConsonantsProps {
  * time. Open family = goldLip border + lip 4; glyph chips = goldPale tiles with
  * a 2px goldLip lip. A secondary-link opens the full 34-letter chart.
  */
-export function StepConsonants({ onOpenChart }: StepConsonantsProps) {
+export function StepConsonants({ families, onOpenChart }: StepConsonantsProps) {
   const reduceMotion = useReducedMotion();
   // First family open by default.
   const [openId, setOpenId] = useState<ConsonantFamily['id'] | null>(
-    CONSONANT_FAMILIES[0]?.id ?? null,
+    families[0]?.id ?? null,
   );
 
   const toggle = (id: ConsonantFamily['id']) => {
@@ -68,7 +70,7 @@ export function StepConsonants({ onOpenChart }: StepConsonantsProps) {
       </Text>
 
       <View style={{ gap: moderateScale(10) }}>
-        {CONSONANT_FAMILIES.map((fam) => {
+        {families.map((fam) => {
           const isOpen = openId === fam.id;
           return (
             <View

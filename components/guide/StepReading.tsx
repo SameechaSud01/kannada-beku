@@ -4,7 +4,8 @@ import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
-import { READING_ROWS, TRY_IT } from '../../constants/guide';
+import { type ReadingRow } from '../../constants/guide';
+import { type GuideTryIt } from '../../services/api/guide';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { Toasts } from '../modals/instances/toastCatalog';
 import { AudioOrb } from '../ui/AudioOrb';
@@ -12,8 +13,15 @@ import { AudioOrb } from '../ui/AudioOrb';
 /**
  * Step 4 — "Reading + try it". A capital/lowercase comparison card (capitals
  * red, lowercase deep-gold) + a goldPale "TRY IT" card with a gold AudioOrb.
+ * Reading rows + try-it word are DB-sourced; the heading is fixed UI chrome.
  */
-export function StepReading() {
+export function StepReading({
+  readingRows,
+  tryIt,
+}: {
+  readingRows: ReadingRow[];
+  tryIt: GuideTryIt;
+}) {
   const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
@@ -25,7 +33,7 @@ export function StepReading() {
   const handlePlay = () => {
     setPlaying(true);
     deviceTtsAudioService
-      .play(TRY_IT.kannada)
+      .play(tryIt.kannada)
       .catch((err) => {
         console.warn('[guide_reading] play failed', err);
         Toasts.audioFailed(handlePlay);
@@ -75,7 +83,7 @@ export function StepReading() {
           marginBottom: Spacing.lg,
         }}
       >
-        {READING_ROWS.map((row, idx) => (
+        {readingRows.map((row, idx) => (
           <View
             key={row.symbol}
             style={{
@@ -140,7 +148,7 @@ export function StepReading() {
           paddingHorizontal: moderateScale(18),
         }}
         accessibilityRole="text"
-        accessibilityLabel={`Try it: ${TRY_IT.transliteration}, ${TRY_IT.kannada}, meaning ${TRY_IT.english}`}
+        accessibilityLabel={`Try it: ${tryIt.transliteration}, ${tryIt.kannada}, meaning ${tryIt.english}`}
       >
         <View style={{ flex: 1 }}>
           <Text
@@ -165,7 +173,7 @@ export function StepReading() {
               }}
               maxFontSizeMultiplier={1.3}
             >
-              {TRY_IT.transliteration}
+              {tryIt.transliteration}
             </Text>
             <Text
               style={{
@@ -175,7 +183,7 @@ export function StepReading() {
               }}
               maxFontSizeMultiplier={1.2}
             >
-              {TRY_IT.kannada}
+              {tryIt.kannada}
             </Text>
           </View>
           <Text
@@ -187,7 +195,7 @@ export function StepReading() {
             }}
             maxFontSizeMultiplier={1.4}
           >
-            “{TRY_IT.english}” — the doubled ‘LL’ lingers, tongue curled.
+            “{tryIt.english}” — the doubled ‘LL’ lingers, tongue curled.
           </Text>
         </View>
 
@@ -198,7 +206,7 @@ export function StepReading() {
           lipColor={Colors.goldLip}
           playing={playing}
           onPress={handlePlay}
-          accessibilityLabel={`Hear ${TRY_IT.transliteration}`}
+          accessibilityLabel={`Hear ${tryIt.transliteration}`}
         />
       </View>
     </View>

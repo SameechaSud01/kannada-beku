@@ -201,17 +201,16 @@ function DictationGameInner({
 
         <FeedbackBanner state={answerState === 'correct' ? 'correct' : answered ? 'wrong' : 'unanswered'} streak={streak} />
 
-        {/* On a miss, reveal the correct word so the learner still learns it. */}
+        {/* On a miss, reveal the correct word so the learner still learns it —
+            English transliteration leads, Kannada script as a small reference. */}
         {answered && answerState !== 'correct' && (
           <View style={{ alignItems: 'center', gap: moderateScale(2) }}>
-            <Text style={{ fontFamily: Fonts.notoSansKannada.bold, fontSize: moderateScale(22), color: Colors.onSurface }}>
+            <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(22), color: Colors.onSurface }}>
+              {currentWord.phonetic || currentWord.accepted[0] || currentWord.kn}
+            </Text>
+            <Text style={{ fontFamily: Fonts.notoSansKannada.regular, fontSize: moderateScale(15), color: Colors.tertiary }}>
               {currentWord.kn}
             </Text>
-            {currentWord.phonetic ? (
-              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: Colors.tertiary }}>
-                {currentWord.phonetic}
-              </Text>
-            ) : null}
           </View>
         )}
 

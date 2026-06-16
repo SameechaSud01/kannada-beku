@@ -7,6 +7,7 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { useCompletedLessons } from '../../hooks/progress';
+import { useProgressStore } from '../../stores/progressStore';
 import { useStreakCelebration } from '../../hooks/useStreakCelebration';
 import { Icons } from '../../constants/icons';
 import { Watermark } from '../../components/ui/Watermark';
@@ -73,6 +74,7 @@ export default function PracticeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const completedLessons = useCompletedLessons();
+  const completedParts = useProgressStore((s) => s.completedParts);
   const { streak, onStreakPress } = useStreakCelebration();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -85,8 +87,7 @@ export default function PracticeScreen() {
     ]).start();
   }, []);
 
-  const completed = completedLessons.length;
-  const hasUnlocked = completed > 0;
+  const hasUnlocked = completedParts.length > 0 || completedLessons.length > 0;
   const go = (id: GameId) => router.push(`/${id}`);
 
   return (
@@ -176,7 +177,7 @@ export default function PracticeScreen() {
         >
           {hasUnlocked
             ? 'Each game draws only from phrases you’ve already learned.'
-            : 'Finish Lesson 1 on the Learn tab to unlock your games.'}
+            : 'Finish a lesson part on the Learn tab to unlock your games.'}
         </Text>
       </ScrollView>
     </Animated.View>

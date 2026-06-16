@@ -194,7 +194,8 @@ export default function EmergencyScreen() {
           >
             {current?.items.map((item) => {
               const accent = groupAccent(current.id);
-              const caption = [item.transliteration, item.meaning].filter(Boolean).join(' · ');
+              const hero = item.transliteration ?? item.kannada;
+              const caption = [item.meaning, item.kannada].filter(Boolean).join(' · ');
               return (
                 <View
                   key={item.id}
@@ -215,7 +216,7 @@ export default function EmergencyScreen() {
                   }}
                 >
                   <View style={{ flex: 1 }}>
-                    {/* Kannada hero */}
+                    {/* Romanised hero — say it out loud */}
                     <Text
                       style={{
                         fontFamily: Fonts.baloo.bold,
@@ -226,7 +227,7 @@ export default function EmergencyScreen() {
                       }}
                       maxFontSizeMultiplier={1.3}
                     >
-                      {item.kannada}
+                      {hero}
                     </Text>
                     {caption ? (
                       <Text

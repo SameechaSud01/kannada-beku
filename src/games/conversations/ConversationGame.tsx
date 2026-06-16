@@ -146,7 +146,13 @@ function ConversationRound({
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ScrollView
         ref={scrollRef}
-        onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
+        keyboardShouldPersistTaps="handled"
+        // Non-animated: the NPC line types in character-by-character, firing
+        // onContentSizeChange every ~35ms. An *animated* scrollToEnd keeps a
+        // scroll in flight for the whole reveal, and the ScrollView's gesture
+        // responder eats taps on its children while it runs (B1). Jumping
+        // instantly avoids that touch-stealing window.
+        onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: false })}
         contentContainerStyle={{
           paddingHorizontal: Spacing.lg,
           paddingVertical: Spacing.lg,
@@ -194,15 +200,25 @@ function ConversationRound({
         />
 
         <FeedbackBanner state={answerState} streak={streak} />
+      </ScrollView>
 
-        {answered && (
+      {/* Advance button lives OUTSIDE the ScrollView so its taps are never
+          intercepted by the auto-scroll responder while the next line types (B1). */}
+      {answered && (
+        <View
+          style={{
+            paddingHorizontal: Spacing.lg,
+            paddingTop: Spacing.md,
+            paddingBottom: Spacing.lg,
+          }}
+        >
           <LipButton
             label={currentIndex + 1 < totalTurns ? 'Next ▸' : 'See results'}
             variant="primary"
             onPress={handleNext}
           />
-        )}
-      </ScrollView>
+        </View>
+      )}
     </SafeAreaView>
   );
 }

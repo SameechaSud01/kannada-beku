@@ -35,6 +35,12 @@ export interface Lesson {
   slug: string;
   situation: string;
   realWorldPrompt: string;
+  /**
+   * Optional note shown on the Situation screen for lessons that teach the
+   * neutral/respectful (singular/plural) distinction, explaining when to use
+   * each register.
+   */
+  registerNote?: string;
   /** Sequential sub-parts; length 1 for un-split lessons. */
   sections: LessonSection[];
   /**

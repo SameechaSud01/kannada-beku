@@ -147,8 +147,9 @@ insert into public.dictation_items
 select l.id, s.sort_order, s.expected_answer, s.accepted_json::jsonb, s.phonetic
 from (values
   -- ---- L1 Greetings
+  -- namaskāra is the single standard greeting; the former namaste entry
+  -- (sort 2) was dropped — see 2026-06-16_standardize_namaskara_greeting.sql.
   (1, 1, 'ನಮಸ್ಕಾರ',       '["namaskara","namaskaara","namaskāra"]', 'na-mas-kā-ra'),
-  (1, 2, 'ನಮಸ್ತೆ',         '["namaste","namasthe","namasthay"]', 'na-mas-te'),
   (1, 3, 'ಹೇಗಿದ್ದೀರ',     '["hegiddira","haegiddira","hegiddera"]', 'hē-gid-dī-ra'),
   (1, 4, 'ಚೆನ್ನಾಗಿದ್ದೇನೆ', '["chennagiddene","chennagidene","channagidene"]', 'chen-nā-gid-dē-ne'),
   (1, 5, 'ನೀವು',          '["nivu","neevu","neevoo"]', 'nī-vu'),
