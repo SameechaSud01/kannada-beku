@@ -44,6 +44,13 @@ const sec = (
 
 type AuthoredLesson = Omit<Lesson, 'words' | 'phrases'>;
 
+/**
+ * Shared note for lessons that teach the neutral/respectful split. Shown on the
+ * Situation screen so a learner knows which form to reach for.
+ */
+const REGISTER_NOTE =
+  'Neutral = use with someone your age or younger. Respectful = use with elders or strangers.';
+
 const AUTHORED: AuthoredLesson[] = [
   // ============================================================
   // Lesson 1 — Greetings
@@ -56,14 +63,14 @@ const AUTHORED: AuthoredLesson[] = [
     situation:
       'You have just met someone — a neighbour, a shopkeeper, someone at work. This is how you open.',
     realWorldPrompt:
-      'Next time you see your auto driver, building guard, or a shopkeeper — open with "namaste, heegiddira?" before anything else.',
+      'Next time you see your auto driver, building guard, or a shopkeeper — open with "namaskāra, heegiddira?" before anything else.',
+    registerNote: REGISTER_NOTE,
     sections: [
       sec(
         '1a',
         'Saying hello',
         [
           w('ನಮಸ್ಕಾರ', 'namaskāra', 'Hello / greetings'),
-          w('ನಮಸ್ತೆ', 'namaste', 'Hello'),
           w('ನೀವು', 'nīvu', 'You (respectful/plural)'),
           w('ನೀನು', 'nīnu', 'You (neutral/singular)'),
         ],
@@ -89,8 +96,8 @@ const AUTHORED: AuthoredLesson[] = [
         'Greeting someone',
         [],
         [
-          p('ನಮಸ್ತೆ, ಹೇಗಿದ್ದೀರ?', 'namaste, hēgiddīra?', 'Hello, how are you? (respectful)'),
-          p('ನಮಸ್ತೆ, ಹೇಗಿದ್ದೀಯ?', 'namaste, hēgiddīya?', 'Hello, how are you? (neutral)'),
+          p('ನಮಸ್ಕಾರ, ಹೇಗಿದ್ದೀರ?', 'namaskāra, hēgiddīra?', 'Hello, how are you? (respectful)'),
+          p('ನಮಸ್ಕಾರ, ಹೇಗಿದ್ದೀಯ?', 'namaskāra, hēgiddīya?', 'Hello, how are you? (neutral)'),
           p('ನಾವು ಚೆನ್ನಾಗಿದ್ದೇವೆ', 'nāvu chennāgiddēve', 'We are fine'),
         ],
       ),
@@ -109,6 +116,7 @@ const AUTHORED: AuthoredLesson[] = [
       'You are meeting someone for the first time — at work, in your building, or at a social event.',
     realWorldPrompt:
       'Next time you meet someone new, ask "nimma hesaru enu?" — even if they speak English back, you opened in Kannada.',
+    registerNote: REGISTER_NOTE,
     sections: [
       sec(
         '2a',
@@ -164,6 +172,7 @@ const AUTHORED: AuthoredLesson[] = [
       'You are at a street market, vegetable vendor, or small shop. You want something, you want to know the price, and you want to negotiate.',
     realWorldPrompt:
       'Next time you buy vegetables or anything from a street vendor, ask "idu estu?" instead of pointing at the price.',
+    registerNote: REGISTER_NOTE,
     sections: [
       sec(
         '3a',
@@ -179,7 +188,7 @@ const AUTHORED: AuthoredLesson[] = [
           w('ಇಲ್ಲ', 'illa', 'No'),
         ],
         [
-          p('ನನಗೆ ಇದು ಬೇಕು', 'nanage idu bēku', 'I want this'),
+          p('ನನಗೆ ಇದು ಬೇಕು', 'nanage idhu bēku', 'I want this'),
           p('ನಮಗೆ ಅದು ಬೇಕು', 'namage adu bēku', 'We want that'),
           p('ನಿನಗೆ ಬೇಕಾ?', 'ninage bēkā?', 'Do you want? (neutral)'),
           p('ನಿಮಗೆ ಬೇಕಾ?', 'nimage bēkā?', 'Do you want? (respectful)'),
@@ -199,9 +208,9 @@ const AUTHORED: AuthoredLesson[] = [
           w('ಜಾಸ್ತಿ', 'jāsti', 'A lot / too much'),
         ],
         [
-          p('ಇದು ಎಷ್ಟು?', 'idu eṣṭu?', 'How much is this?'),
+          p('ಇದು ಎಷ್ಟು?', 'idhu eṣṭu?', 'How much is this?'),
           p('ಯಾಕೆ?', 'yāke?', 'Why?'),
-          p('ಇದು ಜಾಸ್ತಿ', 'idu jāsti', 'This is too much'),
+          p('ಇದು ಜಾಸ್ತಿ', 'idhu jāsti', 'This is too much'),
           p('ಸ್ವಲ್ಪ', 'svalpa', 'A little'),
         ],
       ),
@@ -215,7 +224,7 @@ const AUTHORED: AuthoredLesson[] = [
           w('ಧನ್ಯವಾದಗಳು', 'dhanyavādagaḷu', 'Thank you'),
         ],
         [
-          p('ಇದು ಕಮ್ಮಿ ಮಾಡಿ', 'idu kammi māḍi', 'Please reduce the price'),
+          p('ಇದು ಕಮ್ಮಿ ಮಾಡಿ', 'idhu kammi māḍi', 'Please reduce the price'),
           p('ದಯವಿಟ್ಟು ಮಾಡಿ', 'dayaviṭṭu māḍi', 'Please do'),
           p('ದಯವಿಟ್ಟು ಮಾಡಬೇಡಿ', 'dayaviṭṭu māḍabēḍi', "Please don't"),
         ],
@@ -241,7 +250,7 @@ const AUTHORED: AuthoredLesson[] = [
         'This, that, here, there',
         [
           w('ಇಲ್ಲಿ', 'illi', 'Here'),
-          w('ಇದು', 'idu', 'This'),
+          w('ಇದು', 'idhu', 'This'),
           w('ಅಲ್ಲಿ', 'alli', 'There'),
           w('ಅದು', 'adu', 'That'),
           w('ಎಲ್ಲಿ', 'elli', 'Where'),
@@ -249,7 +258,7 @@ const AUTHORED: AuthoredLesson[] = [
         ],
         [
           p('ಅದು ಎಲ್ಲಿ?', 'adu elli?', 'Where is that?'),
-          p('ಇದು ಎಲ್ಲಿ?', 'idu elli?', 'Where is this?'),
+          p('ಇದು ಎಲ್ಲಿ?', 'idhu elli?', 'Where is this?'),
           p('ನಿಮ್ಮ ಮನೆ ಎಲ್ಲಿ?', 'nimma mane elli?', 'Where is your house?'),
         ],
       ),
@@ -268,26 +277,27 @@ const AUTHORED: AuthoredLesson[] = [
       'You want to ask someone to do something, or describe what you or someone else is doing.',
     realWorldPrompt:
       'Next time you want someone to do something, use the respectful form — "maadi", "hoogi", "noodi" — instead of English.',
+    registerNote: REGISTER_NOTE,
     sections: [
       sec(
         '5a',
         'Everyday actions',
         [
-          w('ಮಾಡು', 'maadu', 'Do / make (casual)'),
+          w('ಮಾಡು', 'maadu', 'Do / make (neutral)'),
           w('ಮಾಡಿ', 'maadi', 'Do / make (respectful)'),
-          w('ಹೋಗು', 'hogu', 'Go (casual)'),
+          w('ಹೋಗು', 'hogu', 'Go (neutral)'),
           w('ಹೋಗಿ', 'hogi', 'Go (respectful)'),
-          w('ಬಾ', 'baa', 'Come (casual)'),
+          w('ಬಾ', 'baa', 'Come (neutral)'),
           w('ಬನ್ನಿ', 'banni', 'Come (respectful)'),
-          w('ತಿನ್ನು', 'tinnu', 'Eat (casual)'),
+          w('ತಿನ್ನು', 'tinnu', 'Eat (neutral)'),
           w('ತಿನ್ನಿ', 'tinni', 'Eat (respectful)'),
-          w('ಕುಡಿ', 'kudi', 'Drink (casual)'),
+          w('ಕುಡಿ', 'kudi', 'Drink (neutral)'),
           w('ಕುಡಿಯಿರಿ', 'kudiyiri', 'Drink (respectful)'),
-          w('ನೋಡು', 'nodu', 'See / watch (casual)'),
-          w('ನೋಡಿ', 'nodi', 'See / watch (respectful)'),
+          w('ನೋಡು', 'nōdu', 'See / watch (neutral)'),
+          w('ನೋಡಿ', 'nōdi', 'See / watch (respectful)'),
         ],
         [
-          p('ಇದು ನೋಡಿ', 'idu nodi', 'Look at this'),
+          p('ಇದು ನೋಡಿ', 'idhu nōdi', 'Look at this'),
           p('ಬನ್ನಿ', 'banni', 'Please come'),
         ],
       ),
@@ -295,13 +305,13 @@ const AUTHORED: AuthoredLesson[] = [
         '5b',
         'Communicating & giving',
         [
-          w('ಕೇಳು', 'kelu', 'Ask / listen (casual)'),
+          w('ಕೇಳು', 'kelu', 'Ask / listen (neutral)'),
           w('ಕೇಳಿ', 'keli', 'Ask / listen (respectful)'),
-          w('ಹೇಳು', 'helu', 'Say / tell (casual)'),
+          w('ಹೇಳು', 'helu', 'Say / tell (neutral)'),
           w('ಹೇಳಿ', 'heli', 'Say / tell (respectful)'),
-          w('ಕೊಡು', 'kodu', 'Give (casual)'),
+          w('ಕೊಡು', 'kodu', 'Give (neutral)'),
           w('ಕೊಡಿ', 'kodi', 'Give (respectful)'),
-          w('ತೆಗೊ', 'tego', 'Take (casual)'),
+          w('ತೆಗೊ', 'tego', 'Take (neutral)'),
           w('ತೆಗೊಳಿ', 'tegolli', 'Take (respectful)'),
         ],
         [
@@ -313,19 +323,19 @@ const AUTHORED: AuthoredLesson[] = [
         '5c',
         'Body & movement',
         [
-          w('ಕುಳಿತುಕೋ', 'kulituko', 'Sit (casual)'),
+          w('ಕುಳಿತುಕೋ', 'kulituko', 'Sit (neutral)'),
           w('ಕುಳಿತುಕೊಳ್ಳಿ', 'kulitukolli', 'Sit (respectful)'),
-          w('ನಿಲ್ಲು', 'nillu', 'Stand / stop (casual)'),
+          w('ನಿಲ್ಲು', 'nillu', 'Stand / stop (neutral)'),
           w('ನಿಲ್ಲಿ', 'nilli', 'Stand / stop (respectful)'),
-          w('ಮಲಗು', 'malagu', 'Sleep (casual)'),
+          w('ಮಲಗು', 'malagu', 'Sleep (neutral)'),
           w('ಮಲಗಿ', 'malagi', 'Sleep (respectful)'),
-          w('ಏಳು', 'elu', 'Get up (casual)'),
+          w('ಏಳು', 'elu', 'Get up (neutral)'),
           w('ಏಳಿ', 'eli', 'Get up (respectful)'),
-          w('ಓಡು', 'odu', 'Run (casual)'),
+          w('ಓಡು', 'odu', 'Run (neutral)'),
           w('ಓಡಿ', 'odi', 'Run (respectful)'),
-          w('ನಡೆ', 'nade', 'Walk (casual)'),
+          w('ನಡೆ', 'nade', 'Walk (neutral)'),
           w('ನಡೆಯಿರಿ', 'nadeyiri', 'Walk (respectful)'),
-          w('ಮುಚ್ಚು', 'mucchu', 'Close (casual)'),
+          w('ಮುಚ್ಚು', 'mucchu', 'Close (neutral)'),
           w('ಮುಚ್ಚಿ', 'mucchi', 'Close (respectful)'),
         ],
         [p('ಕುಳಿತುಕೊಳ್ಳಿ', 'kulitukolli', 'Please sit')],
@@ -356,7 +366,7 @@ const AUTHORED: AuthoredLesson[] = [
           w('ಯಾವಾಗ', 'yaavaaga', 'When'),
           w('ಏಕೆ', 'eke', 'Why'),
           w('ಹೇಗೆ', 'hege', 'How'),
-          w('ಯಾವದು', 'yaavadu', 'Which'),
+          w('ಯಾವುದು', 'yaavudu', 'Which'),
           w('ಎಷ್ಟು', 'estu', 'How much / many'),
           w('ಯಾರದು', 'yaaradu', 'Whose'),
           w('ಯಾರಿಗೆ', 'yaarige', 'To whom'),
@@ -370,7 +380,7 @@ const AUTHORED: AuthoredLesson[] = [
           w('ಇಲ್ಲಿ', 'illi', 'Here'),
           w('ಅಲ್ಲಿ', 'alli', 'There'),
           w('ಎಲ್ಲಿಗೆ', 'ellige', 'To where'),
-          w('ಈಗ', 'iiga', 'Now'),
+          w('ಈಗ', 'eega', 'Now'),
           w('ಹೌದು', 'haudu', 'Yes'),
           w('ಇಲ್ಲ', 'illa', 'No / not'),
           w('ಸರಿ', 'sari', 'Okay'),
@@ -383,8 +393,7 @@ const AUTHORED: AuthoredLesson[] = [
         [
           w('ಬೇಕು', 'beku', 'Want / need'),
           w('ಬೇಡ', 'beda', 'Do not want / no need'),
-          w('ಗೊತ್ತಾ?', 'gottaa', 'Do you know? (casual)'),
-          w('ಗೊತ್ತೇ?', 'gottee', 'Do you know? (respectful)'),
+          w('ಗೊತ್ತಾ?', 'gottaa', 'Do you know?'),
           w('ಗೊತ್ತಿಲ್ಲ', 'gottilla', 'Do not know'),
           w('ಯಾಕೆ ಇಲ್ಲ?', 'yaake illa', 'Why not?'),
         ],
@@ -412,29 +421,30 @@ const AUTHORED: AuthoredLesson[] = [
       'More actions — reading, writing, working, sending. These come up every day.',
     realWorldPrompt:
       'Next time someone asks what you are doing, answer in Kannada — "naanu kelasa maaduttiddene" or "naanu oduttiddene".',
+    registerNote: REGISTER_NOTE,
     sections: [
       sec(
         '7a',
         'Work & study',
         [
-          w('ನೋಡು', 'nodu', 'See / look (casual)'),
-          w('ನೋಡಿ', 'nodi', 'See / look (respectful)'),
-          w('ಮಾಡು', 'maadu', 'Do / make (casual)'),
+          w('ನೋಡು', 'nōdu', 'See / look (neutral)'),
+          w('ನೋಡಿ', 'nōdi', 'See / look (respectful)'),
+          w('ಮಾಡು', 'maadu', 'Do / make (neutral)'),
           w('ಮಾಡಿ', 'maadi', 'Do / make (respectful)'),
-          w('ಆಡು', 'aadu', 'Play (casual)'),
+          w('ಆಡು', 'aadu', 'Play (neutral)'),
           w('ಆಡಿ', 'aadi', 'Play (respectful)'),
-          w('ಕೆಲಸ ಮಾಡು', 'kelasa maadu', 'Work (casual)'),
+          w('ಕೆಲಸ ಮಾಡು', 'kelasa maadu', 'Work (neutral)'),
           w('ಕೆಲಸ ಮಾಡಿ', 'kelasa maadi', 'Work (respectful)'),
-          w('ಓದು', 'odu', 'Read / study (casual)'),
+          w('ಓದು', 'odu', 'Read / study (neutral)'),
           w('ಓದಿ', 'odi', 'Read / study (respectful)'),
-          w('ಬರೆ', 'bareyu', 'Write (casual)'),
+          w('ಬರೆ', 'bareyu', 'Write (neutral)'),
           w('ಬರೆಯಿರಿ', 'bareyiri', 'Write (respectful)'),
         ],
         [
           p('ನೀವು ಏನು ಮಾಡುತ್ತಿದ್ದೀರಾ?', 'neevu enu maaduttiddiraa?', 'What are you doing?'),
           p('ನಾನು ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದೇನೆ', 'naanu kelasa maaduttiddene', 'I am working'),
-          p('ನಾನು ಓದುತ್ತಿದ್ದೇನೆ', 'naanu oduttiddene', 'I am studying'),
-          p('ಇದು ನೋಡಿ', 'idu nodi', 'Look at this'),
+          p('ನಾನು ಓದುತ್ತಿದ್ದೇನೆ', 'naanu oduttiddene', 'I am reading / studying'),
+          p('ಇದು ನೋಡಿ', 'idhu nōdi', 'Look at this'),
           p('ನನಗೆ ಅರ್ಥ ಆಗಲಿಲ್ಲ', 'nanage artha aagalilla', 'I did not understand'),
         ],
       ),
@@ -442,13 +452,13 @@ const AUTHORED: AuthoredLesson[] = [
         '7b',
         'Handling things',
         [
-          w('ತೆಗೊ', 'tego', 'Take (casual)'),
+          w('ತೆಗೊ', 'tego', 'Take (neutral)'),
           w('ತೆಗೊಳ್ಳಿ', 'tegolli', 'Take (respectful)'),
-          w('ಹಾಕು', 'haaku', 'Put (casual)'),
+          w('ಹಾಕು', 'haaku', 'Put (neutral)'),
           w('ಹಾಕಿ', 'haaki', 'Put (respectful)'),
-          w('ಇಡು', 'idu', 'Keep (casual)'),
+          w('ಇಡು', 'idu', 'Keep (neutral)'),
           w('ಇಡಿ', 'idi', 'Keep (respectful)'),
-          w('ಹಿಡಿ', 'hidi', 'Hold / catch (casual)'),
+          w('ಹಿಡಿ', 'hidi', 'Hold / catch (neutral)'),
           w('ಹಿಡಿಯಿರಿ', 'hidiyiri', 'Hold / catch (respectful)'),
         ],
         [p('ನನಗೆ ಕೊಡಿ', 'nanage kodi', 'Give it to me')],
@@ -457,13 +467,13 @@ const AUTHORED: AuthoredLesson[] = [
         '7c',
         'Sending & sequencing',
         [
-          w('ಕಳಿಸು', 'kalisu', 'Send (casual)'),
+          w('ಕಳಿಸು', 'kalisu', 'Send (neutral)'),
           w('ಕಳಿಸಿ', 'kalisi', 'Send (respectful)'),
-          w('ತಂದುಕೊಡು', 'tandukodu', 'Bring (casual)'),
-          w('ತಂದುಕೊಡಿ', 'tandukodi', 'Bring (respectful)'),
-          w('ಶುರು ಮಾಡು', 'shuru maadu', 'Start (casual)'),
+          w('ತಂದುಕೊಡು', 'thandukodu', 'Bring (neutral)'),
+          w('ತಂದುಕೊಡಿ', 'thandukodi', 'Bring (respectful)'),
+          w('ಶುರು ಮಾಡು', 'shuru maadu', 'Start (neutral)'),
           w('ಶುರು ಮಾಡಿ', 'shuru maadi', 'Start (respectful)'),
-          w('ಮುಗಿಸು', 'mugisu', 'Finish (casual)'),
+          w('ಮುಗಿಸು', 'mugisu', 'Finish (neutral)'),
           w('ಮುಗಿಸಿ', 'mugisi', 'Finish (respectful)'),
         ],
         [
@@ -493,7 +503,7 @@ const AUTHORED: AuthoredLesson[] = [
         'Meeting & introductions',
         [],
         [
-          p('ನಮಸ್ತೆ, ಹೇಗಿದ್ದೀರಾ?', 'namaste, heegiddiraa?', 'Hello, how are you?'),
+          p('ನಮಸ್ಕಾರ, ಹೇಗಿದ್ದೀರಾ?', 'namaskāra, heegiddiraa?', 'Hello, how are you?'),
           p('ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ', 'naanu chennagiddene', 'I am fine'),
           p('ನಿಮ್ಮ ಹೆಸರು ಏನು?', 'nimma hesaru enu?', 'What is your name?'),
           p('ನನ್ನ ಹೆಸರು ರಾಹುಲ್', 'nanna hesaru rahul', 'My name is Rahul'),
@@ -509,9 +519,9 @@ const AUTHORED: AuthoredLesson[] = [
           w('ಧನ್ಯವಾದಗಳು', 'dhanyavadagalu', 'Thank you'),
         ],
         [
-          p('ನಿಮಗೆ ಇದು ಬೇಕಾ?', 'nimage idu bekaa?', 'Do you want this?'),
+          p('ನಿಮಗೆ ಇದು ಬೇಕಾ?', 'nimage idhu bekaa?', 'Do you want this?'),
           p('ಹೌದು, ನನಗೆ ಬೇಕು', 'haudu, nanage beku', 'Yes, I want it'),
-          p('ಇದು ಎಷ್ಟು?', 'idu estu?', 'How much is this?'),
+          p('ಇದು ಎಷ್ಟು?', 'idhu estu?', 'How much is this?'),
           p('ಸ್ವಲ್ಪ ಕಮ್ಮಿ ಮಾಡಿ', 'svalpa kammi maadi', 'Please reduce it a little'),
           p('ಸರಿ', 'sari', 'Okay'),
           p('ಧನ್ಯವಾದಗಳು', 'dhanyavadagalu', 'Thank you'),
@@ -561,4 +571,9 @@ export const TS_LESSONS_BY_SLUG: Record<string, Lesson> = Object.fromEntries(
 export function lessonSectionsByNo(lessonNo: number): { key: string; label: string }[] {
   const lesson = TS_LESSONS.find((l) => l.lessonNo === lessonNo);
   return lesson ? lesson.sections.map((s) => ({ key: s.key, label: s.label })) : [];
+}
+
+/** Lesson slug for a lesson number, or null if unknown. */
+export function lessonSlugByNo(lessonNo: number): string | null {
+  return TS_LESSONS.find((l) => l.lessonNo === lessonNo)?.slug ?? null;
 }

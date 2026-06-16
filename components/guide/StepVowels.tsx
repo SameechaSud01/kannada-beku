@@ -5,7 +5,11 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
-import { VOWEL_PAIRS, VOWEL_LONERS_NOTE, type VowelPair } from '../../constants/guide';
+import {
+  VOWEL_LONERS_NOTE,
+  type VowelPair,
+  type VowelLoner,
+} from '../../constants/guide';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { Toasts } from '../modals/instances/toastCatalog';
 import { AudioOrb } from '../ui/AudioOrb';
@@ -13,10 +17,17 @@ import { AudioOrb } from '../ui/AudioOrb';
 /**
  * Step 2 — "Vowels come in pairs". Five short→long rows (long glyph in red, gold
  * chevron between), each with a 32px gold AudioOrb that speaks the long vowel.
+ * Vowel data is DB-sourced; the heading + loners caption are fixed UI chrome.
  */
-export function StepVowels() {
-  // Which row's orb is mid-playback (index), so only one ping animates at once.
-  const [playingIdx, setPlayingIdx] = useState<number | null>(null);
+export function StepVowels({
+  vowelPairs,
+  vowelLoners,
+}: {
+  vowelPairs: VowelPair[];
+  vowelLoners: VowelLoner[];
+}) {
+  // Which orb is mid-playback (string key), so only one ping animates at once.
+  const [playingKey, setPlayingKey] = useState<string | null>(null);
 
   useEffect(() => {
     return () => {
@@ -24,16 +35,24 @@ export function StepVowels() {
     };
   }, []);
 
-  const handlePlay = (idx: number, pair: VowelPair) => {
-    setPlayingIdx(idx);
+  const handlePlay = (key: string, text: string, retry: () => void) => {
+    setPlayingKey(key);
     deviceTtsAudioService
-      .play(`${pair.short.kannada} ${pair.long.kannada}`)
+      .play(text)
       .catch((err) => {
         console.warn('[guide_vowels] play failed', err);
-        Toasts.audioFailed(() => handlePlay(idx, pair));
+        Toasts.audioFailed(retry);
       })
-      .finally(() => setPlayingIdx((cur) => (cur === idx ? null : cur)));
+      .finally(() => setPlayingKey((cur) => (cur === key ? null : cur)));
   };
+
+  const playPair = (pair: VowelPair) =>
+    handlePlay(`pair:${pair.short.kannada}`, `${pair.short.kannada} ${pair.long.kannada}`, () =>
+      playPair(pair),
+    );
+
+  const playLoner = (loner: VowelLoner) =>
+    handlePlay(`loner:${loner.kannada}`, loner.kannada, () => playLoner(loner));
 
   return (
     <View>
@@ -64,7 +83,7 @@ export function StepVowels() {
       </Text>
 
       <View style={{ gap: moderateScale(11) }}>
-        {VOWEL_PAIRS.map((pair, idx) => (
+        {vowelPairs.map((pair) => (
           <View
             key={pair.short.kannada}
             style={{
@@ -110,8 +129,8 @@ export function StepVowels() {
               color={Colors.secondaryFixed}
               iconColor={Colors.secondary}
               lipColor={Colors.goldLip}
-              playing={playingIdx === idx}
-              onPress={() => handlePlay(idx, pair)}
+              playing={playingKey === `pair:${pair.short.kannada}`}
+              onPress={() => playPair(pair)}
               accessibilityLabel={`Hear ${pair.short.transliteration} and ${pair.long.transliteration}`}
             />
           </View>
@@ -125,11 +144,51 @@ export function StepVowels() {
           lineHeight: moderateScale(20),
           color: Colors.textFaint,
           marginTop: Spacing.lg,
+          marginBottom: moderateScale(11),
         }}
         maxFontSizeMultiplier={1.4}
       >
         {VOWEL_LONERS_NOTE}
       </Text>
+
+      <View style={{ flexDirection: 'row', gap: moderateScale(11) }}>
+        {vowelLoners.map((loner) => (
+          <View
+            key={loner.kannada}
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              backgroundColor: '#ffffff',
+              borderRadius: Radius.chunky,
+              borderWidth: 1,
+              borderColor: Colors.hairline,
+              borderBottomWidth: 4,
+              borderBottomColor: Colors.cardLip,
+              paddingVertical: moderateScale(12),
+              paddingHorizontal: moderateScale(8),
+              gap: moderateScale(8),
+            }}
+            accessibilityRole="text"
+            accessibilityLabel={`${loner.transliteration} as in ${loner.example}`}
+          >
+            <VowelGlyph
+              kannada={loner.kannada}
+              translit={loner.transliteration}
+              example={loner.example}
+              color={Colors.onSurface}
+            />
+            <AudioOrb
+              size={32}
+              color={Colors.secondaryFixed}
+              iconColor={Colors.secondary}
+              lipColor={Colors.goldLip}
+              playing={playingKey === `loner:${loner.kannada}`}
+              onPress={() => playLoner(loner)}
+              accessibilityLabel={`Hear ${loner.transliteration}`}
+            />
+          </View>
+        ))}
+      </View>
     </View>
   );
 }

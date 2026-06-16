@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { playWord, stopPlayback } from '../utils/audioPlayer';
-import { splitAksharas, isTileable } from '../utils/kannadaAkshara';
+import { splitAksharas } from '../utils/kannadaAkshara';
 import { useStreak } from '../../shared/useStreak';
 import { useProgressStore } from '../../../../stores/progressStore';
 import type { DictationWord, AnswerState, GamePhase } from '../types';
@@ -77,7 +77,10 @@ export function useDictationGame(
   const currentWord = words[currentIndex];
   const totalWords = words.length;
 
-  const tileable = useMemo(() => isTileable(currentWord.kn), [currentWord]);
+  // Dictation answers are always typed as English transliteration — every word
+  // ships with `accepted` spellings — so the Kannada syllable-tile builder is
+  // never used.
+  const tileable = false;
   const aksharaCount = useMemo(
     () => (tileable ? splitAksharas(currentWord.kn).length : 0),
     [tileable, currentWord],

@@ -42,23 +42,27 @@ const QuizPrompt: React.FC<Props> = ({ question }) => {
       </Text>
       <Text
         style={{
-          fontFamily: Fonts.baloo.extrabold,
+          // dmSans.bold (not Baloo) for the big prompt: Baloo ExtraBold's tall
+          // line metrics clip ascenders/macrons (ā) at the top when constrained.
+          // This matches the lesson word-display cards (Teach/PracticeWordsPhase).
+          fontFamily: Fonts.dmSans.bold,
           fontSize: moderateScale(38),
-          // Kannada ottaksharas (subscript consonants) drop well below the
-          // baseline + vowel signs rise above, so the glyph box needs ~1.6×.
-          lineHeight: moderateScale(isKn ? 60 : 48),
+          lineHeight: moderateScale(50),
           color: Colors.onSurface,
           textAlign: 'center',
         }}
-        maxFontSizeMultiplier={1.3}
+        maxFontSizeMultiplier={1.2}
+        adjustsFontSizeToFit
+        numberOfLines={2}
       >
         {question.prompt}
       </Text>
       {question.promptSub ? (
         <Text
           style={{
-            fontFamily: Fonts.dmSans.medium,
-            fontSize: moderateScale(14),
+            // promptSub carries the Kannada word (kn→en) — Kannada font required.
+            fontFamily: Fonts.notoSansKannada.regular,
+            fontSize: moderateScale(16),
             color: Colors.tertiary,
             textAlign: 'center',
           }}

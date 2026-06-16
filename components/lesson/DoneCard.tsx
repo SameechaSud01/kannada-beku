@@ -25,7 +25,10 @@ import {
 
 const ESTIMATED_MIN_PER_LESSON = 5;
 const COMPLETION_SCORE = 100;
-const DEFAULT_GAMES: Game[] = Object.values(GAMES);
+// Image Match queries a table dropped from the DB, so its runner can never
+// finish — keep it out of the post-lesson "keep practising" list until the full
+// removal (spec_game_subsection_split §5). spec_fix_games_flow Phase B.
+const DEFAULT_GAMES: Game[] = Object.values(GAMES).filter((g) => g.key !== 'image-match');
 
 interface DoneCardProps {
   lesson: Lesson;

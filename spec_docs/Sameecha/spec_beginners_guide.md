@@ -198,7 +198,29 @@ type KeyItem = {
 
 > **Tradeoff acknowledged:** rule 3 was written before `sections` existed. Strict reading says "either reference is `{}` or it has words/phrases." We're picking a third path: reference can also carry `sections` instead. The spec_lesson_content_source.md amendment makes this explicit.
 
-### TypeScript canonical layer
+### Content source
+
+> **AMENDMENT 2026-06-15 — source of truth inverted (supersedes the `[LOCKED]` table below).**
+> The original contract (TS renders, DB is raw / drift allowed) is reversed. The
+> **DB is now the source of truth** for guide content; `constants/guide.ts` is
+> demoted to an **offline fallback** only. Driven by the owner requirement: no
+> hardcoded guide data, content authored in the DB.
+>
+> | Artifact | Role | Read by |
+> |---|---|---|
+> | `public.lessons` row, `slug='basics'`, `content_json.reference.guide` | **Source of truth** — structured guide payload (principles, vowelPairs, vowelLoners, consonantFamilies, readingRows, tryIt, chart) | `services/api/guide.ts` `fetchGuideContent()` at runtime |
+> | `constants/guide.ts` | **Offline fallback** + view-model types + pure UI chrome (headings, intro blurb, loners caption, step count) | The loader's `FALLBACK_GUIDE` when the DB read fails/malformed |
+>
+> Scope: **linguistic data only** moved to the DB (letters, transliterations,
+> examples, pairs, families, reading rows, try-it, principles). Step headings and
+> instruction sentences stay in components as chrome. The fallback must be kept in
+> sync with the DB payload. Loader fetches once per session, caches success, and
+> falls back without caching on failure so a later entry can retry the DB.
+> See migration `2026-06-15_basics_guide_content.sql`.
+
+---
+
+#### Original `[LOCKED]` contract (historical — superseded by the amendment above)
 
 `[LOCKED]` — mirrors the lesson 1–8 pattern. The guide content has both a runtime canonical TS file *and* a DB snapshot:
 

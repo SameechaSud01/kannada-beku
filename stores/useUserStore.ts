@@ -157,16 +157,20 @@ export const useUserStore = create<UserState>()(
         }),
 
       hydrateFromUserRow: (row) =>
-        set({
+        set((s) => ({
           displayName: row.name,
           learningMode: row.learning_mode,
           motivations: row.motivations ?? [],
           dailyGoalMinutes: row.daily_goal_minutes,
-          hasCompletedOnboarding: !!row.onboarding_completed_at,
+          // Onboarding completion is monotonic within a session: a server row that
+          // still reads NULL (replica lag, or a fetch issued before the completion
+          // write committed) must not clobber a locally-completed flag back to false
+          // and bounce the user into /onboarding/welcome. (spec_fix_onboarding_loop.md)
+          hasCompletedOnboarding: s.hasCompletedOnboarding || !!row.onboarding_completed_at,
           dailyReminderTime: row.daily_reminder_time ?? null,
           ttsRate: row.tts_rate ?? 1.0,
           autoReplay: row.auto_replay ?? true,
-        }),
+        })),
 
       reset: () =>
         set({

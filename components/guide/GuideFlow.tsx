@@ -1,6 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { GUIDE_STEP_COUNT } from '../../constants/guide';
+import { fetchGuideContent, type GuideContent } from '../../services/api/guide';
 import { GuideStepShell } from './GuideStepShell';
+import { GuideLoading } from './GuideLoading';
 import { StepThings } from './StepThings';
 import { StepVowels } from './StepVowels';
 import { StepConsonants } from './StepConsonants';
@@ -36,6 +38,18 @@ const STEP_CTAS = [
 export function GuideFlow({ onExit, onFinish, onOpenChart, finishing = false }: GuideFlowProps) {
   // 1-based current step.
   const [step, setStep] = useState(1);
+  // Guide content is DB-sourced (falls back to the bundled copy on any failure).
+  const [guide, setGuide] = useState<GuideContent | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    fetchGuideContent().then((g) => {
+      if (alive) setGuide(g);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const handleBack = useCallback(() => {
     if (step <= 1) {
@@ -53,6 +67,10 @@ export function GuideFlow({ onExit, onFinish, onOpenChart, finishing = false }: 
     setStep((s) => Math.min(GUIDE_STEP_COUNT, s + 1));
   }, [step, onFinish]);
 
+  if (!guide) {
+    return <GuideLoading onBack={onExit} />;
+  }
+
   return (
     <GuideStepShell
       step={step}
@@ -61,10 +79,14 @@ export function GuideFlow({ onExit, onFinish, onOpenChart, finishing = false }: 
       onCta={handleCta}
       ctaDisabled={step >= GUIDE_STEP_COUNT && finishing}
     >
-      {step === 1 && <StepThings />}
-      {step === 2 && <StepVowels />}
-      {step === 3 && <StepConsonants onOpenChart={onOpenChart} />}
-      {step === 4 && <StepReading />}
+      {step === 1 && <StepThings principles={guide.principles} />}
+      {step === 2 && (
+        <StepVowels vowelPairs={guide.vowelPairs} vowelLoners={guide.vowelLoners} />
+      )}
+      {step === 3 && (
+        <StepConsonants families={guide.consonantFamilies} onOpenChart={onOpenChart} />
+      )}
+      {step === 4 && <StepReading readingRows={guide.readingRows} tryIt={guide.tryIt} />}
     </GuideStepShell>
   );
 }

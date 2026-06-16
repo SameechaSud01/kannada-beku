@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -5,25 +6,42 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
-import { GUIDE_SECTIONS, type GlyphItem } from '../../constants/guide';
+import { fetchGuideContent, type GuideContent } from '../../services/api/guide';
 import { Watermark } from '../ui/Watermark';
+import { GuideLoading } from './GuideLoading';
 
 interface GuideChartProps {
   onBack: () => void;
 }
 
+const CHART_SUBTITLE =
+  "The 34 consonants grouped by where they're produced in the mouth.";
+
 /**
  * The full 34-letter consonant chart — a reference screen linked from step 3 of
- * the paced basics flow. Reuses the raw `GUIDE_SECTIONS` consonants data (kept
- * intact for exactly this purpose) with a chunky restyle: goldPale glyph tiles
- * in a responsive grid.
+ * the paced basics flow. The chart is DB-sourced (content_json.reference.guide,
+ * see services/api/guide.ts) with a chunky restyle: goldPale glyph tiles in a
+ * responsive grid.
  */
 export function GuideChart({ onBack }: GuideChartProps) {
   const insets = useSafeAreaInsets();
-  const section = GUIDE_SECTIONS.find((s) => s.slug === 'consonants');
-  const glyphs = (section?.items ?? []).filter(
-    (i): i is GlyphItem => i.kind === 'glyph',
-  );
+  const [guide, setGuide] = useState<GuideContent | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    fetchGuideContent().then((g) => {
+      if (alive) setGuide(g);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  if (!guide) {
+    return <GuideLoading onBack={onBack} />;
+  }
+
+  const glyphs = guide.chart;
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
@@ -91,23 +109,22 @@ export function GuideChart({ onBack }: GuideChartProps) {
           }}
           maxFontSizeMultiplier={1.4}
         >
-          {section?.subtitle ??
-            "The 34 consonants grouped by where they're produced in the mouth."}
+          {CHART_SUBTITLE}
         </Text>
 
         <View
           style={{
             flexDirection: 'row',
             flexWrap: 'wrap',
-            gap: moderateScale(10),
+            gap: moderateScale(8),
           }}
         >
           {glyphs.map((g) => (
             <View
               key={g.kannada}
               style={{
-                width: '22%',
-                minWidth: moderateScale(70),
+                width: '18%',
+                minWidth: moderateScale(54),
                 flexGrow: 1,
                 alignItems: 'center',
                 backgroundColor: Colors.secondaryFixed,
@@ -115,7 +132,7 @@ export function GuideChart({ onBack }: GuideChartProps) {
                 borderBottomWidth: 3,
                 borderBottomColor: Colors.goldLip,
                 paddingVertical: moderateScale(10),
-                paddingHorizontal: moderateScale(6),
+                paddingHorizontal: moderateScale(4),
               }}
               accessibilityRole="text"
               accessibilityLabel={`${g.kannada}, ${g.transliteration}, ${g.example}`}
@@ -123,8 +140,8 @@ export function GuideChart({ onBack }: GuideChartProps) {
               <Text
                 style={{
                   fontFamily: Fonts.notoSansKannada.bold,
-                  fontSize: moderateScale(30),
-                  lineHeight: moderateScale(48),
+                  fontSize: moderateScale(26),
+                  lineHeight: moderateScale(40),
                   color: Colors.onSecondaryContainer,
                 }}
                 maxFontSizeMultiplier={1.2}

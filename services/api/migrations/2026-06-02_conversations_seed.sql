@@ -41,8 +41,10 @@ from (values
    '[{"id":"a","kn":"ಹೌದು, ಚೆನ್ನಾಗಿದ್ದೇನೆ","tr":"haudu, chennāgiddēne","en":"Yes, I am fine"},{"id":"b","kn":"ಹೆಸರು","tr":"hesaru","en":"name"},{"id":"c","kn":"ಮನೆ","tr":"mane","en":"house"}]', 'a'),
 
   -- ===== L1 Scenario 2: Meeting a friend (neutral) =====
-  (1, 2, 1, 'ನಮಸ್ತೆ!', 'Hi!',
-   '[{"id":"a","kn":"ನಮಸ್ತೆ","tr":"namaste","en":"Hi / hello"},{"id":"b","kn":"ಬೇಡ","tr":"bēḍa","en":"do not want"},{"id":"c","kn":"ಅವರು","tr":"avaru","en":"that person"}]', 'a'),
+  -- Greeting standardized on namaskāra (was namaste) — see
+  -- 2026-06-16_standardize_namaskara_greeting.sql.
+  (1, 2, 1, 'ನಮಸ್ಕಾರ!', 'Hi!',
+   '[{"id":"a","kn":"ನಮಸ್ಕಾರ","tr":"namaskāra","en":"Hi / hello"},{"id":"b","kn":"ಬೇಡ","tr":"bēḍa","en":"do not want"},{"id":"c","kn":"ಅವರು","tr":"avaru","en":"that person"}]', 'a'),
   (1, 2, 2, 'ಹೇಗಿದ್ದೀಯ?', 'How are you? (neutral)',
    '[{"id":"a","kn":"ಚೆನ್ನಾಗಿದ್ದೇನೆ","tr":"chennāgiddēne","en":"I am fine"},{"id":"b","kn":"ನಿಮ್ಮ","tr":"nimma","en":"your (respectful)"},{"id":"c","kn":"ಎಲ್ಲಿ","tr":"elli","en":"where"}]', 'a'),
   (1, 2, 3, 'ಸರಿ, ನಮಸ್ಕಾರ.', 'Okay, goodbye.',

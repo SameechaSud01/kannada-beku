@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchAllLessons, fetchLessonBySlug } from '../services/api/lessons';
 import { PLANNED_LESSON_SLOTS } from '../constants/lessons/plannedLessons';
+import { lessonSlugByNo } from '../constants/lessons/lessonContent';
 import { useProgressStore } from '../stores/progressStore';
 import type { Lesson as DbLesson } from '../constants/lessons/types';
 
@@ -15,18 +16,27 @@ export type LessonSelectorItem = {
 /**
  * Lesson list for game lesson-selector.
  *
- * Unlock rule: Lesson N is unlocked iff at least (N-1) lessons have been
- * completed. Lesson 1 is always unlocked. Driven off PLANNED_LESSON_SLOTS
- * and progress store — independent of DB lesson rows.
+ * Unlock rule (spec_fix_games_flow): a lesson is selectable once at least one of
+ * its parts is complete (or the whole lesson is). No more "Lesson 1 always
+ * unlocked" — its games now require lesson part 1a. Driven off
+ * PLANNED_LESSON_SLOTS and the progress store, independent of DB lesson rows.
  */
 export function useLessons(): LessonSelectorItem[] {
-  const completed = useProgressStore((s) => s.completedLessons);
-  return PLANNED_LESSON_SLOTS.map((slot, idx) => ({
-    n: slot.slot,
-    glyph: slot.charPlaceholder,
-    theme: slot.title,
-    unlocked: idx === 0 ? true : completed.length >= idx,
-  }));
+  const completedLessons = useProgressStore((s) => s.completedLessons);
+  const completedParts = useProgressStore((s) => s.completedParts);
+  return PLANNED_LESSON_SLOTS.map((slot) => {
+    const slug = lessonSlugByNo(slot.slot);
+    const unlocked =
+      !!slug &&
+      (completedLessons.includes(slug) ||
+        completedParts.some((k) => k.startsWith(`${slug}:`)));
+    return {
+      n: slot.slot,
+      glyph: slot.charPlaceholder,
+      theme: slot.title,
+      unlocked,
+    };
+  });
 }
 
 /** Fetch all DB lessons ordered by lesson_no. */
