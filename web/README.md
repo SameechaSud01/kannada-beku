@@ -21,7 +21,6 @@ cloudflare-deploy/
 The previous single-file build showed a brief icon "splash" on every load while
 it unpacked. This version renders straight onto the page instead — no splash.
 The `.jsx` files must stay in the same folder as `index.html`.
-This also stops loading time on user side for effiecncy
 
 ## Deploy — drag & drop (~3 min)
 1. dash.cloudflare.com → **Workers & Pages → Create → Pages → Upload assets**.
