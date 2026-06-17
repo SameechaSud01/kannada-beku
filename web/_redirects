@@ -1,4 +1,5 @@
 # Cloudflare Pages — clean URLs
 # https://developers.cloudflare.com/pages/configuration/redirects/
 
-/privacy    /privacy.html    301
+# Privacy page is now at /privacy/ (served from privacy/index.html)
+# No redirect rule needed — Cloudflare handles this automatically
