@@ -1,0 +1,4 @@
+# Cloudflare Pages — clean URLs
+# https://developers.cloudflare.com/pages/configuration/redirects/
+
+/privacy    /privacy.html    200

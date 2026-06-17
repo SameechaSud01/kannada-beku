@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kannada Beku: Learn the Kannada Bengaluru actually speaks</title>
+  <meta name="description" content="Kannada Beku is a friendly mobile app for learning the Kannada that Bengaluru actually speaks: short lessons, real survival phrases, and the culture behind the words. Coming soon to iOS &amp; Android. Join the waitlist." />
+  <meta name="theme-color" content="#91001b" />
+  <link rel="canonical" href="https://kannadabeku.com/" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+  <!-- Open Graph / social -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Kannada Beku" />
+  <meta property="og:title" content="Kannada Beku: Learn the Kannada Bengaluru actually speaks" />
+  <meta property="og:description" content="Short lessons, real survival phrases, and the culture behind the words, so you can speak from day one. Coming soon to iOS &amp; Android." />
+  <meta property="og:url" content="https://kannadabeku.com/" />
+  <meta property="og:image" content="https://kannadabeku.com/og-cover.svg" />
+  <meta property="og:image:type" content="image/svg+xml" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Kannada Beku: learn the Kannada Bengaluru actually speaks" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Kannada Beku: Learn the Kannada Bengaluru actually speaks" />
+  <meta name="twitter:description" content="Short lessons, real survival phrases, and the culture behind the words. Coming soon to iOS &amp; Android." />
+  <meta name="twitter:image" content="https://kannadabeku.com/og-cover.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html, body { margin: 0; padding: 0; background: #faf6ea; font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    #root { width: 100%; min-height: 100vh; }
+    a { -webkit-tap-highlight-color: transparent; }
+
+    @keyframes kb-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+    /* Respect users who ask for less motion — kill the bob + smooth scroll */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+    }
+
+    /* layout */
+    .kb-hero { display: grid; grid-template-columns: 1.04fr 0.96fr; gap: 52px; align-items: center; }
+    .kb-shots { display: flex; gap: 40px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+
+    /* "What's inside" — stats band */
+    .kb-stats { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .kb-stats > div { padding: 8px 32px; position: relative; text-align: center; }
+    .kb-stats > div + div::before { content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 1px; background: rgba(27,29,14,0.10); }
+    /* single-phone walkthrough + feature cards */
+    .kb-walk { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 60px; align-items: center; }
+    .kb-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .kb-about { display: grid; grid-template-columns: 1.08fr 0.92fr; gap: 56px; align-items: center; }
+    .kb-story { display: grid; grid-template-columns: 1.06fr 0.94fr; gap: 56px; align-items: center; }
+    .kb-bridges { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 40px; }
+    .kb-contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+    .kb-foot { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    /* section gutters — overridden tighter on small screens (see media queries) */
+    .kb-wrap { /* padding set inline per-section; only L/R is narrowed on mobile */ }
+
+    @media (max-width: 940px) {
+      .kb-hero { grid-template-columns: 1fr; gap: 48px; }
+      .kb-about { grid-template-columns: 1fr; gap: 36px; }
+      .kb-story { grid-template-columns: 1fr; gap: 40px; }
+      .kb-walk { grid-template-columns: 1fr; gap: 44px; }
+    }
+    @media (max-width: 860px) {
+      .kb-stats { grid-template-columns: 1fr 1fr; row-gap: 34px; }
+      .kb-stats > div { padding: 4px 24px; }
+      .kb-stats > div:nth-child(odd)::before { display: none; }
+      .kb-cards { grid-template-columns: 1fr; }
+      .kb-bridges { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .kb-contact { grid-template-columns: minmax(0, 1fr); }
+      /* !important beats the inline shorthand padding; vertical values are kept */
+      .kb-wrap { padding-left: 20px !important; padding-right: 20px !important; }
+    }
+    @media (max-width: 480px) {
+      .kb-stats { grid-template-columns: 1fr; }
+      .kb-stats > div::before { display: none !important; }
+      .kb-stats > div { padding: 4px 8px; }
+      .kb-wrap { padding-left: 16px !important; padding-right: 16px !important; }
+    }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <template id="__bundler_thumbnail" data-bg-color="#faf6ea">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#faf6ea"/>
+      <rect x="430" y="250" width="340" height="300" rx="60" fill="#be0027"/>
+      <rect x="430" y="512" width="340" height="38" rx="19" fill="#6e0014"/>
+      <text x="600" y="470" font-family="'Baloo Tamma 2', sans-serif" font-size="220" font-weight="800" fill="#ffffff" text-anchor="middle">ಕ</text>
+    </svg>
+  </template>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="site-system.jsx"></script>
+  <script type="text/babel" src="site-screens.jsx"></script>
+  <script type="text/babel" src="site-about.jsx"></script>
+  <script type="text/babel" src="site-questionnaire.jsx"></script>
+  <script type="text/babel" src="site-app.jsx"></script>
+</body>
+</html>
