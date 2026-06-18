@@ -46,5 +46,6 @@ yarn-error.*
 /files/
 /scripts/*
 !/scripts/postinstall.js
+!/scripts/generateAudio.mjs
 /namma-app-v1-spec.docx
 

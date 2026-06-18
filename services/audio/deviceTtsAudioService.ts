@@ -1,6 +1,7 @@
 import * as Speech from 'expo-speech';
 import { Audio } from 'expo-av';
 import type { AudioService, PlayOptions } from './AudioService';
+import { getBundledAudio } from './bundledAudio';
 import { useUserStore } from '../../stores/useUserStore';
 import { useProgressStore } from '../../stores/progressStore';
 
@@ -37,6 +38,40 @@ export const deviceTtsAudioService: AudioService = {
     const rate = resolveRate(options?.rate);
     // Daily-goal "Listen": every in-app content playback counts (auto-play included).
     useProgressStore.getState().recordListen();
+
+    // Prefer the pre-generated, bundled neural-TTS clip when one exists; this is
+    // natural-sounding, instant, and offline. Falls through to on-device TTS for
+    // any string without a bundled clip (and any dynamic text).
+    const asset = getBundledAudio(text);
+    if (asset !== undefined) {
+      // Stop both engines so we never overlap with a previous play.
+      Speech.stop();
+      if (currentPlaybackSound) {
+        try {
+          await currentPlaybackSound.stopAsync();
+          await currentPlaybackSound.unloadAsync();
+        } catch {
+          // sound may already be unloaded
+        }
+        currentPlaybackSound = null;
+      }
+      // The user's speed setting still applies, with pitch correction so slowed
+      // clips don't drop in pitch.
+      const { sound } = await Audio.Sound.createAsync(asset, {
+        shouldPlay: true,
+        rate,
+        shouldCorrectPitch: true,
+      });
+      currentPlaybackSound = sound;
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.isLoaded && status.didJustFinish) {
+          sound.unloadAsync().catch(() => undefined);
+          if (currentPlaybackSound === sound) currentPlaybackSound = null;
+        }
+      });
+      return;
+    }
+
     Speech.stop();
     return new Promise<void>((resolve, reject) => {
       let settled = false;
