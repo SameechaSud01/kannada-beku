@@ -1,6 +1,7 @@
 import * as Speech from 'expo-speech';
 import { Audio } from 'expo-av';
 import type { DictationWord } from '../types';
+import { getBundledAudio } from '../../../../services/audio/bundledAudio';
 import { useProgressStore } from '../../../../stores/progressStore';
 
 let currentSound: Audio.Sound | null = null;
@@ -9,7 +10,10 @@ export async function playWord(word: DictationWord): Promise<void> {
   // Daily-goal "Listen": dictation prompts use this path instead of the TTS service.
   useProgressStore.getState().recordListen();
   try {
-    if (word.audioFile !== undefined) {
+    // Prefer an explicit require()'d asset, then a bundled clip from the
+    // manifest (DB-sourced items have no audioFile), then on-device TTS.
+    const asset = word.audioFile ?? getBundledAudio(word.kn);
+    if (asset !== undefined) {
       if (currentSound) {
         try {
           await currentSound.stopAsync();
@@ -19,7 +23,7 @@ export async function playWord(word: DictationWord): Promise<void> {
         }
         currentSound = null;
       }
-      const { sound } = await Audio.Sound.createAsync(word.audioFile);
+      const { sound } = await Audio.Sound.createAsync(asset);
       currentSound = sound;
       await sound.playAsync();
       sound.setOnPlaybackStatusUpdate((status) => {
