@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kannada Beku: Privacy Policy</title>
+  <meta name="description" content="How Kannada Beku collects, uses, and protects your information." />
+  <meta name="theme-color" content="#91001b" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Noto+Sans+Kannada:wght@400;500;700&display=swap" />
+  <style>
+    :root {
+      --cream: #faf6ea;
+      --cream-low: #f3ecd9;
+      --card: #ffffff;
+      --red: #91001b;
+      --red-hi: #be0027;
+      --red-lip: #6e0014;
+      --gold: #fdc003;
+      --gold-pale: #ffdf9e;
+      --gold-deep: #785900;
+      --gold-ink: #6c5000;
+      --gold-lip: #c98a00;
+      --ink: #1b1d0e;
+      --sub: #464646;
+      --faint: #908d76;
+      --hairline: rgba(27,29,14,0.10);
+      --display: 'Baloo Tamma 2', system-ui, sans-serif;
+      --body: 'DM Sans', system-ui, sans-serif;
+      --kn: 'Noto Sans Kannada', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    body {
+      margin: 0; background: var(--cream); color: var(--ink);
+      font-family: var(--body); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+      background-image: radial-gradient(circle, rgba(27,29,14,0.05) 1.2px, transparent 1.5px);
+      background-size: 24px 24px;
+      overflow-wrap: break-word; word-break: break-word;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 56px 28px 96px; }
+
+    /* team note — screen only */
+    .team-note {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: var(--gold-pale); border: 1px solid var(--gold-lip); border-radius: 14px;
+      padding: 13px 16px; margin-bottom: 40px; box-shadow: 0 3px 0 var(--gold-lip);
+    }
+    .team-note .dot { flex-shrink: 0; width: 22px; height: 22px; border-radius: 7px; background: var(--gold); display: grid; place-items: center; margin-top: 1px; }
+    .team-note .dot span { font-family: var(--display); font-weight: 800; font-size: 14px; color: var(--gold-ink); }
+    .team-note p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--gold-ink); font-weight: 500; }
+
+    /* header */
+    .brand { display: flex; align-items: baseline; gap: 10px; }
+    .brand .latin { font-family: var(--display); font-weight: 800; font-size: 22px; color: var(--red); letter-spacing: -0.3; }
+    .brand .kn { font-family: var(--kn); font-weight: 700; font-size: 14px; color: var(--red); opacity: 0.8; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; margin-top: 34px; }
+    .eyebrow span.lbl { font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; color: var(--red); }
+    h1 { font-family: var(--display); font-weight: 800; font-size: clamp(31px, 8.5vw, 54px); line-height: 1.05; letter-spacing: -0.8px; margin: 14px 0 0; }
+    .effective { font-family: var(--body); font-size: 14px; color: var(--faint); font-weight: 600; margin-top: 14px; }
+    .lede { font-size: 17.5px; line-height: 1.62; color: var(--sub); margin: 22px 0 0; max-width: 62ch; }
+
+    /* TL;DR card */
+    .tldr {
+      margin: 36px 0 8px; background: var(--card); border: 1px solid var(--hairline);
+      border-radius: 18px; padding: 24px 26px; box-shadow: 0 5px 0 rgba(27,29,14,0.10);
+    }
+    .tldr h2 { font-family: var(--display); font-weight: 800; font-size: 20px; margin: 0 0 14px; letter-spacing: -0.3; }
+    .tldr ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 11px; }
+    .tldr li { position: relative; padding-left: 20px; font-size: 15.5px; line-height: 1.5; color: var(--ink); }
+    .tldr li::before { content: ''; position: absolute; left: 0; top: 7px; width: 9px; height: 9px; border-radius: 50%; background: var(--red-hi); }
+    .tldr li.gold::before { background: var(--gold); }
+
+    /* sections */
+    section { margin-top: 38px; }
+    h2.sec { font-family: var(--display); font-weight: 800; font-size: 23px; letter-spacing: -0.4; margin: 0 0 4px; display: flex; align-items: baseline; gap: 12px; }
+    h2.sec .num { font-family: var(--display); font-weight: 800; font-size: 15px; color: var(--gold-deep); background: var(--gold-pale); border-radius: 8px; padding: 3px 9px; letter-spacing: 0; line-height: 1; align-self: center; }
+    section p { font-size: 16px; line-height: 1.62; color: var(--sub); margin: 12px 0 0; max-width: 64ch; }
+    section ul { margin: 12px 0 0; padding-left: 2px; list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 64ch; }
+    section ul li { position: relative; padding-left: 20px; font-size: 16px; line-height: 1.55; color: var(--sub); }
+    section ul li::before { content: ''; position: absolute; left: 0; top: 9px; width: 7px; height: 7px; border-radius: 2px; background: var(--gold); transform: rotate(45deg); }
+    strong { color: var(--ink); font-weight: 700; }
+    a { color: var(--red-hi); text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
+
+    /* placeholder spans */
+    .ph { background: rgba(253,192,3,0.30); border-bottom: 1.5px dashed var(--gold-lip); border-radius: 3px; padding: 0 4px; color: var(--gold-ink); font-weight: 600; font-style: normal; }
+
+    .rule { height: 1px; background: var(--hairline); margin: 44px 0 0; }
+
+    /* contact + back */
+    .contact-card { margin-top: 40px; background: linear-gradient(135deg, var(--red) 0%, var(--red-hi) 100%); color: #fff; border-radius: 18px; padding: 28px 28px 26px; box-shadow: 0 6px 0 var(--red-lip); }
+    .contact-card h2 { font-family: var(--display); font-weight: 800; font-size: 22px; margin: 0; letter-spacing: -0.3; }
+    .contact-card p { color: rgba(255,255,255,0.88); font-size: 16px; line-height: 1.55; margin: 10px 0 0; max-width: 56ch; }
+    .contact-card .links { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 16px; }
+    .contact-card a { color: var(--gold); font-weight: 700; }
+    .contact-card a:hover { color: #fff; }
+
+    .foot { margin-top: 48px; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .foot .copy { font-size: 13px; color: var(--faint); }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--ink);
+      border: 2px solid #b8956a; border-radius: 14px; padding: 11px 18px; font-family: var(--display);
+      font-weight: 700; font-size: 15px; box-shadow: 0 4px 0 #7e6440; cursor: pointer;
+    }
+
+    @media (max-width: 560px) {
+      .wrap { padding: 40px 20px 72px; }
+      .lede { font-size: 16.5px; }
+      .tldr { padding: 20px 18px; border-radius: 16px; }
+      .tldr h2 { font-size: 18.5px; }
+      .contact-card { padding: 24px 20px 22px; border-radius: 16px; }
+      h2.sec { font-size: 21px; }
+      section p, section ul li { font-size: 15.5px; }
+      .foot { flex-direction: column-reverse; align-items: flex-start; }
+      .back-btn { width: 100%; justify-content: center; }
+    }
+
+    @media (max-width: 400px) {
+      .wrap { padding: 34px 16px 64px; }
+      .brand { flex-wrap: wrap; gap: 6px 10px; }
+      .contact-card .links { flex-direction: column; gap: 10px; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .team-note, .back-btn { display: none !important; }
+      .wrap { max-width: none; padding: 0; }
+      .tldr, .contact-card, section { break-inside: avoid; }
+      .contact-card { background: none; color: var(--ink); box-shadow: none; border: 1px solid var(--hairline); }
+      .contact-card p { color: var(--sub); }
+      .contact-card a { color: var(--red); }
+      a { color: var(--ink); }
+      .ph { background: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="brand">
+      <span class="latin">Kannada Beku</span>
+      <span class="kn">ಕನ್ನಡ ಬೇಕು</span>
+    </div>
+
+    <div class="eyebrow"><span class="lbl">Privacy Policy</span></div>
+    <h1>Your privacy, in plain Kannada‑Beku terms.</h1>
+    <div class="effective">Effective 15 June 2026 · Last updated 15 June 2026</div>
+
+    <p class="lede">
+      Kannada Beku is being built by a small team in Bengaluru, and we want the whole thing, including this page,
+      to feel warm and honest. Below is exactly what we collect when you join our waitlist or visit our site, why we
+      collect it, and what you can do about it. No fine‑print games.
+    </p>
+
+    <div class="tldr">
+      <h2>The short version</h2>
+      <ul>
+        <li>We collect <strong>your email</strong> when you join our waitlist.</li>
+        <li class="gold">We use it to <strong>notify you at launch</strong> and send occasional updates.</li>
+        <li>We <strong>never sell, share or misuse</strong> your information. No spam, ever.</li>
+        <li class="gold">Unsubscribe or request deletion anytime by emailing us.</li>
+      </ul>
+    </div>
+
+    <section>
+      <h2 class="sec"><span class="num">01</span> Data Collection</h2>
+      <p>We collect your email when you join our waitlist so we can:</p>
+      <ul>
+        <li>Notify you when Kannada Beku launches.</li>
+        <li>Send occasional updates about progress.</li>
+        <li>Never spam, ever.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="sec"><span class="num">02</span> Data Storage &amp; Security</h2>
+      <p>
+        We store your data securely in our database. We don’t sell, share, or misuse your information.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="sec"><span class="num">03</span> Your Rights</h2>
+      <p>
+        You can unsubscribe or request deletion anytime by emailing
+        <a href="mailto:kannadabeku@gmail.com">kannadabeku@gmail.com</a>.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="sec"><span class="num">04</span> Contact</h2>
+      <p>
+        For privacy questions: <a href="mailto:kannadabeku@gmail.com">kannadabeku@gmail.com</a>.
+      </p>
+    </section>
+
+    <div class="rule"></div>
+
+    <div class="contact-card">
+      <h2>Questions? Say namaskāra.</h2>
+      <p>
+        If you have a question, a request, or just want to talk privacy, we genuinely want to hear from you.
+      </p>
+      <div class="links">
+        <a href="mailto:kannadabeku@gmail.com">kannadabeku@gmail.com</a>
+        <a href="https://instagram.com/kannada.beku" target="_blank" rel="noreferrer">@kannada.beku</a>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div class="copy">© 2026 Kannada Beku · Made with filter coffee in Bengaluru.</div>
+      <a class="back-btn" href="index.html">← Back to the site</a>
+    </div>
+  </div>
+
+  <template id="__bundler_thumbnail" data-bg-color="#faf6ea">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#faf6ea"/>
+      <rect x="430" y="250" width="340" height="300" rx="60" fill="#be0027"/>
+      <rect x="430" y="512" width="340" height="38" rx="19" fill="#6e0014"/>
+      <text x="600" y="470" font-family="'Baloo Tamma 2', sans-serif" font-size="200" font-weight="800" fill="#ffffff" text-anchor="middle">ಕ</text>
+    </svg>
+  </template>
+</body>
+</html>
