@@ -231,8 +231,8 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
       </div>
 
       <Checkbox checked={a.community} onChange={(v) => set('community', v)}
-        title="Add me to the learner community"
-        hint="Join our WhatsApp groups and Instagram communities to practise with other learners. Opt-in only — we’ll reach out before adding you." />
+        title="Opt in to join our WhatsApp and Instagram community"
+        hint="We’ll reach out by email to add you." />
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div style={{ fontFamily: F.ui, fontSize: 13, color: error ? T.red : T.faint, maxWidth: 320 }}>
