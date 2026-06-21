@@ -35,7 +35,6 @@ async function saveSignup(a) {
       wants_note: a.wantsNote || null,
       pricing_model: a.model || null,
       price: a.price || null,
-      community_opt_in: a.communityOptIn,
     }),
   });
   if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
@@ -93,7 +92,7 @@ const textareaStyle = {
 const PRICE_BY_MODEL = {
   'One-time purchase':   ['Free only', '₹299', '₹599', '₹999', '₹1,499+'],
   'Monthly subscription':['Free only', '₹99 / mo', '₹199 / mo', '₹299 / mo', '₹499 / mo'],
-  'Freemium (free + premium)': ['Free + ₹99/mo', 'Free + ₹199/mo', 'Free + ₹299 unlock', 'Wouldn't pay'],
+  'Freemium (free + premium)': ['Free + ₹99/mo', 'Free + ₹199/mo', 'Free + ₹299 unlock', 'Wouldn’t pay'],
   'Pay per lesson pack': ['₹49 / pack', '₹99 / pack', '₹149 / pack', '₹199 / pack'],
 };
 
@@ -105,7 +104,6 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
     wants: [], wantsNote: '',
     model: '', price: '',
     name: '', email: initialEmail, city: '',
-    communityOptIn: false,
   });
   const set = (k, v) => setA((p) => ({ ...p, [k]: v }));
   const toggleIn = (k) => (o) => setA((p) => ({ ...p, [k]: p[k].includes(o) ? p[k].filter((x) => x !== o) : [...p[k], o] }));
@@ -126,7 +124,7 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
       await saveSignup(a);
       onDone(a.email);
     } catch (err) {
-      setError('Couldn't save your spot just now. Please try again.');
+      setError('Couldn’t save your spot just now. Please try again.');
       setSubmitting(false);
     }
   };
@@ -144,7 +142,7 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
             Your email, this saves your spot
           </label>
           <div style={{ fontFamily: F.ui, fontSize: 14, color: T.sub, marginTop: 5, lineHeight: 1.5 }}>
-            One email when we launch. That's the whole commitment. The rest below just helps us build it for you.
+            One email when we launch. That’s the whole commitment. The rest below just helps us build it for you.
           </div>
           <input type="email" required value={a.email} onChange={(e) => set('email', e.target.value)}
             placeholder="you@email.com" style={{ ...textareaStyle, minHeight: 0, height: 52, marginTop: 14 }} />
@@ -153,7 +151,7 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
 
       <div style={{ height: 1, background: T.hairline }} />
 
-      <QField n="01" title="What's motivating you to learn Kannada?"
+      <QField n="01" title="What’s motivating you to learn Kannada?"
         hint="Pick any that ring true, or tell us in your words.">
         <ChipGroup value={a.motivation} onToggle={toggleIn('motivation')}
           options={['Moved to Karnataka', 'Married into a Kannada family', 'Work & colleagues', 'Make local friends', 'Respect the culture', 'Travel often']} />
@@ -178,7 +176,7 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
         <ChipGroup value={a.wants} onToggle={toggleIn('wants')}
           options={['Everyday survival phrases', 'Hold a conversation', 'Read the script', 'Workplace Kannada', 'Slang locals actually use', 'Follow films & songs']} />
         <textarea style={textareaStyle} value={a.wantsNote} onChange={(e) => set('wantsNote', e.target.value)}
-          placeholder="Describe your "I made it" moment (optional)…" />
+          placeholder="Describe your “I made it” moment (optional)…" />
       </QField>
 
       <div style={{ height: 1, background: T.hairline }} />
@@ -207,22 +205,9 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
         <input style={{ ...textareaStyle, minHeight: 0, height: 52 }} value={a.city} onChange={(e) => set('city', e.target.value)} placeholder="City" />
       </div>
 
-      <div style={{ height: 1, background: T.hairline }} />
-
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-        <input type="checkbox" id="communityOptIn" checked={a.communityOptIn || false}
-          onChange={(e) => set('communityOptIn', e.target.checked)}
-          style={{ width: 20, height: 20, minWidth: 20, minHeight: 20, marginTop: 3, cursor: 'pointer', accentColor: T.red }} />
-        <label htmlFor="communityOptIn" style={{ fontFamily: F.ui, fontSize: 14, color: T.sub, lineHeight: 1.5, cursor: 'pointer' }}>
-          I want to be a part of WhatsApp groups and Instagram communities of Kannada Beku
-        </label>
-      </div>
-
-      <div style={{ height: 1, background: T.hairline }} />
-
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div style={{ fontFamily: F.ui, fontSize: 13, color: error ? T.red : T.faint, maxWidth: 320 }}>
-          {error || 'We'll only use this to follow up about Kannada Beku. No spam, no sharing.'}
+          {error || 'We’ll only use this to follow up about Kannada Beku. No spam, no sharing.'}
         </div>
         <LipBtn type="submit" bg={valid ? BRAND_GRADIENT : T.dim} lip={valid ? T.redLip : T.hairStrong}
           fg={valid ? '#fff' : T.faint} icon={submitting ? null : 'forward'}
@@ -269,10 +254,10 @@ function SurveyModal({ open, initialEmail, onClose, tw }) {
             </div>
             <div style={{ fontFamily: kannadaFamily(tw.kfont), fontWeight: 700, fontSize: 22, color: T.red, marginTop: 22 }}>ಧನ್ಯವಾದ</div>
             <h2 style={{ fontFamily: F.display, fontWeight: 800, fontSize: 'clamp(26px, 3.4vw, 34px)', color: T.ink, margin: '6px 0 0', letterSpacing: -0.4 }}>
-              You're on the list!
+              You’re on the list!
             </h2>
             <p style={{ fontFamily: F.ui, fontSize: 16, color: T.sub, lineHeight: 1.6, margin: '14px auto 0', maxWidth: 420 }}>
-              We'll email <b>{doneEmail}</b> the day we launch, and your answers go straight into what we build first. Thank you.
+              We’ll email <b>{doneEmail}</b> the day we launch, and your answers go straight into what we build first. Thank you.
             </p>
             <div style={{ marginTop: 26 }}>
               <LipBtn onClick={onClose} bg={BRAND_GRADIENT} lip={T.redLip}>Done</LipBtn>
