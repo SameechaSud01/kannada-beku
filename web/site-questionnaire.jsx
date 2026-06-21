@@ -93,7 +93,7 @@ const textareaStyle = {
 const PRICE_BY_MODEL = {
   'One-time purchase':   ['Free only', '₹299', '₹599', '₹999', '₹1,499+'],
   'Monthly subscription':['Free only', '₹99 / mo', '₹199 / mo', '₹299 / mo', '₹499 / mo'],
-  'Freemium (free + premium)': ['Free + ₹99/mo', 'Free + ₹199/mo', 'Free + ₹299 unlock', 'Wouldn't pay'],
+  'Freemium (free + premium)': ['Free + ₹99/mo', 'Free + ₹199/mo', 'Free + ₹299 unlock', "Wouldn't pay"],
   'Pay per lesson pack': ['₹49 / pack', '₹99 / pack', '₹149 / pack', '₹199 / pack'],
 };
 
