@@ -126,7 +126,7 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
       await saveSignup(a);
       onDone(a.email);
     } catch (err) {
-      setError('Couldn't save your spot just now. Please try again.');
+      setError("Couldn't save your spot just now. Please try again.");
       setSubmitting(false);
     }
   };
@@ -166,7 +166,7 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
       <QField n="02" title="What have you struggled with so far?"
         hint="Where it falls apart in real life. Be specific, it helps us most.">
         <ChipGroup value={a.struggles} onToggle={toggleIn('struggles')}
-          options={['Freezing at the counter', 'Auto & cab haggling', 'Talking to in-laws', 'Reading signs & menus', 'Pronunciation', 'No one to practise with']} />
+          options={['Freezing at the counter', "Auto & cab haggling", "Talking to in-laws", 'Reading signs & menus', 'Pronunciation', 'No one to practise with']} />
         <textarea style={textareaStyle} value={a.strugglesNote} onChange={(e) => set('strugglesNote', e.target.value)}
           placeholder="What trips you up? (optional)…" />
       </QField>
@@ -178,7 +178,7 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
         <ChipGroup value={a.wants} onToggle={toggleIn('wants')}
           options={['Everyday survival phrases', 'Hold a conversation', 'Read the script', 'Workplace Kannada', 'Slang locals actually use', 'Follow films & songs']} />
         <textarea style={textareaStyle} value={a.wantsNote} onChange={(e) => set('wantsNote', e.target.value)}
-          placeholder="Describe your "I made it" moment (optional)…" />
+          placeholder="Describe your \"I made it\" moment (optional)…" />
       </QField>
 
       <div style={{ height: 1, background: T.hairline }} />
@@ -217,7 +217,7 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div style={{ fontFamily: F.ui, fontSize: 13, color: error ? T.red : T.faint, maxWidth: 320 }}>
-          {error || 'We'll only use this to follow up about Kannada Beku. No spam, no sharing.'}
+          {error || "We'll only use this to follow up about Kannada Beku. No spam, no sharing."}
         </div>
         <LipBtn type="submit" bg={valid ? BRAND_GRADIENT : T.dim} lip={valid ? T.redLip : T.hairStrong}
           fg={valid ? '#fff' : T.faint} icon={submitting ? null : 'forward'}
