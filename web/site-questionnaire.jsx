@@ -35,6 +35,7 @@ async function saveSignup(a) {
       wants_note: a.wantsNote || null,
       pricing_model: a.model || null,
       price: a.price || null,
+      community_optin: !!a.community,
     }),
   });
   if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
@@ -63,6 +64,29 @@ function ChipGroup({ options, value, onToggle, multi = true }) {
         <Chip key={o} label={o} active={has(o)} onClick={() => onToggle(o)} />
       ))}
     </div>
+  );
+}
+
+// ── Checkbox — chunky opt-in toggle ─────────────────────────────────────────
+function Checkbox({ checked, onChange, title, hint }) {
+  return (
+    <button type="button" onClick={() => onChange(!checked)} style={{
+      cursor: 'pointer', textAlign: 'left', width: '100%', display: 'flex', gap: 14, alignItems: 'flex-start',
+      padding: '15px 17px', borderRadius: 16, transition: 'background .12s, border-color .12s',
+      border: `1.5px solid ${checked ? T.red : T.hairStrong}`,
+      background: checked ? T.redSoft : T.card,
+    }}>
+      <div style={{ flexShrink: 0, width: 24, height: 24, borderRadius: 8, marginTop: 1,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        border: `1.5px solid ${checked ? T.red : T.hairStrong}`, background: checked ? T.red : 'transparent',
+        transition: 'background .12s, border-color .12s' }}>
+        {checked && <Icon name="check" size={15} color="#fff" sw={3} />}
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontFamily: F.ui, fontWeight: 700, fontSize: 15.5, color: T.ink, lineHeight: 1.35 }}>{title}</div>
+        {hint && <div style={{ fontFamily: F.ui, fontSize: 13.5, color: T.sub, marginTop: 4, lineHeight: 1.5 }}>{hint}</div>}
+      </div>
+    </button>
   );
 }
 
@@ -104,6 +128,7 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
     wants: [], wantsNote: '',
     model: '', price: '',
     name: '', email: initialEmail, city: '',
+    community: false,
   });
   const set = (k, v) => setA((p) => ({ ...p, [k]: v }));
   const toggleIn = (k) => (o) => setA((p) => ({ ...p, [k]: p[k].includes(o) ? p[k].filter((x) => x !== o) : [...p[k], o] }));
@@ -204,6 +229,10 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
         <input style={{ ...textareaStyle, minHeight: 0, height: 52 }} value={a.name} onChange={(e) => set('name', e.target.value)} placeholder="Your name" />
         <input style={{ ...textareaStyle, minHeight: 0, height: 52 }} value={a.city} onChange={(e) => set('city', e.target.value)} placeholder="City" />
       </div>
+
+      <Checkbox checked={a.community} onChange={(v) => set('community', v)}
+        title="Add me to the learner community"
+        hint="Join our WhatsApp groups and Instagram communities to practise with other learners. Opt-in only — we’ll reach out before adding you." />
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div style={{ fontFamily: F.ui, fontSize: 13, color: error ? T.red : T.faint, maxWidth: 320 }}>
