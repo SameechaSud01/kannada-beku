@@ -42,7 +42,7 @@ function Story({ tw }) {
           <Eyebrow color={T.red} style={{ whiteSpace: 'nowrap' }}>Our story</Eyebrow>
           <p style={{ fontFamily: F.display, fontWeight: 800, letterSpacing: -0.4,
             fontSize: 'clamp(24px, 3.2vw, 38px)', lineHeight: 1.18, color: T.ink, margin: '18px 0 0', textWrap: 'balance' }}>
-            The founding team is two sides of modern Bengaluru — one who grew up speaking it,
+            The founding team is two sides of modern Bengaluru: one who grew up speaking it,
             one who <span style={{ color: T.red }}>struggled to learn it</span>. So they built the app they wished had existed.
           </p>
         </div>

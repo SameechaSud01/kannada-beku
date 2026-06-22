@@ -210,7 +210,7 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
       <QField n="01" title="What’s motivating you to learn Kannada?"
         hint="Pick any that ring true, or tell us in your words.">
         <ChipGroup value={a.motivation} onToggle={toggleIn('motivation')}
-          options={['Moved to Karnataka', 'Married into a Kannada family', 'Work & colleagues', 'Make local friends', 'Respect the culture', 'Travel often']} />
+          options={['Don’t want to feel like an outsider', 'Connect better with Kannadiga friends', 'Navigate daily life in Bengaluru', 'Stop getting overcharged (auto, markets)', 'Impress someone special', 'Understand Kannada slang and humour', 'Read signboards and menus', 'Career / professional reasons']} />
         <textarea style={textareaStyle} value={a.motivationNote} onChange={(e) => set('motivationNote', e.target.value)}
           placeholder="In your own words (optional)…" />
       </QField>

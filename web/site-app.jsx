@@ -76,7 +76,7 @@ function Hero({ tw, onJoin }) {
               Learn the <span style={{ color: T.red }}>Kannada</span> that Bengaluru actually speaks.
             </h1>
             <p style={{ fontFamily: F.ui, fontSize: 'clamp(16px, 1.5vw, 19px)', lineHeight: 1.55, color: T.sub, margin: '20px 0 0', maxWidth: 500 }}>
-              Short lessons, real survival phrases, and the culture behind the words —
+              Short lessons, real survival phrases, and the culture behind the words,
               so you can speak from day one, not just translate.
             </p>
 
