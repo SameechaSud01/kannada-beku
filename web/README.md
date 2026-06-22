@@ -45,6 +45,20 @@ create policy "anon can join waitlist"
   on public.waitlist for insert to anon with check (true);
 ```
 
+### Before pushing any form or DB change — run the smoke test
+If you add/rename a field in the signup form, or change the `waitlist` table,
+run this **before you push**:
+
+```sh
+node web/check-waitlist.mjs
+```
+
+It checks that every field the form sends has a matching column in the live
+table, and names any that don't. (This guards against the form silently 400ing
+on every signup — what happened when `community_optin` was added to the form
+but not the table.) When you add a field to the form's POST body, add the same
+key to `SAMPLE_PAYLOAD` in `check-waitlist.mjs` so the test keeps covering it.
+
 ## Notes
 - The privacy policy states the site uses **no analytics**. Update section 06 if
   that changes.

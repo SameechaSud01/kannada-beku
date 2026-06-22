@@ -14,8 +14,9 @@ const SUPABASE_ANON_KEY = 'sb_publishable_i4ovF7U6Z0wHD09wMDBtpA_CETQFN2l';
 const SUPABASE_TABLE = 'waitlist';
 const SUPABASE_READY = !SUPABASE_URL.includes('YOUR-PROJECT') && !SUPABASE_ANON_KEY.includes('YOUR-ANON-KEY');
 
-async function saveSignup(a) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}`, {
+// POST one row to the waitlist table. Returns the HTTP response.
+async function postWaitlist(row) {
+  return fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}`, {
     method: 'POST',
     headers: {
       apikey: SUPABASE_ANON_KEY,
@@ -23,22 +24,52 @@ async function saveSignup(a) {
       'Content-Type': 'application/json',
       Prefer: 'return=minimal',
     },
-    body: JSON.stringify({
-      email: a.email,
-      name: a.name || null,
-      city: a.city || null,
-      motivation: a.motivation,
-      motivation_note: a.motivationNote || null,
-      struggles: a.struggles,
-      struggles_note: a.strugglesNote || null,
-      wants: a.wants,
-      wants_note: a.wantsNote || null,
-      pricing_model: a.model || null,
-      price: a.price || null,
-      community_optin: !!a.community,
-    }),
+    body: JSON.stringify(row),
   });
-  if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
+}
+
+async function saveSignup(a) {
+  // The core fields are the ones that must never fail to save — losing an
+  // email to a schema mismatch on an *optional* column is the worst outcome.
+  const core = {
+    email: a.email,
+    name: a.name || null,
+    city: a.city || null,
+  };
+  const full = {
+    ...core,
+    motivation: a.motivation,
+    motivation_note: a.motivationNote || null,
+    struggles: a.struggles,
+    struggles_note: a.strugglesNote || null,
+    wants: a.wants,
+    wants_note: a.wantsNote || null,
+    pricing_model: a.model || null,
+    price: a.price || null,
+    community_optin: !!a.community,
+  };
+
+  const res = await postWaitlist(full);
+  if (res.ok) return;
+
+  // Surface the REAL reason — a generic "try again" once hid a missing column
+  // (PGRST204) for days. This makes the next break diagnosable in devtools.
+  const detail = await res.text();
+  console.error(`[waitlist] insert failed ${res.status}: ${detail}`);
+
+  // Fallback: retry with just the core fields so a bad optional column can't
+  // cost us the lead. Only retry on a 4xx (schema/validation), not on a
+  // network/5xx where the core insert would fail too.
+  if (res.status >= 400 && res.status < 500) {
+    const retry = await postWaitlist(core);
+    if (retry.ok) {
+      console.warn('[waitlist] saved core fields only — extra answers were dropped due to the error above');
+      return;
+    }
+    console.error(`[waitlist] core-only retry also failed ${retry.status}: ${await retry.text()}`);
+  }
+
+  throw new Error(`${res.status} ${detail}`);
 }
 
 // ── Chip — pill toggle (multi- or single-select) ────────────────────────────
