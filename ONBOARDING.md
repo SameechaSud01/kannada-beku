@@ -24,7 +24,7 @@ Design principles you'll see reflected everywhere:
 | Framework | **Expo SDK 54** (managed workflow) | No `ios/` or `android/` folders in git — Expo regenerates them. You never run `pod install` or open Android Studio for our code. |
 | Runtime | **React Native 0.81**, React 19 | New Architecture (Fabric/TurboModules) is **on** — see [app.json](app.json) `newArchEnabled: true`. |
 | Navigation | **Expo Router 6** (file-based) | Files in [app/](app/) become routes. Folder = nested stack. `(parens)` folders are route groups (no URL segment). |
-| Styling | **NativeWind 4** (Tailwind for RN) + design tokens in [constants/](constants/) | Pull colors/spacing from tokens; no hex literals in components. |
+| Styling | **`StyleSheet`** + design tokens in [constants/](constants/) | Pull colors from [constants/colors.ts](constants/colors.ts) and spacing from [constants/spacing.ts](constants/spacing.ts); no hex literals in components. (No NativeWind/Tailwind — plain RN `StyleSheet`.) |
 | Sizing | **react-native-size-matters** | `moderateScale()` / `scale()` / `verticalScale()` instead of raw pixels — this is enforced. |
 | Local state | **Zustand 5** (in [stores/](stores/)) | Persisted via AsyncStorage; secrets via `expo-secure-store`. |
 | Server state | **TanStack Query 5** | Do not fetch in `useEffect` for data that belongs in a query. |
@@ -47,7 +47,6 @@ Install these, in order:
 4. **VS Code** — [code.visualstudio.com](https://code.visualstudio.com/). Recommended extensions:
    - ESLint
    - Prettier
-   - Tailwind CSS IntelliSense (works with NativeWind)
    - Expo Tools
 5. **Android Studio** — [developer.android.com/studio](https://developer.android.com/studio). When the setup wizard runs, accept the **Android SDK**, **Android SDK Platform-Tools**, and **Android Virtual Device** components. We need API level 34+ to match `expo-router`/RN 0.81.
 6. **Environment variables** (Settings → System → About → Advanced system settings → Environment Variables):
@@ -200,7 +199,51 @@ If you're confused why a redirect happened, the answer is almost always in that 
 
 ---
 
-## 6. Conventions — read before your first PR
+## 6. Making Android-only changes
+
+Nearly all of our code is shared across iOS, Android, and web — a normal change to a screen or component affects every platform. When you specifically need something to look or behave differently **only on Android**, there are two tools. Pick by how big the difference is.
+
+**Small differences (a spacing value, a color, a shadow, a conditionally-rendered element) → `Platform.OS`.** This is the right choice almost every time. Keep it inline:
+
+```tsx
+import { Platform } from 'react-native';
+
+const styles = StyleSheet.create({
+  card: {
+    padding: moderateScale(16),
+    // Android elevation vs iOS shadow:
+    ...Platform.select({
+      android: { elevation: 6 },
+      ios: { shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 8 },
+    }),
+    marginTop: Platform.OS === 'android' ? moderateScale(12) : 0,
+  },
+});
+
+// Render something only on Android:
+{Platform.OS === 'android' && <AndroidOnlyBanner />}
+```
+
+**Whole-component differences (a screen/component that needs a genuinely different layout) → `.android.tsx` file suffix.** Metro auto-resolves the platform file; your import stays unchanged:
+
+```
+components/ui/HomeHeader.tsx          ← iOS + web fallback
+components/ui/HomeHeader.android.tsx  ← Android only
+```
+
+```tsx
+import { HomeHeader } from '@/components/ui/HomeHeader'; // import is unchanged
+```
+
+We currently have **zero** `.android.*` files — everything is shared. So prefer `Platform.OS` checks, and only split into an `.android.tsx` file when the branching would otherwise clutter a component.
+
+**The most common legitimate Android-only tweak: safe areas.** [app.json](app.json) sets `android.edgeToEdgeEnabled: true`, so Android draws content under the status and navigation bars. If something looks fine on iOS but is clipped or overlapping the system bars on Android, reach for `useSafeAreaInsets()` (from `react-native-safe-area-context`) with a `Platform.OS === 'android'` adjustment rather than a hardcoded offset.
+
+> **Always verify on a real Android build.** Because everything is shared today, an Android-only change is invisible in any iOS view — and you don't have iOS on Windows anyway. Run `npm run android` on the emulator or a device and screenshot the affected screen before declaring done. Don't hand-edit the generated `/android` folder; it's gitignored and regenerated.
+
+---
+
+## 7. Conventions — read before your first PR
 
 These come from [.claude/CLAUDE.md](.claude/CLAUDE.md) (gitignored) and the [README](README.md). Summary of the rules that catch newcomers:
 
@@ -209,7 +252,7 @@ These come from [.claude/CLAUDE.md](.claude/CLAUDE.md) (gitignored) and the [REA
 - **Pressable, not TouchableOpacity.** Min touch target 44×44 pt. `accessibilityLabel` on icon-only buttons.
 - **One screen per file** in [app/](app/). Route name = file name.
 - **No fetch in components.** All network goes through the Supabase client in [services/api/](services/api/). Use React Query for caching.
-- **No hex literals in components.** Pull colors from [constants/colors.ts](constants/colors.ts) so dark mode and future palette tweaks work.
+- **Style with RN `StyleSheet`, not Tailwind.** There is no NativeWind in this repo — write styles with `StyleSheet.create`. **No hex literals in components**; pull colors from [constants/colors.ts](constants/colors.ts) so dark mode and future palette tweaks work.
 - **TypeScript strict.** No `any`, no `@ts-ignore`, no `!` non-null assertions where the value could realistically be null. Use `unknown` and narrow.
 - **`FlatList` / `FlashList` for lists > ~10 items.** Stable `keyExtractor` (never the array index).
 - **No drive-by refactors.** Smallest change that solves the problem. Don't touch `ios/`, `android/`, or lockfiles unless explicitly asked.
@@ -222,7 +265,7 @@ Two things specifically I want to flag because they bite people:
 
 ---
 
-## 7. Before you push
+## 8. Before you push
 
 ```powershell
 npm run pre-push
@@ -232,7 +275,7 @@ This runs `typecheck` and the local secret scan. Don't push with type errors. If
 
 ---
 
-## 8. Windows-specific gotchas
+## 9. Windows-specific gotchas
 
 These are not in the README because the README assumes macOS.
 
@@ -250,7 +293,7 @@ These are not in the README because the README assumes macOS.
 
 ---
 
-## 9. Troubleshooting (the cross-platform ones)
+## 10. Troubleshooting (the cross-platform ones)
 
 - **`Unable to resolve module ...`** — kill Metro, then `npx expo start -c` to clear the cache.
 - **Supabase calls failing with "missing env"** — confirm `.env` exists at repo root and both `EXPO_PUBLIC_*` keys are set; restart Metro after editing `.env`.
@@ -259,7 +302,7 @@ These are not in the README because the README assumes macOS.
 
 ---
 
-## 10. Where to go next
+## 11. Where to go next
 
 Suggested first PR ideas to get familiar with the codebase:
 - Read [app/_layout.tsx](app/_layout.tsx) end to end, then add a `console.log` somewhere in the routing flow and watch it fire as you sign in/out.
