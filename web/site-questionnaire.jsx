@@ -14,8 +14,9 @@ const SUPABASE_ANON_KEY = 'sb_publishable_i4ovF7U6Z0wHD09wMDBtpA_CETQFN2l';
 const SUPABASE_TABLE = 'waitlist';
 const SUPABASE_READY = !SUPABASE_URL.includes('YOUR-PROJECT') && !SUPABASE_ANON_KEY.includes('YOUR-ANON-KEY');
 
-async function saveSignup(a) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}`, {
+// POST one row to the waitlist table. Returns the HTTP response.
+async function postWaitlist(row) {
+  return fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}`, {
     method: 'POST',
     headers: {
       apikey: SUPABASE_ANON_KEY,
@@ -23,21 +24,52 @@ async function saveSignup(a) {
       'Content-Type': 'application/json',
       Prefer: 'return=minimal',
     },
-    body: JSON.stringify({
-      email: a.email,
-      name: a.name || null,
-      city: a.city || null,
-      motivation: a.motivation,
-      motivation_note: a.motivationNote || null,
-      struggles: a.struggles,
-      struggles_note: a.strugglesNote || null,
-      wants: a.wants,
-      wants_note: a.wantsNote || null,
-      pricing_model: a.model || null,
-      price: a.price || null,
-    }),
+    body: JSON.stringify(row),
   });
-  if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
+}
+
+async function saveSignup(a) {
+  // The core fields are the ones that must never fail to save — losing an
+  // email to a schema mismatch on an *optional* column is the worst outcome.
+  const core = {
+    email: a.email,
+    name: a.name || null,
+    city: a.city || null,
+  };
+  const full = {
+    ...core,
+    motivation: a.motivation,
+    motivation_note: a.motivationNote || null,
+    struggles: a.struggles,
+    struggles_note: a.strugglesNote || null,
+    wants: a.wants,
+    wants_note: a.wantsNote || null,
+    pricing_model: a.model || null,
+    price: a.price || null,
+    community_optin: !!a.community,
+  };
+
+  const res = await postWaitlist(full);
+  if (res.ok) return;
+
+  // Surface the REAL reason — a generic "try again" once hid a missing column
+  // (PGRST204) for days. This makes the next break diagnosable in devtools.
+  const detail = await res.text();
+  console.error(`[waitlist] insert failed ${res.status}: ${detail}`);
+
+  // Fallback: retry with just the core fields so a bad optional column can't
+  // cost us the lead. Only retry on a 4xx (schema/validation), not on a
+  // network/5xx where the core insert would fail too.
+  if (res.status >= 400 && res.status < 500) {
+    const retry = await postWaitlist(core);
+    if (retry.ok) {
+      console.warn('[waitlist] saved core fields only — extra answers were dropped due to the error above');
+      return;
+    }
+    console.error(`[waitlist] core-only retry also failed ${retry.status}: ${await retry.text()}`);
+  }
+
+  throw new Error(`${res.status} ${detail}`);
 }
 
 // ── Chip — pill toggle (multi- or single-select) ────────────────────────────
@@ -63,6 +95,29 @@ function ChipGroup({ options, value, onToggle, multi = true }) {
         <Chip key={o} label={o} active={has(o)} onClick={() => onToggle(o)} />
       ))}
     </div>
+  );
+}
+
+// ── Checkbox — chunky opt-in toggle ─────────────────────────────────────────
+function Checkbox({ checked, onChange, title, hint }) {
+  return (
+    <button type="button" onClick={() => onChange(!checked)} style={{
+      cursor: 'pointer', textAlign: 'left', width: '100%', display: 'flex', gap: 14, alignItems: 'flex-start',
+      padding: '15px 17px', borderRadius: 16, transition: 'background .12s, border-color .12s',
+      border: `1.5px solid ${checked ? T.red : T.hairStrong}`,
+      background: checked ? T.redSoft : T.card,
+    }}>
+      <div style={{ flexShrink: 0, width: 24, height: 24, borderRadius: 8, marginTop: 1,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        border: `1.5px solid ${checked ? T.red : T.hairStrong}`, background: checked ? T.red : 'transparent',
+        transition: 'background .12s, border-color .12s' }}>
+        {checked && <Icon name="check" size={15} color="#fff" sw={3} />}
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontFamily: F.ui, fontWeight: 700, fontSize: 15.5, color: T.ink, lineHeight: 1.35 }}>{title}</div>
+        {hint && <div style={{ fontFamily: F.ui, fontSize: 13.5, color: T.sub, marginTop: 4, lineHeight: 1.5 }}>{hint}</div>}
+      </div>
+    </button>
   );
 }
 
@@ -104,6 +159,7 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
     wants: [], wantsNote: '',
     model: '', price: '',
     name: '', email: initialEmail, city: '',
+    community: false,
   });
   const set = (k, v) => setA((p) => ({ ...p, [k]: v }));
   const toggleIn = (k) => (o) => setA((p) => ({ ...p, [k]: p[k].includes(o) ? p[k].filter((x) => x !== o) : [...p[k], o] }));
@@ -204,6 +260,10 @@ function SurveyBody({ tw, initialEmail = '', onDone }) {
         <input style={{ ...textareaStyle, minHeight: 0, height: 52 }} value={a.name} onChange={(e) => set('name', e.target.value)} placeholder="Your name" />
         <input style={{ ...textareaStyle, minHeight: 0, height: 52 }} value={a.city} onChange={(e) => set('city', e.target.value)} placeholder="City" />
       </div>
+
+      <Checkbox checked={a.community} onChange={(v) => set('community', v)}
+        title="Opt in to join our WhatsApp and Instagram community"
+        hint="We’ll reach out by email to add you." />
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div style={{ fontFamily: F.ui, fontSize: 13, color: error ? T.red : T.faint, maxWidth: 320 }}>

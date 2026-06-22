@@ -98,31 +98,33 @@ export function BrandSplash() {
         <Rise reduced={reduced} delay={620}>
           <Text
             style={{
-              fontFamily: Fonts.notoSansKannada.bold,
+              fontFamily: Fonts.dmSans.bold,
               fontSize: moderateScale(34),
               color: Colors.onPrimary,
               marginTop: Spacing.xxl,
-              lineHeight: moderateScale(44),
+              lineHeight: moderateScale(52),
+              paddingTop: moderateScale(6),
+              textAlignVertical: 'center',
+              includeFontPadding: false,
             }}
             maxFontSizeMultiplier={1.2}
           >
-            ಕನ್ನಡ <Text style={{ color: Colors.goldBright }}>ಬೇಕು</Text>
+            Kannada <Text style={{ color: Colors.goldBright }}>Beku</Text>
           </Text>
         </Rise>
 
         <Rise reduced={reduced} delay={720}>
           <Text
             style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(11),
+              fontFamily: Fonts.notoSansKannada.bold,
+              fontSize: moderateScale(16),
               letterSpacing: 2.6,
-              textTransform: 'uppercase',
               color: 'rgba(255,255,255,0.7)',
               marginTop: Spacing.md,
             }}
             maxFontSizeMultiplier={1.2}
           >
-            Kannada  Beku
+            ಕನ್ನಡ ಬೇಕು
           </Text>
         </Rise>
       </View>
