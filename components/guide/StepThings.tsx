@@ -37,7 +37,7 @@ export function StepThings({ principles }: { principles: BasicPrinciple[] }) {
       body: 'Listen to the difference:',
       demos: [
         { kannada: 'ಹಳ್ಳಿ', romanization: 'halLi', note: 'held' },
-        { kannada: 'ಹಲಿ', romanization: 'hali', note: 'quick' },
+        { kannada: 'ಹಲ್ಲಿ', romanization: 'halli', note: 'lizard' },
       ],
     },
   ];

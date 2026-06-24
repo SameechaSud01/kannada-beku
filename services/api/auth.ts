@@ -2,13 +2,23 @@ import * as Linking from 'expo-linking';
 import { Platform } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as Crypto from 'expo-crypto';
-import {
-  GoogleSignin,
-  isSuccessResponse,
-  isErrorWithCode,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
 import { supabase } from './supabase';
+
+// `@react-native-google-signin/google-signin` resolves its native module with
+// TurboModuleRegistry.getEnforcing at *import* time, which throws in Expo Go
+// (the RNGoogleSignin binary only exists in a dev/production build). A static
+// import would therefore crash this whole module on load — taking every (auth)
+// route that imports it down with it. Load it lazily so only an actual Google
+// sign-in (which only runs in a real build) touches the native module.
+type GoogleSigninModule = typeof import('@react-native-google-signin/google-signin');
+let googleModule: GoogleSigninModule | null = null;
+function getGoogleModule(): GoogleSigninModule {
+  if (!googleModule) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    googleModule = require('@react-native-google-signin/google-signin');
+  }
+  return googleModule!;
+}
 
 // ---------------------------------------------------------------------------
 // Password recovery (spec_password_reset.md)
@@ -58,7 +68,7 @@ function configureGoogle(): void {
   if (googleConfigured) return;
   // Client IDs are public (not secrets); sourced from env via EXPO_PUBLIC_*.
   // The Web client ID is the audience Supabase validates the id-token against.
-  GoogleSignin.configure({
+  getGoogleModule().GoogleSignin.configure({
     webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
     iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
   });
@@ -67,6 +77,7 @@ function configureGoogle(): void {
 
 export async function signInWithGoogle(): Promise<SocialResult> {
   try {
+    const { GoogleSignin, isSuccessResponse } = getGoogleModule();
     configureGoogle();
     if (Platform.OS === 'android') {
       await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
@@ -85,6 +96,7 @@ export async function signInWithGoogle(): Promise<SocialResult> {
     if (error) throw error;
     return { status: 'signedIn' };
   } catch (e) {
+    const { isErrorWithCode, statusCodes } = getGoogleModule();
     if (isErrorWithCode(e) && e.code === statusCodes.SIGN_IN_CANCELLED) {
       return { status: 'cancelled' };
     }

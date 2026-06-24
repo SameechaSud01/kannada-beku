@@ -115,7 +115,14 @@ function extractKannadaLiterals(src) {
 
 function collectFromTsFiles() {
   const strings = new Set();
-  for (const rel of ['constants/lessons/lessonContent.ts', 'constants/guide.ts']) {
+  // Guide step components embed a few fixed "UI chrome" glyphs directly (e.g.
+  // StepThings' doubled-consonant demos ಹಳ್ಳಿ/ಹಲ್ಲಿ). Those are played too, so
+  // they must be scanned or they fall through to runtime (expo) TTS.
+  for (const rel of [
+    'constants/lessons/lessonContent.ts',
+    'constants/guide.ts',
+    'components/guide/StepThings.tsx',
+  ]) {
     const p = join(ROOT, rel);
     if (!existsSync(p)) {
       console.warn(`  ! TS source not found, skipping: ${rel}`);
