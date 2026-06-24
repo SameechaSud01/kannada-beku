@@ -18,11 +18,12 @@ import { ErrorState } from '../components/states/ErrorState';
  * Emergency phrases (chunky_v3 §5). Intentionally all-red urgency — no
  * warning-orange anywhere here. Red gradient header with a redLip lip, red lip
  * category chips, then a Mysore-Red-accented context bar whose subtitle tracks
- * the selected category. Cards are sorted most → least urgent (see tierOf) and
- * carry a tiered left accent: red (danger) / gold (urgent) / muted (neutral),
- * with a DANGER/URGENT eyebrow on the top two tiers. Each card leads with the
- * transliteration (what you say), then Kannada script (what you show), then the
- * English gloss.
+ * the selected category. Cards are sorted most → least urgent (see contextOf)
+ * and carry a uniform red left accent. Each card leads with a red situation
+ * badge (SAFETY ISSUE / METER DISPUTE / ASKING PRICE …), then a huge
+ * transliteration (what you say out loud), a small English gloss (sanity check),
+ * and finally the Kannada script demoted to a footnote — these users are
+ * learning to speak, not read, and only flash the script to show the driver.
  */
 export default function EmergencyScreen() {
   const router = useRouter();
@@ -213,16 +214,15 @@ export default function EmergencyScreen() {
             }}
           >
             {[...(current?.items ?? [])]
-              .sort((a, b) => TIER_RANK[tierOf(a.meaning)] - TIER_RANK[tierOf(b.meaning)])
+              .sort((a, b) => contextOf(a.meaning).rank - contextOf(b.meaning).rank)
               .map((item) => {
-                const tier = tierOf(item.meaning);
-                const { accent, tag, tagColor } = tierStyle(tier);
+                const badge = contextOf(item.meaning).badge;
                 return (
                   <View
                     key={item.id}
                     style={{
                       flexDirection: 'row',
-                      alignItems: 'flex-start',
+                      alignItems: 'center',
                       gap: Spacing.md,
                       backgroundColor: '#ffffff',
                       borderRadius: Radius.chunky,
@@ -231,60 +231,56 @@ export default function EmergencyScreen() {
                       borderWidth: 1,
                       borderColor: Colors.hairline,
                       borderLeftWidth: 5,
-                      borderLeftColor: accent,
+                      borderLeftColor: Colors.primaryContainer,
                       borderBottomWidth: 4,
                       borderBottomColor: Colors.cardLip,
                     }}
                   >
                     <View style={{ flex: 1 }}>
-                      {tag ? (
+                      {/* Red situation badge — the context, at a glance */}
+                      <View
+                        style={{
+                          alignSelf: 'flex-start',
+                          backgroundColor: Colors.primaryContainer,
+                          borderRadius: Radius.full,
+                          paddingVertical: moderateScale(4),
+                          paddingHorizontal: moderateScale(10),
+                          borderBottomWidth: 2,
+                          borderBottomColor: Colors.redLip,
+                          marginBottom: moderateScale(10),
+                        }}
+                      >
                         <Text
                           style={{
                             fontFamily: Fonts.dmSans.bold,
                             fontSize: moderateScale(10.5),
-                            letterSpacing: 1.2,
-                            color: tagColor,
-                            marginBottom: moderateScale(4),
+                            letterSpacing: 1,
+                            color: Colors.onPrimary,
                           }}
                           maxFontSizeMultiplier={1.2}
                         >
-                          {tag}
+                          {badge}
                         </Text>
-                      ) : null}
-                      {/* Transliteration — what you actually say out loud */}
+                      </View>
+                      {/* Transliteration — huge: this is what you say out loud */}
                       <Text
                         style={{
                           fontFamily: Fonts.dmSans.bold,
-                          fontSize: moderateScale(19),
-                          lineHeight: moderateScale(26),
+                          fontSize: moderateScale(25),
+                          lineHeight: moderateScale(32),
                           color: Colors.onSurface,
-                          letterSpacing: -0.2,
+                          letterSpacing: -0.3,
                         }}
                         maxFontSizeMultiplier={1.3}
                       >
                         {item.transliteration ?? item.kannada}
                       </Text>
-                      {/* Kannada script — show the screen to the driver */}
-                      {item.transliteration ? (
-                        <Text
-                          style={{
-                            fontFamily: Fonts.notoSansKannada.medium,
-                            fontSize: moderateScale(15),
-                            lineHeight: moderateScale(23),
-                            color: Colors.onSurface,
-                            marginTop: moderateScale(2),
-                          }}
-                          maxFontSizeMultiplier={1.3}
-                        >
-                          {item.kannada}
-                        </Text>
-                      ) : null}
-                      {/* English gloss — smallest, muted */}
+                      {/* English — small sanity check on the meaning */}
                       <Text
                         style={{
                           fontFamily: Fonts.dmSans.medium,
-                          fontSize: moderateScale(12.5),
-                          lineHeight: moderateScale(18),
+                          fontSize: moderateScale(13),
+                          lineHeight: moderateScale(19),
                           color: Colors.tertiary,
                           marginTop: moderateScale(3),
                         }}
@@ -292,6 +288,21 @@ export default function EmergencyScreen() {
                       >
                         {item.meaning}
                       </Text>
+                      {/* Kannada script — footnote only, for showing the driver */}
+                      {item.transliteration ? (
+                        <Text
+                          style={{
+                            fontFamily: Fonts.notoSansKannada.regular,
+                            fontSize: moderateScale(12),
+                            lineHeight: moderateScale(18),
+                            color: 'rgba(27,29,14,0.42)',
+                            marginTop: moderateScale(8),
+                          }}
+                          maxFontSizeMultiplier={1.2}
+                        >
+                          {item.kannada}
+                        </Text>
+                      ) : null}
                     </View>
                     <AudioOrb
                       size={44}
@@ -323,30 +334,29 @@ export default function EmergencyScreen() {
 }
 
 /**
- * Urgency tiers, derived client-side from the English meaning so they survive
- * DB re-seeds (rows carry uuids, not stable keys). Cards are reordered most →
- * least urgent and accented accordingly:
- *   danger  → Mysore Red left border + DANGER eyebrow (safety / get-out-now)
- *   urgent  → gold left border + URGENT eyebrow (important but routine)
- *   neutral → muted left border, no eyebrow (transactional)
+ * Situation badges, derived client-side from the English meaning so they survive
+ * DB re-seeds (rows carry uuids, not stable keys). Every card gets a red badge
+ * naming the situation, and `rank` reorders the list most → least urgent —
+ * safety first, then the ride-dispute stuff, then routine phrases. First rule to
+ * match wins, so order matters.
  */
-type Tier = 'danger' | 'urgent' | 'neutral';
+type Context = { badge: string; rank: number };
 
-const DANGER_RE = /\b(help|stop|police|lost|emergency|accident|danger|hurt|thief|wrong)\b/i;
-const URGENT_RE = /\b(meter|slow|kannada|wait|address|turn)\b/i;
+const CONTEXT_RULES: { re: RegExp; badge: string; rank: number }[] = [
+  { re: /\b(help|police|emergency|accident|danger|hurt|thief|lost|stop)\b/i, badge: 'SAFETY ISSUE', rank: 0 },
+  { re: /\bmeter\b/i, badge: 'METER DISPUTE', rank: 1 },
+  { re: /\b(how much|price|cost|fare|rupees|eshtu)\b/i, badge: 'ASKING PRICE', rank: 2 },
+  { re: /\b(kannada|english|understand|speak)\b/i, badge: 'LANGUAGE GAP', rank: 3 },
+  { re: /\b(slow|wait|slowly)\b/i, badge: 'SLOW DOWN', rank: 4 },
+  { re: /\b(where|turn|address|left|right)\b/i, badge: 'DIRECTIONS', rank: 5 },
+  { re: /\b(no|don't|not)\b/i, badge: 'SAYING NO', rank: 6 },
+];
 
-const TIER_RANK: Record<Tier, number> = { danger: 0, urgent: 1, neutral: 2 };
-
-function tierOf(meaning: string): Tier {
-  if (DANGER_RE.test(meaning)) return 'danger';
-  if (URGENT_RE.test(meaning)) return 'urgent';
-  return 'neutral';
-}
-
-function tierStyle(tier: Tier): { accent: string; tag: string | null; tagColor: string } {
-  if (tier === 'danger') return { accent: Colors.primaryContainer, tag: 'DANGER', tagColor: Colors.primaryContainer };
-  if (tier === 'urgent') return { accent: Colors.secondaryContainer, tag: 'URGENT', tagColor: Colors.secondary };
-  return { accent: Colors.cardLip, tag: null, tagColor: Colors.tertiary };
+function contextOf(meaning: string): Context {
+  for (const rule of CONTEXT_RULES) {
+    if (rule.re.test(meaning)) return { badge: rule.badge, rank: rule.rank };
+  }
+  return { badge: 'GOOD TO KNOW', rank: 7 };
 }
 
 /** Per-category context line shown under the pills in the header bar. */
