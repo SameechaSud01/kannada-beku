@@ -8,6 +8,7 @@ import { Spacing } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
 import { GAMES } from '@/constants/games';
 import { useProgressStore } from '@/stores/progressStore';
+import { recordLearningDay } from '@/services/progress/streak';
 import { useGameSplit } from '@/src/games/shared/parts';
 import { GamePartChooser } from '@/components/games/GamePartChooser';
 import { useOppositesItems, useRecordOppositesAttempt } from '../../../hooks/games/opposites';
@@ -111,7 +112,11 @@ function OppositeGameInner({
   // Finishing the round marks this sub-part done, so the chooser unlocks the
   // next one (spec_game_subsection_split). Idempotent in the store.
   useEffect(() => {
-    if (phase === 'result' && sectionKey) completeGamePart(gameKey, sectionKey);
+    if (phase === 'result' && sectionKey) {
+      completeGamePart(gameKey, sectionKey);
+      // Finishing a game part counts as a learning day (audit H2/B4).
+      recordLearningDay();
+    }
   }, [phase, sectionKey, gameKey, completeGamePart]);
 
   if (phase === 'result') {

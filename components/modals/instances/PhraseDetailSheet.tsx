@@ -181,14 +181,9 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
         </View>
       ) : null}
 
-      <View style={{ flexDirection: 'row', gap: moderateScale(10) }}>
-        <View style={{ flex: 1 }}>
-          <LipButton label="Save" variant="secondary" disabled accessibilityLabel="Save. Coming soon." />
-        </View>
-        <View style={{ flex: 1 }}>
-          <LipButton label="Got it" variant="primary" onPress={onDismiss} />
-        </View>
-      </View>
+      {/* "Save" was a disabled "Coming soon" stub — removed until implemented so
+          it doesn't ship as a dead button (audit Phase 5). */}
+      <LipButton label="Got it" variant="primary" onPress={onDismiss} />
       <View style={{ height: Spacing.sm }} />
     </BottomSheetScrollView>
   );

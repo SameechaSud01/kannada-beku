@@ -7,6 +7,7 @@ import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
+import { useIsMounted } from '../../hooks/useIsMounted';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { LessonProgressBar } from './LessonProgressBar';
 import { SpeedControl } from './SpeedControl';
@@ -30,13 +31,10 @@ interface PracticePhrasesPhaseProps {
 
 function pickDistractors(pool: Phrase[], current: Phrase): Phrase[] {
   const candidates = pool.filter((ph) => ph !== current);
-  if (candidates.length === 0) return [];
+  // Take up to 2 distinct distractors. The modulo approach used to repeat the
+  // same phrase when only one candidate existed, rendering it twice (audit Phase 4).
   const shuffled = [...candidates].sort(() => Math.random() - 0.5);
-  const picks: Phrase[] = [];
-  for (let i = 0; i < 2; i++) {
-    picks.push(shuffled[i % shuffled.length]);
-  }
-  return picks;
+  return shuffled.slice(0, 2);
 }
 
 export function PracticePhrasesPhase({
@@ -53,6 +51,7 @@ export function PracticePhrasesPhase({
   const autoReplay = useUserStore((s) => s.autoReplay);
   const [picked, setPicked] = useState<number | null>(null);
   const [playing, setPlaying] = useState(false);
+  const mounted = useIsMounted();
 
   const options = useMemo<Phrase[]>(() => {
     if (!phrase) return [];
@@ -86,7 +85,9 @@ export function PracticePhrasesPhase({
       .catch((err) => {
         console.warn('[practice_phrases] replay failed', err);
       })
-      .finally(() => setPlaying(false));
+      .finally(() => {
+        if (mounted.current) setPlaying(false);
+      });
   };
 
   const handlePickOption = (idx: number) => {

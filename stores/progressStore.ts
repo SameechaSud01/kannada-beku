@@ -1,6 +1,33 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { localDateISO, localYesterdayISO } from '../utils/date';
+import { TS_LESSONS_BY_SLUG } from '../constants/lessons/lessonContent';
+
+/** Every completed lesson awards a flat 20 XP (completion score is always 100). */
+const LESSON_XP = 20;
+
+/**
+ * Words+phrases implied by a set of completed lesson slugs — the same
+ * `words.length + phrases.length` a lesson contributes via completeLesson.
+ * Used to rebuild the local-only xp/words counters after a reinstall, where
+ * completedLessons is restored from the server but the counters are not
+ * (audit B4/H1). Slugs without TS content (e.g. L0 basics) contribute 0.
+ */
+function itemsLearnedFor(slugs: Iterable<string>): number {
+  let total = 0;
+  for (const slug of slugs) {
+    const lesson = TS_LESSONS_BY_SLUG[slug];
+    if (lesson) total += lesson.words.length + lesson.phrases.length;
+  }
+  return total;
+}
+
+function lessonXpFor(slugs: Iterable<string>): number {
+  let total = 0;
+  for (const slug of slugs) if (TS_LESSONS_BY_SLUG[slug]) total += LESSON_XP;
+  return total;
+}
 
 const LEGACY_STORAGE_KEY = 'kannada-baa-progress';
 const STORAGE_KEY = 'kannada-beku-progress';
@@ -105,13 +132,19 @@ interface ProgressState {
    */
   hydrateFromServerCompletions: (slugs: string[]) => void;
   /**
+   * Adopt the server-persisted streak when it reflects equal-or-more-recent
+   * activity than the local store (true after a reinstall, where local is
+   * empty). No-op when local is already as fresh (audit B4).
+   */
+  hydrateStreakFromServer: (serverStreak: number, serverLastActive: string | null) => void;
+  /**
    * Wipe all progress. Called on signOut and when the signed-in Supabase
    * user changes, so a different account doesn't inherit another user's progress.
    */
   reset: () => void;
 }
 
-const getTodayISO = () => new Date().toISOString().split('T')[0];
+const getTodayISO = () => localDateISO();
 
 /**
  * Increment one dimension of today's activity tally, rolling the counts over to
@@ -192,9 +225,7 @@ export const useProgressStore = create<ProgressState>()(
 
         if (lastActiveDate === today) return;
 
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayISO = yesterday.toISOString().split('T')[0];
+        const yesterdayISO = localYesterdayISO();
 
         const newStreak = lastActiveDate === yesterdayISO ? streak + 1 : 1;
 
@@ -223,8 +254,34 @@ export const useProgressStore = create<ProgressState>()(
         set((state) => {
           const merged = new Set(state.completedLessons);
           for (const slug of slugs) merged.add(slug);
-          if (merged.size === state.completedLessons.length) return state;
-          return { completedLessons: Array.from(merged) };
+          const mergedArr = Array.from(merged);
+          // Rebuild the local-only words/xp counters from the merged completion
+          // set so a reinstall shows correct stats. max() preserves any higher
+          // legit local value and keeps this idempotent against the live
+          // completeLesson increment (audit B4/H1).
+          const nextWords = Math.max(state.totalPhrasesLearned, itemsLearnedFor(mergedArr));
+          const nextXp = Math.max(state.xp, lessonXpFor(mergedArr));
+          if (
+            merged.size === state.completedLessons.length &&
+            nextWords === state.totalPhrasesLearned &&
+            nextXp === state.xp
+          ) {
+            return state;
+          }
+          return {
+            completedLessons: mergedArr,
+            totalPhrasesLearned: nextWords,
+            xp: nextXp,
+          };
+        }),
+
+      hydrateStreakFromServer: (serverStreak, serverLastActive) =>
+        set((state) => {
+          if (!serverLastActive) return state;
+          // ISO dates compare lexicographically. Keep local when it's at least
+          // as recent; otherwise adopt the server's streak + last-active day.
+          if (state.lastActiveDate && state.lastActiveDate >= serverLastActive) return state;
+          return { streak: serverStreak, lastActiveDate: serverLastActive };
         }),
 
       reset: () =>
@@ -247,9 +304,15 @@ export const useProgressStore = create<ProgressState>()(
     }),
     {
       name: STORAGE_KEY,
+      version: 1,
       storage: createJSONStorage(() => migratingStorage),
-      onRehydrateStorage: () => (state) => {
-        state?.setHydrated(true);
+      // Always release the boot gate, even when rehydration fails (corrupt or
+      // locked storage). On error zustand passes `state === undefined`, so reach
+      // the store via getState() — otherwise isHydrated stays false and the
+      // splash screen hangs forever (audit B1).
+      onRehydrateStorage: () => (state, error) => {
+        (state ?? useProgressStore.getState()).setHydrated(true);
+        if (error) console.warn('[progress] rehydrate failed', error);
       },
     }
   )

@@ -155,7 +155,6 @@ export function RemindersSheet() {
   }
 
   const selectedTime = reminderTime ?? DEFAULT_TIME;
-  const isCustom = enabled && !PRESET_TIMES.includes(selectedTime as (typeof PRESET_TIMES)[number]);
 
   return (
     <BottomSheetView
@@ -229,33 +228,89 @@ export function RemindersSheet() {
       </View>
 
       {enabled ? (
-        <View style={{ gap: moderateScale(10) }}>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(11),
-              letterSpacing: 1.4,
-              color: Colors.tertiary,
-              textTransform: 'uppercase',
-            }}
-            maxFontSizeMultiplier={1.4}
+        <View style={{ gap: moderateScale(12) }}>
+          {/* Prominent, tappable current-time card — opens the native picker */}
+          <Pressable
+            onPress={() => setPickerOpen((v) => !v)}
+            accessibilityRole="button"
+            accessibilityLabel={`Reminder time, ${formatTime(selectedTime)}. Tap to change.`}
+            style={({ pressed }) => ({
+              backgroundColor: '#ffffff',
+              borderRadius: Radius.chunky,
+              borderWidth: 1,
+              borderColor: pickerOpen ? Colors.goldLip : Colors.hairline,
+              borderBottomWidth: 4,
+              borderBottomColor: pickerOpen ? Colors.goldLip : Colors.cardLip,
+              paddingVertical: moderateScale(14),
+              paddingHorizontal: Spacing.lg,
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: Spacing.md,
+              transform: [{ scale: pressed ? 0.99 : 1 }],
+            })}
           >
-            Time
-          </Text>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: moderateScale(8) }}>
-            {PRESET_TIMES.map((t) => (
-              <TimeChip
-                key={t}
-                label={formatTime(t)}
-                selected={enabled && selectedTime === t}
-                onPress={() => onChipPress(t)}
-              />
-            ))}
-            <TimeChip
-              label={isCustom ? formatTime(selectedTime) : 'Custom'}
-              selected={isCustom}
-              onPress={() => setPickerOpen((v) => !v)}
-            />
+            <View style={{ flex: 1, gap: moderateScale(2) }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.dmSans.bold,
+                  fontSize: moderateScale(11),
+                  letterSpacing: 1.4,
+                  color: Colors.tertiary,
+                  textTransform: 'uppercase',
+                }}
+                maxFontSizeMultiplier={1.4}
+              >
+                Reminder time
+              </Text>
+              <Text
+                style={{
+                  fontFamily: Fonts.baloo.extrabold,
+                  fontSize: moderateScale(26),
+                  color: Colors.onSurface,
+                  letterSpacing: -0.5,
+                  fontVariant: ['tabular-nums'],
+                }}
+                maxFontSizeMultiplier={1.3}
+              >
+                {formatTime(selectedTime)}
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.bold,
+                fontSize: moderateScale(13.5),
+                color: Colors.primary,
+              }}
+              maxFontSizeMultiplier={1.3}
+            >
+              {pickerOpen ? 'Done' : 'Change'}
+            </Text>
+          </Pressable>
+
+          {/* Quick-pick presets */}
+          <View style={{ gap: moderateScale(8) }}>
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.bold,
+                fontSize: moderateScale(11),
+                letterSpacing: 1.4,
+                color: Colors.tertiary,
+                textTransform: 'uppercase',
+              }}
+              maxFontSizeMultiplier={1.4}
+            >
+              Quick pick
+            </Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: moderateScale(8) }}>
+              {PRESET_TIMES.map((t) => (
+                <TimeChip
+                  key={t}
+                  label={formatTime(t)}
+                  selected={selectedTime === t}
+                  onPress={() => onChipPress(t)}
+                />
+              ))}
+            </View>
           </View>
         </View>
       ) : null}

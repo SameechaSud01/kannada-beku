@@ -151,14 +151,6 @@ CREATE TABLE public.emergency_phrases (
   transliteration text,
   CONSTRAINT emergency_phrases_pkey PRIMARY KEY (id)
 );
-CREATE TABLE public.karnataka_fun_facts (
-  id uuid NOT NULL DEFAULT gen_random_uuid(),
-  fact_no integer NOT NULL UNIQUE CHECK (fact_no >= 1 AND fact_no <= 999),
-  category text NOT NULL CHECK (category = ANY (ARRAY['History'::text, 'Food'::text, 'Cinema'::text, 'Literature'::text, 'Culture'::text, 'Nature'::text])),
-  fact text NOT NULL,
-  created_at timestamp with time zone NOT NULL DEFAULT now(),
-  CONSTRAINT karnataka_fun_facts_pkey PRIMARY KEY (id)
-);
 CREATE TABLE public.conversation_scenarios (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   lesson_id uuid,
@@ -168,4 +160,32 @@ CREATE TABLE public.conversation_scenarios (
   section text,
   CONSTRAINT conversation_scenarios_pkey PRIMARY KEY (id),
   CONSTRAINT conversation_scenarios_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES public.lessons(id)
+);
+CREATE TABLE public.user_feedback (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  category text,
+  message text NOT NULL,
+  app_version text,
+  device text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT user_feedback_pkey PRIMARY KEY (id),
+  CONSTRAINT user_feedback_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.waitlist (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  created_at timestamp with time zone DEFAULT now(),
+  email text NOT NULL,
+  name text,
+  city text,
+  motivation jsonb,
+  motivation_note text,
+  struggles jsonb,
+  struggles_note text,
+  wants jsonb,
+  wants_note text,
+  pricing_model text,
+  price text,
+  community_optin boolean NOT NULL DEFAULT false,
+  CONSTRAINT waitlist_pkey PRIMARY KEY (id)
 );

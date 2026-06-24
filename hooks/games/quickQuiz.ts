@@ -1,4 +1,5 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '../../stores/useAuthStore';
 import {
   fetchQuickQuizItemsByLessonNo,
   recordQuickQuizAttempt,
@@ -20,14 +21,23 @@ export function useQuickQuizItems(lessonNo: number | null | undefined) {
 
 /**
  * Record one per-item attempt via the record_quick_quiz_attempt RPC.
- * Personal-best on the server side. Quick Quiz is excluded from the locked
- * user_overall_progress formula, so this intentionally does NOT invalidate
- * the ['overall-progress', userId] query.
+ * Personal-best on the server side. Quick Quiz now counts toward the
+ * content-derived overall rollup, so this invalidates ['game-mastery', userId]
+ * to refresh the headline %. Retries transient failures (audit H4).
  */
 export function useRecordQuickQuizAttempt() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ['recordQuickQuizAttempt'],
+    retry: 2,
     mutationFn: ({ itemId, isCorrect }: { itemId: string; isCorrect: boolean }) =>
       recordQuickQuizAttempt(itemId, isCorrect),
+    onSuccess: () => {
+      const userId = useAuthStore.getState().user?.id;
+      if (userId) {
+        queryClient.invalidateQueries({ queryKey: ['game-mastery', userId] });
+      }
+    },
   });
 }

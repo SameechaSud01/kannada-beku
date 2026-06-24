@@ -23,10 +23,14 @@ import { LessonInfoDialog } from '../../components/modals/instances/LessonInfoDi
 import { BasicsCard } from '../../components/guide/BasicsCard';
 import { Watermark } from '../../components/ui/Watermark';
 import { TopBar } from '../../components/ui/TopBar';
+import { TAB_BAR_CLEARANCE } from '../../components/ui/TabBar';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
 import { ChunkyCircle, ChunkyLip } from '../../components/ui/ChunkyLip';
 import { LockTile } from '../../components/ui/LockTile';
 import { LearnSkeleton } from '../../components/states/skeletons/TabSkeletons';
+import { ErrorState } from '../../components/states/ErrorState';
+import { OfflineState } from '../../components/states/OfflineState';
+import { useIsOffline } from '../../hooks/useIsOffline';
 
 const ESTIMATED_MIN_PER_LESSON = 5;
 
@@ -56,6 +60,7 @@ export default function LearnScreen() {
   const modal = useModal();
   const lessonsQuery = useDbLessons();
   const dbLessons = lessonsQuery.data ?? [];
+  const offline = useIsOffline();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(4)).current;
@@ -157,6 +162,19 @@ export default function LearnScreen() {
   // First-load shimmer while lessons fetch — same chrome, no reflow on arrival.
   if (lessonsQuery.isLoading) return <LearnSkeleton streak={streak} />;
 
+  // A failed fetch must not silently render placeholder lesson titles (audit
+  // B5/H1): offline → reassuring caution state; otherwise a genuine error.
+  if (lessonsQuery.isError) {
+    return offline ? (
+      <OfflineState
+        onRetry={() => lessonsQuery.refetch()}
+        onPracticeOffline={() => router.push('/emergency')}
+      />
+    ) : (
+      <ErrorState onRetry={() => lessonsQuery.refetch()} />
+    );
+  }
+
   return (
     <Animated.View
       style={{
@@ -172,7 +190,7 @@ export default function LearnScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
+        contentContainerStyle={{ paddingBottom: TAB_BAR_CLEARANCE + insets.bottom }}
       >
         {/* Page title */}
         <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg }}>

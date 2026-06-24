@@ -8,6 +8,7 @@ import { Fonts } from '../../../constants/fonts';
 import { Radius, Spacing } from '../../../constants/spacing';
 import { GAMES } from '../../../constants/games';
 import { useProgressStore } from '../../../stores/progressStore';
+import { recordLearningDay } from '../../../services/progress/streak';
 import { useGameSplit } from '../shared/parts';
 import { GamePartChooser } from '../../../components/games/GamePartChooser';
 import { useDictationItems, useRecordDictationAttempt } from '../../../hooks/games/dictation';
@@ -31,7 +32,7 @@ function toWord(item: DictationItem): DictationWord {
   return {
     id: item.id,
     kn: item.expectedAnswer,
-    accepted: item.acceptedSpellings,
+    accepted: item.acceptedSpellings ?? [],
     phonetic: item.phonetic ?? '',
   };
 }
@@ -86,6 +87,7 @@ function DictationGameInner({
     streak,
     bestStreak,
     isPlaying,
+    audioUnavailable,
     tileable,
     tray,
     placed,
@@ -114,7 +116,11 @@ function DictationGameInner({
   }, [currentIndex]);
 
   useEffect(() => {
-    if (phase === 'result' && sectionKey) completeGamePart(gameKey, sectionKey);
+    if (phase === 'result' && sectionKey) {
+      completeGamePart(gameKey, sectionKey);
+      // Finishing a game part counts as a learning day (audit H2/B4).
+      recordLearningDay();
+    }
   }, [phase, sectionKey, gameKey, completeGamePart]);
 
   if (phase === 'result') {
@@ -173,9 +179,22 @@ function DictationGameInner({
           }}
         >
           <AudioButton isPlaying={isPlaying} onPress={playCurrentWord} />
-          <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary }}>
-            {tileable ? 'Tap the tiles to spell the word' : 'Type what you hear'}
-          </Text>
+          {audioUnavailable ? (
+            // No audio on this device — reveal the word so the game is still
+            // playable as a copy/read exercise (audit H7).
+            <>
+              <Text style={{ fontFamily: Fonts.notoSansKannada.bold, fontSize: moderateScale(30), color: Colors.onSurface, lineHeight: moderateScale(44) }}>
+                {currentWord.kn}
+              </Text>
+              <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary, textAlign: 'center' }}>
+                Audio isn’t available on this device — type the word shown above.
+              </Text>
+            </>
+          ) : (
+            <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary }}>
+              {tileable ? 'Tap the tiles to spell the word' : 'Type what you hear'}
+            </Text>
+          )}
         </View>
 
         {tileable ? (

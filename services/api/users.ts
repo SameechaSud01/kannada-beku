@@ -12,6 +12,8 @@ export type UserRow = {
   motivations: string[];
   daily_goal_minutes: DailyGoalMinutes | null;
   current_streak: number;
+  /** Local calendar day (YYYY-MM-DD) of the most recent qualifying activity. */
+  last_active_date: string | null;
   onboarding_completed_at: string | null;
   created_at: string;
   daily_reminder_time: string | null;
@@ -20,7 +22,7 @@ export type UserRow = {
 };
 
 const USER_SELECT =
-  'id, email, name, avatar_url, learning_mode, motivations, daily_goal_minutes, current_streak, onboarding_completed_at, created_at, daily_reminder_time, tts_rate, auto_replay';
+  'id, email, name, avatar_url, learning_mode, motivations, daily_goal_minutes, current_streak, last_active_date, onboarding_completed_at, created_at, daily_reminder_time, tts_rate, auto_replay';
 
 export async function fetchUserRow(userId: string): Promise<UserRow | null> {
   const { data, error } = await supabase
@@ -59,6 +61,25 @@ export async function completeOnboarding(
 
   if (error) throw error;
   return data as UserRow;
+}
+
+/**
+ * Persist the learning streak (audit B4). Fire-and-forget from the client —
+ * the local store is the live source of truth; this just mirrors it so the
+ * streak survives reinstall / a new device. Writes both columns together so a
+ * restored streak knows whether it's still live. Returns nothing; callers
+ * swallow/warn on error rather than block the UI.
+ */
+export async function updateStreakOnServer(
+  userId: string,
+  streak: number,
+  lastActiveDate: string,
+): Promise<void> {
+  const { error } = await supabase
+    .from('users')
+    .update({ current_streak: streak, last_active_date: lastActiveDate })
+    .eq('id', userId);
+  if (error) throw error;
 }
 
 export async function updateLearningMode(

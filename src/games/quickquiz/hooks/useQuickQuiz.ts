@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { AppState } from 'react-native';
 import { buildQuiz } from '../utils/roundBuilder';
 import { useStreak } from '../../shared/useStreak';
 import type { AnswerState, GamePhase, OptionState, QuizQuestion, QuizVocab } from '../types';
@@ -48,6 +49,7 @@ export function useQuickQuiz(
   const [answerState, setAnswerState] = useState<AnswerState>('unanswered');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(PER_QUESTION_SECONDS);
+  const [isActive, setIsActive] = useState(true);
   const { streak, bestStreak, record: recordStreak, reset: resetStreak } = useStreak();
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -76,16 +78,29 @@ export function useQuickQuiz(
     [currentIndex, clearTimer, recordStreak],
   );
 
-  // Start a fresh countdown whenever a new question begins.
+  // Pause the countdown while the app is backgrounded, so a quiz left mid-question
+  // isn't auto-failed on return (audit Phase 5).
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (s) => setIsActive(s === 'active'));
+    return () => sub.remove();
+  }, []);
+
+  // Reset the countdown whenever a new question begins.
   useEffect(() => {
     if (phase !== 'playing') return;
     setSecondsLeft(PER_QUESTION_SECONDS);
+  }, [currentIndex, phase]);
+
+  // Tick only while playing AND foregrounded; backgrounding clears the interval
+  // (freezing secondsLeft), and returning resumes from the frozen value.
+  useEffect(() => {
+    if (phase !== 'playing' || !isActive) return;
     clearTimer();
     timerRef.current = setInterval(() => {
       setSecondsLeft((prev) => (prev <= 1 ? 0 : prev - 1));
     }, 1000);
     return clearTimer;
-  }, [currentIndex, phase, clearTimer]);
+  }, [currentIndex, phase, isActive, clearTimer]);
 
   // Timeout = wrong answer + auto-reveal.
   useEffect(() => {

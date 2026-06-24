@@ -2,11 +2,18 @@ import * as Speech from 'expo-speech';
 import { Audio } from 'expo-av';
 import type { DictationWord } from '../types';
 import { getBundledAudio } from '../../../../services/audio/bundledAudio';
+import { isKannadaVoiceAvailable } from '../../../../services/audio/deviceTtsAudioService';
 import { useProgressStore } from '../../../../stores/progressStore';
 
 let currentSound: Audio.Sound | null = null;
 
-export async function playWord(word: DictationWord): Promise<void> {
+/**
+ * Play the word's audio. Returns whether it will actually be audible: true for
+ * a bundled/asset clip or when the device has a Kannada TTS voice, false when
+ * there's no clip and no voice — the caller reveals the word so dictation stays
+ * playable (audit H7).
+ */
+export async function playWord(word: DictationWord): Promise<boolean> {
   // Daily-goal "Listen": dictation prompts use this path instead of the TTS service.
   useProgressStore.getState().recordListen();
   try {
@@ -32,16 +39,22 @@ export async function playWord(word: DictationWord): Promise<void> {
           currentSound = null;
         }
       });
-    } else {
-      Speech.stop();
-      Speech.speak(word.kn, {
-        language: 'kn-IN',
-        rate: 0.85,
-        pitch: 1.0,
-      });
+      return true;
     }
+
+    // No bundled clip → on-device TTS, which is only audible with a Kannada voice.
+    const hasVoice = await isKannadaVoiceAvailable();
+    Speech.stop();
+    if (!hasVoice) return false;
+    Speech.speak(word.kn, {
+      language: 'kn-IN',
+      rate: 0.85,
+      pitch: 1.0,
+    });
+    return true;
   } catch (err) {
     console.warn('DictationAudio error:', err);
+    return false;
   }
 }
 

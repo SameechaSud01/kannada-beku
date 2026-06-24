@@ -4,25 +4,47 @@ import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
-import { type ReadingRow } from '../../constants/guide';
 import { type GuideTryIt } from '../../services/api/guide';
+import { useIsMounted } from '../../hooks/useIsMounted';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { Toasts } from '../modals/instances/toastCatalog';
 import { AudioOrb } from '../ui/AudioOrb';
+import { GuidePhonemeButton } from './GuidePhonemeButton';
+
+/** A capital/lowercase audio comparison + its one-line insight. */
+const COMPARISONS: Array<{
+  pair: [
+    { kannada: string; romanization: string; note: string },
+    { kannada: string; romanization: string; note: string },
+  ];
+  insight: string;
+}> = [
+  {
+    pair: [
+      { kannada: 'ಟ', romanization: 'Ta', note: 'curled' },
+      { kannada: 'ತ', romanization: 'ta', note: 'teeth' },
+    ],
+    insight: 'Capital letter = different sound. The shape tells you how to say it.',
+  },
+  {
+    pair: [
+      { kannada: 'ಡ', romanization: 'Da', note: 'curled' },
+      { kannada: 'ದ', romanization: 'da', note: 'teeth' },
+    ],
+    insight: 'Same rule: capital = curled sound.',
+  },
+];
 
 /**
- * Step 4 — "Reading + try it". A capital/lowercase comparison card (capitals
- * red, lowercase deep-gold) + a goldPale "TRY IT" card with a gold AudioOrb.
- * Reading rows + try-it word are DB-sourced; the heading is fixed UI chrome.
+ * Step 3 — "Reading it" (onboarding-simplification 2026-06-22). Listen → Notice:
+ * lead with the Ta/ta · Da/da audio comparisons, surface the one-line pattern
+ * below each, then the DB-sourced "TRY IT" word. The old explanatory prose box
+ * was dropped — the audio does the teaching. Comparison glyphs are fixed UI
+ * chrome; the try-it word stays DB-sourced.
  */
-export function StepReading({
-  readingRows,
-  tryIt,
-}: {
-  readingRows: ReadingRow[];
-  tryIt: GuideTryIt;
-}) {
+export function StepReading({ tryIt }: { tryIt: GuideTryIt }) {
   const [playing, setPlaying] = useState(false);
+  const mounted = useIsMounted();
 
   useEffect(() => {
     return () => {
@@ -38,7 +60,9 @@ export function StepReading({
         console.warn('[guide_reading] play failed', err);
         Toasts.audioFailed(handlePlay);
       })
-      .finally(() => setPlaying(false));
+      .finally(() => {
+        if (mounted.current) setPlaying(false);
+      });
   };
 
   return (
@@ -66,69 +90,38 @@ export function StepReading({
         }}
         maxFontSizeMultiplier={1.4}
       >
-        Capital letters curl the tongue; lowercase ones stay forward at the teeth. Same letter, two sounds.
+        You’ve heard the differences. Now notice the pattern.
       </Text>
 
-      {/* Comparison card */}
-      <View
-        style={{
-          backgroundColor: '#ffffff',
-          borderRadius: Radius.chunky,
-          borderWidth: 1,
-          borderColor: Colors.hairline,
-          borderBottomWidth: 4,
-          borderBottomColor: Colors.cardLip,
-          paddingVertical: moderateScale(6),
-          paddingHorizontal: moderateScale(16),
-          marginBottom: Spacing.lg,
-        }}
-      >
-        {readingRows.map((row, idx) => (
-          <View
-            key={row.symbol}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingVertical: moderateScale(12),
-              borderTopWidth: idx === 0 ? 0 : 1,
-              borderTopColor: Colors.hairline,
-            }}
-            accessibilityRole="text"
-            accessibilityLabel={`${row.symbol} ${row.example}`}
-          >
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(18),
-                color: row.isCapital ? Colors.primaryContainer : Colors.secondary,
-                minWidth: moderateScale(56),
-              }}
-              maxFontSizeMultiplier={1.3}
-            >
-              {row.symbol}
-            </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.regular,
-                fontSize: moderateScale(14),
-                color: Colors.tertiary,
-                flex: 1,
-              }}
-              maxFontSizeMultiplier={1.4}
-            >
-              {row.example}
-            </Text>
+      {/* Audio comparisons — listen first, pattern second */}
+      <View style={{ gap: Spacing.lg, marginBottom: Spacing.lg }}>
+        {COMPARISONS.map((cmp) => (
+          <View key={cmp.pair[0].kannada}>
+            <View style={{ flexDirection: 'row', gap: moderateScale(12) }}>
+              <GuidePhonemeButton
+                kannada={cmp.pair[0].kannada}
+                romanization={cmp.pair[0].romanization}
+                note={cmp.pair[0].note}
+                accent="red"
+              />
+              <GuidePhonemeButton
+                kannada={cmp.pair[1].kannada}
+                romanization={cmp.pair[1].romanization}
+                note={cmp.pair[1].note}
+              />
+            </View>
             <Text
               style={{
                 fontFamily: Fonts.dmSans.medium,
-                fontSize: moderateScale(11.5),
-                color: row.isCapital ? Colors.primary : Colors.onSecondaryContainer,
-                textTransform: 'uppercase',
-                letterSpacing: 1,
+                fontSize: moderateScale(13),
+                lineHeight: moderateScale(19),
+                color: Colors.tertiary,
+                marginTop: moderateScale(8),
+                textAlign: 'center',
               }}
-              maxFontSizeMultiplier={1.3}
+              maxFontSizeMultiplier={1.4}
             >
-              {row.isCapital ? 'curled' : 'teeth'}
+              {cmp.insight}
             </Text>
           </View>
         ))}

@@ -7,6 +7,7 @@ import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
+import { useIsMounted } from '../../hooks/useIsMounted';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { LessonProgressBar } from './LessonProgressBar';
@@ -32,6 +33,7 @@ export function TeachWordsPhase({ words, wordIndex, sectionLabel, onAdvance }: T
   const isLast = wordIndex >= total - 1;
   const autoReplay = useUserStore((s) => s.autoReplay);
   const [playing, setPlaying] = useState(false);
+  const mounted = useIsMounted();
 
   useEffect(() => {
     if (!word || !autoReplay) return;
@@ -41,7 +43,9 @@ export function TeachWordsPhase({ words, wordIndex, sectionLabel, onAdvance }: T
       .catch((err) => {
         console.warn('[teach_words] auto-play failed', err);
       })
-      .finally(() => setPlaying(false));
+      .finally(() => {
+        if (mounted.current) setPlaying(false);
+      });
     return () => {
       deviceTtsAudioService.stop().catch(() => undefined);
       setPlaying(false);
@@ -60,7 +64,9 @@ export function TeachWordsPhase({ words, wordIndex, sectionLabel, onAdvance }: T
         console.warn('[teach_words] replay failed', err);
         Toasts.audioFailed(handleReplay);
       })
-      .finally(() => setPlaying(false));
+      .finally(() => {
+        if (mounted.current) setPlaying(false);
+      });
   };
 
   return (

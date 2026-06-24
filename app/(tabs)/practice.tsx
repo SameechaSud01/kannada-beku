@@ -14,6 +14,7 @@ import { GamesLockedEmpty } from '../../components/states/empties/TabEmpties';
 import { Icons } from '../../constants/icons';
 import { Watermark } from '../../components/ui/Watermark';
 import { TopBar } from '../../components/ui/TopBar';
+import { TAB_BAR_CLEARANCE } from '../../components/ui/TabBar';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
 import { ChunkyCircle } from '../../components/ui/ChunkyLip';
 import type { Icon as TablerIcon } from '@tabler/icons-react-native';
@@ -120,7 +121,7 @@ export default function PracticeScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
+        contentContainerStyle={{ paddingBottom: TAB_BAR_CLEARANCE + insets.bottom }}
       >
         {/* Page title */}
         <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg, marginBottom: Spacing.lg }}>

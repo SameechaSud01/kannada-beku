@@ -8,6 +8,7 @@ import { Spacing } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
 import { GAMES } from '@/constants/games';
 import { useProgressStore } from '@/stores/progressStore';
+import { recordLearningDay } from '@/services/progress/streak';
 import { useGameSplit } from '@/src/games/shared/parts';
 import { GamePartChooser } from '@/components/games/GamePartChooser';
 import { ExitBackButton } from '@/components/ui/ExitBackButton';
@@ -127,7 +128,11 @@ function QuickQuizGameInner({
   useAnswerHaptics(answerState);
 
   useEffect(() => {
-    if (phase === 'result' && sectionKey) completeGamePart(gameKey, sectionKey);
+    if (phase === 'result' && sectionKey) {
+      completeGamePart(gameKey, sectionKey);
+      // Finishing a game part counts as a learning day (audit H2/B4).
+      recordLearningDay();
+    }
   }, [phase, sectionKey, gameKey, completeGamePart]);
 
   if (phase === 'result') {
@@ -135,6 +140,16 @@ function QuickQuizGameInner({
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
         <ExitBackButton skipConfirm />
         <ResultScreen score={score} total={totalQuestions} bestStreak={bestStreak} onReplay={restart} />
+      </SafeAreaView>
+    );
+  }
+
+  // Defensive: if the round builder yields no questions (e.g. banks desync),
+  // don't dereference an undefined question — bail out cleanly (audit Phase 5).
+  if (!currentQuestion) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
+        <ExitBackButton skipConfirm />
       </SafeAreaView>
     );
   }

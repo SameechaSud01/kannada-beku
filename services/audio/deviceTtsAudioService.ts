@@ -17,15 +17,21 @@ function resolveRate(explicit?: number): number {
 let currentRecording: Audio.Recording | null = null;
 let currentPlaybackSound: Audio.Sound | null = null;
 
+// Cached result of the voice probe — voices don't change within a session, and
+// the dictation fallback (audit H7) checks this on every word play.
+let knVoiceAvailable: boolean | null = null;
+
 /**
- * Checks if a Kannada voice is available on this device.
- * Call once at app startup; surface a warning to the user if false.
+ * Checks if a Kannada voice is available on this device. Call once at app
+ * startup; surface a warning to the user if false. Result is cached after the
+ * first successful probe (a thrown probe is not cached, so it can recover).
  */
 export async function isKannadaVoiceAvailable(): Promise<boolean> {
+  if (knVoiceAvailable !== null) return knVoiceAvailable;
   try {
     const voices = await Speech.getAvailableVoicesAsync();
-    const knVoices = voices.filter((v) => v.language.toLowerCase().startsWith('kn'));
-    return knVoices.length > 0;
+    knVoiceAvailable = voices.some((v) => v.language.toLowerCase().startsWith('kn'));
+    return knVoiceAvailable;
   } catch (err) {
     console.warn('[audio] getAvailableVoicesAsync threw', err);
     return false;

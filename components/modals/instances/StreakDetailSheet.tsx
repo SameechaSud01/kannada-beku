@@ -8,6 +8,7 @@ import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
 import { Icons } from '../../../constants/icons';
 import { useProgressStore } from '../../../stores/progressStore';
+import { localDateISO } from '../../../utils/date';
 import { useCompletedLessons } from '../../../hooks/progress';
 import { useDbLessons } from '../../../hooks/useLessons';
 import { STREAK_MILESTONES } from './StreakMilestoneTakeover';
@@ -41,12 +42,13 @@ const WEEKDAY_NAMES = [
   'Sunday',
 ] as const;
 
-const getTodayISO = () => new Date().toISOString().split('T')[0];
+const getTodayISO = () => localDateISO();
 
 /**
  * Build the current week Mon→Sun from the persisted `weeklyActivity` map.
- * Dates are derived in UTC to match how the store stamps day keys
- * (`new Date().toISOString()`), so a day-dot never drifts off its stored key.
+ * `todayISO` is the local calendar day (matching how the store now stamps day
+ * keys — audit H3); the UTC arithmetic below is pure calendar math on that
+ * date string, so a day-dot never drifts off its stored key.
  */
 function buildWeek(todayISO: string, weeklyActivity: Record<string, boolean>): DayCell[] {
   const base = new Date(`${todayISO}T00:00:00Z`);

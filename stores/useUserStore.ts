@@ -192,9 +192,15 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: 'user_prefs',
+      version: 1,
       storage: createJSONStorage(() => AsyncStorage),
-      onRehydrateStorage: () => (state) => {
-        state?.setHydrated(true);
+      // Always release the boot gate, even when rehydration fails (corrupt or
+      // locked storage). On error zustand passes `state === undefined`, so reach
+      // the store via getState() — otherwise isHydrated stays false and the
+      // splash screen hangs forever (audit B1).
+      onRehydrateStorage: () => (state, error) => {
+        (state ?? useUserStore.getState()).setHydrated(true);
+        if (error) console.warn('[user] rehydrate failed', error);
       },
     }
   )

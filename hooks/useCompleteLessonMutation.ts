@@ -3,6 +3,7 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { useProgressStore } from '../stores/progressStore';
 import { fetchLessonIdBySlug } from '../services/api/lessons';
 import { recordLessonCompletion } from '../services/api/progress';
+import { recordLearningDay } from '../services/progress/streak';
 
 export interface CompleteLessonInput {
   slug: string;
@@ -48,8 +49,9 @@ export function useCompleteLessonMutation() {
 
       const progress = useProgressStore.getState();
       progress.completeLesson(slug, score, phrasesLearned, minutesPracticed);
-      progress.updateStreak();
-      progress.recordActivity();
+      // Advance + server-persist the streak (audit H2/B4) instead of the local
+      // updateStreak/recordActivity pair, so reinstalls keep the streak.
+      recordLearningDay();
 
       return { userId, slug };
     },
