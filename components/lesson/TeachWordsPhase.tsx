@@ -9,6 +9,7 @@ import { Icons } from '../../constants/icons';
 import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
 import { useIsMounted } from '../../hooks/useIsMounted';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
+import { useProgressStore } from '../../stores/progressStore';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { LessonProgressBar } from './LessonProgressBar';
 import { LipButton } from '../ui/LipButton';
@@ -21,12 +22,13 @@ import type { Word } from '../../constants/lessons/types';
 interface TeachWordsPhaseProps {
   words: Word[];
   wordIndex: number;
+  lessonNo: number;
   /** Sub-part name (e.g. "Saying hello"); shown on the progress label when split. */
   sectionLabel?: string;
   onAdvance: () => void;
 }
 
-export function TeachWordsPhase({ words, wordIndex, sectionLabel, onAdvance }: TeachWordsPhaseProps) {
+export function TeachWordsPhase({ words, wordIndex, lessonNo, sectionLabel, onAdvance }: TeachWordsPhaseProps) {
   const insets = useSafeAreaInsets();
   const word = words[wordIndex];
   const total = words.length;
@@ -37,6 +39,7 @@ export function TeachWordsPhase({ words, wordIndex, sectionLabel, onAdvance }: T
 
   useEffect(() => {
     if (!word || !autoReplay) return;
+    if (lessonNo >= 1) useProgressStore.getState().recordListen();
     setPlaying(true);
     deviceTtsAudioService
       .play(word.kannada)
@@ -57,6 +60,7 @@ export function TeachWordsPhase({ words, wordIndex, sectionLabel, onAdvance }: T
   const { text: englishText, tag } = splitGloss(word.english);
 
   const handleReplay = () => {
+    if (lessonNo >= 1) useProgressStore.getState().recordListen();
     setPlaying(true);
     deviceTtsAudioService
       .play(word.kannada)

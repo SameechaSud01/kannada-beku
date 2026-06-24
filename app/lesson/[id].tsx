@@ -115,6 +115,7 @@ export default function LessonScreen() {
         <TeachWordsPhase
           words={sectionWords}
           wordIndex={runner.wordIndex}
+          lessonNo={lesson.lessonNo}
           sectionLabel={sectionLabel}
           onAdvance={runner.advance}
         />
@@ -140,6 +141,7 @@ export default function LessonScreen() {
           // still resolve their audio.
           words={lesson.words}
           phraseIndex={runner.phraseIndex}
+          lessonNo={lesson.lessonNo}
           sectionLabel={sectionLabel}
           onAdvance={runner.advance}
         />

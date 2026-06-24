@@ -9,6 +9,7 @@ import { Icons } from '../../constants/icons';
 import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
 import { useIsMounted } from '../../hooks/useIsMounted';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
+import { useProgressStore } from '../../stores/progressStore';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { LessonProgressBar } from './LessonProgressBar';
 import { LipButton } from '../ui/LipButton';
@@ -22,6 +23,7 @@ interface TeachPhrasesPhaseProps {
   phrases: Phrase[];
   words: Word[];
   phraseIndex: number;
+  lessonNo: number;
   /** Sub-part name; shown on the progress label when the lesson is split. */
   sectionLabel?: string;
   onAdvance: () => void;
@@ -37,6 +39,7 @@ export function TeachPhrasesPhase({
   phrases,
   words,
   phraseIndex,
+  lessonNo,
   sectionLabel,
   onAdvance,
 }: TeachPhrasesPhaseProps) {
@@ -59,6 +62,7 @@ export function TeachPhrasesPhase({
 
   useEffect(() => {
     if (!phrase || !autoReplay) return;
+    if (lessonNo >= 1) useProgressStore.getState().recordListen();
     deviceTtsAudioService.play(phrase.kannada).catch((err) => {
       console.warn('[teach_phrases] auto-play failed', err);
     });
@@ -72,6 +76,7 @@ export function TeachPhrasesPhase({
   const { text: englishText, tag } = splitGloss(phrase.english);
 
   const handleReplay = () => {
+    if (lessonNo >= 1) useProgressStore.getState().recordListen();
     setPlaying(true);
     deviceTtsAudioService
       .play(phrase.kannada)
@@ -86,6 +91,7 @@ export function TeachPhrasesPhase({
 
   const handleChipTap = (idx: number, kannadaText: string) => {
     if (!kannadaText) return;
+    if (lessonNo >= 1) useProgressStore.getState().recordListen();
     setHighlightedChip(idx);
     deviceTtsAudioService.play(kannadaText).catch(() => undefined);
     setTimeout(() => setHighlightedChip((cur) => (cur === idx ? null : cur)), HIGHLIGHT_MS);
