@@ -3,7 +3,6 @@ import { Audio } from 'expo-av';
 import type { AudioService, PlayOptions } from './AudioService';
 import { getBundledAudio } from './bundledAudio';
 import { useUserStore } from '../../stores/useUserStore';
-import { useProgressStore } from '../../stores/progressStore';
 
 const DEFAULT_LANGUAGE = 'kn-IN';
 const MIN_RATE = 0.5;
@@ -42,8 +41,6 @@ export const deviceTtsAudioService: AudioService = {
   async play(text: string, options?: PlayOptions) {
     const language = options?.language ?? DEFAULT_LANGUAGE;
     const rate = resolveRate(options?.rate);
-    // Daily-goal "Listen": every in-app content playback counts (auto-play included).
-    useProgressStore.getState().recordListen();
 
     // Prefer the pre-generated, bundled neural-TTS clip when one exists; this is
     // natural-sounding, instant, and offline. Falls through to on-device TTS for

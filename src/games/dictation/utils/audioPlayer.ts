@@ -3,7 +3,6 @@ import { Audio } from 'expo-av';
 import type { DictationWord } from '../types';
 import { getBundledAudio } from '../../../../services/audio/bundledAudio';
 import { isKannadaVoiceAvailable } from '../../../../services/audio/deviceTtsAudioService';
-import { useProgressStore } from '../../../../stores/progressStore';
 
 let currentSound: Audio.Sound | null = null;
 
@@ -14,8 +13,6 @@ let currentSound: Audio.Sound | null = null;
  * playable (audit H7).
  */
 export async function playWord(word: DictationWord): Promise<boolean> {
-  // Daily-goal "Listen": dictation prompts use this path instead of the TTS service.
-  useProgressStore.getState().recordListen();
   try {
     // Prefer an explicit require()'d asset, then a bundled clip from the
     // manifest (DB-sourced items have no audioFile), then on-device TTS.
