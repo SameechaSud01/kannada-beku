@@ -76,6 +76,7 @@ export function AudioOrb({
       disabled={disabled}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
+      accessibilityState={{ busy: playing, disabled }}
       hitSlop={moderateScale(8)}
       style={{
         width: dim,

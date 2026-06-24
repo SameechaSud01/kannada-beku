@@ -9,13 +9,10 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
-import { safeOpenUrl } from '../../lib/safeOpenUrl';
 
 // `[OPEN]` per spec_profile_settings_wiring §5 — owner must fill in.
 // Rows referencing a null value are hidden at render time so no dead links ship.
 const SUPPORT_EMAIL: string | null = null;
-const PRIVACY_URL: string | null = null;
-const TERMS_URL: string | null = null;
 
 function bugReportBody(): string {
   const lines = [
@@ -40,10 +37,6 @@ function buildMailto(address: string, subject: string, body?: string): string {
 export default function HelpScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-
-  const version = Application.nativeApplicationVersion ?? 'unknown';
-  const build = Application.nativeBuildVersion ?? '';
-  const versionLabel = build ? `${version} · ${build}` : version;
 
   function openContact() {
     if (!SUPPORT_EMAIL) return;
@@ -131,56 +124,6 @@ export default function HelpScreen() {
             </View>
           </>
         ) : null}
-
-        <SectionHeader label="About" />
-        <View
-          style={{
-            backgroundColor: Colors.surfaceContainerLow,
-            borderRadius: Radius.lg,
-            overflow: 'hidden',
-          }}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingVertical: moderateScale(14),
-              paddingHorizontal: Spacing.lg,
-              minHeight: moderateScale(56),
-              backgroundColor: Colors.surfaceContainerLow,
-            }}
-          >
-            <Text
-              style={{
-                flex: 1,
-                fontFamily: Fonts.dmSans.medium,
-                fontSize: moderateScale(14),
-                color: Colors.onSurface,
-              }}
-              maxFontSizeMultiplier={1.3}
-            >
-              Version
-            </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.regular,
-                fontSize: moderateScale(13),
-                color: Colors.tertiary,
-              }}
-              maxFontSizeMultiplier={1.3}
-            >
-              {versionLabel}
-            </Text>
-          </View>
-          {PRIVACY_URL ? <Row label="Privacy policy" onPress={() => safeOpenUrl(PRIVACY_URL)} idx={1} /> : null}
-          {TERMS_URL ? (
-            <Row
-              label="Terms of service"
-              onPress={() => safeOpenUrl(TERMS_URL)}
-              idx={PRIVACY_URL ? 0 : 1}
-            />
-          ) : null}
-        </View>
       </ScrollView>
     </View>
   );

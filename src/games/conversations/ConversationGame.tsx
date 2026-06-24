@@ -9,6 +9,7 @@ import { Fonts } from '@/constants/fonts';
 import { Icons } from '@/constants/icons';
 import { GAMES } from '@/constants/games';
 import { useProgressStore } from '@/stores/progressStore';
+import { recordLearningDay } from '@/services/progress/streak';
 import { useGameSplit } from '@/src/games/shared/parts';
 import { GamePartChooser } from '@/components/games/GamePartChooser';
 import { ExitBackButton } from '@/components/ui/ExitBackButton';
@@ -79,7 +80,11 @@ function ConversationFlow({
 
   // The sub-part is done once every scenario in it has been played through.
   useEffect(() => {
-    if (allDone && sectionKey) completeGamePart(gameKey, sectionKey);
+    if (allDone && sectionKey) {
+      completeGamePart(gameKey, sectionKey);
+      // Finishing a game part counts as a learning day (audit H2/B4).
+      recordLearningDay();
+    }
   }, [allDone, sectionKey, gameKey, completeGamePart]);
 
   const advance = () => {

@@ -3,6 +3,9 @@ import { fetchAllLessons, fetchLessonBySlug } from '../services/api/lessons';
 import { PLANNED_LESSON_SLOTS } from '../constants/lessons/plannedLessons';
 import { lessonSlugByNo } from '../constants/lessons/lessonContent';
 import { useProgressStore } from '../stores/progressStore';
+import { useUserStore } from '../stores/useUserStore';
+import { formatFirstName } from '../utils/formatName';
+import { personalizeLesson } from '../utils/personalize';
 import type { Lesson as DbLesson } from '../constants/lessons/types';
 
 /** Lesson-selector view-model (game lesson picker). */
@@ -48,12 +51,21 @@ export function useDbLessons() {
   });
 }
 
-/** Fetch a single DB lesson by slug. */
+/**
+ * Fetch a single DB lesson by slug.
+ *
+ * Self-introduction phrases authored with a `[name]` placeholder (e.g. "I am
+ * [name]") are resolved to the learner's onboarding name here, so every lesson
+ * phase downstream renders the personalized text. Falls back to "Priya" for the
+ * rare nameless case so the example still reads naturally.
+ */
 export function useDbLesson(slug: string | undefined) {
+  const firstName = useUserStore((s) => formatFirstName(s.displayName, 'Priya'));
   return useQuery<DbLesson | null>({
     queryKey: ['lesson', slug],
     queryFn: () => (slug ? fetchLessonBySlug(slug) : Promise.resolve(null)),
     enabled: !!slug,
     staleTime: 5 * 60 * 1000,
+    select: (l) => (l ? personalizeLesson(l, firstName) : l),
   });
 }

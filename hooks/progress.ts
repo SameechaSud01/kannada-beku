@@ -5,6 +5,7 @@ import {
   DAILY_SPEAK_TARGET,
   DAILY_PRACTICE_TARGET,
 } from '../constants/goals';
+import { localDateISO } from '../utils/date';
 
 type DailyGoal = Readonly<{ completed: number; target: number }>;
 
@@ -23,8 +24,16 @@ export function useCompletedLessons(): string[] {
   return useProgressStore((s) => s.completedLessons);
 }
 
+export function useXp(): number {
+  return useProgressStore((s) => s.xp);
+}
+
+export function useMinutesPracticed(): number {
+  return useProgressStore((s) => s.totalMinutesPracticed);
+}
+
 export function useDailyGoalToday(): DailyGoal {
-  const today = new Date().toISOString().split('T')[0];
+  const today = localDateISO();
   const didActivityToday = useProgressStore((s) => Boolean(s.weeklyActivity[today]));
   return didActivityToday ? DONE_GOAL : ZERO_GOAL;
 }
@@ -54,7 +63,7 @@ const dimension = (value: number, target: number): DailyDimension => ({
  */
 export function useDailyGoal(): DailyGoalProgress {
   const activity = useProgressStore((s) => s.dailyActivity);
-  const today = new Date().toISOString().split('T')[0];
+  const today = localDateISO();
   return useMemo(() => {
     const fresh = activity.date === today;
     const listen = dimension(fresh ? activity.listen : 0, DAILY_LISTEN_TARGET);

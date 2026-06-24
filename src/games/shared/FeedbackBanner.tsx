@@ -37,7 +37,10 @@ const FeedbackBanner: React.FC<Props> = ({ state, streak = 0 }) => {
 
   return (
     <View
-      accessibilityLiveRegion="polite"
+      accessibilityLiveRegion="assertive"
+      accessibilityRole="alert"
+      accessible
+      accessibilityLabel={showStreak ? `${message} Streak ${streak}.` : message}
       style={{
         flexDirection: 'row',
         alignItems: 'center',

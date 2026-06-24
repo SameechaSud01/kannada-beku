@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { playWord, stopPlayback } from '../utils/audioPlayer';
 import { splitAksharas } from '../utils/kannadaAkshara';
 import { useStreak } from '../../shared/useStreak';
+import { useIsMounted } from '../../../../hooks/useIsMounted';
 import { useProgressStore } from '../../../../stores/progressStore';
 import type { DictationWord, AnswerState, GamePhase } from '../types';
 
@@ -19,6 +20,9 @@ type UseDictationGameReturn = {
   streak: number;
   bestStreak: number;
   isPlaying: boolean;
+  /** True when audio can't play on this device (no clip + no Kannada voice);
+   *  the UI reveals the word so dictation stays playable (audit H7). */
+  audioUnavailable: boolean;
   /** Whether the current word is presented as tiles (false → typed fallback). */
   tileable: boolean;
   tray: Tile[];
@@ -70,9 +74,15 @@ export function useDictationGame(
   const [answerState, setAnswerState] = useState<AnswerState>('unanswered');
   const [score, setScore] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [audioUnavailable, setAudioUnavailable] = useState(false);
   const [tray, setTray] = useState<Tile[]>([]);
   const [placed, setPlaced] = useState<string[]>([]);
   const { streak, bestStreak, record: recordStreak, reset: resetStreak } = useStreak();
+  const mounted = useIsMounted();
+
+  // Stop any in-flight playback when the game unmounts so audio doesn't leak
+  // past an early exit (audit H5).
+  useEffect(() => () => stopPlayback(), []);
 
   const currentWord = words[currentIndex];
   const totalWords = words.length;
@@ -109,11 +119,14 @@ export function useDictationGame(
     if (isPlaying) return;
     setIsPlaying(true);
     try {
-      await playWord(currentWord);
+      const played = await playWord(currentWord);
+      // Once we know audio can't play on this device, reveal words for the rest
+      // of the round so dictation stays usable (audit H7).
+      if (!played && mounted.current) setAudioUnavailable(true);
     } finally {
-      setIsPlaying(false);
+      if (mounted.current) setIsPlaying(false);
     }
-  }, [isPlaying, currentWord]);
+  }, [isPlaying, currentWord, mounted]);
 
   const tapTile = useCallback(
     (id: string) => {
@@ -160,7 +173,7 @@ export function useDictationGame(
       if (answerState !== 'unanswered') return;
       const norm = text.trim().toLowerCase();
       if (norm.length === 0) return;
-      const accepted = currentWord.accepted.map((a) => a.trim().toLowerCase());
+      const accepted = (currentWord.accepted ?? []).map((a) => a.trim().toLowerCase());
       commit(accepted.includes(norm));
     },
     [answerState, currentWord, commit],
@@ -207,6 +220,7 @@ export function useDictationGame(
     streak,
     bestStreak,
     isPlaying,
+    audioUnavailable,
     tileable,
     tray,
     placed,

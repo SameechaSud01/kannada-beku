@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import Animated, { FadeOut } from 'react-native-reanimated';
-import { Slot, useRouter, useSegments } from 'expo-router';
+import { Slot, useRouter, useSegments, type ErrorBoundaryProps } from 'expo-router';
+import * as Sentry from '@sentry/react-native';
+import { ThemeProvider, DefaultTheme } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, DMSans_400Regular, DMSans_500Medium, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
 import {
@@ -32,14 +34,57 @@ import { isKannadaVoiceAvailable } from '../services/audio/deviceTtsAudioService
 import { ModalHost, useModal } from '../components/modals/ModalHost';
 import { ToastHost } from '../components/modals/ToastHost';
 import { BrandSplash } from '../components/states/BrandSplash';
+import { ErrorState } from '../components/states/ErrorState';
 import { TTSUnavailableDialog } from '../components/modals/instances/TTSUnavailableDialog';
 import {
   scheduleDailyReminder,
   hasNotificationPermission,
 } from '../lib/reminders';
 import * as Linking from 'expo-linking';
+import { Colors } from '../constants/colors';
 
 SplashScreen.preventAutoHideAsync();
+
+// Crash reporting (audit B2). Init is a no-op without a DSN, so local/dev runs
+// and any build missing EXPO_PUBLIC_SENTRY_DSN simply don't report. Disabled in
+// __DEV__ so development errors never reach the dashboard.
+const SENTRY_DSN = process.env.EXPO_PUBLIC_SENTRY_DSN;
+Sentry.init({
+  dsn: SENTRY_DSN,
+  enabled: !!SENTRY_DSN && !__DEV__,
+  tracesSampleRate: 0.2,
+});
+
+/**
+ * Root error boundary (audit B2). Expo Router renders this in place of the tree
+ * when any descendant route throws during render, so an uncaught error shows a
+ * recoverable screen instead of a white screen — and the crash is reported.
+ */
+export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
+  return (
+    <SafeAreaProvider>
+      <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
+        <ErrorState
+          title="Something went wrong"
+          body="The app hit an unexpected error. Try again — if it keeps happening, restart the app."
+          onRetry={retry}
+        />
+      </View>
+    </SafeAreaProvider>
+  );
+}
+
+// React Navigation's DefaultTheme paints scenes + nav chrome with a cool grey
+// (rgb(242,242,242)) that reads as "whitespace" against our warm page cream
+// (e.g. behind the floating tab bar during transitions). Override the theme
+// background to the page cream so no grey can leak anywhere in the navigator.
+const CreamNavTheme = {
+  ...DefaultTheme,
+  colors: { ...DefaultTheme.colors, background: Colors.surfaceCream },
+};
 
 const queryClient = new QueryClient();
 
@@ -143,6 +188,12 @@ function AppGate() {
           if (!row) return;
           useUserStore.getState().hydrateFromUserRow(row);
 
+          // Restore the server-persisted streak so it survives reinstall / a
+          // new device (audit B4). No-op when local is already as fresh.
+          useProgressStore
+            .getState()
+            .hydrateStreakFromServer(row.current_streak, row.last_active_date);
+
           // spec_security_hardening.md §6: if local says onboarding is done but
           // the DB row's flag is null, the prior sync silently failed. Retry
           // once now that we have a session.
@@ -182,15 +233,31 @@ function AppGate() {
       });
     });
 
-    supabase.auth.getSession().catch(async (err) => {
-      if (err?.message?.toLowerCase().includes('refresh token')) {
-        await supabase.auth.signOut().catch(() => {});
-        setSession(null);
+    // onAuthStateChange normally fires INITIAL_SESSION and clears loading, but
+    // don't rely on it — release the boot gate here too, on both the success
+    // and failure paths, or the app can hang on the splash forever (audit B1).
+    supabase.auth.getSession()
+      .then(({ data }) => {
+        setSession(data.session ?? null);
         setLoading(false);
-      }
-    });
+      })
+      .catch(async (err) => {
+        if (err?.message?.toLowerCase().includes('refresh token')) {
+          await supabase.auth.signOut().catch(() => {});
+          setSession(null);
+        }
+        setLoading(false);
+      });
 
-    return () => subscription.unsubscribe();
+    // Hard fallback: if neither the auth event nor getSession resolves (e.g. a
+    // stalled network on a cold start), force the gate open so the user reaches
+    // a usable screen rather than an endless splash (audit B1).
+    const bootFallback = setTimeout(() => setLoading(false), 8000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(bootFallback);
+    };
   }, []);
 
   // Bind persisted per-user state to the current Supabase user; reset on user switch.
@@ -256,8 +323,10 @@ function AppGate() {
   }, [booting, minElapsed]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <Slot />
+    <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
+      <ThemeProvider value={CreamNavTheme}>
+        <Slot />
+      </ThemeProvider>
       {splashVisible ? (
         <Animated.View exiting={FadeOut.duration(350)} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}>
           <BrandSplash />
@@ -267,7 +336,7 @@ function AppGate() {
   );
 }
 
-export default function RootLayout() {
+function RootLayout() {
   const [fontsLoaded] = useFonts({
     DMSans_400Regular,
     DMSans_500Medium,
@@ -321,3 +390,7 @@ export default function RootLayout() {
     </GestureHandlerRootView>
   );
 }
+
+// Sentry.wrap enables native crash + performance instrumentation on the root
+// component (audit B2). No-op at runtime when Sentry is disabled (no DSN).
+export default Sentry.wrap(RootLayout);

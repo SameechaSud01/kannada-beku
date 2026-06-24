@@ -5,7 +5,6 @@ import { GuideStepShell } from './GuideStepShell';
 import { GuideLoading } from './GuideLoading';
 import { StepThings } from './StepThings';
 import { StepVowels } from './StepVowels';
-import { StepConsonants } from './StepConsonants';
 import { StepReading } from './StepReading';
 
 interface GuideFlowProps {
@@ -15,10 +14,8 @@ interface GuideFlowProps {
    * or route to the previous onboarding step.
    */
   onExit: () => void;
-  /** Called when step 4's CTA is pressed (finish onboarding / dismiss guide). */
+  /** Called when the final step's CTA is pressed (finish onboarding / dismiss guide). */
   onFinish: () => void;
-  /** Open the full 34-letter chart reference screen (step 3 link). */
-  onOpenChart: () => void;
   /** Disables the final CTA (e.g. while an onboarding sync is in flight). */
   finishing?: boolean;
 }
@@ -26,16 +23,16 @@ interface GuideFlowProps {
 const STEP_CTAS = [
   'Show me the vowels',
   'Next',
-  'Next',
   'Done — start Lesson 1',
 ];
 
 /**
- * The 4-step paced Kannada-basics flow (chunky_v3 §8). Owns step navigation and
- * renders the shared shell; the two host screens (/guide standalone and
- * /onboarding/basics) supply the exit + finish wiring.
+ * The 3-step paced Kannada-basics flow — Listen → Notice → Name
+ * (onboarding-simplification 2026-06-22). Owns step navigation and renders the
+ * shared shell; the two host screens (/guide standalone and /onboarding/basics)
+ * supply the exit + finish wiring.
  */
-export function GuideFlow({ onExit, onFinish, onOpenChart, finishing = false }: GuideFlowProps) {
+export function GuideFlow({ onExit, onFinish, finishing = false }: GuideFlowProps) {
   // 1-based current step.
   const [step, setStep] = useState(1);
   // Guide content is DB-sourced (falls back to the bundled copy on any failure).
@@ -83,10 +80,7 @@ export function GuideFlow({ onExit, onFinish, onOpenChart, finishing = false }: 
       {step === 2 && (
         <StepVowels vowelPairs={guide.vowelPairs} vowelLoners={guide.vowelLoners} />
       )}
-      {step === 3 && (
-        <StepConsonants families={guide.consonantFamilies} onOpenChart={onOpenChart} />
-      )}
-      {step === 4 && <StepReading readingRows={guide.readingRows} tryIt={guide.tryIt} />}
+      {step === 3 && <StepReading tryIt={guide.tryIt} />}
     </GuideStepShell>
   );
 }

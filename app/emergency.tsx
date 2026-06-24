@@ -17,8 +17,12 @@ import { ErrorState } from '../components/states/ErrorState';
 /**
  * Emergency phrases (chunky_v3 §5). Intentionally all-red urgency — no
  * warning-orange anywhere here. Red gradient header with a redLip lip, red lip
- * category chips, and white chunky phrase cards with a 5px left accent in the
- * group colour (gold for Auto/cab, red for In-trouble).
+ * category chips, then a Mysore-Red-accented context bar whose subtitle tracks
+ * the selected category. Cards are sorted most → least urgent (see tierOf) and
+ * carry a tiered left accent: red (danger) / gold (urgent) / muted (neutral),
+ * with a DANGER/URGENT eyebrow on the top two tiers. Each card leads with the
+ * transliteration (what you say), then Kannada script (what you show), then the
+ * English gloss.
  */
 export default function EmergencyScreen() {
   const router = useRouter();
@@ -158,76 +162,146 @@ export default function EmergencyScreen() {
             </ScrollView>
           </View>
 
+          {/* Category context bar — Mysore Red left accent, subtitle changes with category */}
+          <View
+            style={{
+              marginHorizontal: Spacing.lg,
+              marginTop: Spacing.md,
+              backgroundColor: '#ffffff',
+              borderRadius: Radius.chunky,
+              paddingVertical: Spacing.md,
+              paddingHorizontal: Spacing.lg,
+              borderWidth: 1,
+              borderColor: Colors.hairline,
+              borderLeftWidth: 6,
+              borderLeftColor: Colors.primaryContainer,
+              borderBottomWidth: 4,
+              borderBottomColor: Colors.cardLip,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: Fonts.baloo.bold,
+                fontSize: moderateScale(15),
+                color: Colors.onSurface,
+              }}
+              maxFontSizeMultiplier={1.2}
+            >
+              {current?.label}
+            </Text>
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.medium,
+                fontSize: moderateScale(12.5),
+                lineHeight: moderateScale(18),
+                color: Colors.tertiary,
+                marginTop: moderateScale(2),
+              }}
+              maxFontSizeMultiplier={1.3}
+            >
+              {GROUP_BLURB[current?.id ?? ''] ?? ''}
+            </Text>
+          </View>
+
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               paddingHorizontal: Spacing.lg,
-              paddingTop: Spacing.lg,
+              paddingTop: Spacing.md,
               paddingBottom: moderateScale(40) + insets.bottom,
               gap: moderateScale(10),
             }}
           >
-            {current?.items.map((item) => {
-              const accent = groupAccent(current.id);
-              const hero = item.transliteration ?? item.kannada;
-              const caption = [item.meaning, item.kannada].filter(Boolean).join(' · ');
-              return (
-                <View
-                  key={item.id}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: Spacing.md,
-                    backgroundColor: '#ffffff',
-                    borderRadius: Radius.chunky,
-                    paddingVertical: Spacing.lg,
-                    paddingHorizontal: Spacing.lg,
-                    borderWidth: 1,
-                    borderColor: Colors.hairline,
-                    borderLeftWidth: 5,
-                    borderLeftColor: accent,
-                    borderBottomWidth: 4,
-                    borderBottomColor: Colors.cardLip,
-                  }}
-                >
-                  <View style={{ flex: 1 }}>
-                    {/* Romanised hero — say it out loud */}
-                    <Text
-                      style={{
-                        fontFamily: Fonts.baloo.bold,
-                        fontSize: moderateScale(17),
-                        lineHeight: moderateScale(25),
-                        color: Colors.onSurface,
-                        letterSpacing: -0.2,
-                      }}
-                      maxFontSizeMultiplier={1.3}
-                    >
-                      {hero}
-                    </Text>
-                    {caption ? (
+            {[...(current?.items ?? [])]
+              .sort((a, b) => TIER_RANK[tierOf(a.meaning)] - TIER_RANK[tierOf(b.meaning)])
+              .map((item) => {
+                const tier = tierOf(item.meaning);
+                const { accent, tag, tagColor } = tierStyle(tier);
+                return (
+                  <View
+                    key={item.id}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'flex-start',
+                      gap: Spacing.md,
+                      backgroundColor: '#ffffff',
+                      borderRadius: Radius.chunky,
+                      paddingVertical: Spacing.lg,
+                      paddingHorizontal: Spacing.lg,
+                      borderWidth: 1,
+                      borderColor: Colors.hairline,
+                      borderLeftWidth: 5,
+                      borderLeftColor: accent,
+                      borderBottomWidth: 4,
+                      borderBottomColor: Colors.cardLip,
+                    }}
+                  >
+                    <View style={{ flex: 1 }}>
+                      {tag ? (
+                        <Text
+                          style={{
+                            fontFamily: Fonts.dmSans.bold,
+                            fontSize: moderateScale(10.5),
+                            letterSpacing: 1.2,
+                            color: tagColor,
+                            marginBottom: moderateScale(4),
+                          }}
+                          maxFontSizeMultiplier={1.2}
+                        >
+                          {tag}
+                        </Text>
+                      ) : null}
+                      {/* Transliteration — what you actually say out loud */}
+                      <Text
+                        style={{
+                          fontFamily: Fonts.dmSans.bold,
+                          fontSize: moderateScale(19),
+                          lineHeight: moderateScale(26),
+                          color: Colors.onSurface,
+                          letterSpacing: -0.2,
+                        }}
+                        maxFontSizeMultiplier={1.3}
+                      >
+                        {item.transliteration ?? item.kannada}
+                      </Text>
+                      {/* Kannada script — show the screen to the driver */}
+                      {item.transliteration ? (
+                        <Text
+                          style={{
+                            fontFamily: Fonts.notoSansKannada.medium,
+                            fontSize: moderateScale(15),
+                            lineHeight: moderateScale(23),
+                            color: Colors.onSurface,
+                            marginTop: moderateScale(2),
+                          }}
+                          maxFontSizeMultiplier={1.3}
+                        >
+                          {item.kannada}
+                        </Text>
+                      ) : null}
+                      {/* English gloss — smallest, muted */}
                       <Text
                         style={{
                           fontFamily: Fonts.dmSans.medium,
-                          fontSize: moderateScale(13),
-                          lineHeight: moderateScale(19),
+                          fontSize: moderateScale(12.5),
+                          lineHeight: moderateScale(18),
                           color: Colors.tertiary,
                           marginTop: moderateScale(3),
                         }}
                         maxFontSizeMultiplier={1.3}
                       >
-                        {caption}
+                        {item.meaning}
                       </Text>
-                    ) : null}
+                    </View>
+                    <AudioOrb
+                      size={44}
+                      playing={playingId === item.id}
+                      onPress={() => play(item.id, item.audioUrl ?? item.kannada)}
+                      accessibilityLabel={`Listen: ${item.meaning}`}
+                    />
                   </View>
-                  <AudioOrb
-                    size={44}
-                    playing={playingId === item.id}
-                    onPress={() => play(item.id, item.audioUrl ?? item.kannada)}
-                    accessibilityLabel={`Listen: ${item.meaning}`}
-                  />
-                </View>
-              );
-            })}
+                );
+              })}
 
             <Text
               style={{
@@ -248,10 +322,39 @@ export default function EmergencyScreen() {
   );
 }
 
-/** Left-accent colour per group: gold for Auto/cab, red for everything else. */
-function groupAccent(id: string): string {
-  return id === 'auto' ? Colors.secondaryContainer : Colors.primaryContainer;
+/**
+ * Urgency tiers, derived client-side from the English meaning so they survive
+ * DB re-seeds (rows carry uuids, not stable keys). Cards are reordered most →
+ * least urgent and accented accordingly:
+ *   danger  → Mysore Red left border + DANGER eyebrow (safety / get-out-now)
+ *   urgent  → gold left border + URGENT eyebrow (important but routine)
+ *   neutral → muted left border, no eyebrow (transactional)
+ */
+type Tier = 'danger' | 'urgent' | 'neutral';
+
+const DANGER_RE = /\b(help|stop|police|lost|emergency|accident|danger|hurt|thief|wrong)\b/i;
+const URGENT_RE = /\b(meter|slow|kannada|wait|address|turn)\b/i;
+
+const TIER_RANK: Record<Tier, number> = { danger: 0, urgent: 1, neutral: 2 };
+
+function tierOf(meaning: string): Tier {
+  if (DANGER_RE.test(meaning)) return 'danger';
+  if (URGENT_RE.test(meaning)) return 'urgent';
+  return 'neutral';
 }
+
+function tierStyle(tier: Tier): { accent: string; tag: string | null; tagColor: string } {
+  if (tier === 'danger') return { accent: Colors.primaryContainer, tag: 'DANGER', tagColor: Colors.primaryContainer };
+  if (tier === 'urgent') return { accent: Colors.secondaryContainer, tag: 'URGENT', tagColor: Colors.secondary };
+  return { accent: Colors.cardLip, tag: null, tagColor: Colors.tertiary };
+}
+
+/** Per-category context line shown under the pills in the header bar. */
+const GROUP_BLURB: Record<string, string> = {
+  auto: "If you're in a ride dispute or a safety issue",
+  trouble: "When you need help fast and can't explain",
+  basics: 'Everyday words to get by',
+};
 
 function GroupIcon({ id, color }: { id: string; color: string }) {
   if (id === 'auto') return <Icons.emAuto size={moderateScale(16)} color={color} />;

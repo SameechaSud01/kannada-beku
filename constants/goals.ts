@@ -20,3 +20,11 @@ export const WEEKLY_WORD_TARGET = 35;
 export const DAILY_LISTEN_TARGET = 10;
 export const DAILY_SPEAK_TARGET = 8;
 export const DAILY_PRACTICE_TARGET = 10;
+
+/**
+ * Weight of the "learning" track (vs. the "doing"/games track) in the overall
+ * progress rollup — α in `mastery = α·learn + (1−α)·practice`. The single
+ * principled knob that replaced the old hand-tuned 50/25/25 split. 0.5 = a
+ * lesson is half learnt-it, half can-use-it. See services/progress/overallMastery.ts.
+ */
+export const LEARN_ALPHA = 0.5;

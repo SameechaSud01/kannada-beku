@@ -39,7 +39,7 @@ else
 fi
 
 echo ""
-echo "[ Step 2/2 ] Running security scan..."
+echo "[ Step 2/3 ] Running security scan..."
 SCRIPT_DIR="$(git rev-parse --show-toplevel)/scripts"
 if [ -f "$SCRIPT_DIR/security-scan.sh" ]; then
   if bash "$SCRIPT_DIR/security-scan.sh"; then
@@ -50,7 +50,19 @@ if [ -f "$SCRIPT_DIR/security-scan.sh" ]; then
     exit 1
   fi
 else
-  echo "  Security scan script not found, skipping."
+  echo "  Security scan script missing — failing closed (audit H2). Push blocked."
+  exit 1
+fi
+
+echo ""
+echo "[ Step 3/3 ] Running tests..."
+if npm test --silent; then
+  echo "  Tests: PASS"
+else
+  echo "  Tests: FAIL"
+  echo ""
+  echo "  Fix failing tests before pushing."
+  exit 1
 fi
 
 echo ""

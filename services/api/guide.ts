@@ -1,17 +1,12 @@
 import { supabase } from './supabase';
 import {
-  CONSONANT_CHART,
   BASIC_PRINCIPLES,
   VOWEL_PAIRS,
   VOWEL_LONERS,
-  CONSONANT_FAMILIES,
-  READING_ROWS,
   TRY_IT,
   type BasicPrinciple,
   type VowelPair,
   type VowelLoner,
-  type ConsonantFamily,
-  type ReadingRow,
 } from '../../constants/guide';
 
 /**
@@ -22,10 +17,11 @@ import {
  * constants/guide.ts is kept only as an OFFLINE FALLBACK — the guide runs during
  * first-run onboarding, so a flaky fetch must never leave the primer blank. The
  * fallback is assembled from the same constants below.
+ *
+ * Onboarding-simplification (2026-06-22): the flow is now 3 screens, so only
+ * principles/vowels/tryIt are consumed. The live DB row may still carry the old
+ * consonantFamilies/readingRows/chart fields — they're simply ignored here.
  */
-
-/** A single chart/family glyph — DB rows omit the `kind` discriminator. */
-export type GuideGlyph = { kannada: string; transliteration: string; example?: string };
 
 export interface GuideTryIt {
   transliteration: string;
@@ -33,16 +29,12 @@ export interface GuideTryIt {
   english: string;
 }
 
-/** The curated, linguistic content the 4-step flow + /guide/chart render. */
+/** The curated, linguistic content the 3-step flow renders. */
 export interface GuideContent {
   principles: BasicPrinciple[];
   vowelPairs: VowelPair[];
   vowelLoners: VowelLoner[];
-  consonantFamilies: ConsonantFamily[];
-  readingRows: ReadingRow[];
   tryIt: GuideTryIt;
-  /** The full 34-letter consonant chart. */
-  chart: GuideGlyph[];
 }
 
 /** Bundled fallback, mirrored from constants/guide.ts. */
@@ -50,10 +42,7 @@ export const FALLBACK_GUIDE: GuideContent = {
   principles: BASIC_PRINCIPLES,
   vowelPairs: VOWEL_PAIRS,
   vowelLoners: VOWEL_LONERS,
-  consonantFamilies: CONSONANT_FAMILIES,
-  readingRows: READING_ROWS,
   tryIt: TRY_IT,
-  chart: CONSONANT_CHART,
 };
 
 /**
@@ -66,14 +55,7 @@ function parseGuide(raw: unknown): GuideContent | null {
   const g = raw as Record<string, unknown>;
 
   const nonEmptyArray = (v: unknown): v is unknown[] => Array.isArray(v) && v.length > 0;
-  const arrayKeys = [
-    'principles',
-    'vowelPairs',
-    'vowelLoners',
-    'consonantFamilies',
-    'readingRows',
-    'chart',
-  ] as const;
+  const arrayKeys = ['principles', 'vowelPairs', 'vowelLoners'] as const;
   for (const k of arrayKeys) {
     if (!nonEmptyArray(g[k])) return null;
   }
@@ -85,10 +67,7 @@ function parseGuide(raw: unknown): GuideContent | null {
     principles: g.principles as BasicPrinciple[],
     vowelPairs: g.vowelPairs as VowelPair[],
     vowelLoners: g.vowelLoners as VowelLoner[],
-    consonantFamilies: g.consonantFamilies as ConsonantFamily[],
-    readingRows: g.readingRows as ReadingRow[],
     tryIt: tryIt as unknown as GuideTryIt,
-    chart: g.chart as GuideGlyph[],
   };
 }
 

@@ -10,6 +10,7 @@ import {
   type VowelPair,
   type VowelLoner,
 } from '../../constants/guide';
+import { useIsMounted } from '../../hooks/useIsMounted';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { Toasts } from '../modals/instances/toastCatalog';
 import { AudioOrb } from '../ui/AudioOrb';
@@ -28,6 +29,7 @@ export function StepVowels({
 }) {
   // Which orb is mid-playback (string key), so only one ping animates at once.
   const [playingKey, setPlayingKey] = useState<string | null>(null);
+  const mounted = useIsMounted();
 
   useEffect(() => {
     return () => {
@@ -43,7 +45,9 @@ export function StepVowels({
         console.warn('[guide_vowels] play failed', err);
         Toasts.audioFailed(retry);
       })
-      .finally(() => setPlayingKey((cur) => (cur === key ? null : cur)));
+      .finally(() => {
+        if (mounted.current) setPlayingKey((cur) => (cur === key ? null : cur));
+      });
   };
 
   const playPair = (pair: VowelPair) =>

@@ -51,16 +51,21 @@ from (values
    '[{"id":"a","kn":"ನಮಸ್ಕಾರ","tr":"namaskāra","en":"Goodbye"},{"id":"b","kn":"ಹೆಸರು","tr":"hesaru","en":"name"},{"id":"c","kn":"ಮನೆ","tr":"mane","en":"house"}]', 'a'),
 
   -- ===== L2 Scenario 1: Introducing yourself =====
+  -- Self-intro reply personalized with the learner's name via the `[name]`
+  -- placeholder (was "Priya") — see 2026-06-23_personalize_self_intro_names.sql.
   (2, 1, 1, 'ನಿಮ್ಮ ಹೆಸರು ಏನು?', 'What is your name? (respectful)',
-   '[{"id":"a","kn":"ನಾನು ಪ್ರಿಯಾ","tr":"nānu priyā","en":"I am Priya"},{"id":"b","kn":"ಮನೆ","tr":"mane","en":"house"},{"id":"c","kn":"ಅವರು","tr":"avaru","en":"that person"}]', 'a'),
+   '[{"id":"a","kn":"ನಾನು ಪ್ರಿಯಾ","tr":"nānu [name]","en":"I am [name]"},{"id":"b","kn":"ಮನೆ","tr":"mane","en":"house"},{"id":"c","kn":"ಅವರು","tr":"avaru","en":"that person"}]', 'a'),
   (2, 1, 2, 'ನಿಮ್ಮ ಮನೆ ಎಲ್ಲಿ?', 'Where is your house?',
    '[{"id":"a","kn":"ಇಲ್ಲಿ","tr":"illi","en":"Here"},{"id":"b","kn":"ಹೆಸರು","tr":"hesaru","en":"name"},{"id":"c","kn":"ನೀವು","tr":"nīvu","en":"you (respectful)"}]', 'a'),
   (2, 1, 3, 'ಸರಿ, ನಮಸ್ಕಾರ.', 'Okay, goodbye.',
    '[{"id":"a","kn":"ನಮಸ್ಕಾರ","tr":"namaskāra","en":"Goodbye"},{"id":"b","kn":"ನಾನು","tr":"nānu","en":"I"},{"id":"c","kn":"ಮನೆ","tr":"mane","en":"house"}]', 'a'),
 
   -- ===== L2 Scenario 2: Asking about people (neutral) =====
+  -- Turn 1 self-intro personalized via `[name]` (was "Ravi"); turn 2 below is
+  -- third-person and keeps its example name — see
+  -- 2026-06-23_personalize_self_intro_names.sql.
   (2, 2, 1, 'ನಿನ್ನ ಹೆಸರು ಏನು?', 'What is your name? (neutral)',
-   '[{"id":"a","kn":"ನಾನು ರವಿ","tr":"nānu ravi","en":"I am Ravi"},{"id":"b","kn":"ನಿಮ್ಮ","tr":"nimma","en":"your (respectful)"},{"id":"c","kn":"ಮನೆ","tr":"mane","en":"house"}]', 'a'),
+   '[{"id":"a","kn":"ನಾನು ರವಿ","tr":"nānu [name]","en":"I am [name]"},{"id":"b","kn":"ನಿಮ್ಮ","tr":"nimma","en":"your (respectful)"},{"id":"c","kn":"ಮನೆ","tr":"mane","en":"house"}]', 'a'),
   (2, 2, 2, 'ಇವಳು ಯಾರು?', 'Who is she?',
    '[{"id":"a","kn":"ಇವಳು ಪ್ರಿಯಾ","tr":"ivaḷu priyā","en":"She is Priya"},{"id":"b","kn":"ಅವನು","tr":"avanu","en":"that person (he)"},{"id":"c","kn":"ಮನೆ","tr":"mane","en":"house"}]', 'a'),
   (2, 2, 3, 'ಸರಿ!', 'Okay!',

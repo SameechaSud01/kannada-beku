@@ -21,20 +21,22 @@ export function useOppositesItems(lessonNo: number | null | undefined) {
 
 /**
  * Record one per-item attempt via the record_opposites_attempt RPC.
- * Personal-best on the server side; invalidates the overall-progress query
- * so the new aggregate is picked up on next read.
+ * Personal-best on the server side; invalidates ['game-mastery', userId] so the
+ * content-derived overall % refreshes on next read. Retries transient
+ * failures (audit H4).
  */
 export function useRecordOppositesAttempt() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ['recordOppositesAttempt'],
+    retry: 2,
     mutationFn: ({ itemId, isCorrect }: { itemId: string; isCorrect: boolean }) =>
       recordOppositesAttempt(itemId, isCorrect),
     onSuccess: () => {
       const userId = useAuthStore.getState().user?.id;
       if (userId) {
-        queryClient.invalidateQueries({ queryKey: ['overall-progress', userId] });
+        queryClient.invalidateQueries({ queryKey: ['game-mastery', userId] });
       }
     },
   });

@@ -23,11 +23,5 @@ export default function GuideScreen() {
 
   const dismiss = () => router.back();
 
-  return (
-    <GuideFlow
-      onExit={dismiss}
-      onFinish={dismiss}
-      onOpenChart={() => router.push('/guide/chart')}
-    />
-  );
+  return <GuideFlow onExit={dismiss} onFinish={dismiss} />;
 }

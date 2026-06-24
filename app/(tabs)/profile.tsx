@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { View, Text, ScrollView, Pressable, Animated as RNAnimated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import Constants from 'expo-constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { useRouter } from 'expo-router';
@@ -13,12 +14,13 @@ import { useAuthStore } from '../../stores/useAuthStore';
 import { useUserStore } from '../../stores/useUserStore';
 import { useWordsLearned, useCompletedLessons } from '../../hooks/progress';
 import { useStreakCelebration } from '../../hooks/useStreakCelebration';
-import { useOverallProgress } from '../../hooks/useOverallProgress';
+import { useOverallMastery } from '../../hooks/useOverallMastery';
 import { useFluencyMode } from '../../hooks/useFluencyMode';
 import { formatFirstName } from '../../utils/formatName';
 import { useModal } from '../../components/modals/ModalHost';
 import { Watermark } from '../../components/ui/Watermark';
 import { TopBar } from '../../components/ui/TopBar';
+import { TAB_BAR_CLEARANCE } from '../../components/ui/TabBar';
 import { LipButton } from '../../components/ui/LipButton';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
@@ -29,14 +31,16 @@ import { ProfileSkeleton } from '../../components/states/skeletons/TabSkeletons'
 import { NoStreakEmpty } from '../../components/states/empties/TabEmpties';
 import { useDbLessons } from '../../hooks/useLessons';
 
+const appVersion = Constants.expoConfig?.version ?? '1.0.0';
+
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { streak, onStreakPress } = useStreakCelebration();
   const wordsLearned = useWordsLearned();
   const lessonsDone = useCompletedLessons().length;
-  const overall = useOverallProgress();
-  const overallPct = Math.max(0, Math.min(100, Math.round(overall.data?.progressPct ?? 0)));
+  const overall = useOverallMastery();
+  const overallPct = Math.max(0, Math.min(100, Math.round(overall.progressPct)));
   const dbLessons = useDbLessons().data ?? [];
   const user = useAuthStore((s) => s.user);
   const displayName = useUserStore((s) => s.displayName);
@@ -140,7 +144,7 @@ export default function ProfileScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
+        contentContainerStyle={{ paddingBottom: TAB_BAR_CLEARANCE + insets.bottom }}
       >
         {/* Name block */}
         <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.xl, marginBottom: moderateScale(18) }}>
@@ -315,6 +319,20 @@ export default function ProfileScreen() {
         <View style={{ paddingHorizontal: Spacing.lg }}>
           <LipButton label="Sign out" variant="secondary" onPress={handleSignOutPress} />
         </View>
+
+        {/* App version */}
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.medium,
+            fontSize: moderateScale(11.5),
+            color: Colors.textFaint,
+            textAlign: 'center',
+            marginTop: moderateScale(16),
+          }}
+          maxFontSizeMultiplier={1.3}
+        >
+          Version {appVersion}
+        </Text>
       </ScrollView>
     </RNAnimated.View>
   );

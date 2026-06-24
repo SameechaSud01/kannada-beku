@@ -19,12 +19,14 @@ export function useRecordDictationAttempt() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['recordDictationAttempt'],
+    retry: 2,
     mutationFn: ({ itemId, isCorrect }: { itemId: string; isCorrect: boolean }) =>
       recordDictationAttempt(itemId, isCorrect),
     onSuccess: () => {
       const userId = useAuthStore.getState().user?.id;
       if (userId) {
-        queryClient.invalidateQueries({ queryKey: ['overall-progress', userId] });
+        // Refresh the content-derived overall % (audit H4 + rollup port).
+        queryClient.invalidateQueries({ queryKey: ['game-mastery', userId] });
       }
     },
   });

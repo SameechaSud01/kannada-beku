@@ -78,7 +78,6 @@ export default function BasicsScreen() {
       // Step-1 back returns to the previous onboarding step.
       onExit={() => router.replace('/onboarding/commitment')}
       onFinish={() => void finishOnboarding()}
-      onOpenChart={() => router.push('/guide/chart')}
       finishing={submitting}
     />
   );

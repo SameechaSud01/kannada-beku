@@ -10,6 +10,7 @@ import { flattenSections, type Lesson } from '../../constants/lessons/types';
 import { useDbLesson } from '../../hooks/useLessons';
 import { useLessonRunner } from '../../hooks/useLessonRunner';
 import { useProgressStore } from '../../stores/progressStore';
+import { recordLearningDay } from '../../services/progress/streak';
 import { SituationPhase } from '../../components/lesson/SituationPhase';
 import { TeachWordsPhase } from '../../components/lesson/TeachWordsPhase';
 import { PracticeWordsPhase } from '../../components/lesson/PracticeWordsPhase';
@@ -54,6 +55,8 @@ export default function LessonScreen() {
   useEffect(() => {
     if (runner.phase === 'done' && isPartRun && lesson && part) {
       completePart(lesson.slug, part);
+      // Finishing a lesson sub-part counts as a learning day (audit H2/B4).
+      recordLearningDay();
     }
   }, [runner.phase, isPartRun, lesson, part, completePart]);
 

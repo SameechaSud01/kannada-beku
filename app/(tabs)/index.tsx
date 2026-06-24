@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { View, Text, ScrollView, Animated as RNAnimated } from 'react-native';
+import { View, Text, ScrollView, Pressable, Animated as RNAnimated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -23,13 +23,19 @@ import { WEEKLY_WORD_TARGET } from '../../constants/goals';
 import { formatFirstName } from '../../utils/formatName';
 import { useCompletedLessons, useWordsLearned, useDailyGoal } from '../../hooks/progress';
 import { useStreakCelebration } from '../../hooks/useStreakCelebration';
+import { useModal } from '../../components/modals/ModalHost';
+import { WordsLearnedSheet, type WordsLearnedGroup } from '../../components/modals/instances/WordsLearnedSheet';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
 import { ChunkyCircle, ChunkyLip } from '../../components/ui/ChunkyLip';
 import { MultiProgressRing } from '../../components/ui/ProgressRing';
 import { Watermark } from '../../components/ui/Watermark';
 import { TopBar } from '../../components/ui/TopBar';
+import { TAB_BAR_CLEARANCE } from '../../components/ui/TabBar';
 import { HomeSkeleton } from '../../components/states/skeletons/TabSkeletons';
+import { ErrorState } from '../../components/states/ErrorState';
+import { OfflineState } from '../../components/states/OfflineState';
+import { useIsOffline } from '../../hooks/useIsOffline';
 
 const ESTIMATED_MIN_PER_LESSON = 5;
 
@@ -40,10 +46,12 @@ export default function HomeScreen() {
   const wordsLearned = useWordsLearned();
   const daily = useDailyGoal();
   const { streak, onStreakPress } = useStreakCelebration();
+  const modal = useModal();
   const user = useAuthStore((s) => s.user);
   const displayName = useUserStore((s) => s.displayName);
   const lessonsQuery = useDbLessons();
   const dbLessons = lessonsQuery.data ?? [];
+  const offline = useIsOffline();
 
   const fadeAnim = useRef(new RNAnimated.Value(0)).current;
   const slideAnim = useRef(new RNAnimated.Value(4)).current;
@@ -95,12 +103,37 @@ export default function HomeScreen() {
   // Words-learnt reward banner — progress toward a fixed weekly word target.
   const wordPct = Math.max(0, Math.min(100, Math.round((wordsLearned / WEEKLY_WORD_TARGET) * 100)));
 
+  // Every word & phrase from completed lessons, grouped by lesson, for the
+  // "Words learnt" sheet. Mirrors the count (words + phrases per lesson).
+  const learnedGroups: WordsLearnedGroup[] = dbLessons
+    .filter((l) => completedSlugSet.has(l.slug) && (l.words.length > 0 || l.phrases.length > 0))
+    .map((l) => ({ title: l.title, items: [...l.words, ...l.phrases] }));
+
+  const openWordsLearned = () =>
+    modal.show({
+      kind: 'sheet',
+      component: WordsLearnedSheet,
+      props: { groups: learnedGroups, total: wordsLearned, onDismiss: () => modal.dismiss() },
+    });
+
   // Daily-goal rings now read real per-day activity counts (useDailyGoal):
   // Listen = audio played in-app, Speak = practice-phase reps, Practice = game
   // questions answered. Resets at midnight.
 
   // First-load shimmer while lessons fetch — same chrome, no reflow on arrival.
   if (lessonsQuery.isLoading) return <HomeSkeleton streak={streak} />;
+
+  // A failed fetch must not silently render placeholder content (audit B5/H1).
+  if (lessonsQuery.isError) {
+    return offline ? (
+      <OfflineState
+        onRetry={() => lessonsQuery.refetch()}
+        onPracticeOffline={() => router.push('/emergency')}
+      />
+    ) : (
+      <ErrorState onRetry={() => lessonsQuery.refetch()} />
+    );
+  }
 
   return (
     <RNAnimated.View
@@ -117,7 +150,7 @@ export default function HomeScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: moderateScale(40) + insets.bottom }}
+        contentContainerStyle={{ paddingBottom: TAB_BAR_CLEARANCE + insets.bottom }}
       >
         <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.md, gap: moderateScale(11) }}>
           {/* Greeting */}
@@ -194,7 +227,13 @@ export default function HomeScreen() {
             </View>
           )}
 
-          {/* Words-learnt banner — gold reward */}
+          {/* Words-learnt banner — gold reward; tap to see every word learnt */}
+          <Pressable
+            onPress={openWordsLearned}
+            accessibilityRole="button"
+            accessibilityLabel={`Words learnt: ${wordsLearned}. Tap to see all words learnt.`}
+            style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+          >
           <LinearGradient
             colors={[Colors.goldBright, Colors.secondaryContainer]}
             start={{ x: 0, y: 0 }}
@@ -218,13 +257,25 @@ export default function HomeScreen() {
             <View style={{ height: moderateScale(9), backgroundColor: 'rgba(108,80,0,0.22)', borderRadius: Radius.full, overflow: 'hidden', marginTop: Spacing.sm }}>
               <View style={{ height: '100%', width: `${wordPct}%`, backgroundColor: Colors.primaryContainer, borderRadius: Radius.full }} />
             </View>
-            <Text
-              style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12), color: Colors.onSecondaryContainer, marginTop: Spacing.sm }}
-              maxFontSizeMultiplier={1.3}
-            >
-              of your weekly target achieved
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: Spacing.sm }}>
+              <Text
+                style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12), color: Colors.onSecondaryContainer, flexShrink: 1 }}
+                maxFontSizeMultiplier={1.3}
+              >
+                of your weekly target achieved
+              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(2) }}>
+                <Text
+                  style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(12), color: Colors.onSecondaryContainer }}
+                  maxFontSizeMultiplier={1.3}
+                >
+                  See all
+                </Text>
+                <Icons.forward size={moderateScale(14)} color={Colors.onSecondaryContainer} />
+              </View>
+            </View>
           </LinearGradient>
+          </Pressable>
 
           {/* Stuck right now? — the single urgent red surface (not a warning) */}
           <ChunkyPressable
@@ -285,9 +336,6 @@ function DailyGoalCard({
   return (
     <View
       style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: moderateScale(26),
         backgroundColor: '#ffffff',
         borderRadius: Radius.chunky,
         borderWidth: 1,
@@ -295,46 +343,47 @@ function DailyGoalCard({
         borderBottomWidth: 4,
         borderBottomColor: Colors.cardLip,
         padding: moderateScale(16),
+        gap: moderateScale(14),
       }}
     >
-      <MultiProgressRing
-        size={158}
-        strokeWidth={12}
-        gap={9}
-        animated
-        rings={[
-          { progress: listenFrac, color: Colors.primaryContainer },
-          { progress: speakFrac, color: Colors.secondaryContainer },
-          { progress: practiceFrac, color: Colors.primary },
-        ]}
+      <Text
+        style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(22), color: Colors.onSurface, letterSpacing: -0.3 }}
+        maxFontSizeMultiplier={1.2}
       >
-        <View style={{ alignItems: 'center' }}>
-          <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(16), color: Colors.onSurface }} maxFontSizeMultiplier={1.2}>
-            Daily
-          </Text>
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(9), letterSpacing: 1.4, color: Colors.textFaint, textTransform: 'uppercase' }} maxFontSizeMultiplier={1.2}>
-            Goal
-          </Text>
-        </View>
-      </MultiProgressRing>
+        Daily Goal
+      </Text>
 
-      <View style={{ flex: 1, gap: moderateScale(12) }}>
-        {metrics.map((m) => (
-          <View key={m.label}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(6) }}>
-              <View style={{ width: moderateScale(8), height: moderateScale(8), borderRadius: Radius.full, backgroundColor: m.dot }} />
-              <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(13), color: Colors.tertiary }} maxFontSizeMultiplier={1.3}>
-                {m.label}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(26) }}>
+        <MultiProgressRing
+          size={158}
+          strokeWidth={12}
+          gap={9}
+          animated
+          rings={[
+            { progress: listenFrac, color: Colors.primaryContainer },
+            { progress: speakFrac, color: Colors.secondaryContainer },
+            { progress: practiceFrac, color: Colors.primary },
+          ]}
+        />
+
+        <View style={{ flex: 1, gap: moderateScale(12) }}>
+          {metrics.map((m) => (
+            <View key={m.label}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(6) }}>
+                <View style={{ width: moderateScale(8), height: moderateScale(8), borderRadius: Radius.full, backgroundColor: m.dot }} />
+                <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(13), color: Colors.tertiary }} maxFontSizeMultiplier={1.3}>
+                  {m.label}
+                </Text>
+              </View>
+              <Text
+                style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(22), color: m.text, letterSpacing: -0.3, fontVariant: ['tabular-nums'], marginTop: moderateScale(1) }}
+                maxFontSizeMultiplier={1.2}
+              >
+                {m.value}
               </Text>
             </View>
-            <Text
-              style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(22), color: m.text, letterSpacing: -0.3, fontVariant: ['tabular-nums'], marginTop: moderateScale(1) }}
-              maxFontSizeMultiplier={1.2}
-            >
-              {m.value}
-            </Text>
-          </View>
-        ))}
+          ))}
+        </View>
       </View>
     </View>
   );
