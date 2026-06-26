@@ -190,7 +190,8 @@ export default function LessonScreen() {
           />
         );
       }
-      // Final sub-part (or whole lesson) → full completion + celebration.
+      // Final sub-part (or whole lesson) → "Where you are" completion screen
+      // (server completion + trail orientation, not applause).
       return <DoneCard lesson={lesson} runner={runner} onClose={() => router.back()} />;
   }
 

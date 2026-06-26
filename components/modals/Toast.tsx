@@ -124,7 +124,7 @@ export function Toast({ kind, title, subtitle, onPress, onDismiss }: ToastProps)
           onPress={handlePress}
           accessibilityRole="button"
           accessibilityLabel={title}
-          hitSlop={8}
+          hitSlop={moderateScale(8)}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -194,7 +194,7 @@ export function Toast({ kind, title, subtitle, onPress, onDismiss }: ToastProps)
         onPress={handlePress}
         accessibilityRole="button"
         accessibilityLabel={subtitle ? `${title}. ${subtitle}` : title}
-        hitSlop={8}
+        hitSlop={moderateScale(8)}
         style={{
           flexDirection: 'row',
           alignItems: 'center',

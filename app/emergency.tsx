@@ -262,32 +262,56 @@ export default function EmergencyScreen() {
                           {badge}
                         </Text>
                       </View>
-                      {/* Transliteration — huge: this is what you say out loud */}
-                      <Text
+                      {/* English first, transliteration right next to it — easy to match */}
+                      <View
                         style={{
-                          fontFamily: Fonts.dmSans.bold,
-                          fontSize: moderateScale(25),
-                          lineHeight: moderateScale(32),
-                          color: Colors.onSurface,
-                          letterSpacing: -0.3,
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
+                          alignItems: 'baseline',
+                          columnGap: moderateScale(8),
+                          rowGap: moderateScale(2),
                         }}
-                        maxFontSizeMultiplier={1.3}
                       >
-                        {item.transliteration ?? item.kannada}
-                      </Text>
-                      {/* English — small sanity check on the meaning */}
-                      <Text
-                        style={{
-                          fontFamily: Fonts.dmSans.medium,
-                          fontSize: moderateScale(13),
-                          lineHeight: moderateScale(19),
-                          color: Colors.tertiary,
-                          marginTop: moderateScale(3),
-                        }}
-                        maxFontSizeMultiplier={1.3}
-                      >
-                        {item.meaning}
-                      </Text>
+                        {/* English — what you mean */}
+                        <Text
+                          style={{
+                            fontFamily: Fonts.dmSans.bold,
+                            fontSize: moderateScale(19),
+                            lineHeight: moderateScale(25),
+                            color: Colors.onSurface,
+                            letterSpacing: -0.2,
+                          }}
+                          maxFontSizeMultiplier={1.3}
+                        >
+                          {item.meaning}
+                        </Text>
+                        {/* Visual separator between meaning and what you say */}
+                        <Text
+                          style={{
+                            fontFamily: Fonts.dmSans.bold,
+                            fontSize: moderateScale(19),
+                            lineHeight: moderateScale(25),
+                            color: Colors.tertiary,
+                            opacity: 0.5,
+                          }}
+                          maxFontSizeMultiplier={1.3}
+                        >
+                          |
+                        </Text>
+                        {/* Transliteration — what you say out loud */}
+                        <Text
+                          style={{
+                            fontFamily: Fonts.dmSans.bold,
+                            fontSize: moderateScale(19),
+                            lineHeight: moderateScale(25),
+                            color: Colors.primary,
+                            letterSpacing: -0.2,
+                          }}
+                          maxFontSizeMultiplier={1.3}
+                        >
+                          {item.transliteration ?? item.kannada}
+                        </Text>
+                      </View>
                       {/* Kannada script — footnote only, for showing the driver */}
                       {item.transliteration ? (
                         <Text

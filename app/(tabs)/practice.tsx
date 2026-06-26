@@ -289,6 +289,9 @@ function FeaturedQuiz({ locked, onPress }: { locked: boolean; onPress: () => voi
   if (locked) {
     return (
       <View
+        accessibilityRole="button"
+        accessibilityLabel="Quick quiz — locked. Finish a lesson part on the Learn tab to unlock."
+        accessibilityState={{ disabled: true }}
         style={{
           borderRadius: Radius.chunky,
           backgroundColor: Colors.secondaryContainer,
@@ -366,6 +369,9 @@ function GameCard({
   if (locked) {
     return (
       <View
+        accessibilityRole="button"
+        accessibilityLabel={`${game.title} — locked. Finish a lesson part on the Learn tab to unlock.`}
+        accessibilityState={{ disabled: true }}
         style={{
           width,
           borderRadius: Radius.chunky,

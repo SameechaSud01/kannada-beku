@@ -37,11 +37,11 @@ export default function HeritageScreen() {
   if (!entry) {
     return (
       <View style={{ flex: 1, backgroundColor: Colors.surface, paddingTop: insets.top + Spacing.xxxl, paddingHorizontal: Spacing.xxl, alignItems: 'center' }}>
-        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(20), color: '#1B1D0E', marginBottom: Spacing.sm }}>
+        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(20), color: Colors.onSurface, marginBottom: Spacing.sm }}>
           Heritage entry not found
         </Text>
         <Pressable onPress={() => router.back()} hitSlop={8} style={{ paddingVertical: Spacing.md }}>
-          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(14), color: '#91001B' }}>
+          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(14), color: Colors.primary }}>
             ← Back
           </Text>
         </Pressable>
@@ -69,10 +69,10 @@ export default function HeritageScreen() {
           hitSlop={8}
         >
           <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
-            <Path d="M19 12H5M12 19l-7-7 7-7" stroke="#91001B" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
+            <Path d="M19 12H5M12 19l-7-7 7-7" stroke={Colors.primary} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
           </Svg>
         </Pressable>
-        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: '#1B1D0E' }}>
+        <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onSurface }}>
           Heritage
         </Text>
       </View>
@@ -102,17 +102,17 @@ export default function HeritageScreen() {
               fontFamily: Fonts.dmSans.bold,
               fontSize: moderateScale(10),
               letterSpacing: 2.5,
-              color: '#785900',
+              color: Colors.secondary,
               textTransform: 'uppercase',
               marginBottom: Spacing.sm,
             }}
           >
             {entry.eyebrow}
           </Text>
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(28), color: '#1B1D0E', letterSpacing: -0.5, marginBottom: moderateScale(6) }}>
+          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(28), color: Colors.onSurface, letterSpacing: -0.5, marginBottom: moderateScale(6) }}>
             {entry.title}
           </Text>
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: '#464646', marginBottom: Spacing.xxl }}>
+          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: Colors.tertiary, marginBottom: Spacing.xxl }}>
             {entry.subtitle}
           </Text>
           {entry.body.map((p, i) => (
@@ -121,7 +121,7 @@ export default function HeritageScreen() {
               style={{
                 fontFamily: Fonts.dmSans.regular,
                 fontSize: moderateScale(15),
-                color: '#1B1D0E',
+                color: Colors.onSurface,
                 lineHeight: moderateScale(24),
                 marginBottom: Spacing.lg,
               }}
