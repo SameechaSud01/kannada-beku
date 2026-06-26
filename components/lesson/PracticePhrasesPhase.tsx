@@ -232,6 +232,7 @@ export function PracticePhrasesPhase({
                 color: Colors.onSecondaryContainer,
                 textAlign: 'center',
               }}
+              maxFontSizeMultiplier={1.3}
             >
               {phrase.english}
             </Text>
@@ -270,6 +271,7 @@ export function PracticePhrasesPhase({
                 textAlign: 'center',
                 marginTop: Spacing.md,
               }}
+              maxFontSizeMultiplier={1.3}
             >
               {phrase.kannada}
             </Text>

@@ -50,10 +50,8 @@ export function StepVowels({
       });
   };
 
-  const playPair = (pair: VowelPair) =>
-    handlePlay(`pair:${pair.short.kannada}`, `${pair.short.kannada} ${pair.long.kannada}`, () =>
-      playPair(pair),
-    );
+  const playVowel = (vowel: VowelPair['short']) =>
+    handlePlay(`vowel:${vowel.kannada}`, vowel.kannada, () => playVowel(vowel));
 
   const playLoner = (loner: VowelLoner) =>
     handlePlay(`loner:${loner.kannada}`, loner.kannada, () => playLoner(loner));
@@ -83,7 +81,7 @@ export function StepVowels({
         }}
         maxFontSizeMultiplier={1.4}
       >
-        A short sound and its longer twin. Tap to hear each pair.
+        A short sound and its longer twin. Tap to hear each sound.
       </Text>
 
       <View style={{ gap: moderateScale(11) }}>
@@ -93,6 +91,7 @@ export function StepVowels({
             style={{
               flexDirection: 'row',
               alignItems: 'center',
+              justifyContent: 'space-between',
               backgroundColor: '#ffffff',
               borderRadius: Radius.chunky,
               borderWidth: 1,
@@ -111,6 +110,8 @@ export function StepVowels({
               translit={pair.short.transliteration}
               example={pair.short.example}
               color={Colors.onSurface}
+              playing={playingKey === `vowel:${pair.short.kannada}`}
+              onPlay={() => playVowel(pair.short)}
             />
 
             <Icons.forward
@@ -124,18 +125,8 @@ export function StepVowels({
               translit={pair.long.transliteration}
               example={pair.long.example}
               color={Colors.primaryContainer}
-            />
-
-            <View style={{ flex: 1 }} />
-
-            <AudioOrb
-              size={32}
-              color={Colors.secondaryFixed}
-              iconColor={Colors.secondary}
-              lipColor={Colors.goldLip}
-              playing={playingKey === `pair:${pair.short.kannada}`}
-              onPress={() => playPair(pair)}
-              accessibilityLabel={`Hear ${pair.short.transliteration} and ${pair.long.transliteration}`}
+              playing={playingKey === `vowel:${pair.long.kannada}`}
+              onPlay={() => playVowel(pair.long)}
             />
           </View>
         ))}
@@ -202,11 +193,15 @@ function VowelGlyph({
   translit,
   example,
   color,
+  playing,
+  onPlay,
 }: {
   kannada: string;
   translit: string;
   example: string;
   color: string;
+  playing?: boolean;
+  onPlay?: () => void;
 }) {
   return (
     <View style={{ alignItems: 'center', width: moderateScale(58) }}>
@@ -243,6 +238,19 @@ function VowelGlyph({
       >
         {example}
       </Text>
+      {onPlay ? (
+        <View style={{ marginTop: moderateScale(8) }}>
+          <AudioOrb
+            size={32}
+            color={Colors.secondaryFixed}
+            iconColor={Colors.secondary}
+            lipColor={Colors.goldLip}
+            playing={!!playing}
+            onPress={onPlay}
+            accessibilityLabel={`Hear ${translit}`}
+          />
+        </View>
+      ) : null}
     </View>
   );
 }

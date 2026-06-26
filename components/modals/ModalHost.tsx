@@ -151,7 +151,12 @@ export function ModalHost({ children }: { children: ReactNode }) {
 
   return (
     <ModalContext.Provider value={value}>
-      <View style={{ flex: 1 }}>{children}</View>
+      <View
+        style={{ flex: 1 }}
+        importantForAccessibility={entry ? 'no-hide-descendants' : 'auto'}
+      >
+        {children}
+      </View>
       <View
         pointerEvents={entry ? 'auto' : 'none'}
         style={StyleSheet.absoluteFill}

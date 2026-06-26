@@ -52,7 +52,7 @@ export function RoundIconButton({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityState={{ disabled: !!disabled }}
-      hitSlop={8}
+      hitSlop={moderateScale(8)}
       style={({ pressed }) => ({
         width: dim,
         height: dim,

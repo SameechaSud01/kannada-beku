@@ -240,10 +240,12 @@ export default function LoginScreen() {
         {/* Form */}
         <TextInput
           placeholder="Email"
+          accessibilityLabel="Email"
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
           keyboardType="email-address"
+          maxFontSizeMultiplier={1.2}
           style={[INPUT_STYLE, { marginBottom: Spacing.md }]}
           placeholderTextColor={Colors.tertiary}
         />
@@ -406,12 +408,14 @@ function PasswordInput({
     <View style={{ position: 'relative', marginBottom }}>
       <TextInput
         placeholder={placeholder}
+        accessibilityLabel={placeholder}
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={!visible}
         autoCapitalize="none"
         autoCorrect={false}
         onSubmitEditing={onSubmitEditing}
+        maxFontSizeMultiplier={1.2}
         style={[INPUT_STYLE, { paddingRight: moderateScale(48) }]}
         placeholderTextColor={Colors.tertiary}
       />

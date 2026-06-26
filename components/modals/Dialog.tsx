@@ -2,8 +2,7 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import {
   AccessibilityInfo,
   Animated,
-  Dimensions,
-  Platform,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
@@ -56,7 +55,7 @@ export function Dialog({ children, destructive, animate = true }: DialogProps) {
     };
   }, [animate, opacity, scale]);
 
-  const screenWidth = Dimensions.get('window').width;
+  const { width: screenWidth } = useWindowDimensions();
   const width = Math.min(screenWidth * 0.88, moderateScale(360));
 
   return (
@@ -75,7 +74,7 @@ export function Dialog({ children, destructive, animate = true }: DialogProps) {
     >
       <Animated.View
         accessibilityRole={destructive ? 'alert' : 'none'}
-        accessibilityViewIsModal={Platform.OS === 'ios'}
+        accessibilityViewIsModal
         importantForAccessibility="yes"
         style={{
           width,

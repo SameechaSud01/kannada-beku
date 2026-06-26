@@ -268,15 +268,16 @@ function LessonRowView({
         >
           <Text
             style={{
-              fontFamily: Fonts.notoSansKannada.bold,
-              fontSize: moderateScale(24),
-              lineHeight: moderateScale(36),
-              paddingTop: moderateScale(2),
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(26),
+              includeFontPadding: false,
+              textAlign: 'center',
+              textAlignVertical: 'center',
               color: isActive ? Colors.onPrimary : Colors.onSecondaryContainer,
             }}
             maxFontSizeMultiplier={1.2}
           >
-            {row.char}
+            {row.slot}
           </Text>
         </ChunkyLip>
       )}

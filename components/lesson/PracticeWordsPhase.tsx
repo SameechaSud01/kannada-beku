@@ -186,6 +186,7 @@ export function PracticeWordsPhase({
                   textAlign: 'center',
                   marginTop: Spacing.sm,
                 }}
+                maxFontSizeMultiplier={1.3}
               >
                 {word.kannada}
               </Text>
@@ -237,6 +238,7 @@ export function PracticeWordsPhase({
                 textAlign: 'center',
                 marginTop: Spacing.md,
               }}
+              maxFontSizeMultiplier={1.3}
             >
               {word.english}
             </Text>
@@ -248,6 +250,7 @@ export function PracticeWordsPhase({
                 textAlign: 'center',
                 marginTop: Spacing.lg,
               }}
+              maxFontSizeMultiplier={1.3}
             >
               {word.kannada}
             </Text>
@@ -274,6 +277,7 @@ export function PracticeWordsPhase({
               marginTop: Spacing.xl,
               textAlign: 'center',
             }}
+            maxFontSizeMultiplier={1.3}
           >
             Say it out loud
           </Text>
