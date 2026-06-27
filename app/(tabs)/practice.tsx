@@ -34,8 +34,7 @@ type GameDef = {
   glyphColor: string;
 };
 
-// 'image-match' stays hidden from Practice (CONTRADICTIONS C13). The featured
-// Quick quiz renders separately; these three fill the grid + wide row.
+// The featured Quick quiz renders separately; these three fill the grid + wide row.
 const GRID_GAMES: GameDef[] = [
   {
     id: 'dictation',

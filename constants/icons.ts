@@ -48,7 +48,6 @@ import {
   IconMoodHappy,
   IconMoodNeutral,
   IconMoodSad,
-  IconPhoto,
   IconPlayerPlayFilled,
   IconRefresh,
   IconSparkles,
@@ -87,7 +86,6 @@ export const Icons = {
 
   // Practice games
   gameQuickQuiz: IconBolt,
-  gameImageMatch: IconPhoto,
   gameDictation: IconHeadphones,
   gameConversations: IconMessages,
   gameOpposites: IconArrowsLeftRight,

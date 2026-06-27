@@ -1,4 +1,4 @@
-export type GameKey = 'quiz' | 'image-match' | 'dictation' | 'conversations' | 'opposites';
+export type GameKey = 'quiz' | 'dictation' | 'conversations' | 'opposites';
 
 export type Game = {
   key: GameKey;
@@ -11,11 +11,6 @@ export const GAMES = {
     key: 'quiz',
     title: 'Quick quiz',
     tagline: 'Test your speed and accuracy.',
-  },
-  'image-match': {
-    key: 'image-match',
-    title: 'Image match',
-    tagline: 'Connect words to their visuals.',
   },
   dictation: {
     key: 'dictation',
