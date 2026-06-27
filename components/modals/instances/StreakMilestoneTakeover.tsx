@@ -62,7 +62,6 @@ export const STREAK_MILESTONE_COPY: Record<StreakMilestone, { title: string; bod
 
 export interface StreakMilestoneTakeoverProps {
   streak: StreakMilestone;
-  nWordsLearned: number;
   onContinue: () => void;
   onShare?: () => void;
 }
@@ -74,7 +73,6 @@ export interface StreakMilestoneTakeoverProps {
  */
 export function StreakMilestoneTakeover({
   streak,
-  nWordsLearned,
   onContinue,
   onShare,
 }: StreakMilestoneTakeoverProps) {
@@ -133,7 +131,7 @@ export function StreakMilestoneTakeover({
             }}
             maxFontSizeMultiplier={1.4}
           >
-            {interpolate(copy.body, { nWordsLearned: String(nWordsLearned) })}
+            {copy.body}
           </Text>
         </View>
         <View
@@ -247,8 +245,4 @@ function Confetti() {
 
 function capitalise(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-function interpolate(template: string, vars: Record<string, string>): string {
-  return template.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? '');
 }

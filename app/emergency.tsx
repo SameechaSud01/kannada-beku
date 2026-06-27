@@ -9,6 +9,7 @@ import { Spacing, Radius } from '../constants/spacing';
 import { Icons } from '../constants/icons';
 import { deviceTtsAudioService } from '../services/audio/deviceTtsAudioService';
 import { useEmergencyPhrases } from '../hooks/useEmergencyPhrases';
+import { Toasts } from '../components/modals/instances/toastCatalog';
 import { BrandGradient } from '../components/ui/BrandGradient';
 import { AudioOrb } from '../components/ui/AudioOrb';
 import { BrandSpinner } from '../components/states/BrandSpinner';
@@ -36,7 +37,10 @@ export default function EmergencyScreen() {
     setPlayingId(id);
     deviceTtsAudioService
       .play(text)
-      .catch((err) => console.warn('[audio] emergency phrase failed', err))
+      .catch((err) => {
+        console.warn('[audio] emergency phrase failed', err);
+        Toasts.audioFailed(() => play(id, text));
+      })
       .finally(() => setPlayingId((cur) => (cur === id ? null : cur)));
   };
 
@@ -262,7 +266,7 @@ export default function EmergencyScreen() {
                           {badge}
                         </Text>
                       </View>
-                      {/* English first, transliteration right next to it — easy to match */}
+                      {/* Transliteration first (what you say), then English — obvious in any situation */}
                       <View
                         style={{
                           flexDirection: 'row',
@@ -272,32 +276,6 @@ export default function EmergencyScreen() {
                           rowGap: moderateScale(2),
                         }}
                       >
-                        {/* English — what you mean */}
-                        <Text
-                          style={{
-                            fontFamily: Fonts.dmSans.bold,
-                            fontSize: moderateScale(19),
-                            lineHeight: moderateScale(25),
-                            color: Colors.onSurface,
-                            letterSpacing: -0.2,
-                          }}
-                          maxFontSizeMultiplier={1.3}
-                        >
-                          {item.meaning}
-                        </Text>
-                        {/* Visual separator between meaning and what you say */}
-                        <Text
-                          style={{
-                            fontFamily: Fonts.dmSans.bold,
-                            fontSize: moderateScale(19),
-                            lineHeight: moderateScale(25),
-                            color: Colors.tertiary,
-                            opacity: 0.5,
-                          }}
-                          maxFontSizeMultiplier={1.3}
-                        >
-                          |
-                        </Text>
                         {/* Transliteration — what you say out loud */}
                         <Text
                           style={{
@@ -310,6 +288,32 @@ export default function EmergencyScreen() {
                           maxFontSizeMultiplier={1.3}
                         >
                           {item.transliteration ?? item.kannada}
+                        </Text>
+                        {/* Visual separator between what you say and what you mean */}
+                        <Text
+                          style={{
+                            fontFamily: Fonts.dmSans.bold,
+                            fontSize: moderateScale(19),
+                            lineHeight: moderateScale(25),
+                            color: Colors.tertiary,
+                            opacity: 0.5,
+                          }}
+                          maxFontSizeMultiplier={1.3}
+                        >
+                          |
+                        </Text>
+                        {/* English — what you mean */}
+                        <Text
+                          style={{
+                            fontFamily: Fonts.dmSans.bold,
+                            fontSize: moderateScale(19),
+                            lineHeight: moderateScale(25),
+                            color: Colors.onSurface,
+                            letterSpacing: -0.2,
+                          }}
+                          maxFontSizeMultiplier={1.3}
+                        >
+                          {item.meaning}
                         </Text>
                       </View>
                       {/* Kannada script — footnote only, for showing the driver */}

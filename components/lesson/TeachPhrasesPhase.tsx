@@ -91,6 +91,8 @@ export function TeachPhrasesPhase({
 
   const handleChipTap = (idx: number, kannadaText: string) => {
     if (!kannadaText) return;
+    // Ignore taps while a chip is mid-highlight so rapid taps don't overlap audio.
+    if (highlightedChip !== null) return;
     if (lessonNo >= 1) useProgressStore.getState().recordListen();
     setHighlightedChip(idx);
     deviceTtsAudioService.play(kannadaText).catch(() => undefined);

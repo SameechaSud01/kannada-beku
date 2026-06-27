@@ -25,8 +25,8 @@ interface GuideStepShellProps {
 }
 
 /**
- * Shared chrome for the 4-step paced basics flow (chunky_v3 §8):
- * back chip + "Kannada basics" + "n/4" counter + a gold progress bar header,
+ * Shared chrome for the 3-step paced basics flow (chunky_v3 §8):
+ * back chip + "Kannada basics" + "n/3" counter + a gold progress bar header,
  * a scrolling content body, and a single red Next/Done CTA pinned at the bottom.
  *
  * Both /onboarding/basics and /guide render their step content inside this so

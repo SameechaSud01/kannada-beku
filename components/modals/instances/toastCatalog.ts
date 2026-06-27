@@ -165,6 +165,15 @@ export const Toasts = {
     });
   },
 
+  partUnavailable() {
+    Toast.show({
+      kind: 'error',
+      id: 'lesson.partUnavailable',
+      title: "That part isn't available yet",
+      subtitle: 'Starting the full lesson instead',
+    });
+  },
+
   basicsHomeNudge() {
     Toast.show({
       kind: 'success',

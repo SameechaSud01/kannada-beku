@@ -20,8 +20,18 @@ export default function GameRunnerScreen() {
   }>();
 
   // Image Match's runner is dead (dropped DB table, spec_fix_games_flow Phase B);
-  // treat the route as not-found until the full removal lands.
-  if (!gameParam || !isGameKey(gameParam) || gameParam === 'image-match') {
+  // give a retired-game message rather than the generic not-found so an old
+  // deep link reads clearly until the full removal lands.
+  if (gameParam === 'image-match') {
+    return (
+      <NotFound
+        title="No longer available"
+        message="Image Match has been retired. Try another game."
+        onBack={() => router.replace('/practice')}
+      />
+    );
+  }
+  if (!gameParam || !isGameKey(gameParam)) {
     return <NotFound onBack={() => router.replace('/practice')} />;
   }
 
@@ -42,7 +52,15 @@ export default function GameRunnerScreen() {
   }
 }
 
-function NotFound({ onBack }: { onBack: () => void }) {
+function NotFound({
+  onBack,
+  title = 'Game not found',
+  message,
+}: {
+  onBack: () => void;
+  title?: string;
+  message?: string;
+}) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surface }} edges={['top', 'bottom']}>
       <View
@@ -59,10 +77,23 @@ function NotFound({ onBack }: { onBack: () => void }) {
             fontFamily: Fonts.dmSans.bold,
             fontSize: moderateScale(18),
             color: Colors.onSurface,
+            textAlign: 'center',
           }}
         >
-          Game not found
+          {title}
         </Text>
+        {message ? (
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.medium,
+              fontSize: moderateScale(14),
+              color: Colors.tertiary,
+              textAlign: 'center',
+            }}
+          >
+            {message}
+          </Text>
+        ) : null}
         <Pressable
           onPress={onBack}
           accessibilityRole="button"

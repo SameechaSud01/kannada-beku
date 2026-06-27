@@ -206,7 +206,7 @@ export const useProgressStore = create<ProgressState>()(
           // Streak and lastActiveDate are intentionally not updated here —
           // call updateStreak() separately to keep streak logic in one place.
           if (state.completedLessons.includes(lessonId)) return state;
-          const xpAward = score >= 80 ? 20 : 10;
+          const xpAward = typeof score === 'number' && score >= 80 ? 20 : 10;
           const today = getTodayISO();
           const carryToday = state.todayMinutesDate === today ? state.todayMinutes : 0;
           return {

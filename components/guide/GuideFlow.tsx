@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { GUIDE_STEP_COUNT } from '../../constants/guide';
-import { fetchGuideContent, type GuideContent } from '../../services/api/guide';
+import { fetchGuideContent, FALLBACK_GUIDE, type GuideContent } from '../../services/api/guide';
 import { GuideStepShell } from './GuideStepShell';
 import { GuideLoading } from './GuideLoading';
 import { StepThings } from './StepThings';
@@ -40,7 +40,13 @@ export function GuideFlow({ onExit, onFinish, finishing = false }: GuideFlowProp
 
   useEffect(() => {
     let alive = true;
-    fetchGuideContent().then((g) => {
+    // fetchGuideContent() already falls back to bundled copy on errors, but a
+    // network *stall* never resolves — race a timeout so the loader can't hang
+    // forever during first-run onboarding (issue ISS-08).
+    const timeout = new Promise<GuideContent>((resolve) => {
+      setTimeout(() => resolve(FALLBACK_GUIDE), 6000);
+    });
+    Promise.race([fetchGuideContent(), timeout]).then((g) => {
       if (alive) setGuide(g);
     });
     return () => {

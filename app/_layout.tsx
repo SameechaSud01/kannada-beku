@@ -33,6 +33,7 @@ import { Audio } from 'expo-av';
 import { isKannadaVoiceAvailable } from '../services/audio/deviceTtsAudioService';
 import { ModalHost, useModal } from '../components/modals/ModalHost';
 import { ToastHost } from '../components/modals/ToastHost';
+import { Toasts } from '../components/modals/instances/toastCatalog';
 import { BrandSplash } from '../components/states/BrandSplash';
 import { ErrorState } from '../components/states/ErrorState';
 import { TTSUnavailableDialog } from '../components/modals/instances/TTSUnavailableDialog';
@@ -245,6 +246,7 @@ function AppGate() {
         if (err?.message?.toLowerCase().includes('refresh token')) {
           await supabase.auth.signOut().catch(() => {});
           setSession(null);
+          Toasts.sessionLost();
         }
         setLoading(false);
       });

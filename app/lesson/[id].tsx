@@ -25,6 +25,7 @@ import { PhaseBackButton } from '../../components/lesson/PhaseBackButton';
 import { ExitBackButton } from '../../components/ui/ExitBackButton';
 import { LoadingScreen } from '../../components/states/LoadingScreen';
 import { ErrorState } from '../../components/states/ErrorState';
+import { Toasts } from '../../components/modals/instances/toastCatalog';
 
 export default function LessonScreen() {
   const { id, part } = useLocalSearchParams<{ id: string; part?: string }>();
@@ -50,6 +51,14 @@ export default function LessonScreen() {
   // Part runs skip the lesson-level intro/outro (shown by the chooser + final
   // done card) so they aren't repeated once per sub-part.
   const runner = useLessonRunner(runLesson, { intro: !isPartRun, outro: !isPartRun });
+
+  // A `part` param that matches no section (locked/typo'd deep link) silently
+  // falls back to the whole lesson above — tell the user instead of going quiet.
+  useEffect(() => {
+    if (part && lesson && partIndex < 0) {
+      Toasts.partUnavailable();
+    }
+  }, [part, lesson, partIndex]);
 
   // Record sub-part completion as soon as its run reaches `done` (idempotent).
   useEffect(() => {
