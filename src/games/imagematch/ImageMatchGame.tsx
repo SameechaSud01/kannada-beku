@@ -41,10 +41,7 @@ const ImageMatchGame: React.FC<Props> = ({ lessonNo }) => {
   const next1 = useImageMatchItems(lessonNo + 1);
   const next2 = useImageMatchItems(lessonNo + 2);
 
-  const targetBank = useMemo<VocabItem[]>(
-    () => (target.data ?? []).map(toVocab),
-    [target.data],
-  );
+  const targetBank = useMemo<VocabItem[]>(() => (target.data ?? []).map(toVocab), [target.data]);
 
   const distractorBank = useMemo<VocabItem[]>(() => {
     const all = [
@@ -236,12 +233,29 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
             transform: [{ scale: pressed ? 0.97 : 1 }],
           })}
         >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: Colors.onPrimary }}>
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.bold,
+              fontSize: moderateScale(14),
+              color: Colors.onPrimary,
+            }}
+          >
             Retry
           </Text>
         </Pressable>
-        <Pressable onPress={() => router.back()} style={({ pressed }) => ({ paddingVertical: Spacing.sm, opacity: pressed ? 0.6 : 1 })}>
-          <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary }}>Back</Text>
+        <Pressable
+          onPress={() => router.back()}
+          style={({ pressed }) => ({ paddingVertical: Spacing.sm, opacity: pressed ? 0.6 : 1 })}
+        >
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.regular,
+              fontSize: moderateScale(13),
+              color: Colors.tertiary,
+            }}
+          >
+            Back
+          </Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -295,7 +309,13 @@ function EmptyState({ lessonNo }: { lessonNo: number }) {
             transform: [{ scale: pressed ? 0.97 : 1 }],
           })}
         >
-          <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14), color: Colors.onPrimary }}>
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.bold,
+              fontSize: moderateScale(14),
+              color: Colors.onPrimary,
+            }}
+          >
             Back to lessons
           </Text>
         </Pressable>

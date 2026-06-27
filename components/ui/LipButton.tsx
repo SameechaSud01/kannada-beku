@@ -121,7 +121,13 @@ export function LipButton({
             borderRightWidth: !disabled && v.borderWidth ? v.borderWidth : 0,
             borderColor: !disabled ? v.borderColor : undefined,
             // The lip.
-            borderBottomWidth: hasLip ? (dropped ? DEPTH / 2 : DEPTH) : (!disabled && v.borderWidth ? v.borderWidth : 0),
+            borderBottomWidth: hasLip
+              ? dropped
+                ? DEPTH / 2
+                : DEPTH
+              : !disabled && v.borderWidth
+                ? v.borderWidth
+                : 0,
             borderBottomColor: hasLip ? lipColor : v.borderColor,
             transform: [{ translateY: dropped ? DEPTH / 2 : 0 }],
           },

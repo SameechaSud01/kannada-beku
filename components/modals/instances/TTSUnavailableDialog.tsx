@@ -25,8 +25,8 @@ export function TTSUnavailableDialog({ onOpenSettings, onDismiss }: TTSUnavailab
       </View>
       <DialogTitle>Kannada voice not installed</DialogTitle>
       <DialogBody>
-        Your phone doesn&apos;t have a Kannada text-to-speech voice yet. We can guide you — it&apos;s a
-        one-time download in system settings.
+        Your phone doesn&apos;t have a Kannada text-to-speech voice yet. We can guide you —
+        it&apos;s a one-time download in system settings.
       </DialogBody>
       <View
         style={{

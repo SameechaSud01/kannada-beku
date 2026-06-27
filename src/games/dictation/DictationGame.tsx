@@ -108,7 +108,9 @@ function DictationGameInner({
     );
   });
 
-  useAnswerHaptics(answerState === 'correct' ? 'correct' : answerState === 'unanswered' ? 'unanswered' : 'wrong');
+  useAnswerHaptics(
+    answerState === 'correct' ? 'correct' : answerState === 'unanswered' ? 'unanswered' : 'wrong',
+  );
 
   const [inputText, setInputText] = useState('');
   useEffect(() => {
@@ -144,19 +146,45 @@ function DictationGameInner({
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
-      <ScrollView contentContainerStyle={{ paddingHorizontal: Spacing.lg, paddingVertical: Spacing.lg, gap: Spacing.lg }}>
-
+      <ScrollView
+        contentContainerStyle={{
+          paddingHorizontal: Spacing.lg,
+          paddingVertical: Spacing.lg,
+          gap: Spacing.lg,
+        }}
+      >
         {/* Header */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: Spacing.md }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: Spacing.md,
+          }}
+        >
           <ExitBackButton floating={false} variant="game" />
-          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 14, color: Colors.tertiary, fontVariant: ['tabular-nums'] }}>
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.medium,
+              fontSize: 14,
+              color: Colors.tertiary,
+              fontVariant: ['tabular-nums'],
+            }}
+          >
             Word{' '}
             <Text style={{ fontFamily: Fonts.baloo.bold, color: Colors.onSurface }}>
               {currentIndex + 1}
-            </Text>
-            {' '}/ {totalWords}
+            </Text>{' '}
+            / {totalWords}
           </Text>
-          <Text style={{ fontFamily: Fonts.dmSans.medium, fontSize: 14, color: Colors.tertiary, fontVariant: ['tabular-nums'] }}>
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.medium,
+              fontSize: 14,
+              color: Colors.tertiary,
+              fontVariant: ['tabular-nums'],
+            }}
+          >
             Score{' '}
             <Text style={{ fontFamily: Fonts.baloo.bold, color: Colors.onSurface }}>{score}</Text>
           </Text>
@@ -183,15 +211,35 @@ function DictationGameInner({
             // No audio on this device — reveal the word so the game is still
             // playable as a copy/read exercise (audit H7).
             <>
-              <Text style={{ fontFamily: Fonts.notoSansKannada.bold, fontSize: moderateScale(30), color: Colors.onSurface, lineHeight: moderateScale(44) }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.notoSansKannada.bold,
+                  fontSize: moderateScale(30),
+                  color: Colors.onSurface,
+                  lineHeight: moderateScale(44),
+                }}
+              >
                 {currentWord.kn}
               </Text>
-              <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary, textAlign: 'center' }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.dmSans.regular,
+                  fontSize: moderateScale(13),
+                  color: Colors.tertiary,
+                  textAlign: 'center',
+                }}
+              >
                 Audio isn’t available on this device — type the word shown above.
               </Text>
             </>
           ) : (
-            <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary }}>
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.regular,
+                fontSize: moderateScale(13),
+                color: Colors.tertiary,
+              }}
+            >
               {tileable ? 'Tap the tiles to spell the word' : 'Type what you hear'}
             </Text>
           )}
@@ -218,16 +266,31 @@ function DictationGameInner({
           />
         )}
 
-        <FeedbackBanner state={answerState === 'correct' ? 'correct' : answered ? 'wrong' : 'unanswered'} streak={streak} />
+        <FeedbackBanner
+          state={answerState === 'correct' ? 'correct' : answered ? 'wrong' : 'unanswered'}
+          streak={streak}
+        />
 
         {/* On a miss, reveal the correct word so the learner still learns it —
             English transliteration leads, Kannada script as a small reference. */}
         {answered && answerState !== 'correct' && (
           <View style={{ alignItems: 'center', gap: moderateScale(2) }}>
-            <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(22), color: Colors.onSurface }}>
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.bold,
+                fontSize: moderateScale(22),
+                color: Colors.onSurface,
+              }}
+            >
               {currentWord.phonetic || currentWord.accepted[0] || currentWord.kn}
             </Text>
-            <Text style={{ fontFamily: Fonts.notoSansKannada.regular, fontSize: moderateScale(15), color: Colors.tertiary }}>
+            <Text
+              style={{
+                fontFamily: Fonts.notoSansKannada.regular,
+                fontSize: moderateScale(15),
+                color: Colors.tertiary,
+              }}
+            >
               {currentWord.kn}
             </Text>
           </View>
@@ -250,10 +313,7 @@ function DictationGameInner({
         )}
 
         {/* Skip */}
-        {!answered && (
-          <LipButton label="Skip this word" variant="tertiary" onPress={skipWord} />
-        )}
-
+        {!answered && <LipButton label="Skip this word" variant="tertiary" onPress={skipWord} />}
       </ScrollView>
     </SafeAreaView>
   );
@@ -261,7 +321,10 @@ function DictationGameInner({
 
 function CenteredLoading() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      edges={['top', 'bottom']}
+    >
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
@@ -272,16 +335,47 @@ function CenteredLoading() {
 function ErrorState({ onRetry }: { onRetry: () => void }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.md }}>
-        <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      edges={['top', 'bottom']}
+    >
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: Spacing.xxl,
+          gap: Spacing.md,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(18),
+            color: Colors.onSurface,
+            textAlign: 'center',
+          }}
+        >
           Couldn&apos;t load this round
         </Text>
-        <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(14), color: Colors.tertiary, textAlign: 'center', marginBottom: Spacing.md }}>
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.regular,
+            fontSize: moderateScale(14),
+            color: Colors.tertiary,
+            textAlign: 'center',
+            marginBottom: Spacing.md,
+          }}
+        >
           Check your connection and try again.
         </Text>
         <LipButton label="Retry" variant="primary" fullWidth={false} onPress={onRetry} />
-        <LipButton label="Back" variant="tertiary" fullWidth={false} onPress={() => router.back()} />
+        <LipButton
+          label="Back"
+          variant="tertiary"
+          fullWidth={false}
+          onPress={() => router.back()}
+        />
       </View>
     </SafeAreaView>
   );
@@ -290,15 +384,47 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
 function EmptyState({ lessonNo }: { lessonNo: number }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.md }}>
-        <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      edges={['top', 'bottom']}
+    >
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: Spacing.xxl,
+          gap: Spacing.md,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(18),
+            color: Colors.onSurface,
+            textAlign: 'center',
+          }}
+        >
           Lesson {lessonNo} — coming soon
         </Text>
-        <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(14), color: Colors.tertiary, textAlign: 'center', lineHeight: moderateScale(20), marginBottom: Spacing.md }}>
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.regular,
+            fontSize: moderateScale(14),
+            color: Colors.tertiary,
+            textAlign: 'center',
+            lineHeight: moderateScale(20),
+            marginBottom: Spacing.md,
+          }}
+        >
           No dictation words have been authored for this lesson yet. Try an earlier lesson.
         </Text>
-        <LipButton label="Back to lessons" variant="primary" fullWidth={false} onPress={() => router.back()} />
+        <LipButton
+          label="Back to lessons"
+          variant="primary"
+          fullWidth={false}
+          onPress={() => router.back()}
+        />
       </View>
     </SafeAreaView>
   );

@@ -60,7 +60,7 @@ export default function ResetPasswordScreen() {
     // expo-router consumes the inbound deep link and exposes its query string
     // via useLocalSearchParams (Linking.useURL is often null here). Parse the
     // raw URL too as a cold-start fallback.
-    const fromUrl = url ? Linking.parse(url).queryParams ?? {} : {};
+    const fromUrl = url ? (Linking.parse(url).queryParams ?? {}) : {};
     const pick = (key: string): string | null => {
       const v = (params as Record<string, unknown>)[key] ?? fromUrl[key];
       return typeof v === 'string' ? v : null;

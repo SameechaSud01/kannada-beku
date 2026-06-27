@@ -68,15 +68,15 @@ function mapRow(row: Row, lessonNo: number): OppositesItem {
   };
 }
 
-export async function fetchOppositesItemsByLessonNo(
-  lessonNo: number,
-): Promise<OppositesItem[]> {
+export async function fetchOppositesItemsByLessonNo(lessonNo: number): Promise<OppositesItem[]> {
   const lessonId = await lessonIdByNo(lessonNo);
   if (!lessonId) return [];
 
   const { data, error } = await supabase
     .from('opposites_items')
-    .select('id, lesson_id, sort_order, word, opposite, transliteration, meaning, section, options_json')
+    .select(
+      'id, lesson_id, sort_order, word, opposite, transliteration, meaning, section, options_json',
+    )
     .eq('lesson_id', lessonId)
     .gt('sort_order', 0)
     .order('sort_order', { ascending: true });
@@ -89,10 +89,7 @@ export async function fetchOppositesItemsByLessonNo(
  * UPSERT into opposites_progress via SECURITY INVOKER RPC.
  * OR-merges is_correct (personal-best); increments attempts; updates last_played.
  */
-export async function recordOppositesAttempt(
-  itemId: string,
-  isCorrect: boolean,
-): Promise<void> {
+export async function recordOppositesAttempt(itemId: string, isCorrect: boolean): Promise<void> {
   const { error } = await supabase.rpc('record_opposites_attempt', {
     p_item_id: itemId,
     p_is_correct: isCorrect,

@@ -6,10 +6,10 @@ import ImageTile from './ImageTile';
 import type { Tile } from '../hooks/useImageMatchBoard';
 
 type Props = {
-  wordColumn:  Tile[];
+  wordColumn: Tile[];
   imageColumn: Tile[];
-  onWordTap:   (id: string) => void;
-  onImageTap:  (id: string) => void;
+  onWordTap: (id: string) => void;
+  onImageTap: (id: string) => void;
 };
 
 const MatchBoard: React.FC<Props> = ({ wordColumn, imageColumn, onWordTap, onImageTap }) => (

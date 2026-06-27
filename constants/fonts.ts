@@ -34,15 +34,15 @@ export const Fonts = {
  * components may pick a different size within the documented range when needed.
  */
 export const TypeScale = {
-  heroTitle:   { fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(30) },
+  heroTitle: { fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(30) },
   screenTitle: { fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(24) },
-  cardHeading: { fontFamily: Fonts.baloo.bold,      fontSize: moderateScale(18) },
-  bigNumber:   { fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(28) },
-  buttonLabel: { fontFamily: Fonts.baloo.bold,      fontSize: moderateScale(16.5) },
-  body:        { fontFamily: Fonts.dmSans.medium,   fontSize: moderateScale(14) },
-  eyebrow:     { fontFamily: Fonts.dmSans.bold,     fontSize: moderateScale(11), letterSpacing: 1.4 },
+  cardHeading: { fontFamily: Fonts.baloo.bold, fontSize: moderateScale(18) },
+  bigNumber: { fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(28) },
+  buttonLabel: { fontFamily: Fonts.baloo.bold, fontSize: moderateScale(16.5) },
+  body: { fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(14) },
+  eyebrow: { fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(11), letterSpacing: 1.4 },
   // Transliteration: brand sans (DM Sans), bold + full-strength foreground —
   // distinguished from the muted English gloss by weight + colour, not a separate
   // font (DESIGN.md Amendment A re-sign 2026-06-06; spec_ui_refinement.md Item 1).
-  translit:    { fontFamily: Fonts.dmSans.bold,      fontSize: moderateScale(20) },
+  translit: { fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(20) },
 } as const;

@@ -113,7 +113,7 @@ interface ProgressState {
     lessonId: string,
     score: number,
     phrasesLearned: number,
-    minutesPracticed: number
+    minutesPracticed: number,
   ) => void;
   updateStreak: () => void;
   recordActivity: () => void;
@@ -314,6 +314,6 @@ export const useProgressStore = create<ProgressState>()(
         (state ?? useProgressStore.getState()).setHydrated(true);
         if (error) console.warn('[progress] rehydrate failed', error);
       },
-    }
-  )
+    },
+  ),
 );

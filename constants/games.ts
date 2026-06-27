@@ -1,9 +1,4 @@
-export type GameKey =
-  | 'quiz'
-  | 'image-match'
-  | 'dictation'
-  | 'conversations'
-  | 'opposites';
+export type GameKey = 'quiz' | 'image-match' | 'dictation' | 'conversations' | 'opposites';
 
 export type Game = {
   key: GameKey;

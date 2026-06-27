@@ -70,13 +70,31 @@ const ResultScreen: React.FC<Props> = ({
       }}
     >
       <Rangoli ratio={ratioOf(score, total)} />
-      <Text style={{ fontSize: moderateScale(22), fontFamily: Fonts.baloo.extrabold, color: Colors.onSurface }}>
+      <Text
+        style={{
+          fontSize: moderateScale(22),
+          fontFamily: Fonts.baloo.extrabold,
+          color: Colors.onSurface,
+        }}
+      >
         {getTitle(score, total)}
       </Text>
-      <Text style={{ fontSize: moderateScale(52), fontFamily: Fonts.baloo.extrabold, color: Colors.primaryContainer }}>
+      <Text
+        style={{
+          fontSize: moderateScale(52),
+          fontFamily: Fonts.baloo.extrabold,
+          color: Colors.primaryContainer,
+        }}
+      >
         {score}
       </Text>
-      <Text style={{ fontSize: moderateScale(14), color: Colors.tertiary, fontFamily: Fonts.dmSans.regular }}>
+      <Text
+        style={{
+          fontSize: moderateScale(14),
+          color: Colors.tertiary,
+          fontFamily: Fonts.dmSans.regular,
+        }}
+      >
         {subline ?? `out of ${total} correct`}
       </Text>
       {bestStreak && bestStreak >= 2 ? (
@@ -92,7 +110,13 @@ const ResultScreen: React.FC<Props> = ({
           }}
         >
           <Icons.streak size={moderateScale(14)} color={Colors.onSecondaryContainer} />
-          <Text style={{ fontSize: moderateScale(13), fontFamily: Fonts.dmSans.bold, color: Colors.onSecondaryContainer }}>
+          <Text
+            style={{
+              fontSize: moderateScale(13),
+              fontFamily: Fonts.dmSans.bold,
+              color: Colors.onSecondaryContainer,
+            }}
+          >
             Best streak {bestStreak}
           </Text>
         </View>

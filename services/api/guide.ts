@@ -92,8 +92,8 @@ export async function fetchGuideContent(): Promise<GuideContent> {
 
     if (error) throw error;
 
-    const raw = (data?.content_json as { reference?: { guide?: unknown } } | null)
-      ?.reference?.guide;
+    const raw = (data?.content_json as { reference?: { guide?: unknown } } | null)?.reference
+      ?.guide;
     const parsed = parseGuide(raw);
 
     if (!parsed) {

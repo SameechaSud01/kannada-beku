@@ -23,7 +23,12 @@ export const PLANNED_LESSON_SLOTS: PlannedLessonSlot[] = [
   { slot: 5, title: 'Easy verbs', subtitle: 'Come, eat, laugh', charPlaceholder: 'ಬ' },
   { slot: 6, title: 'Questions', subtitle: 'Who, what, where', charPlaceholder: 'ಯಾ' },
   { slot: 7, title: 'Hard verbs', subtitle: 'See, do, play', charPlaceholder: 'ನೋ' },
-  { slot: 8, title: 'Putting it together', subtitle: "Combining what you've learned", charPlaceholder: 'ಸ' },
+  {
+    slot: 8,
+    title: 'Putting it together',
+    subtitle: "Combining what you've learned",
+    charPlaceholder: 'ಸ',
+  },
 ];
 
 export const TOTAL_LESSON_SLOTS = PLANNED_LESSON_SLOTS.length;

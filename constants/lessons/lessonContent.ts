@@ -19,13 +19,7 @@
  * Lesson 0 (Kannada basics) is NOT here — it has a different content shape and
  * its own screen, and keeps loading from the DB.
  */
-import {
-  flattenSections,
-  type Lesson,
-  type LessonSection,
-  type Phrase,
-  type Word,
-} from './types';
+import { flattenSections, type Lesson, type LessonSection, type Phrase, type Word } from './types';
 
 const w = (kannada: string, transliteration: string, english: string): Word => ({
   kannada,
@@ -39,12 +33,12 @@ const p = (kannada: string, transliteration: string, english: string): Phrase =>
   english,
 });
 
-const sec = (
-  key: string,
-  label: string,
-  words: Word[],
-  phrases: Phrase[],
-): LessonSection => ({ key, label, words, phrases });
+const sec = (key: string, label: string, words: Word[], phrases: Phrase[]): LessonSection => ({
+  key,
+  label,
+  words,
+  phrases,
+});
 
 type AuthoredLesson = Omit<Lesson, 'words' | 'phrases'>;
 
@@ -150,10 +144,7 @@ const AUTHORED: AuthoredLesson[] = [
       sec(
         '2c',
         'Name & home',
-        [
-          w('ಹೆಸರು', 'hesaru', 'Name'),
-          w('ಮನೆ', 'mane', 'House / home'),
-        ],
+        [w('ಹೆಸರು', 'hesaru', 'Name'), w('ಮನೆ', 'mane', 'House / home')],
         [
           p('ನಿಮ್ಮ ಹೆಸರು ಏನು?', 'nimma hesaru ēnu?', 'What is your name? (respectful)'),
           p('ನಿನ್ನ ಹೆಸರು ಏನು?', 'ninna hesaru ēnu?', 'What is your name? (neutral)'),
@@ -244,8 +235,7 @@ const AUTHORED: AuthoredLesson[] = [
     lessonNo: 4,
     title: 'Pointing',
     slug: 'pointing',
-    situation:
-      'You need to point something out, ask where something is, or describe a location.',
+    situation: 'You need to point something out, ask where something is, or describe a location.',
     realWorldPrompt:
       'Next time you need to point something out, use "illi" and "alli" instead of just pointing silently.',
     sections: [
@@ -300,10 +290,7 @@ const AUTHORED: AuthoredLesson[] = [
           w('ನೋಡು', 'nōḍu', 'See / watch (neutral)'),
           w('ನೋಡಿ', 'nōḍi', 'See / watch (respectful)'),
         ],
-        [
-          p('ಇದು ನೋಡಿ', 'idu nōḍi', 'Look at this'),
-          p('ಬನ್ನಿ', 'banni', 'Please come'),
-        ],
+        [p('ಇದು ನೋಡಿ', 'idu nōḍi', 'Look at this'), p('ಬನ್ನಿ', 'banni', 'Please come')],
       ),
       sec(
         '5b',
@@ -355,8 +342,7 @@ const AUTHORED: AuthoredLesson[] = [
     lessonNo: 6,
     title: 'Questions',
     slug: 'questions',
-    situation:
-      'You need to ask a question — about a person, a place, a thing, or a situation.',
+    situation: 'You need to ask a question — about a person, a place, a thing, or a situation.',
     realWorldPrompt:
       'Next time you want to ask someone something, open with the Kannada question word — "yāru", "ēnu", "elli" — even if the rest comes out in English.',
     sections: [
@@ -421,8 +407,7 @@ const AUTHORED: AuthoredLesson[] = [
     lessonNo: 7,
     title: 'Hard verbs',
     slug: 'hard-verbs',
-    situation:
-      'More actions — reading, writing, working, sending. These come up every day.',
+    situation: 'More actions — reading, writing, working, sending. These come up every day.',
     realWorldPrompt:
       'Next time someone asks what you are doing, answer in Kannada — "nānu kelasa māḍuttiddēne" or "nānu ōduttiddēne".',
     registerNote: REGISTER_NOTE,
@@ -518,10 +503,7 @@ const AUTHORED: AuthoredLesson[] = [
       sec(
         '8b',
         'Shopping & negotiating',
-        [
-          w('ಸರಿ', 'sari', 'Okay'),
-          w('ಧನ್ಯವಾದಗಳು', 'dhanyavādagaḷu', 'Thank you'),
-        ],
+        [w('ಸರಿ', 'sari', 'Okay'), w('ಧನ್ಯವಾದಗಳು', 'dhanyavādagaḷu', 'Thank you')],
         [
           p('ನಿಮಗೆ ಇದು ಬೇಕಾ?', 'nimage idu bēkā?', 'Do you want this?'),
           p('ಹೌದು, ನನಗೆ ಬೇಕು', 'haudu, nanage bēku', 'Yes, I want it'),
@@ -534,10 +516,7 @@ const AUTHORED: AuthoredLesson[] = [
       sec(
         '8c',
         'Getting around & wrapping up',
-        [
-          w('ನಿಧಾನವಾಗಿ', 'nidhānavāgi', 'Slowly'),
-          w('ಮತ್ತೆ', 'matte', 'Again / later'),
-        ],
+        [w('ನಿಧಾನವಾಗಿ', 'nidhānavāgi', 'Slowly'), w('ಮತ್ತೆ', 'matte', 'Again / later')],
         [
           p('ಅವನು ಇಲ್ಲಿ ಇದ್ದಾನೆ', 'avanu illi iddāne', 'He is here'),
           p('ಅವಳು ಅಲ್ಲಿ ಇದ್ದಾಳೆ', 'avaḷu alli iddāḷe', 'She is there'),

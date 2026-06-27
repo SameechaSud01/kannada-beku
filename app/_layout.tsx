@@ -5,7 +5,12 @@ import { Slot, useRouter, useSegments, type ErrorBoundaryProps } from 'expo-rout
 import * as Sentry from '@sentry/react-native';
 import { ThemeProvider, DefaultTheme } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
-import { useFonts, DMSans_400Regular, DMSans_500Medium, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
+import {
+  useFonts,
+  DMSans_400Regular,
+  DMSans_500Medium,
+  DMSans_700Bold,
+} from '@expo-google-fonts/dm-sans';
 import {
   NotoSansKannada_400Regular,
   NotoSansKannada_500Medium,
@@ -37,10 +42,7 @@ import { Toasts } from '../components/modals/instances/toastCatalog';
 import { BrandSplash } from '../components/states/BrandSplash';
 import { ErrorState } from '../components/states/ErrorState';
 import { TTSUnavailableDialog } from '../components/modals/instances/TTSUnavailableDialog';
-import {
-  scheduleDailyReminder,
-  hasNotificationPermission,
-} from '../lib/reminders';
+import { scheduleDailyReminder, hasNotificationPermission } from '../lib/reminders';
 import * as Linking from 'expo-linking';
 import { Colors } from '../constants/colors';
 
@@ -123,9 +125,7 @@ async function hydrateCompletions(userId: string) {
     }),
   );
 
-  useProgressStore
-    .getState()
-    .hydrateFromServerCompletions([...serverSlugs, ...localOnly]);
+  useProgressStore.getState().hydrateFromServerCompletions([...serverSlugs, ...localOnly]);
 }
 
 /**
@@ -173,7 +173,9 @@ function AppGate() {
   const progressHydrated = useProgressStore((s) => s.isHydrated);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setLoading(false);
 
@@ -237,7 +239,8 @@ function AppGate() {
     // onAuthStateChange normally fires INITIAL_SESSION and clears loading, but
     // don't rely on it — release the boot gate here too, on both the success
     // and failure paths, or the app can hang on the splash forever (audit B1).
-    supabase.auth.getSession()
+    supabase.auth
+      .getSession()
       .then(({ data }) => {
         setSession(data.session ?? null);
         setLoading(false);
@@ -305,7 +308,15 @@ function AppGate() {
     } else if (session && hasCompletedOnboarding && inOnboarding) {
       router.replace('/(tabs)');
     }
-  }, [session, authLoading, segments, hasCompletedOnboarding, storedUserId, userHydrated, progressHydrated]);
+  }, [
+    session,
+    authLoading,
+    segments,
+    hasCompletedOnboarding,
+    storedUserId,
+    userHydrated,
+    progressHydrated,
+  ]);
 
   // Animated brand splash (Splash C) covers the boot hydration window — the gap
   // between the native splash hiding (fonts ready) and auth/stores resolving.
@@ -330,7 +341,10 @@ function AppGate() {
         <Slot />
       </ThemeProvider>
       {splashVisible ? (
-        <Animated.View exiting={FadeOut.duration(350)} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}>
+        <Animated.View
+          exiting={FadeOut.duration(350)}
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}
+        >
           <BrandSplash />
         </Animated.View>
       ) : null}

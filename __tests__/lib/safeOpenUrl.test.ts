@@ -5,12 +5,12 @@
  * (http:, javascript:, file:, mailto:, null/undefined/non-string) is dropped.
  */
 
+import * as Linking from 'expo-linking';
+import { safeOpenUrl } from '../../lib/safeOpenUrl';
+
 jest.mock('expo-linking', () => ({
   openURL: jest.fn(() => Promise.resolve()),
 }));
-
-import * as Linking from 'expo-linking';
-import { safeOpenUrl } from '../../lib/safeOpenUrl';
 
 const openURL = Linking.openURL as jest.Mock;
 

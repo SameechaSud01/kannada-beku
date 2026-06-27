@@ -25,7 +25,11 @@ const GLYPHS = ['ಕ', 'ನ', 'ಡ', 'ಬಾ', 'ಮ', 'ಹ', 'ಸ', 'ಲ', 'ಗ'
  *
  * Default motif is Rangoli (a fine grid of gold dots). Global on by default.
  */
-export function Watermark({ motif = 'rangoli', on = true, color = Colors.secondaryContainer }: WatermarkProps) {
+export function Watermark({
+  motif = 'rangoli',
+  on = true,
+  color = Colors.secondaryContainer,
+}: WatermarkProps) {
   // Deterministic scatter for the glyph motif (stable across renders).
   const glyphs = useMemo(() => {
     let s = 11;
@@ -46,7 +50,10 @@ export function Watermark({ motif = 'rangoli', on = true, color = Colors.seconda
 
   if (motif === 'glyphs') {
     return (
-      <View pointerEvents="none" style={[StyleSheet.absoluteFill, { overflow: 'hidden', opacity: 0.05 }]}>
+      <View
+        pointerEvents="none"
+        style={[StyleSheet.absoluteFill, { overflow: 'hidden', opacity: 0.05 }]}
+      >
         {glyphs.map((it, i) => (
           <Text
             key={i}
@@ -70,10 +77,21 @@ export function Watermark({ motif = 'rangoli', on = true, color = Colors.seconda
   if (motif === 'rays') {
     // Soft concentric arcs emanating from the top-right corner.
     return (
-      <View pointerEvents="none" style={[StyleSheet.absoluteFill, { overflow: 'hidden', opacity: 0.08 }]}>
+      <View
+        pointerEvents="none"
+        style={[StyleSheet.absoluteFill, { overflow: 'hidden', opacity: 0.08 }]}
+      >
         <Svg width="100%" height="100%">
           {[60, 120, 180, 240, 300, 360, 420].map((radius) => (
-            <Circle key={radius} cx="100%" cy={0} r={radius} stroke={color} strokeWidth={1.5} fill="none" />
+            <Circle
+              key={radius}
+              cx="100%"
+              cy={0}
+              r={radius}
+              stroke={color}
+              strokeWidth={1.5}
+              fill="none"
+            />
           ))}
         </Svg>
       </View>

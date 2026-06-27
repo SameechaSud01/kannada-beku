@@ -74,22 +74,19 @@ export function ModalHost({ children }: { children: ReactNode }) {
     setEntry((current) => (current?.kind === 'sheet' ? null : current));
   }, []);
 
-  const show = useCallback(
-    <P,>(args: ShowArgs<P>) => {
-      idRef.current += 1;
-      const next: ModalEntry = {
-        id: idRef.current,
-        kind: args.kind,
-        Component: args.component as ComponentType<unknown>,
-        props: args.props ?? {},
-        dim: args.dim,
-        blockBackdropDismiss: args.blockBackdropDismiss,
-        blockHardwareBack: args.blockHardwareBack,
-      };
-      setEntry(next);
-    },
-    [],
-  );
+  const show = useCallback(<P,>(args: ShowArgs<P>) => {
+    idRef.current += 1;
+    const next: ModalEntry = {
+      id: idRef.current,
+      kind: args.kind,
+      Component: args.component as ComponentType<unknown>,
+      props: args.props ?? {},
+      dim: args.dim,
+      blockBackdropDismiss: args.blockBackdropDismiss,
+      blockHardwareBack: args.blockHardwareBack,
+    };
+    setEntry(next);
+  }, []);
 
   // Android hardware back: dismisses non-destructive modals; destructive blocks.
   useEffect(() => {
@@ -102,10 +99,7 @@ export function ModalHost({ children }: { children: ReactNode }) {
     return () => sub.remove();
   }, [entry, dismiss]);
 
-  const value = useMemo<ModalContextValue>(
-    () => ({ show, dismiss }),
-    [show, dismiss],
-  );
+  const value = useMemo<ModalContextValue>(() => ({ show, dismiss }), [show, dismiss]);
 
   const renderActive = () => {
     if (!entry) return null;
@@ -115,10 +109,7 @@ export function ModalHost({ children }: { children: ReactNode }) {
     if (entry.kind === 'dialog') {
       return (
         <>
-          <Backdrop
-            dim={dim}
-            onTap={entry.blockBackdropDismiss ? undefined : dismiss}
-          />
+          <Backdrop dim={dim} onTap={entry.blockBackdropDismiss ? undefined : dismiss} />
           <Dialog destructive={entry.blockBackdropDismiss}>
             {/* @ts-expect-error props are validated at the show() call site */}
             <Comp {...entry.props} />
@@ -151,16 +142,10 @@ export function ModalHost({ children }: { children: ReactNode }) {
 
   return (
     <ModalContext.Provider value={value}>
-      <View
-        style={{ flex: 1 }}
-        importantForAccessibility={entry ? 'no-hide-descendants' : 'auto'}
-      >
+      <View style={{ flex: 1 }} importantForAccessibility={entry ? 'no-hide-descendants' : 'auto'}>
         {children}
       </View>
-      <View
-        pointerEvents={entry ? 'auto' : 'none'}
-        style={StyleSheet.absoluteFill}
-      >
+      <View pointerEvents={entry ? 'auto' : 'none'} style={StyleSheet.absoluteFill}>
         {renderActive()}
       </View>
     </ModalContext.Provider>

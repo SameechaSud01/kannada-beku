@@ -2,6 +2,8 @@ import { renderHook, act } from '@testing-library/react-native';
 import { useDictationGame } from '../../src/games/dictation/hooks/useDictationGame';
 import type { DictationWord } from '../../src/games/dictation/types';
 
+import { stopPlayback } from '../../src/games/dictation/utils/audioPlayer';
+
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 );
@@ -10,8 +12,6 @@ jest.mock('../../src/games/dictation/utils/audioPlayer', () => ({
   playWord: jest.fn().mockResolvedValue(undefined),
   stopPlayback: jest.fn(),
 }));
-
-import { stopPlayback } from '../../src/games/dictation/utils/audioPlayer';
 
 // Dictation is always answered by typing the English transliteration — the
 // Kannada syllable-tile builder was removed, so `tileable` is always false and

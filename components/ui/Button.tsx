@@ -21,10 +21,7 @@ export interface ButtonProps {
   destructive?: boolean;
 }
 
-const variantColors: Record<
-  ButtonVariant,
-  { bg: string; fg: string; pressedBg: string }
-> = {
+const variantColors: Record<ButtonVariant, { bg: string; fg: string; pressedBg: string }> = {
   primary: {
     bg: Colors.primary,
     fg: Colors.onPrimary,
@@ -64,9 +61,7 @@ export function Button({
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityHint={
-        destructive
-          ? `${accessibilityHint ?? ''} Destructive.`.trim()
-          : accessibilityHint
+        destructive ? `${accessibilityHint ?? ''} Destructive.`.trim() : accessibilityHint
       }
       accessibilityState={{ disabled: isInactive, busy: loading }}
       style={({ pressed }) => ({

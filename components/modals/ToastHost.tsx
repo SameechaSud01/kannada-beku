@@ -70,10 +70,7 @@ export function ToastHost({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const value = useMemo<ToastContextValue>(
-    () => ({ show, dismiss }),
-    [show, dismiss],
-  );
+  const value = useMemo<ToastContextValue>(() => ({ show, dismiss }), [show, dismiss]);
 
   useEffect(() => {
     bridge = value;
@@ -87,11 +84,7 @@ export function ToastHost({ children }: { children: ReactNode }) {
       {children}
       <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
         {entry ? (
-          <ToastView
-            key={entry.uid}
-            entry={entry}
-            onComplete={() => setEntry(null)}
-          />
+          <ToastView key={entry.uid} entry={entry} onComplete={() => setEntry(null)} />
         ) : null}
       </View>
     </ToastContext.Provider>

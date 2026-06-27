@@ -66,7 +66,11 @@ export function ProgressRing({
 
   return (
     <View style={{ width: dim, height: dim, alignItems: 'center', justifyContent: 'center' }}>
-      <Svg width={dim} height={dim} style={{ position: 'absolute', transform: [{ rotate: '-90deg' }] }}>
+      <Svg
+        width={dim}
+        height={dim}
+        style={{ position: 'absolute', transform: [{ rotate: '-90deg' }] }}
+      >
         <Circle cx={dim / 2} cy={dim / 2} r={r} stroke={trackColor} strokeWidth={sw} fill="none" />
         <AnimatedCircle
           cx={dim / 2}
@@ -122,12 +126,25 @@ export function MultiProgressRing({
 
   return (
     <View style={{ width: dim, height: dim, alignItems: 'center', justifyContent: 'center' }}>
-      <Svg width={dim} height={dim} style={{ position: 'absolute', transform: [{ rotate: '-90deg' }] }}>
+      <Svg
+        width={dim}
+        height={dim}
+        style={{ position: 'absolute', transform: [{ rotate: '-90deg' }] }}
+      >
         {rings.map((ring, i) => {
           const r = (dim - sw) / 2 - i * (sw + g);
           if (r <= 0) return null;
           return (
-            <MultiRing key={i} index={i} cx={dim / 2} cy={dim / 2} r={r} sw={sw} ring={ring} animated={animated} />
+            <MultiRing
+              key={i}
+              index={i}
+              cx={dim / 2}
+              cy={dim / 2}
+              r={r}
+              sw={sw}
+              ring={ring}
+              animated={animated}
+            />
           );
         })}
       </Svg>

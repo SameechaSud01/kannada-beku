@@ -45,8 +45,9 @@ export default function HelpScreen() {
 
   function openBugReport() {
     if (!SUPPORT_EMAIL) return;
-    Linking.openURL(buildMailto(SUPPORT_EMAIL, 'Bug report — Kannada Beku', bugReportBody()))
-      .catch(() => undefined);
+    Linking.openURL(buildMailto(SUPPORT_EMAIL, 'Bug report — Kannada Beku', bugReportBody())).catch(
+      () => undefined,
+    );
   }
 
   return (
@@ -141,8 +142,7 @@ function Row({ label, onPress, idx }: { label: string; onPress: () => void; idx:
         paddingVertical: moderateScale(14),
         paddingHorizontal: Spacing.lg,
         minHeight: moderateScale(56),
-        backgroundColor:
-          idx % 2 === 0 ? Colors.surfaceContainerLow : Colors.surfaceContainerHigh,
+        backgroundColor: idx % 2 === 0 ? Colors.surfaceContainerLow : Colors.surfaceContainerHigh,
         opacity: pressed ? 0.7 : 1,
       })}
     >

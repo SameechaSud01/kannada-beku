@@ -46,14 +46,25 @@ function TabEmpty({
       {pageTitle ? (
         <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg }}>
           <Text
-            style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(32), color: Colors.onSurface, letterSpacing: -0.5, lineHeight: moderateScale(45) }}
+            style={{
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(32),
+              color: Colors.onSurface,
+              letterSpacing: -0.5,
+              lineHeight: moderateScale(45),
+            }}
             maxFontSizeMultiplier={1.2}
           >
             {pageTitle}
           </Text>
           {pageSub ? (
             <Text
-              style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(15), color: Colors.tertiary, marginTop: moderateScale(2) }}
+              style={{
+                fontFamily: Fonts.dmSans.medium,
+                fontSize: moderateScale(15),
+                color: Colors.tertiary,
+                marginTop: moderateScale(2),
+              }}
               maxFontSizeMultiplier={1.4}
             >
               {pageSub}
@@ -71,10 +82,20 @@ function TabEmpty({
           paddingBottom: insets.bottom + moderateScale(70),
         }}
       >
-        <Rise reduced={reduced} delay={0}>{well}</Rise>
+        <Rise reduced={reduced} delay={0}>
+          {well}
+        </Rise>
         <Rise reduced={reduced} delay={80}>
           <Text
-            style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(24), lineHeight: moderateScale(28), letterSpacing: -0.3, color: Colors.onSurface, marginTop: Spacing.xxl, textAlign: 'center' }}
+            style={{
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(24),
+              lineHeight: moderateScale(28),
+              letterSpacing: -0.3,
+              color: Colors.onSurface,
+              marginTop: Spacing.xxl,
+              textAlign: 'center',
+            }}
             maxFontSizeMultiplier={1.3}
           >
             {title}
@@ -82,13 +103,25 @@ function TabEmpty({
         </Rise>
         <Rise reduced={reduced} delay={140}>
           <Text
-            style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(14.5), lineHeight: moderateScale(22), color: Colors.tertiary, marginTop: Spacing.md, maxWidth: moderateScale(290), textAlign: 'center' }}
+            style={{
+              fontFamily: Fonts.dmSans.medium,
+              fontSize: moderateScale(14.5),
+              lineHeight: moderateScale(22),
+              color: Colors.tertiary,
+              marginTop: Spacing.md,
+              maxWidth: moderateScale(290),
+              textAlign: 'center',
+            }}
             maxFontSizeMultiplier={1.4}
           >
             {body}
           </Text>
         </Rise>
-        <Rise reduced={reduced} delay={220} style={{ alignSelf: 'stretch', marginTop: moderateScale(26) }}>
+        <Rise
+          reduced={reduced}
+          delay={220}
+          style={{ alignSelf: 'stretch', marginTop: moderateScale(26) }}
+        >
           {action}
         </Rise>
       </View>
@@ -96,17 +129,36 @@ function TabEmpty({
   );
 }
 
-function Rise({ children, delay, reduced, style }: { children: ReactNode; delay: number; reduced: boolean; style?: object }) {
+function Rise({
+  children,
+  delay,
+  reduced,
+  style,
+}: {
+  children: ReactNode;
+  delay: number;
+  reduced: boolean;
+  style?: object;
+}) {
   if (reduced) return <View style={[{ alignItems: 'center' }, style]}>{children}</View>;
   return (
-    <Animated.View entering={FadeInDown.delay(delay).duration(440)} style={[{ alignItems: 'center' }, style]}>
+    <Animated.View
+      entering={FadeInDown.delay(delay).duration(440)}
+      style={[{ alignItems: 'center' }, style]}
+    >
       {children}
     </Animated.View>
   );
 }
 
 /** Games tab — nothing unlocked yet (locked = warning orange). */
-export function GamesLockedEmpty({ streak = 0, onStart }: { streak?: number; onStart: () => void }) {
+export function GamesLockedEmpty({
+  streak = 0,
+  onStart,
+}: {
+  streak?: number;
+  onStart: () => void;
+}) {
   return (
     <TabEmpty
       streak={streak}
@@ -119,7 +171,15 @@ export function GamesLockedEmpty({ streak = 0, onStart }: { streak?: number; onS
       }
       title="Games unlock as you learn"
       body="Finish your first lesson and Quick Quiz, Dictation and more open up — each one plays only with phrases you already know."
-      action={<LipButton label="Start Lesson 1" variant="primary" icon={Icons.play} iconLeading onPress={onStart} />}
+      action={
+        <LipButton
+          label="Start Lesson 1"
+          variant="primary"
+          icon={Icons.play}
+          iconLeading
+          onPress={onStart}
+        />
+      }
     />
   );
 }

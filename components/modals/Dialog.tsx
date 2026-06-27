@@ -1,10 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import {
-  AccessibilityInfo,
-  Animated,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import { AccessibilityInfo, Animated, useWindowDimensions, View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { Radius } from '../../constants/spacing';
 import { Shadows } from '../../constants/shadows';

@@ -13,7 +13,11 @@ import ConversationGame from '@/src/games/conversations';
 
 export default function GameRunnerScreen() {
   const router = useRouter();
-  const { game: gameParam, n: nParam, part } = useLocalSearchParams<{
+  const {
+    game: gameParam,
+    n: nParam,
+    part,
+  } = useLocalSearchParams<{
     game: string;
     n: string;
     part?: string;

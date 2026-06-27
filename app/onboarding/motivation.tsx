@@ -93,7 +93,11 @@ export default function MotivationScreen() {
 
         <ScrollView
           style={{ flex: 1 }}
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: Spacing.xl }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            paddingVertical: Spacing.xl,
+          }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
@@ -158,7 +162,13 @@ export default function MotivationScreen() {
             <LipButton label="Back" variant="secondary" onPress={() => router.back()} />
           </View>
           <View style={{ flex: 1 }}>
-            <LipButton label="Continue" variant="primary" disabled={!canContinue} icon={Icons.forward} onPress={handleContinue} />
+            <LipButton
+              label="Continue"
+              variant="primary"
+              disabled={!canContinue}
+              icon={Icons.forward}
+              onPress={handleContinue}
+            />
           </View>
         </View>
       </View>

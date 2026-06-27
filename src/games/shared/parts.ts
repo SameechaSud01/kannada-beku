@@ -98,7 +98,11 @@ export function useGameSplit<T extends Sectioned>(
   const completedLessons = useProgressStore((s) => s.completedLessons);
 
   const sections = useMemo(
-    () => availableSections(lessonNo, (items ?? []).map((i) => i.section)),
+    () =>
+      availableSections(
+        lessonNo,
+        (items ?? []).map((i) => i.section),
+      ),
     [lessonNo, items],
   );
 
@@ -136,7 +140,7 @@ export function useGameSplit<T extends Sectioned>(
     return items; // single-section lesson, or chooser bypassed
   }, [items, showChooser, multi, section]);
 
-  const activeSection = multi ? section : parts[0]?.key ?? null;
+  const activeSection = multi ? section : (parts[0]?.key ?? null);
 
   return { parts, showChooser, playItems, activeSection };
 }

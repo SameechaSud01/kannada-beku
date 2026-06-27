@@ -37,25 +37,15 @@ export function Backdrop({ dim = 0.55, onTap, withBlur = true }: BackdropProps) 
   }, [opacity]);
 
   return (
-    <Animated.View
-      pointerEvents="auto"
-      style={[StyleSheet.absoluteFill, { opacity }]}
-    >
+    <Animated.View pointerEvents="auto" style={[StyleSheet.absoluteFill, { opacity }]}>
       {withBlur && Platform.OS !== 'web' ? (
-        <BlurView
-          intensity={20}
-          tint="dark"
-          style={StyleSheet.absoluteFill}
-        />
+        <BlurView intensity={20} tint="dark" style={StyleSheet.absoluteFill} />
       ) : null}
       <Pressable
         onPress={onTap}
         accessible={false}
         importantForAccessibility="no"
-        style={[
-          StyleSheet.absoluteFill,
-          { backgroundColor: `rgba(27,29,14,${dim})` },
-        ]}
+        style={[StyleSheet.absoluteFill, { backgroundColor: `rgba(27,29,14,${dim})` }]}
       />
     </Animated.View>
   );

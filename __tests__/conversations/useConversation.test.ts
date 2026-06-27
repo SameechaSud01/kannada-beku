@@ -39,7 +39,7 @@ describe('useConversation', () => {
   });
 
   it('correct pick scores, reveals, and records against the turn id', () => {
-    const attempts: Array<{ itemId: string; isCorrect: boolean }> = [];
+    const attempts: { itemId: string; isCorrect: boolean }[] = [];
     const { result } = renderHook(() => useConversation(TURNS, (a) => attempts.push(a)));
     act(() => result.current.handleOptionTap('a'));
     expect(result.current.answerState).toBe('correct');

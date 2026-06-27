@@ -22,7 +22,7 @@ export function StepThings({ principles }: { principles: BasicPrinciple[] }) {
     body: 'Kannada is written the way it sounds. Read the letters left to right and you have said the word.',
   };
 
-  const habits: Array<{ title: string; body: string; demos?: Demo[] }> = [
+  const habits: { title: string; body: string; demos?: Demo[] }[] = [
     { title: sayWhatYouSee.title, body: sayWhatYouSee.body },
     {
       title: 'Hear the difference',
@@ -86,7 +86,9 @@ export function StepThings({ principles }: { principles: BasicPrinciple[] }) {
             accessibilityRole="text"
             accessibilityLabel={`${idx + 1}. ${habit.title}. ${habit.body}`}
           >
-            <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: moderateScale(14) }}>
+            <View
+              style={{ flexDirection: 'row', alignItems: 'flex-start', gap: moderateScale(14) }}
+            >
               {/* Gold number circle */}
               <View
                 style={{

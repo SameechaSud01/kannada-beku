@@ -13,7 +13,10 @@ import { recordLearningDay } from '@/services/progress/streak';
 import { useGameSplit } from '@/src/games/shared/parts';
 import { GamePartChooser } from '@/components/games/GamePartChooser';
 import { ExitBackButton } from '@/components/ui/ExitBackButton';
-import { useConversationScenarios, useRecordConversationAttempt } from '../../../hooks/games/conversations';
+import {
+  useConversationScenarios,
+  useRecordConversationAttempt,
+} from '../../../hooks/games/conversations';
 import { useConversation } from './hooks/useConversation';
 import ChatTranscript from './components/ChatTranscript';
 import ReplyOptionGrid from './components/ReplyOptionGrid';
@@ -59,7 +62,9 @@ const ConversationGame: React.FC<Props> = ({ lessonNo, section }) => {
   }
   if (playItems.length === 0) return <EmptyState lessonNo={lessonNo} />;
 
-  return <ConversationFlow scenarios={playItems} gameKey="conversations" sectionKey={activeSection} />;
+  return (
+    <ConversationFlow scenarios={playItems} gameKey="conversations" sectionKey={activeSection} />
+  );
 };
 
 function ConversationFlow({
@@ -140,7 +145,13 @@ function ConversationRound({
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
         <ExitBackButton skipConfirm />
-        <ResultScreen score={score} total={totalTurns} bestStreak={bestStreak} onReplay={onReplay} replayLabel="Next conversation ▸" />
+        <ResultScreen
+          score={score}
+          total={totalTurns}
+          bestStreak={bestStreak}
+          onReplay={onReplay}
+          replayLabel="Next conversation ▸"
+        />
       </SafeAreaView>
     );
   }
@@ -173,10 +184,24 @@ function ConversationRound({
           }}
         >
           <ExitBackButton floating={false} variant="game" />
-          <Text style={{ fontSize: moderateScale(14), color: Colors.tertiary, fontFamily: Fonts.dmSans.medium }} numberOfLines={1}>
+          <Text
+            style={{
+              fontSize: moderateScale(14),
+              color: Colors.tertiary,
+              fontFamily: Fonts.dmSans.medium,
+            }}
+            numberOfLines={1}
+          >
             {scenario.title}
           </Text>
-          <Text style={{ fontSize: moderateScale(14), fontFamily: Fonts.baloo.bold, color: Colors.onSurface, fontVariant: ['tabular-nums'] }}>
+          <Text
+            style={{
+              fontSize: moderateScale(14),
+              fontFamily: Fonts.baloo.bold,
+              color: Colors.onSurface,
+              fontVariant: ['tabular-nums'],
+            }}
+          >
             Score {score}
           </Text>
         </View>
@@ -233,19 +258,45 @@ function AllCaughtUp({ count, onRestart }: { count: number; onRestart: () => voi
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ExitBackButton skipConfirm />
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.lg }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: Spacing.xxl,
+          gap: Spacing.lg,
+        }}
+      >
         <Icons.gameConversations size={moderateScale(24)} color={Colors.primary} />
-        <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(22), color: Colors.onSurface, textAlign: 'center' }}>
+        <Text
+          style={{
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(22),
+            color: Colors.onSurface,
+            textAlign: 'center',
+          }}
+        >
           All caught up!
         </Text>
         <Text
-          style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(14), color: Colors.tertiary, textAlign: 'center', lineHeight: moderateScale(20) }}
+          style={{
+            fontFamily: Fonts.dmSans.regular,
+            fontSize: moderateScale(14),
+            color: Colors.tertiary,
+            textAlign: 'center',
+            lineHeight: moderateScale(20),
+          }}
         >
-          You&apos;ve played all {count} conversation{count === 1 ? '' : 's'} for this lesson. Go again for more practice?
+          You&apos;ve played all {count} conversation{count === 1 ? '' : 's'} for this lesson. Go
+          again for more practice?
         </Text>
         <View style={{ width: '100%', gap: Spacing.md, marginTop: Spacing.sm }}>
           <LipButton label="Play again ▸" variant="primary" onPress={onRestart} />
-          <LipButton label="Back to Practice" variant="secondary" onPress={() => router.replace('/(tabs)/practice')} />
+          <LipButton
+            label="Back to Practice"
+            variant="secondary"
+            onPress={() => router.replace('/(tabs)/practice')}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -254,7 +305,10 @@ function AllCaughtUp({ count, onRestart }: { count: number; onRestart: () => voi
 
 function CenteredLoading() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      edges={['top', 'bottom']}
+    >
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
@@ -265,16 +319,47 @@ function CenteredLoading() {
 function ErrorState({ onRetry }: { onRetry: () => void }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.md }}>
-        <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      edges={['top', 'bottom']}
+    >
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: Spacing.xxl,
+          gap: Spacing.md,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(18),
+            color: Colors.onSurface,
+            textAlign: 'center',
+          }}
+        >
           Couldn&apos;t load this conversation
         </Text>
-        <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(14), color: Colors.tertiary, textAlign: 'center', marginBottom: Spacing.md }}>
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.regular,
+            fontSize: moderateScale(14),
+            color: Colors.tertiary,
+            textAlign: 'center',
+            marginBottom: Spacing.md,
+          }}
+        >
           Check your connection and try again.
         </Text>
         <LipButton label="Retry" variant="primary" fullWidth={false} onPress={onRetry} />
-        <LipButton label="Back" variant="tertiary" fullWidth={false} onPress={() => router.back()} />
+        <LipButton
+          label="Back"
+          variant="tertiary"
+          fullWidth={false}
+          onPress={() => router.back()}
+        />
       </View>
     </SafeAreaView>
   );
@@ -283,15 +368,47 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
 function EmptyState({ lessonNo }: { lessonNo: number }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.md }}>
-        <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      edges={['top', 'bottom']}
+    >
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: Spacing.xxl,
+          gap: Spacing.md,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(18),
+            color: Colors.onSurface,
+            textAlign: 'center',
+          }}
+        >
           Lesson {lessonNo} — coming soon
         </Text>
-        <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(14), color: Colors.tertiary, textAlign: 'center', lineHeight: moderateScale(20), marginBottom: Spacing.md }}>
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.regular,
+            fontSize: moderateScale(14),
+            color: Colors.tertiary,
+            textAlign: 'center',
+            lineHeight: moderateScale(20),
+            marginBottom: Spacing.md,
+          }}
+        >
           No conversations have been written for this lesson yet. Try an earlier lesson.
         </Text>
-        <LipButton label="Back to lessons" variant="primary" fullWidth={false} onPress={() => router.back()} />
+        <LipButton
+          label="Back to lessons"
+          variant="primary"
+          fullWidth={false}
+          onPress={() => router.back()}
+        />
       </View>
     </SafeAreaView>
   );

@@ -103,7 +103,9 @@ export function PracticePhrasesPhase({
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
-      <View style={{ paddingTop: insets.top + BACK_CHIP_TOP_RESERVE, paddingHorizontal: Spacing.lg }}>
+      <View
+        style={{ paddingTop: insets.top + BACK_CHIP_TOP_RESERVE, paddingHorizontal: Spacing.lg }}
+      >
         <LessonProgressBar
           current={practicePhrasesIndex + 1}
           total={total}
@@ -122,7 +124,12 @@ export function PracticePhrasesPhase({
           }}
         >
           <View style={{ alignItems: 'center', marginBottom: Spacing.xxl, gap: Spacing.md }}>
-            <AudioOrb onPress={handleReplay} playing={playing} size={72} accessibilityLabel="Replay audio" />
+            <AudioOrb
+              onPress={handleReplay}
+              playing={playing}
+              size={72}
+              accessibilityLabel="Replay audio"
+            />
             <SpeedControl onRateChange={handleReplay} />
           </View>
 

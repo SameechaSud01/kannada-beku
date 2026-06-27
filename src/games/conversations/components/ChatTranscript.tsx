@@ -11,9 +11,9 @@ import UserBubble from './UserBubble';
 import type { ConversationTurn } from '../types';
 
 type Props = {
-  turns:        ConversationTurn[];
+  turns: ConversationTurn[];
   currentIndex: number;
-  answers:      Record<number, string>;
+  answers: Record<number, string>;
 };
 
 const ChatTranscript: React.FC<Props> = ({ turns, currentIndex, answers }) => (

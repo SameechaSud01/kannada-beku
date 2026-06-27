@@ -139,7 +139,12 @@ function QuickQuizGameInner({
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
         <ExitBackButton skipConfirm />
-        <ResultScreen score={score} total={totalQuestions} bestStreak={bestStreak} onReplay={restart} />
+        <ResultScreen
+          score={score}
+          total={totalQuestions}
+          bestStreak={bestStreak}
+          onReplay={restart}
+        />
       </SafeAreaView>
     );
   }
@@ -174,10 +179,24 @@ function QuickQuizGameInner({
           }}
         >
           <ExitBackButton floating={false} variant="game" />
-          <Text style={{ fontSize: moderateScale(14), color: Colors.tertiary, fontFamily: Fonts.dmSans.medium, fontVariant: ['tabular-nums'] }}>
+          <Text
+            style={{
+              fontSize: moderateScale(14),
+              color: Colors.tertiary,
+              fontFamily: Fonts.dmSans.medium,
+              fontVariant: ['tabular-nums'],
+            }}
+          >
             Question {currentIndex + 1} / {totalQuestions}
           </Text>
-          <Text style={{ fontSize: moderateScale(14), fontFamily: Fonts.baloo.bold, color: Colors.onSurface, fontVariant: ['tabular-nums'] }}>
+          <Text
+            style={{
+              fontSize: moderateScale(14),
+              fontFamily: Fonts.baloo.bold,
+              color: Colors.onSurface,
+              fontVariant: ['tabular-nums'],
+            }}
+          >
             Score {score}
           </Text>
         </View>
@@ -208,7 +227,10 @@ function QuickQuizGameInner({
 
 function CenteredLoading() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      edges={['top', 'bottom']}
+    >
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
@@ -219,16 +241,47 @@ function CenteredLoading() {
 function ErrorState({ onRetry }: { onRetry: () => void }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.md }}>
-        <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      edges={['top', 'bottom']}
+    >
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: Spacing.xxl,
+          gap: Spacing.md,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(18),
+            color: Colors.onSurface,
+            textAlign: 'center',
+          }}
+        >
           Couldn&apos;t load this quiz
         </Text>
-        <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(14), color: Colors.tertiary, textAlign: 'center', marginBottom: Spacing.md }}>
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.regular,
+            fontSize: moderateScale(14),
+            color: Colors.tertiary,
+            textAlign: 'center',
+            marginBottom: Spacing.md,
+          }}
+        >
           Check your connection and try again.
         </Text>
         <LipButton label="Retry" variant="primary" fullWidth={false} onPress={onRetry} />
-        <LipButton label="Back" variant="tertiary" fullWidth={false} onPress={() => router.back()} />
+        <LipButton
+          label="Back"
+          variant="tertiary"
+          fullWidth={false}
+          onPress={() => router.back()}
+        />
       </View>
     </SafeAreaView>
   );
@@ -237,15 +290,47 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
 function EmptyState({ lessonNo }: { lessonNo: number }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: Spacing.xxl, gap: Spacing.md }}>
-        <Text style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(18), color: Colors.onSurface, textAlign: 'center' }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      edges={['top', 'bottom']}
+    >
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: Spacing.xxl,
+          gap: Spacing.md,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(18),
+            color: Colors.onSurface,
+            textAlign: 'center',
+          }}
+        >
           Lesson {lessonNo} — coming soon
         </Text>
-        <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(14), color: Colors.tertiary, textAlign: 'center', lineHeight: moderateScale(20), marginBottom: Spacing.md }}>
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.regular,
+            fontSize: moderateScale(14),
+            color: Colors.tertiary,
+            textAlign: 'center',
+            lineHeight: moderateScale(20),
+            marginBottom: Spacing.md,
+          }}
+        >
           No quiz words have been authored for this lesson yet. Try an earlier lesson.
         </Text>
-        <LipButton label="Back to lessons" variant="primary" fullWidth={false} onPress={() => router.back()} />
+        <LipButton
+          label="Back to lessons"
+          variant="primary"
+          fullWidth={false}
+          onPress={() => router.back()}
+        />
       </View>
     </SafeAreaView>
   );

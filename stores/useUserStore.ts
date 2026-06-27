@@ -116,8 +116,7 @@ export const useUserStore = create<UserState>()(
 
       setHasSeenBasicsGuide: (hasSeenBasicsGuide) => set({ hasSeenBasicsGuide }),
 
-      setHasSeenBasicsHomeNudge: (hasSeenBasicsHomeNudge) =>
-        set({ hasSeenBasicsHomeNudge }),
+      setHasSeenBasicsHomeNudge: (hasSeenBasicsHomeNudge) => set({ hasSeenBasicsHomeNudge }),
 
       recordPermissionDenial: (kind) =>
         set((s) => ({
@@ -202,6 +201,6 @@ export const useUserStore = create<UserState>()(
         (state ?? useUserStore.getState()).setHydrated(true);
         if (error) console.warn('[user] rehydrate failed', error);
       },
-    }
-  )
+    },
+  ),
 );

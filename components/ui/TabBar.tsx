@@ -114,11 +114,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
                   />
                 </ChunkyCircle>
               ) : (
-                <Icon
-                  size={moderateScale(TAB_ICON_SIZE)}
-                  color={Colors.tertiary}
-                  strokeWidth={2}
-                />
+                <Icon size={moderateScale(TAB_ICON_SIZE)} color={Colors.tertiary} strokeWidth={2} />
               )}
             </Pressable>
           );

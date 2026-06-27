@@ -131,9 +131,7 @@ export default function AudioScreen() {
                     style={{
                       fontFamily: Fonts.dmSans.bold,
                       fontSize: moderateScale(14),
-                      color: selected
-                        ? Colors.onSecondaryContainer
-                        : Colors.onSurface,
+                      color: selected ? Colors.onSecondaryContainer : Colors.onSurface,
                     }}
                     maxFontSizeMultiplier={1.3}
                   >

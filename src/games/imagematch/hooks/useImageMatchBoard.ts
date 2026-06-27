@@ -9,19 +9,19 @@ const MISMATCH_MS = 550;
 export type Tile = { item: VocabItem; state: TileState };
 
 type UseImageMatchBoardReturn = {
-  wordColumn:    Tile[];
-  imageColumn:   Tile[];
-  matchedCount:  number;
-  totalPairs:    number;
-  score:         number;
-  phase:         GamePhase;
+  wordColumn: Tile[];
+  imageColumn: Tile[];
+  matchedCount: number;
+  totalPairs: number;
+  score: number;
+  phase: GamePhase;
   selectedWordId: string | null;
-  handleWordTap:  (id: string) => void;
+  handleWordTap: (id: string) => void;
   handleImageTap: (id: string) => void;
   /** Clear the current word selection without recording a mismatch (e.g. a
    *  drag released over empty space). */
-  deselect:       () => void;
-  restart:        () => void;
+  deselect: () => void;
+  restart: () => void;
 };
 
 function shuffle<T>(arr: T[]): T[] {
@@ -63,15 +63,12 @@ export function buildBoardPairs(
 }
 
 type BoardState = {
-  pairs:     VocabItem[];
+  pairs: VocabItem[];
   wordOrder: VocabItem[];
   imageOrder: VocabItem[];
 };
 
-function initBoard(
-  targetBank: VocabItem[],
-  distractorBank?: VocabItem[],
-): BoardState {
+function initBoard(targetBank: VocabItem[], distractorBank?: VocabItem[]): BoardState {
   const pairs = buildBoardPairs(targetBank, distractorBank);
   return { pairs, wordOrder: shuffle(pairs), imageOrder: shuffle(pairs) };
 }
@@ -88,9 +85,7 @@ export function useImageMatchBoard(
   const onAttemptRef = useRef(onAttempt);
   onAttemptRef.current = onAttempt;
 
-  const [board, setBoard] = useState<BoardState>(() =>
-    initBoard(targetBank, distractorBank),
-  );
+  const [board, setBoard] = useState<BoardState>(() => initBoard(targetBank, distractorBank));
   const [selectedWordId, setSelectedWordId] = useState<string | null>(null);
   const [matchedIds, setMatchedIds] = useState<Set<string>>(() => new Set());
   const [mismatch, setMismatch] = useState<{ wordId: string; imageId: string } | null>(null);

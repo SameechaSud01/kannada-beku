@@ -106,7 +106,7 @@ export default function LessonScreen() {
   const active = runLesson ?? lesson;
   const isLastPart = isPartRun && partIndex === lesson.sections.length - 1;
   const nextSection = isPartRun ? lesson.sections[partIndex + 1] : undefined;
-  const currentPartLabel = isPartRun ? lesson.sections[partIndex]?.label ?? '' : '';
+  const currentPartLabel = isPartRun ? (lesson.sections[partIndex]?.label ?? '') : '';
 
   // Sub-part label rides on the progress bar only during a part run.
   const sectionLabel = isPartRun ? runner.sectionLabel : undefined;
@@ -171,11 +171,7 @@ export default function LessonScreen() {
     case 'summary':
       // Recap just the sub-part that was played (whole lesson for un-split).
       phaseEl = (
-        <SummaryPhase
-          words={active.words}
-          phrases={active.phrases}
-          onAdvance={runner.advance}
-        />
+        <SummaryPhase words={active.words} phrases={active.phrases} onAdvance={runner.advance} />
       );
       break;
     case 'real_world':

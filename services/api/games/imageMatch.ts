@@ -53,9 +53,7 @@ function mapRow(row: Row, lessonNo: number): ImageMatchItem {
   };
 }
 
-export async function fetchImageMatchItemsByLessonNo(
-  lessonNo: number,
-): Promise<ImageMatchItem[]> {
+export async function fetchImageMatchItemsByLessonNo(lessonNo: number): Promise<ImageMatchItem[]> {
   const lessonId = await lessonIdByNo(lessonNo);
   if (!lessonId) return [];
 
@@ -73,10 +71,7 @@ export async function fetchImageMatchItemsByLessonNo(
 /**
  * UPSERT into image_match_progress via SECURITY INVOKER RPC.
  */
-export async function recordImageMatchAttempt(
-  itemId: string,
-  isCorrect: boolean,
-): Promise<void> {
+export async function recordImageMatchAttempt(itemId: string, isCorrect: boolean): Promise<void> {
   const { error } = await supabase.rpc('record_image_match_attempt', {
     p_item_id: itemId,
     p_is_correct: isCorrect,

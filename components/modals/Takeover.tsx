@@ -1,11 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import {
-  AccessibilityInfo,
-  Animated,
-  Dimensions,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { AccessibilityInfo, Animated, Dimensions, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '../../constants/colors';
 import { Spacing } from '../../constants/spacing';
@@ -65,11 +59,7 @@ export function Takeover({ children, onClose, backgroundColor }: TakeoverProps) 
         },
       ]}
     >
-      <View
-        accessibilityViewIsModal
-        importantForAccessibility="yes"
-        style={{ flex: 1 }}
-      >
+      <View accessibilityViewIsModal importantForAccessibility="yes" style={{ flex: 1 }}>
         {children}
       </View>
       <View

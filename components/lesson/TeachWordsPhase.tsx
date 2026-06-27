@@ -28,7 +28,13 @@ interface TeachWordsPhaseProps {
   onAdvance: () => void;
 }
 
-export function TeachWordsPhase({ words, wordIndex, lessonNo, sectionLabel, onAdvance }: TeachWordsPhaseProps) {
+export function TeachWordsPhase({
+  words,
+  wordIndex,
+  lessonNo,
+  sectionLabel,
+  onAdvance,
+}: TeachWordsPhaseProps) {
   const insets = useSafeAreaInsets();
   const word = words[wordIndex];
   const total = words.length;
@@ -75,7 +81,9 @@ export function TeachWordsPhase({ words, wordIndex, lessonNo, sectionLabel, onAd
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
-      <View style={{ paddingTop: insets.top + BACK_CHIP_TOP_RESERVE, paddingHorizontal: Spacing.lg }}>
+      <View
+        style={{ paddingTop: insets.top + BACK_CHIP_TOP_RESERVE, paddingHorizontal: Spacing.lg }}
+      >
         <LessonProgressBar
           current={wordIndex + 1}
           total={total}

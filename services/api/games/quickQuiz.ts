@@ -55,9 +55,7 @@ function mapRow(row: Row, lessonNo: number): QuickQuizItem {
   };
 }
 
-export async function fetchQuickQuizItemsByLessonNo(
-  lessonNo: number,
-): Promise<QuickQuizItem[]> {
+export async function fetchQuickQuizItemsByLessonNo(lessonNo: number): Promise<QuickQuizItem[]> {
   const lessonId = await lessonIdByNo(lessonNo);
   if (!lessonId) return [];
 
@@ -78,10 +76,7 @@ export async function fetchQuickQuizItemsByLessonNo(
  * Note: Quick Quiz is excluded from user_overall_progress (locked formula),
  * so there is no overall-progress recompute on the server side.
  */
-export async function recordQuickQuizAttempt(
-  itemId: string,
-  isCorrect: boolean,
-): Promise<void> {
+export async function recordQuickQuizAttempt(itemId: string, isCorrect: boolean): Promise<void> {
   const { error } = await supabase.rpc('record_quick_quiz_attempt', {
     p_item_id: itemId,
     p_is_correct: isCorrect,

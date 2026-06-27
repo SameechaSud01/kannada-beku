@@ -121,7 +121,13 @@ export default function NameScreen() {
             <LipButton label="Back" variant="secondary" onPress={() => router.back()} />
           </View>
           <View style={{ flex: 1 }}>
-            <LipButton label="Continue" variant="primary" onPress={handleContinue} disabled={!valid} icon={Icons.forward} />
+            <LipButton
+              label="Continue"
+              variant="primary"
+              onPress={handleContinue}
+              disabled={!valid}
+              icon={Icons.forward}
+            />
           </View>
         </View>
       </View>

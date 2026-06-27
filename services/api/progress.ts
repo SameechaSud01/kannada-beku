@@ -23,9 +23,7 @@ export async function recordLessonCompletion(
   if (error) throw error;
 }
 
-export async function fetchCompletedLessons(
-  userId: string,
-): Promise<LessonCompletion[]> {
+export async function fetchCompletedLessons(userId: string): Promise<LessonCompletion[]> {
   const { data, error } = await supabase
     .from('user_lesson_progress')
     .select('completed_at, score, lessons:lesson_id ( slug )')

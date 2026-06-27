@@ -35,7 +35,11 @@ export function LockTile({ size = 40, iconSize = 20, radius = Radius.tile, style
         style,
       ]}
     >
-      <Icons.locked size={moderateScale(iconSize)} color={Colors.warningContainer} strokeWidth={2} />
+      <Icons.locked
+        size={moderateScale(iconSize)}
+        color={Colors.warningContainer}
+        strokeWidth={2}
+      />
     </View>
   );
 }

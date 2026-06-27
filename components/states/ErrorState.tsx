@@ -47,7 +47,13 @@ export function ErrorState({
       body={body}
       actions={
         <>
-          <LipButton label={retryLabel} variant="primary" icon={Icons.refresh} iconLeading onPress={onRetry} />
+          <LipButton
+            label={retryLabel}
+            variant="primary"
+            icon={Icons.refresh}
+            iconLeading
+            onPress={onRetry}
+          />
           {onHelp ? <LipButton label={helpLabel} variant="tertiary" onPress={onHelp} /> : null}
         </>
       }

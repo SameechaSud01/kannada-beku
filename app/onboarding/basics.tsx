@@ -26,8 +26,7 @@ export default function BasicsScreen() {
       return;
     }
 
-    const { displayName, motivations, dailyGoalMinutes } =
-      useUserStore.getState();
+    const { displayName, motivations, dailyGoalMinutes } = useUserStore.getState();
 
     // Learning-focus selection was removed — we only teach spoken Kannada now.
     const learningMode = useUserStore.getState().learningMode ?? 'spoken';

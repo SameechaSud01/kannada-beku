@@ -1,12 +1,15 @@
 import { renderHook, act } from '@testing-library/react-native';
-import { useImageMatchBoard, buildBoardPairs } from '../../src/games/imagematch/hooks/useImageMatchBoard';
+import {
+  useImageMatchBoard,
+  buildBoardPairs,
+} from '../../src/games/imagematch/hooks/useImageMatchBoard';
 import type { VocabItem } from '../../src/games/imagematch/types';
 
 const FIXTURE: VocabItem[] = Array.from({ length: 5 }, (_, i) => ({
-  id:    `v-${i + 1}`,
-  kn:    `K${i + 1}`,
-  ph:    `k${i + 1}`,
-  en:    `english ${i + 1}`,
+  id: `v-${i + 1}`,
+  kn: `K${i + 1}`,
+  ph: `k${i + 1}`,
+  en: `english ${i + 1}`,
   emoji: '🔤',
 }));
 
@@ -61,7 +64,7 @@ describe('useImageMatchBoard', () => {
   });
 
   it('correct pair locks, clears selection, scores, and fires a correct attempt', () => {
-    const attempts: Array<{ itemId: string; isCorrect: boolean }> = [];
+    const attempts: { itemId: string; isCorrect: boolean }[] = [];
     const { result } = renderHook(() =>
       useImageMatchBoard(FIXTURE, undefined, (a) => attempts.push(a)),
     );
@@ -77,7 +80,7 @@ describe('useImageMatchBoard', () => {
 
   it('wrong pairing flashes mismatch, fires a wrong attempt, and does not lock', () => {
     jest.useFakeTimers();
-    const attempts: Array<{ itemId: string; isCorrect: boolean }> = [];
+    const attempts: { itemId: string; isCorrect: boolean }[] = [];
     const { result } = renderHook(() =>
       useImageMatchBoard(FIXTURE, undefined, (a) => attempts.push(a)),
     );

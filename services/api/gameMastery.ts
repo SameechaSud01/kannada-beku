@@ -17,17 +17,11 @@ export type GameMasteryByLesson = Record<number, LessonMastery>;
  * so "correct" means "got it right at least once".
  */
 type ProgressTable =
-  | 'opposites_progress'
-  | 'dictation_progress'
-  | 'quick_quiz_progress'
-  | 'conversation_progress';
+  'opposites_progress' | 'dictation_progress' | 'quick_quiz_progress' | 'conversation_progress';
 
 /** Item ids the user has ever answered correctly for one game (RLS scopes the
  *  read to this user; we also filter on user_id defensively). Read-only. */
-async function fetchCorrectItemIds(
-  table: ProgressTable,
-  userId: string,
-): Promise<Set<string>> {
+async function fetchCorrectItemIds(table: ProgressTable, userId: string): Promise<Set<string>> {
   const { data, error } = await supabase
     .from(table)
     .select('item_id')
@@ -74,9 +68,7 @@ async function gameMastery(
  * volume — there is no per-game weighting constant to tune. This is the
  * "practice" half of the overall-progress rollup (see overallMastery.ts).
  */
-export async function fetchGameMasteryByLesson(
-  userId: string,
-): Promise<GameMasteryByLesson> {
+export async function fetchGameMasteryByLesson(userId: string): Promise<GameMasteryByLesson> {
   const games = await Promise.all([
     gameMastery(
       'opposites_progress',
@@ -96,9 +88,7 @@ export async function fetchGameMasteryByLesson(
     gameMastery(
       'conversation_progress',
       async (no) =>
-        (await fetchConversationScenariosByLessonNo(no)).flatMap((s) =>
-          s.turns.map((t) => t.id),
-        ),
+        (await fetchConversationScenariosByLessonNo(no)).flatMap((s) => s.turns.map((t) => t.id)),
       userId,
     ),
   ]);

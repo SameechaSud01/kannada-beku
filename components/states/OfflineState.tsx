@@ -52,7 +52,13 @@ export function OfflineState({
       note={onPracticeOffline ? note : undefined}
       actions={
         <>
-          <LipButton label={retryLabel} variant="primary" icon={Icons.refresh} iconLeading onPress={onRetry} />
+          <LipButton
+            label={retryLabel}
+            variant="primary"
+            icon={Icons.refresh}
+            iconLeading
+            onPress={onRetry}
+          />
           {onPracticeOffline ? (
             <LipButton label={practiceLabel} variant="tertiary" onPress={onPracticeOffline} />
           ) : null}

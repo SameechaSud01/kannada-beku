@@ -82,10 +82,7 @@ export async function updateStreakOnServer(
   if (error) throw error;
 }
 
-export async function updateLearningMode(
-  userId: string,
-  mode: LearningMode,
-): Promise<UserRow> {
+export async function updateLearningMode(userId: string, mode: LearningMode): Promise<UserRow> {
   const { data, error } = await supabase
     .from('users')
     .update({ learning_mode: mode })
@@ -110,10 +107,7 @@ export async function updateDailyReminderTime(
   return data as UserRow;
 }
 
-export async function updateTtsRate(
-  userId: string,
-  rate: number,
-): Promise<UserRow> {
+export async function updateTtsRate(userId: string, rate: number): Promise<UserRow> {
   const { data, error } = await supabase
     .from('users')
     .update({ tts_rate: rate })
@@ -124,10 +118,7 @@ export async function updateTtsRate(
   return data as UserRow;
 }
 
-export async function updateAutoReplay(
-  userId: string,
-  value: boolean,
-): Promise<UserRow> {
+export async function updateAutoReplay(userId: string, value: boolean): Promise<UserRow> {
   const { data, error } = await supabase
     .from('users')
     .update({ auto_replay: value })

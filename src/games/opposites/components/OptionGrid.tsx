@@ -34,7 +34,13 @@ function chunk<T>(arr: T[], size: number): T[][] {
 
 const GAP = moderateScale(10);
 
-const OptionGrid: React.FC<Props> = ({ opts, answerState, selectedOpt, correctAnswer, onSelect }) => {
+const OptionGrid: React.FC<Props> = ({
+  opts,
+  answerState,
+  selectedOpt,
+  correctAnswer,
+  onSelect,
+}) => {
   // If ANY option carries a gloss tag, every tile reserves the tag's height —
   // so all tiles are identical in size whether or not they have a tag.
   const reserveTag = opts.some((o) => Boolean(splitGloss(o.en).tag));

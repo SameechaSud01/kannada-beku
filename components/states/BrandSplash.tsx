@@ -41,7 +41,9 @@ export function BrandSplash() {
   const tileRadius = Math.round(tile * 0.225);
 
   return (
-    <View style={[StyleSheet.absoluteFill, { backgroundColor: Colors.primary, overflow: 'hidden' }]}>
+    <View
+      style={[StyleSheet.absoluteFill, { backgroundColor: Colors.primary, overflow: 'hidden' }]}
+    >
       {/* Red brand background — brighter at top, deep maroon at the foot (approximates
           the design's upper-centre radial with a known-good linear gradient). */}
       <LinearGradient
@@ -130,7 +132,11 @@ export function BrandSplash() {
       </View>
 
       {/* Loader dots + tagline. */}
-      <Rise reduced={reduced} delay={1000} style={{ paddingBottom: insets.bottom + moderateScale(56) }}>
+      <Rise
+        reduced={reduced}
+        delay={1000}
+        style={{ paddingBottom: insets.bottom + moderateScale(56) }}
+      >
         <LoadingDots color={Colors.goldBright} />
         <Text
           style={{

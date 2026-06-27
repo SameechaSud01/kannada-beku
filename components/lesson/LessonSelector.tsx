@@ -113,9 +113,7 @@ function LessonPill({ lesson, index, onTap }: LessonPillProps) {
         </Text>
       </View>
 
-      {unlocked ? (
-        <Icons.forward size={moderateScale(20)} color={Colors.tertiary} />
-      ) : null}
+      {unlocked ? <Icons.forward size={moderateScale(20)} color={Colors.tertiary} /> : null}
     </View>
   );
 
@@ -153,12 +151,7 @@ function LessonPill({ lesson, index, onTap }: LessonPillProps) {
   );
 }
 
-export function LessonSelector({
-  game,
-  lessons,
-  onSelectLesson,
-  onBack,
-}: LessonSelectorProps) {
+export function LessonSelector({ game, lessons, onSelectLesson, onBack }: LessonSelectorProps) {
   const headerOpacity = useSharedValue(0);
   useEffect(() => {
     headerOpacity.value = withTiming(1, {

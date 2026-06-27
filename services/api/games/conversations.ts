@@ -85,7 +85,9 @@ export async function fetchConversationScenariosByLessonNo(
   const scenarioIds = scenarios.map((s) => s.id);
   const { data: itemData, error: itemErr } = await supabase
     .from('conversation_items')
-    .select('id, scenario_id, turn_index, speaker_line_kn, speaker_line_en, options_json, correct_option_id')
+    .select(
+      'id, scenario_id, turn_index, speaker_line_kn, speaker_line_en, options_json, correct_option_id',
+    )
     .in('scenario_id', scenarioIds)
     .order('turn_index', { ascending: true });
 
@@ -124,10 +126,7 @@ export async function fetchConversationScenariosByLessonNo(
  * the turn's item id. Conversations is excluded from user_overall_progress
  * (locked formula), so there is no overall-progress recompute server-side.
  */
-export async function recordConversationAttempt(
-  itemId: string,
-  isCorrect: boolean,
-): Promise<void> {
+export async function recordConversationAttempt(itemId: string, isCorrect: boolean): Promise<void> {
   const { error } = await supabase.rpc('record_conversation_attempt', {
     p_item_id: itemId,
     p_is_correct: isCorrect,

@@ -114,8 +114,7 @@ export default function FeedbackScreen() {
           }}
           maxFontSizeMultiplier={1.4}
         >
-          Tell us what's working, what's not, or what you'd love to see next. We read
-          every message.
+          Tell us what's working, what's not, or what you'd love to see next. We read every message.
         </Text>
 
         <TextInput

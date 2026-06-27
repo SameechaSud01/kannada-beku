@@ -24,66 +24,67 @@ export interface BottomSheetProps {
  * - Backdrop tap and swipe-down both dismiss
  * - Slide-up 250ms ease-out, slide-down 200ms ease-in (defaults from lib)
  */
-export const BottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(
-  function BottomSheet({ children, onDismiss }, ref) {
-    const sheetRef = useRef<GorhomBottomSheet>(null);
+export const BottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(function BottomSheet(
+  { children, onDismiss },
+  ref,
+) {
+  const sheetRef = useRef<GorhomBottomSheet>(null);
 
-    useImperativeHandle(ref, () => ({
-      close: () => sheetRef.current?.close(),
-    }));
+  useImperativeHandle(ref, () => ({
+    close: () => sheetRef.current?.close(),
+  }));
 
-    const renderBackdrop = useCallback(
-      (props: BottomSheetBackdropProps) => (
-        <BottomSheetBackdrop
-          {...props}
-          appearsOnIndex={0}
-          disappearsOnIndex={-1}
-          opacity={0.55}
-          pressBehavior="close"
-        />
-      ),
-      [],
-    );
+  const renderBackdrop = useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        opacity={0.55}
+        pressBehavior="close"
+      />
+    ),
+    [],
+  );
 
-    const handleChange = useCallback(
-      (index: number) => {
-        if (index === -1) onDismiss();
-      },
-      [onDismiss],
-    );
+  const handleChange = useCallback(
+    (index: number) => {
+      if (index === -1) onDismiss();
+    },
+    [onDismiss],
+  );
 
-    return (
-      <GorhomBottomSheet
-        ref={sheetRef}
-        index={0}
-        enableDynamicSizing
-        enablePanDownToClose
-        animateOnMount
-        onChange={handleChange}
-        backdropComponent={renderBackdrop}
-        backgroundStyle={{
-          backgroundColor: '#ffffff',
-          borderTopLeftRadius: moderateScale(24),
-          borderTopRightRadius: moderateScale(24),
-          ...Shadows.modal,
-        }}
-        handleStyle={{
-          paddingTop: moderateScale(12),
-          paddingBottom: moderateScale(8),
-        }}
-        handleIndicatorStyle={{
-          width: moderateScale(40),
-          height: moderateScale(5),
-          borderRadius: moderateScale(3),
-          backgroundColor: Colors.hairline,
-        }}
-        accessible
-        accessibilityLabel="Bottom sheet"
-      >
-        <View accessibilityViewIsModal style={{ flexShrink: 1 }}>
-          {children}
-        </View>
-      </GorhomBottomSheet>
-    );
-  },
-);
+  return (
+    <GorhomBottomSheet
+      ref={sheetRef}
+      index={0}
+      enableDynamicSizing
+      enablePanDownToClose
+      animateOnMount
+      onChange={handleChange}
+      backdropComponent={renderBackdrop}
+      backgroundStyle={{
+        backgroundColor: '#ffffff',
+        borderTopLeftRadius: moderateScale(24),
+        borderTopRightRadius: moderateScale(24),
+        ...Shadows.modal,
+      }}
+      handleStyle={{
+        paddingTop: moderateScale(12),
+        paddingBottom: moderateScale(8),
+      }}
+      handleIndicatorStyle={{
+        width: moderateScale(40),
+        height: moderateScale(5),
+        borderRadius: moderateScale(3),
+        backgroundColor: Colors.hairline,
+      }}
+      accessible
+      accessibilityLabel="Bottom sheet"
+    >
+      <View accessibilityViewIsModal style={{ flexShrink: 1 }}>
+        {children}
+      </View>
+    </GorhomBottomSheet>
+  );
+});

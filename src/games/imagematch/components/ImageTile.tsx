@@ -8,23 +8,23 @@ import { useShake } from '../../shared/animations';
 import type { TileState, VocabItem } from '../types';
 
 type Props = {
-  item:     VocabItem;
-  state:    TileState;
+  item: VocabItem;
+  state: TileState;
   imageUrl?: string | null;
-  onPress:  () => void;
+  onPress: () => void;
 };
 
 const BG: Record<TileState, string> = {
-  default:  Colors.surface,
+  default: Colors.surface,
   selected: Colors.surfaceContainerHigh,
-  matched:  Colors.secondaryFixed,
+  matched: Colors.secondaryFixed,
   mismatch: Colors.errorContainerLow,
 };
 
 const BORDER: Record<TileState, string> = {
-  default:  Colors.outlineVariant,
+  default: Colors.outlineVariant,
   selected: Colors.primary,
-  matched:  Colors.secondary,
+  matched: Colors.secondary,
   mismatch: Colors.primary,
 };
 
@@ -36,13 +36,27 @@ const ImageTile: React.FC<Props> = ({ item, state, imageUrl, onPress }) => {
   useEffect(() => {
     if (state !== 'matched') return;
     Animated.sequence([
-      Animated.spring(pop, { toValue: 1.08, damping: 8, stiffness: 220, mass: 1, useNativeDriver: true }),
-      Animated.spring(pop, { toValue: 1, damping: 12, stiffness: 200, mass: 1, useNativeDriver: true }),
+      Animated.spring(pop, {
+        toValue: 1.08,
+        damping: 8,
+        stiffness: 220,
+        mass: 1,
+        useNativeDriver: true,
+      }),
+      Animated.spring(pop, {
+        toValue: 1,
+        damping: 12,
+        stiffness: 200,
+        mass: 1,
+        useNativeDriver: true,
+      }),
     ]).start();
   }, [state, pop]);
 
   return (
-    <Animated.View style={{ transform: [{ translateX }, { scale: pop }], opacity: locked ? 0.55 : 1 }}>
+    <Animated.View
+      style={{ transform: [{ translateX }, { scale: pop }], opacity: locked ? 0.55 : 1 }}
+    >
       <Pressable
         onPress={onPress}
         disabled={locked}

@@ -24,7 +24,10 @@ import { formatFirstName } from '../../utils/formatName';
 import { useCompletedLessons, useWordsLearned, useDailyGoal } from '../../hooks/progress';
 import { useStreakCelebration } from '../../hooks/useStreakCelebration';
 import { useModal } from '../../components/modals/ModalHost';
-import { WordsLearnedSheet, type WordsLearnedGroup } from '../../components/modals/instances/WordsLearnedSheet';
+import {
+  WordsLearnedSheet,
+  type WordsLearnedGroup,
+} from '../../components/modals/instances/WordsLearnedSheet';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
 import { ChunkyCircle, ChunkyLip } from '../../components/ui/ChunkyLip';
@@ -152,17 +155,30 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: TAB_BAR_CLEARANCE + insets.bottom }}
       >
-        <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.md, gap: moderateScale(11) }}>
+        <View
+          style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.md, gap: moderateScale(11) }}
+        >
           {/* Greeting */}
           <View style={{ marginBottom: moderateScale(2) }}>
             <Text
-              style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(32), color: Colors.onSurface, letterSpacing: -0.5, lineHeight: moderateScale(45) }}
+              style={{
+                fontFamily: Fonts.baloo.extrabold,
+                fontSize: moderateScale(32),
+                color: Colors.onSurface,
+                letterSpacing: -0.5,
+                lineHeight: moderateScale(45),
+              }}
               maxFontSizeMultiplier={1.3}
             >
               Namaskāra, {userName}!
             </Text>
             <Text
-              style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(15), color: Colors.tertiary, marginTop: moderateScale(2) }}
+              style={{
+                fontFamily: Fonts.dmSans.medium,
+                fontSize: moderateScale(15),
+                color: Colors.tertiary,
+                marginTop: moderateScale(2),
+              }}
               maxFontSizeMultiplier={1.4}
             >
               Let&apos;s build your Kannada fluency today.
@@ -188,7 +204,12 @@ export default function HomeScreen() {
               lip={5}
               lipColor={Colors.redLip}
               radius={Radius.chunky}
-              style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.md, padding: moderateScale(16) }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: Spacing.md,
+                padding: moderateScale(16),
+              }}
             >
               <ChunkyCircle
                 size={moderateScale(44)}
@@ -200,14 +221,24 @@ export default function HomeScreen() {
               </ChunkyCircle>
               <View style={{ flex: 1 }}>
                 <Text
-                  style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(17), color: Colors.onPrimary, letterSpacing: -0.2 }}
+                  style={{
+                    fontFamily: Fonts.baloo.bold,
+                    fontSize: moderateScale(17),
+                    color: Colors.onPrimary,
+                    letterSpacing: -0.2,
+                  }}
                   maxFontSizeMultiplier={1.2}
                   numberOfLines={1}
                 >
                   Continue where you left off
                 </Text>
                 <Text
-                  style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12.5), color: 'rgba(255,255,255,0.85)', marginTop: moderateScale(2) }}
+                  style={{
+                    fontFamily: Fonts.dmSans.medium,
+                    fontSize: moderateScale(12.5),
+                    color: 'rgba(255,255,255,0.85)',
+                    marginTop: moderateScale(2),
+                  }}
                   maxFontSizeMultiplier={1.3}
                   numberOfLines={1}
                 >
@@ -217,11 +248,34 @@ export default function HomeScreen() {
               <Icons.forward size={moderateScale(20)} color={Colors.onPrimary} />
             </ChunkyPressable>
           ) : (
-            <View style={{ borderRadius: Radius.chunky, padding: Spacing.xxl, backgroundColor: '#ffffff', borderWidth: 1, borderColor: Colors.hairline }}>
-              <Text style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(20), color: Colors.onSurface }} maxFontSizeMultiplier={1.2}>
+            <View
+              style={{
+                borderRadius: Radius.chunky,
+                padding: Spacing.xxl,
+                backgroundColor: '#ffffff',
+                borderWidth: 1,
+                borderColor: Colors.hairline,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: Fonts.baloo.bold,
+                  fontSize: moderateScale(20),
+                  color: Colors.onSurface,
+                }}
+                maxFontSizeMultiplier={1.2}
+              >
                 All caught up
               </Text>
-              <Text style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary, marginTop: Spacing.xs }} maxFontSizeMultiplier={1.3}>
+              <Text
+                style={{
+                  fontFamily: Fonts.dmSans.regular,
+                  fontSize: moderateScale(13),
+                  color: Colors.tertiary,
+                  marginTop: Spacing.xs,
+                }}
+                maxFontSizeMultiplier={1.3}
+              >
                 More lessons coming soon.
               </Text>
             </View>
@@ -234,47 +288,99 @@ export default function HomeScreen() {
             accessibilityLabel={`Words learnt: ${wordsLearned}. Tap to see all words learnt.`}
             style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
           >
-          <LinearGradient
-            colors={[Colors.goldBright, Colors.secondaryContainer]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={{ borderRadius: Radius.chunky, borderBottomWidth: 5, borderBottomColor: Colors.goldLip, padding: moderateScale(16) }}
-          >
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
-              <Text
-                style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(19), color: Colors.onSecondaryContainer, letterSpacing: -0.2 }}
-                maxFontSizeMultiplier={1.2}
+            <LinearGradient
+              colors={[Colors.goldBright, Colors.secondaryContainer]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                borderRadius: Radius.chunky,
+                borderBottomWidth: 5,
+                borderBottomColor: Colors.goldLip,
+                padding: moderateScale(16),
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'baseline',
+                }}
               >
-                Words learnt: {wordsLearned}
-              </Text>
-              <Text
-                style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(19), color: Colors.onSecondaryContainer, fontVariant: ['tabular-nums'] }}
-                maxFontSizeMultiplier={1.2}
-              >
-                {wordPct}%
-              </Text>
-            </View>
-            <View style={{ height: moderateScale(9), backgroundColor: 'rgba(108,80,0,0.22)', borderRadius: Radius.full, overflow: 'hidden', marginTop: Spacing.sm }}>
-              <View style={{ height: '100%', width: `${wordPct}%`, backgroundColor: Colors.primaryContainer, borderRadius: Radius.full }} />
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: Spacing.sm }}>
-              <Text
-                style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12), color: Colors.onSecondaryContainer, flexShrink: 1 }}
-                maxFontSizeMultiplier={1.3}
-              >
-                of your weekly target achieved
-              </Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(2) }}>
                 <Text
-                  style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(12), color: Colors.onSecondaryContainer }}
+                  style={{
+                    fontFamily: Fonts.baloo.extrabold,
+                    fontSize: moderateScale(19),
+                    color: Colors.onSecondaryContainer,
+                    letterSpacing: -0.2,
+                  }}
+                  maxFontSizeMultiplier={1.2}
+                >
+                  Words learnt: {wordsLearned}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Fonts.baloo.extrabold,
+                    fontSize: moderateScale(19),
+                    color: Colors.onSecondaryContainer,
+                    fontVariant: ['tabular-nums'],
+                  }}
+                  maxFontSizeMultiplier={1.2}
+                >
+                  {wordPct}%
+                </Text>
+              </View>
+              <View
+                style={{
+                  height: moderateScale(9),
+                  backgroundColor: 'rgba(108,80,0,0.22)',
+                  borderRadius: Radius.full,
+                  overflow: 'hidden',
+                  marginTop: Spacing.sm,
+                }}
+              >
+                <View
+                  style={{
+                    height: '100%',
+                    width: `${wordPct}%`,
+                    backgroundColor: Colors.primaryContainer,
+                    borderRadius: Radius.full,
+                  }}
+                />
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginTop: Spacing.sm,
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: Fonts.dmSans.medium,
+                    fontSize: moderateScale(12),
+                    color: Colors.onSecondaryContainer,
+                    flexShrink: 1,
+                  }}
                   maxFontSizeMultiplier={1.3}
                 >
-                  See all
+                  of your weekly target achieved
                 </Text>
-                <Icons.forward size={moderateScale(14)} color={Colors.onSecondaryContainer} />
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(2) }}>
+                  <Text
+                    style={{
+                      fontFamily: Fonts.dmSans.bold,
+                      fontSize: moderateScale(12),
+                      color: Colors.onSecondaryContainer,
+                    }}
+                    maxFontSizeMultiplier={1.3}
+                  >
+                    See all
+                  </Text>
+                  <Icons.forward size={moderateScale(14)} color={Colors.onSecondaryContainer} />
+                </View>
               </View>
-            </View>
-          </LinearGradient>
+            </LinearGradient>
           </Pressable>
 
           {/* Stuck right now? — the single urgent red surface (not a warning) */}
@@ -285,18 +391,34 @@ export default function HomeScreen() {
             lip={4}
             lipColor="rgba(110,0,20,0.18)"
             radius={Radius.chunky}
-            style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.md, padding: moderateScale(16) }}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: Spacing.md,
+              padding: moderateScale(16),
+            }}
           >
             <StuckIcon />
             <View style={{ flex: 1 }}>
               <Text
-                style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(18), color: Colors.primary, letterSpacing: -0.2 }}
+                style={{
+                  fontFamily: Fonts.baloo.bold,
+                  fontSize: moderateScale(18),
+                  color: Colors.primary,
+                  letterSpacing: -0.2,
+                }}
                 maxFontSizeMultiplier={1.3}
               >
                 Stuck right now?
               </Text>
               <Text
-                style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(12.5), color: Colors.tertiary, marginTop: moderateScale(1), lineHeight: moderateScale(17) }}
+                style={{
+                  fontFamily: Fonts.dmSans.regular,
+                  fontSize: moderateScale(12.5),
+                  color: Colors.tertiary,
+                  marginTop: moderateScale(1),
+                  lineHeight: moderateScale(17),
+                }}
                 numberOfLines={2}
                 maxFontSizeMultiplier={1.4}
               >
@@ -347,7 +469,12 @@ function DailyGoalCard({
       }}
     >
       <Text
-        style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(22), color: Colors.onSurface, letterSpacing: -0.3 }}
+        style={{
+          fontFamily: Fonts.baloo.extrabold,
+          fontSize: moderateScale(22),
+          color: Colors.onSurface,
+          letterSpacing: -0.3,
+        }}
         maxFontSizeMultiplier={1.2}
       >
         Daily Goal
@@ -370,13 +497,34 @@ function DailyGoalCard({
           {metrics.map((m) => (
             <View key={m.label}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(6) }}>
-                <View style={{ width: moderateScale(8), height: moderateScale(8), borderRadius: Radius.full, backgroundColor: m.dot }} />
-                <Text style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(13), color: Colors.tertiary }} maxFontSizeMultiplier={1.3}>
+                <View
+                  style={{
+                    width: moderateScale(8),
+                    height: moderateScale(8),
+                    borderRadius: Radius.full,
+                    backgroundColor: m.dot,
+                  }}
+                />
+                <Text
+                  style={{
+                    fontFamily: Fonts.dmSans.bold,
+                    fontSize: moderateScale(13),
+                    color: Colors.tertiary,
+                  }}
+                  maxFontSizeMultiplier={1.3}
+                >
                   {m.label}
                 </Text>
               </View>
               <Text
-                style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(22), color: m.text, letterSpacing: -0.3, fontVariant: ['tabular-nums'], marginTop: moderateScale(1) }}
+                style={{
+                  fontFamily: Fonts.baloo.extrabold,
+                  fontSize: moderateScale(22),
+                  color: m.text,
+                  letterSpacing: -0.3,
+                  fontVariant: ['tabular-nums'],
+                  marginTop: moderateScale(1),
+                }}
                 maxFontSizeMultiplier={1.2}
               >
                 {m.value}

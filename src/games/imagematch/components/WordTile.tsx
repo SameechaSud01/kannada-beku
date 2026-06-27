@@ -9,22 +9,22 @@ import { useShake } from '../../shared/animations';
 import type { TileState, VocabItem } from '../types';
 
 type Props = {
-  item:    VocabItem;
-  state:   TileState;
+  item: VocabItem;
+  state: TileState;
   onPress: () => void;
 };
 
 const BG: Record<TileState, string> = {
-  default:  Colors.surface,
+  default: Colors.surface,
   selected: Colors.surfaceContainerHigh,
-  matched:  Colors.secondaryFixed,
+  matched: Colors.secondaryFixed,
   mismatch: Colors.errorContainerLow,
 };
 
 const BORDER: Record<TileState, string> = {
-  default:  Colors.outlineVariant,
+  default: Colors.outlineVariant,
   selected: Colors.primary,
-  matched:  Colors.secondary,
+  matched: Colors.secondary,
   mismatch: Colors.primary,
 };
 
@@ -37,13 +37,27 @@ const WordTile: React.FC<Props> = ({ item, state, onPress }) => {
   useEffect(() => {
     if (state !== 'matched') return;
     Animated.sequence([
-      Animated.spring(pop, { toValue: 1.08, damping: 8, stiffness: 220, mass: 1, useNativeDriver: true }),
-      Animated.spring(pop, { toValue: 1, damping: 12, stiffness: 200, mass: 1, useNativeDriver: true }),
+      Animated.spring(pop, {
+        toValue: 1.08,
+        damping: 8,
+        stiffness: 220,
+        mass: 1,
+        useNativeDriver: true,
+      }),
+      Animated.spring(pop, {
+        toValue: 1,
+        damping: 12,
+        stiffness: 200,
+        mass: 1,
+        useNativeDriver: true,
+      }),
     ]).start();
   }, [state, pop]);
 
   return (
-    <Animated.View style={{ transform: [{ translateX }, { scale: pop }], opacity: locked ? 0.55 : 1 }}>
+    <Animated.View
+      style={{ transform: [{ translateX }, { scale: pop }], opacity: locked ? 0.55 : 1 }}
+    >
       <Pressable
         onPress={onPress}
         disabled={locked}
@@ -64,7 +78,11 @@ const WordTile: React.FC<Props> = ({ item, state, onPress }) => {
       >
         {item.ph ? (
           <Text
-            style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onSurface }}
+            style={{
+              fontFamily: Fonts.dmSans.bold,
+              fontSize: moderateScale(16),
+              color: Colors.onSurface,
+            }}
             numberOfLines={1}
             maxFontSizeMultiplier={1.3}
           >
@@ -72,7 +90,12 @@ const WordTile: React.FC<Props> = ({ item, state, onPress }) => {
           </Text>
         ) : null}
         <Text
-          style={{ fontFamily: Fonts.notoSansKannada.regular, fontSize: moderateScale(14), color: Colors.tertiary, marginTop: moderateScale(2) }}
+          style={{
+            fontFamily: Fonts.notoSansKannada.regular,
+            fontSize: moderateScale(14),
+            color: Colors.tertiary,
+            marginTop: moderateScale(2),
+          }}
           numberOfLines={1}
           maxFontSizeMultiplier={1.3}
         >
