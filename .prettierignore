@@ -1,0 +1,20 @@
+node_modules/
+.expo/
+dist/
+web-build/
+build/
+ios/
+android/
+package-lock.json
+assets/
+*.md
+
+# Design / spec handoff artifacts — reference material, not app source.
+spec_docs/
+design_handoff_system_states/
+design_handoff_chunky_v3/
+.agents/
+docs/
+
+# Standalone marketing site — separate toolchain.
+web/
