@@ -146,7 +146,7 @@ export default function PracticeScreen() {
             }}
             maxFontSizeMultiplier={1.4}
           >
-            Play with what you&apos;ve learned.
+            Every game matches your lessons, one to one.
           </Text>
         </View>
 

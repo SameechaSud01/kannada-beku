@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { View, Text, Pressable, Switch, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -24,10 +25,12 @@ export default function AudioScreen() {
   const { ttsRate, changeRate } = useTtsRate();
   const autoReplay = useUserStore((s) => s.autoReplay);
   const setAutoReplay = useUserStore((s) => s.setAutoReplay);
+  const [savingAutoReplay, setSavingAutoReplay] = useState(false);
 
   async function handleAutoReplayToggle(next: boolean) {
-    if (!userId) return;
+    if (!userId || savingAutoReplay) return;
     const previous = useUserStore.getState().autoReplay;
+    setSavingAutoReplay(true);
     setAutoReplay(next);
     try {
       await updateAutoReplay(userId, next);
@@ -35,6 +38,8 @@ export default function AudioScreen() {
       console.warn('[audio] updateAutoReplay failed', err);
       setAutoReplay(previous);
       Toasts.preferenceSaveFailed();
+    } finally {
+      setSavingAutoReplay(false);
     }
   }
 
@@ -205,6 +210,7 @@ export default function AudioScreen() {
           <Switch
             value={autoReplay}
             onValueChange={handleAutoReplayToggle}
+            disabled={savingAutoReplay}
             trackColor={{ true: Colors.primary, false: Colors.surfaceContainerHighest }}
             thumbColor={Colors.onPrimary}
             accessibilityLabel="Auto-replay audio on lesson cards"
