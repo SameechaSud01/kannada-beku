@@ -58,7 +58,11 @@ const AksharaTile: React.FC<Props> = ({ char, onPress, disabled, tone = 'tray' }
     })}
   >
     <Text
-      style={{ fontFamily: Fonts.notoSansKannada.bold, fontSize: moderateScale(22), color: Colors.onSurface }}
+      style={{
+        fontFamily: Fonts.notoSansKannada.bold,
+        fontSize: moderateScale(22),
+        color: Colors.onSurface,
+      }}
       maxFontSizeMultiplier={1.3}
     >
       {char}

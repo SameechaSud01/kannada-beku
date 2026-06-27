@@ -16,21 +16,19 @@ export interface RoundIconButtonProps {
   style?: object;
 }
 
-const variantColors: Record<
-  RoundIconButtonVariant,
-  { bg: string; fg: string; pressedBg: string }
-> = {
-  primary: {
-    bg: Colors.primary,
-    fg: Colors.onPrimary,
-    pressedBg: Colors.primaryContainer,
-  },
-  ghost: {
-    bg: Colors.surfaceContainerHighest,
-    fg: Colors.primary,
-    pressedBg: Colors.surfaceContainerHigh,
-  },
-};
+const variantColors: Record<RoundIconButtonVariant, { bg: string; fg: string; pressedBg: string }> =
+  {
+    primary: {
+      bg: Colors.primary,
+      fg: Colors.onPrimary,
+      pressedBg: Colors.primaryContainer,
+    },
+    ghost: {
+      bg: Colors.surfaceContainerHighest,
+      fg: Colors.primary,
+      pressedBg: Colors.surfaceContainerHigh,
+    },
+  };
 
 export function RoundIconButton({
   icon,

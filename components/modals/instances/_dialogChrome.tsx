@@ -66,7 +66,5 @@ export function DialogBody({ children }: { children: ReactNode }) {
 }
 
 DialogBody.Strong = function DialogBodyStrong({ children }: { children: ReactNode }) {
-  return (
-    <Text style={{ fontFamily: Fonts.dmSans.bold, color: Colors.onSurface }}>{children}</Text>
-  );
+  return <Text style={{ fontFamily: Fonts.dmSans.bold, color: Colors.onSurface }}>{children}</Text>;
 };

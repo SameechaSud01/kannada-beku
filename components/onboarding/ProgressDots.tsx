@@ -14,7 +14,14 @@ interface ProgressDotsProps {
  */
 export function ProgressDots({ total, current }: ProgressDotsProps) {
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: Spacing.sm }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: Spacing.sm,
+      }}
+    >
       {Array.from({ length: total }, (_, i) => {
         const active = i === current;
         return (

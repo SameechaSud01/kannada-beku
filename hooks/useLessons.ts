@@ -31,8 +31,7 @@ export function useLessons(): LessonSelectorItem[] {
     const slug = lessonSlugByNo(slot.slot);
     const unlocked =
       !!slug &&
-      (completedLessons.includes(slug) ||
-        completedParts.some((k) => k.startsWith(`${slug}:`)));
+      (completedLessons.includes(slug) || completedParts.some((k) => k.startsWith(`${slug}:`)));
     return {
       n: slot.slot,
       glyph: slot.charPlaceholder,

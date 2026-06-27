@@ -204,7 +204,10 @@ function OppositeGameInner({
 
 function CenteredLoading() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      edges={['top', 'bottom']}
+    >
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
@@ -215,7 +218,10 @@ function CenteredLoading() {
 function ErrorState({ onRetry }: { onRetry: () => void }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      edges={['top', 'bottom']}
+    >
       <View
         style={{
           flex: 1,
@@ -247,7 +253,12 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
           Check your connection and try again.
         </Text>
         <LipButton label="Retry" variant="primary" fullWidth={false} onPress={onRetry} />
-        <LipButton label="Back" variant="tertiary" fullWidth={false} onPress={() => router.back()} />
+        <LipButton
+          label="Back"
+          variant="tertiary"
+          fullWidth={false}
+          onPress={() => router.back()}
+        />
       </View>
     </SafeAreaView>
   );
@@ -256,7 +267,10 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
 function EmptyState({ lessonNo }: { lessonNo: number }) {
   const router = useRouter();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.surfaceCream }} edges={['top', 'bottom']}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      edges={['top', 'bottom']}
+    >
       <View
         style={{
           flex: 1,
@@ -288,7 +302,12 @@ function EmptyState({ lessonNo }: { lessonNo: number }) {
         >
           No opposites items have been authored for this lesson yet. Try an earlier lesson.
         </Text>
-        <LipButton label="Back to lessons" variant="primary" fullWidth={false} onPress={() => router.back()} />
+        <LipButton
+          label="Back to lessons"
+          variant="primary"
+          fullWidth={false}
+          onPress={() => router.back()}
+        />
       </View>
     </SafeAreaView>
   );

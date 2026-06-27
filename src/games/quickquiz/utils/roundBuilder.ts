@@ -28,30 +28,24 @@ function toOption(v: QuizVocab, direction: QuizQuestion['direction']): QuizOptio
  * Returns fewer questions if the bank is small; options may have < 4 entries
  * only when the pool has fewer than 4 unique items total.
  */
-export function buildQuiz(
-  targetBank: QuizVocab[],
-  distractorBank?: QuizVocab[],
-): QuizQuestion[] {
+export function buildQuiz(targetBank: QuizVocab[], distractorBank?: QuizVocab[]): QuizQuestion[] {
   if (targetBank.length === 0) return [];
 
-  const pool = distractorBank && distractorBank.length >= targetBank.length
-    ? distractorBank
-    : targetBank;
+  const pool =
+    distractorBank && distractorBank.length >= targetBank.length ? distractorBank : targetBank;
   const roundSize = Math.min(targetBank.length, ROUND_SIZE);
   const targets = fisherYates(targetBank).slice(0, roundSize);
 
   return targets.map((target, i) => {
     const direction: QuizQuestion['direction'] = i % 2 === 0 ? 'kn-to-en' : 'en-to-kn';
     const distractors = fisherYates(pool.filter((v) => v.id !== target.id)).slice(0, 3);
-    const options = fisherYates(
-      [target, ...distractors].map((v) => toOption(v, direction)),
-    );
+    const options = fisherYates([target, ...distractors].map((v) => toOption(v, direction)));
     return {
       itemId: target.id,
       direction,
       // kn→en leads with the English transliteration (Kannada script can clip at
       // the large prompt size); the Kannada word rides along as a small subtitle.
-      prompt: direction === 'kn-to-en' ? (target.transliteration || target.kannada) : target.meaning,
+      prompt: direction === 'kn-to-en' ? target.transliteration || target.kannada : target.meaning,
       promptSub: direction === 'kn-to-en' && target.transliteration ? target.kannada : '',
       answerId: target.id,
       options,

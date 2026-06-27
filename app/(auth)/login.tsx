@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  ScrollView,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as AppleAuthentication from 'expo-apple-authentication';
@@ -326,7 +335,9 @@ export default function LoginScreen() {
 
         {/* Social sign-in (spec_social_login.md) */}
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: Spacing.xl }}>
-          <View style={{ flex: 1, height: moderateScale(0.5), backgroundColor: Colors.outlineVariant }} />
+          <View
+            style={{ flex: 1, height: moderateScale(0.5), backgroundColor: Colors.outlineVariant }}
+          />
           <Text
             style={{
               marginHorizontal: Spacing.md,
@@ -337,7 +348,9 @@ export default function LoginScreen() {
           >
             or continue with
           </Text>
-          <View style={{ flex: 1, height: moderateScale(0.5), backgroundColor: Colors.outlineVariant }} />
+          <View
+            style={{ flex: 1, height: moderateScale(0.5), backgroundColor: Colors.outlineVariant }}
+          />
         </View>
 
         {/* Google — secondary (tan) chunky button with the red G */}

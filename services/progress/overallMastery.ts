@@ -54,16 +54,13 @@ export function computeOverallMastery(
     const gm = gameMastery[lesson.lessonNo];
     const practice = gm && gm.total > 0 ? gm.correct / gm.total : null;
 
-    const mastery =
-      practice === null ? learn : LEARN_ALPHA * learn + (1 - LEARN_ALPHA) * practice;
+    const mastery = practice === null ? learn : LEARN_ALPHA * learn + (1 - LEARN_ALPHA) * practice;
 
     return { lessonNo: lesson.lessonNo, slug: lesson.slug, learn, practice, mastery };
   });
 
   const avg =
-    perLesson.length > 0
-      ? perLesson.reduce((sum, l) => sum + l.mastery, 0) / perLesson.length
-      : 0;
+    perLesson.length > 0 ? perLesson.reduce((sum, l) => sum + l.mastery, 0) / perLesson.length : 0;
 
   return {
     progressPct: Math.max(0, Math.min(100, avg * 100)),

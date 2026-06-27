@@ -9,10 +9,10 @@ import AksharaTile from './AksharaTile';
 import type { Tile } from '../hooks/useDictationGame';
 
 type Props = {
-  tray:     Tile[];
-  placed:   string[];
+  tray: Tile[];
+  placed: string[];
   disabled: boolean;
-  onTap:    (id: string) => void;
+  onTap: (id: string) => void;
 };
 
 const SyllableTray: React.FC<Props> = ({ tray, placed, disabled, onTap }) => (

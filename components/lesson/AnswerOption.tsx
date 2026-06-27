@@ -131,7 +131,11 @@ export function AnswerOption({ label, index, picked, correctIndex, onPick }: Ans
               justifyContent: 'center',
             }}
           >
-            <Icons.check size={moderateScale(16)} color={Colors.onSecondaryContainer} strokeWidth={2.6} />
+            <Icons.check
+              size={moderateScale(16)}
+              color={Colors.onSecondaryContainer}
+              strokeWidth={2.6}
+            />
           </View>
         ) : null}
       </Pressable>

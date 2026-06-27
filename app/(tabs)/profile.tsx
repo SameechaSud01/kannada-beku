@@ -90,10 +90,16 @@ export default function ProfileScreen() {
 
   const joinedLabel = formatJoined(user?.created_at);
 
-  const goalLabel = goal === 'spoken' ? 'Spoken only' : goal === 'fluency' ? 'Complete fluency' : null;
+  const goalLabel =
+    goal === 'spoken' ? 'Spoken only' : goal === 'fluency' ? 'Complete fluency' : null;
   const dailyGoalLabel = dailyGoalMinutes ? `${dailyGoalMinutes} min / day` : null;
   const hasOnboardingSummary = !!(goalLabel || dailyGoalLabel || motivations.length);
-  const goalSub = [dailyGoalLabel, motivations.length ? `${motivations.length} reason${motivations.length === 1 ? '' : 's'}` : null]
+  const goalSub = [
+    dailyGoalLabel,
+    motivations.length
+      ? `${motivations.length} reason${motivations.length === 1 ? '' : 's'}`
+      : null,
+  ]
     .filter(Boolean)
     .join(' · ');
 
@@ -105,10 +111,14 @@ export default function ProfileScreen() {
   // exists.
   if (lessonsDone === 0 && streak === 0) {
     const firstSlug = dbLessons.find((l) => l.lessonNo === 1)?.slug ?? dbLessons[0]?.slug;
-    return <NoStreakEmpty onStart={() => router.push(firstSlug ? `/lesson/${firstSlug}` : '/(tabs)/learn')} />;
+    return (
+      <NoStreakEmpty
+        onStart={() => router.push(firstSlug ? `/lesson/${firstSlug}` : '/(tabs)/learn')}
+      />
+    );
   }
 
-  const settingsItems: Array<{ id: string; label: string; Icon: TablerIcon; onPress: () => void }> = [
+  const settingsItems: { id: string; label: string; Icon: TablerIcon; onPress: () => void }[] = [
     {
       id: 'reminders',
       label: 'Reminders',
@@ -147,9 +157,20 @@ export default function ProfileScreen() {
         contentContainerStyle={{ paddingBottom: TAB_BAR_CLEARANCE + insets.bottom }}
       >
         {/* Name block */}
-        <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.xl, marginBottom: moderateScale(18) }}>
+        <View
+          style={{
+            paddingHorizontal: Spacing.lg,
+            paddingTop: Spacing.xl,
+            marginBottom: moderateScale(18),
+          }}
+        >
           <Text
-            style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(30), color: Colors.onSurface, letterSpacing: -0.5 }}
+            style={{
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(30),
+              color: Colors.onSurface,
+              letterSpacing: -0.5,
+            }}
             maxFontSizeMultiplier={1.2}
             numberOfLines={1}
           >
@@ -157,7 +178,12 @@ export default function ProfileScreen() {
           </Text>
           {joinedLabel ? (
             <Text
-              style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(13), color: Colors.tertiary, marginTop: moderateScale(2) }}
+              style={{
+                fontFamily: Fonts.dmSans.medium,
+                fontSize: moderateScale(13),
+                color: Colors.tertiary,
+                marginTop: moderateScale(2),
+              }}
               maxFontSizeMultiplier={1.3}
             >
               Learning since {joinedLabel}
@@ -182,25 +208,62 @@ export default function ProfileScreen() {
               accessibilityRole="progressbar"
               accessibilityLabel={`Overall progress: ${overallPct} percent. Lessons and games combined.`}
             >
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: Spacing.sm }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'baseline',
+                  marginBottom: Spacing.sm,
+                }}
+              >
                 <Text
-                  style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(11), letterSpacing: 1.4, color: Colors.onSecondaryContainer, textTransform: 'uppercase' }}
+                  style={{
+                    fontFamily: Fonts.dmSans.bold,
+                    fontSize: moderateScale(11),
+                    letterSpacing: 1.4,
+                    color: Colors.onSecondaryContainer,
+                    textTransform: 'uppercase',
+                  }}
                   maxFontSizeMultiplier={1.4}
                 >
                   Overall progress
                 </Text>
                 <Text
-                  style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(22), color: Colors.onSecondaryContainer, fontVariant: ['tabular-nums'] }}
+                  style={{
+                    fontFamily: Fonts.baloo.extrabold,
+                    fontSize: moderateScale(22),
+                    color: Colors.onSecondaryContainer,
+                    fontVariant: ['tabular-nums'],
+                  }}
                   maxFontSizeMultiplier={1.3}
                 >
                   {overall.isLoading ? '—' : `${overallPct}%`}
                 </Text>
               </View>
-              <View style={{ height: moderateScale(9), backgroundColor: 'rgba(108,80,0,0.22)', borderRadius: Radius.full, overflow: 'hidden' }}>
-                <View style={{ height: '100%', width: `${overallPct}%`, backgroundColor: Colors.primaryContainer, borderRadius: Radius.full }} />
+              <View
+                style={{
+                  height: moderateScale(9),
+                  backgroundColor: 'rgba(108,80,0,0.22)',
+                  borderRadius: Radius.full,
+                  overflow: 'hidden',
+                }}
+              >
+                <View
+                  style={{
+                    height: '100%',
+                    width: `${overallPct}%`,
+                    backgroundColor: Colors.primaryContainer,
+                    borderRadius: Radius.full,
+                  }}
+                />
               </View>
               <Text
-                style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12), color: Colors.onSecondaryContainer, marginTop: Spacing.sm }}
+                style={{
+                  fontFamily: Fonts.dmSans.medium,
+                  fontSize: moderateScale(12),
+                  color: Colors.onSecondaryContainer,
+                  marginTop: Spacing.sm,
+                }}
                 maxFontSizeMultiplier={1.3}
               >
                 Lessons + games combined
@@ -212,8 +275,18 @@ export default function ProfileScreen() {
         {/* Two stat cards */}
         <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(28) }}>
           <View style={{ flexDirection: 'row', gap: moderateScale(11) }}>
-            <StatCard Icon={Icons.lessonDone} iconColor={Colors.primaryContainer} value={lessonsDone} label="Lessons done" />
-            <StatCard Icon={Icons.tabLearn} iconColor={Colors.secondary} value={wordsLearned} label="Words learned" />
+            <StatCard
+              Icon={Icons.lessonDone}
+              iconColor={Colors.primaryContainer}
+              value={lessonsDone}
+              label="Lessons done"
+            />
+            <StatCard
+              Icon={Icons.tabLearn}
+              iconColor={Colors.secondary}
+              value={wordsLearned}
+              label="Words learned"
+            />
           </View>
         </View>
 
@@ -251,14 +324,24 @@ export default function ProfileScreen() {
               </View>
               <View style={{ flex: 1 }}>
                 <Text
-                  style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(16), color: Colors.onSurface, letterSpacing: -0.2 }}
+                  style={{
+                    fontFamily: Fonts.baloo.bold,
+                    fontSize: moderateScale(16),
+                    color: Colors.onSurface,
+                    letterSpacing: -0.2,
+                  }}
                   maxFontSizeMultiplier={1.3}
                 >
                   {goalLabel ?? 'View your goal'}
                 </Text>
                 {goalSub ? (
                   <Text
-                    style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12.5), color: Colors.tertiary, marginTop: moderateScale(1) }}
+                    style={{
+                      fontFamily: Fonts.dmSans.medium,
+                      fontSize: moderateScale(12.5),
+                      color: Colors.tertiary,
+                      marginTop: moderateScale(1),
+                    }}
                     maxFontSizeMultiplier={1.3}
                   >
                     {goalSub}
@@ -302,9 +385,18 @@ export default function ProfileScreen() {
                   opacity: pressed ? 0.6 : 1,
                 })}
               >
-                <item.Icon size={moderateScale(20)} color={Colors.primaryContainer} strokeWidth={2.1} />
+                <item.Icon
+                  size={moderateScale(20)}
+                  color={Colors.primaryContainer}
+                  strokeWidth={2.1}
+                />
                 <Text
-                  style={{ flex: 1, fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(14.5), color: Colors.onSurface }}
+                  style={{
+                    flex: 1,
+                    fontFamily: Fonts.dmSans.bold,
+                    fontSize: moderateScale(14.5),
+                    color: Colors.onSurface,
+                  }}
                   maxFontSizeMultiplier={1.3}
                 >
                   {item.label}
@@ -348,10 +440,30 @@ function formatJoined(createdAt?: string): string | null {
 
 function SectionLabel({ children }: { children: string }) {
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(7), marginBottom: Spacing.md }}>
-      <View style={{ width: moderateScale(4), height: moderateScale(13), borderRadius: 2, backgroundColor: Colors.secondary }} />
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: moderateScale(7),
+        marginBottom: Spacing.md,
+      }}
+    >
+      <View
+        style={{
+          width: moderateScale(4),
+          height: moderateScale(13),
+          borderRadius: 2,
+          backgroundColor: Colors.secondary,
+        }}
+      />
       <Text
-        style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(11), letterSpacing: 1.4, color: Colors.tertiary, textTransform: 'uppercase' }}
+        style={{
+          fontFamily: Fonts.dmSans.bold,
+          fontSize: moderateScale(11),
+          letterSpacing: 1.4,
+          color: Colors.tertiary,
+          textTransform: 'uppercase',
+        }}
         maxFontSizeMultiplier={1.4}
       >
         {children}
@@ -360,7 +472,17 @@ function SectionLabel({ children }: { children: string }) {
   );
 }
 
-function StatCard({ Icon, iconColor, value, label }: { Icon: TablerIcon; iconColor: string; value: number; label: string }) {
+function StatCard({
+  Icon,
+  iconColor,
+  value,
+  label,
+}: {
+  Icon: TablerIcon;
+  iconColor: string;
+  value: number;
+  label: string;
+}) {
   return (
     <View
       style={{
@@ -376,14 +498,29 @@ function StatCard({ Icon, iconColor, value, label }: { Icon: TablerIcon; iconCol
     >
       <Icon size={moderateScale(20)} color={iconColor} />
       <Text
-        style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(28), color: Colors.onSurface, letterSpacing: -0.8, marginTop: moderateScale(6), lineHeight: moderateScale(38), fontVariant: ['tabular-nums'] }}
+        style={{
+          fontFamily: Fonts.baloo.extrabold,
+          fontSize: moderateScale(28),
+          color: Colors.onSurface,
+          letterSpacing: -0.8,
+          marginTop: moderateScale(6),
+          lineHeight: moderateScale(38),
+          fontVariant: ['tabular-nums'],
+        }}
         maxFontSizeMultiplier={1.2}
         numberOfLines={1}
       >
         {value}
       </Text>
       <Text
-        style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(10.5), letterSpacing: 1.2, color: Colors.textFaint, textTransform: 'uppercase', marginTop: moderateScale(5) }}
+        style={{
+          fontFamily: Fonts.dmSans.bold,
+          fontSize: moderateScale(10.5),
+          letterSpacing: 1.2,
+          color: Colors.textFaint,
+          textTransform: 'uppercase',
+          marginTop: moderateScale(5),
+        }}
         maxFontSizeMultiplier={1.4}
       >
         {label}

@@ -18,10 +18,10 @@ type StateStyle = { borderColor: string; backgroundColor: string };
 // chunky_v3: correct/partial = goldPale (reward), wrong = redPale (error).
 // No green/teal — warm-only palette.
 const stateStyles: Record<AnswerState, StateStyle> = {
-  unanswered: { borderColor: Colors.hairline,          backgroundColor: '#ffffff' },
-  correct:    { borderColor: Colors.goldLip,           backgroundColor: Colors.secondaryFixed },
-  partial:    { borderColor: Colors.goldLip,           backgroundColor: Colors.warningContainerLow },
-  wrong:      { borderColor: Colors.primaryContainer,  backgroundColor: Colors.errorContainerLow },
+  unanswered: { borderColor: Colors.hairline, backgroundColor: '#ffffff' },
+  correct: { borderColor: Colors.goldLip, backgroundColor: Colors.secondaryFixed },
+  partial: { borderColor: Colors.goldLip, backgroundColor: Colors.warningContainerLow },
+  wrong: { borderColor: Colors.primaryContainer, backgroundColor: Colors.errorContainerLow },
 };
 
 const AnswerInput: React.FC<Props> = ({ value, onChange, onSubmit, answerState, disabled }) => {
@@ -42,12 +42,12 @@ const AnswerInput: React.FC<Props> = ({ value, onChange, onSubmit, answerState, 
         value={value}
         onChangeText={onChange}
         onSubmitEditing={onSubmit}
-        returnKeyType='done'
-        autoCapitalize='none'
+        returnKeyType="done"
+        autoCapitalize="none"
         autoCorrect={false}
         spellCheck={false}
         editable={!disabled}
-        placeholder='type the word in English...'
+        placeholder="type the word in English..."
         placeholderTextColor={Colors.tertiary}
         style={{
           fontFamily: Fonts.dmSans.regular,

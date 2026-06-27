@@ -3,12 +3,7 @@
  * Lowercase, trim, strip diacritics, collapse whitespace.
  */
 export function normalizeTransliteration(s: string): string {
-  return s
-    .toLowerCase()
-    .trim()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/\s+/g, ' ');
+  return s.toLowerCase().trim().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ');
 }
 
 /**

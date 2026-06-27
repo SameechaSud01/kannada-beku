@@ -10,7 +10,13 @@ import { TopBar } from '../../ui/TopBar';
  * there's no chrome reflow when data arrives. The floating TabBar comes from the
  * (tabs) navigator, so skeletons don't render it.
  */
-export function TabSkeletonShell({ streak = 0, children }: { streak?: number; children: ReactNode }) {
+export function TabSkeletonShell({
+  streak = 0,
+  children,
+}: {
+  streak?: number;
+  children: ReactNode;
+}) {
   return (
     <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <Watermark motif="kolamGrid" />

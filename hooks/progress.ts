@@ -1,10 +1,6 @@
 import { useMemo } from 'react';
 import { useProgressStore } from '../stores/progressStore';
-import {
-  DAILY_LISTEN_TARGET,
-  DAILY_SPEAK_TARGET,
-  DAILY_PRACTICE_TARGET,
-} from '../constants/goals';
+import { DAILY_LISTEN_TARGET, DAILY_SPEAK_TARGET, DAILY_PRACTICE_TARGET } from '../constants/goals';
 import { localDateISO } from '../utils/date';
 
 type DailyGoal = Readonly<{ completed: number; target: number }>;

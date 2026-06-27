@@ -76,7 +76,11 @@ export function ChunkyPressable({
         accessibilityRole={accessibilityRole === 'none' ? undefined : accessibilityRole}
         accessibilityState={{ disabled: true }}
         style={[
-          { backgroundColor: Colors.surfaceContainerHighest, borderRadius: radius, borderBottomWidth: 0 },
+          {
+            backgroundColor: Colors.surfaceContainerHighest,
+            borderRadius: radius,
+            borderBottomWidth: 0,
+          },
           style,
         ]}
       >

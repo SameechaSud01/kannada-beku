@@ -47,7 +47,7 @@ describe('useQuickQuiz', () => {
   });
 
   it('correct tap scores and reveals; records a correct attempt', () => {
-    const attempts: Array<{ itemId: string; isCorrect: boolean }> = [];
+    const attempts: { itemId: string; isCorrect: boolean }[] = [];
     const { result } = renderHook(() => useQuickQuiz(BANK, undefined, (a) => attempts.push(a)));
     const answerId = result.current.currentQuestion.answerId;
     act(() => result.current.handleOptionTap(answerId));
@@ -58,7 +58,7 @@ describe('useQuickQuiz', () => {
   });
 
   it('a timeout auto-reveals as wrong and records a wrong attempt', () => {
-    const attempts: Array<{ itemId: string; isCorrect: boolean }> = [];
+    const attempts: { itemId: string; isCorrect: boolean }[] = [];
     const { result } = renderHook(() => useQuickQuiz(BANK, undefined, (a) => attempts.push(a)));
     const itemId = result.current.currentQuestion.itemId;
     act(() => jest.advanceTimersByTime(PER_QUESTION_SECONDS * 1000));

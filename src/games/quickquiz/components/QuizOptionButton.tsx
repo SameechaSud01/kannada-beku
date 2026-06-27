@@ -9,34 +9,34 @@ import { useShake } from '../../shared/animations';
 import type { OptionState, QuizOption } from '../types';
 
 type Props = {
-  option:  QuizOption;
-  state:   OptionState;
+  option: QuizOption;
+  state: OptionState;
   onPress: () => void;
 };
 
 // chunky_v3 §9: correct = goldPale face + goldLip border + gold check; wrong =
 // redPale + 2px primaryContainer border (wrong STAYS red — error ≠ warning).
 const FACE: Record<OptionState, string> = {
-  default:  '#ffffff',
-  correct:  Colors.secondaryFixed,
-  wrong:    Colors.errorContainerLow,
-  reveal:   Colors.secondaryFixed,
+  default: '#ffffff',
+  correct: Colors.secondaryFixed,
+  wrong: Colors.errorContainerLow,
+  reveal: Colors.secondaryFixed,
   disabled: '#ffffff',
 };
 
 const BORDER: Record<OptionState, string> = {
-  default:  Colors.hairline,
-  correct:  Colors.goldLip,
-  wrong:    Colors.primaryContainer,
-  reveal:   Colors.goldLip,
+  default: Colors.hairline,
+  correct: Colors.goldLip,
+  wrong: Colors.primaryContainer,
+  reveal: Colors.goldLip,
   disabled: Colors.hairline,
 };
 
 const BORDER_WIDTH: Record<OptionState, number> = {
-  default:  1,
-  correct:  2,
-  wrong:    2,
-  reveal:   2,
+  default: 1,
+  correct: 2,
+  wrong: 2,
+  reveal: 2,
   disabled: 1,
 };
 
@@ -110,7 +110,11 @@ const QuizOptionButton: React.FC<Props> = ({ option, state, onPress }) => {
               justifyContent: 'center',
             }}
           >
-            <Icons.check size={moderateScale(13)} color={Colors.onSecondaryContainer} strokeWidth={3} />
+            <Icons.check
+              size={moderateScale(13)}
+              color={Colors.onSecondaryContainer}
+              strokeWidth={3}
+            />
           </View>
         )}
       </Pressable>

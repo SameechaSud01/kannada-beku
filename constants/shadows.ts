@@ -76,14 +76,14 @@ export type ShadowName = keyof typeof Shadows;
  * (see `ChunkyPressable` / `LipButton`). `disabled` is flat: no lip, no depth.
  */
 export const Lips = {
-  primary:   { face: Colors.primaryContainer,     lip: Colors.redLip,                 depth: 5 },
-  red:       { face: Colors.primaryContainer,     lip: Colors.redLip,                 depth: 5 },
-  redDeep:   { face: Colors.primary,              lip: Colors.redLipDeep,             depth: 5 },
-  gold:      { face: Colors.secondaryContainer,   lip: Colors.goldLip,                depth: 5 },
-  secondary: { face: '#ffffff',                   lip: Colors.interactiveSecondaryLip, depth: 4 },
-  white:     { face: '#ffffff',                   lip: 'rgba(27,29,14,0.10)',         depth: 4 },
-  chip:      { face: '#ffffff',                   lip: 'rgba(27,29,14,0.10)',         depth: 3 },
-  disabled:  { face: Colors.surfaceContainerHighest, lip: 'transparent',             depth: 0 },
+  primary: { face: Colors.primaryContainer, lip: Colors.redLip, depth: 5 },
+  red: { face: Colors.primaryContainer, lip: Colors.redLip, depth: 5 },
+  redDeep: { face: Colors.primary, lip: Colors.redLipDeep, depth: 5 },
+  gold: { face: Colors.secondaryContainer, lip: Colors.goldLip, depth: 5 },
+  secondary: { face: '#ffffff', lip: Colors.interactiveSecondaryLip, depth: 4 },
+  white: { face: '#ffffff', lip: 'rgba(27,29,14,0.10)', depth: 4 },
+  chip: { face: '#ffffff', lip: 'rgba(27,29,14,0.10)', depth: 3 },
+  disabled: { face: Colors.surfaceContainerHighest, lip: 'transparent', depth: 0 },
 } as const;
 
 export type LipName = keyof typeof Lips;

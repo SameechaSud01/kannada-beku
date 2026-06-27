@@ -20,11 +20,7 @@ interface GuideFlowProps {
   finishing?: boolean;
 }
 
-const STEP_CTAS = [
-  'Show me the vowels',
-  'Next',
-  'Done — start Lesson 1',
-];
+const STEP_CTAS = ['Show me the vowels', 'Next', 'Done — start Lesson 1'];
 
 /**
  * The 3-step paced Kannada-basics flow — Listen → Notice → Name
@@ -83,9 +79,7 @@ export function GuideFlow({ onExit, onFinish, finishing = false }: GuideFlowProp
       ctaDisabled={step >= GUIDE_STEP_COUNT && finishing}
     >
       {step === 1 && <StepThings principles={guide.principles} />}
-      {step === 2 && (
-        <StepVowels vowelPairs={guide.vowelPairs} vowelLoners={guide.vowelLoners} />
-      )}
+      {step === 2 && <StepVowels vowelPairs={guide.vowelPairs} vowelLoners={guide.vowelLoners} />}
       {step === 3 && <StepReading tryIt={guide.tryIt} />}
     </GuideStepShell>
   );

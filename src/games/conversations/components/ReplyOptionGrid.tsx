@@ -5,9 +5,9 @@ import ReplyOptionButton from './ReplyOptionButton';
 import type { ConversationOption, OptionState } from '../types';
 
 type Props = {
-  options:     ConversationOption[];
+  options: ConversationOption[];
   optionState: (optionId: string) => OptionState;
-  onSelect:    (optionId: string) => void;
+  onSelect: (optionId: string) => void;
 };
 
 const ReplyOptionGrid: React.FC<Props> = ({ options, optionState, onSelect }) => (

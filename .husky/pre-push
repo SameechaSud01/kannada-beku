@@ -28,7 +28,7 @@ echo "  Pre-Push Pipeline - Kannada Beku"
 echo "========================================="
 echo ""
 
-echo "[ Step 1/2 ] Running TypeScript type check..."
+echo "[ Step 1/4 ] Running TypeScript type check..."
 if npx tsc --noEmit; then
   echo "  TypeScript: PASS"
 else
@@ -39,7 +39,18 @@ else
 fi
 
 echo ""
-echo "[ Step 2/3 ] Running security scan..."
+echo "[ Step 2/4 ] Running ESLint..."
+if npx eslint .; then
+  echo "  ESLint: PASS"
+else
+  echo "  ESLint: FAIL"
+  echo ""
+  echo "  Fix lint errors before pushing (run: npm run lint:fix)."
+  exit 1
+fi
+
+echo ""
+echo "[ Step 3/4 ] Running security scan..."
 SCRIPT_DIR="$(git rev-parse --show-toplevel)/scripts"
 if [ -f "$SCRIPT_DIR/security-scan.sh" ]; then
   if bash "$SCRIPT_DIR/security-scan.sh"; then
@@ -55,7 +66,7 @@ else
 fi
 
 echo ""
-echo "[ Step 3/3 ] Running tests..."
+echo "[ Step 4/4 ] Running tests..."
 if npm test --silent; then
   echo "  Tests: PASS"
 else

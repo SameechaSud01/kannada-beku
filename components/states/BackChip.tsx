@@ -23,7 +23,12 @@ export function BackChip({ onPress }: BackChipProps) {
       hitSlop={8}
       accessibilityRole="button"
       accessibilityLabel="Go back"
-      style={{ position: 'absolute', top: insets.top + moderateScale(12), left: moderateScale(18), zIndex: 2 }}
+      style={{
+        position: 'absolute',
+        top: insets.top + moderateScale(12),
+        left: moderateScale(18),
+        zIndex: 2,
+      }}
     >
       <ChunkyCircle
         size={moderateScale(40)}

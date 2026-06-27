@@ -176,7 +176,11 @@ function PartRow({ part, onPress }: { part: PartState; onPress: () => void }) {
             bg={Colors.secondaryContainer}
             lipColor={Colors.goldLip}
           >
-            <Icons.check size={moderateScale(15)} color={Colors.onSecondaryContainer} strokeWidth={2.6} />
+            <Icons.check
+              size={moderateScale(15)}
+              color={Colors.onSecondaryContainer}
+              strokeWidth={2.6}
+            />
           </ChunkyCircle>
         ) : part.active ? (
           <ChunkyCircle
@@ -195,7 +199,13 @@ function PartRow({ part, onPress }: { part: PartState; onPress: () => void }) {
   // Locked rows are de-emphasised and flat (no lip / no press-translate).
   if (locked) {
     return (
-      <Pressable onPress={onPress} disabled accessibilityRole="button" accessibilityState={{ disabled: true }} accessibilityLabel={a11yLabel}>
+      <Pressable
+        onPress={onPress}
+        disabled
+        accessibilityRole="button"
+        accessibilityState={{ disabled: true }}
+        accessibilityLabel={a11yLabel}
+      >
         <View
           style={{
             backgroundColor: Colors.surfaceCreamLow,

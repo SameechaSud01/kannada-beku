@@ -40,7 +40,11 @@ export function PartDoneCard({ partLabel, nextLabel, onContinue, onBack }: PartD
           lipColor={Colors.goldLip}
           style={{ marginBottom: Spacing.xl }}
         >
-          <Icons.check size={moderateScale(38)} color={Colors.onSecondaryContainer} strokeWidth={2.6} />
+          <Icons.check
+            size={moderateScale(38)}
+            color={Colors.onSecondaryContainer}
+            strokeWidth={2.6}
+          />
         </ChunkyCircle>
 
         <Text

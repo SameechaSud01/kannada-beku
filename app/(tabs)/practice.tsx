@@ -34,8 +34,7 @@ type GameDef = {
   glyphColor: string;
 };
 
-// 'image-match' stays hidden from Practice (CONTRADICTIONS C13). The featured
-// Quick quiz renders separately; these three fill the grid + wide row.
+// The featured Quick quiz renders separately; these three fill the grid + wide row.
 const GRID_GAMES: GameDef[] = [
   {
     id: 'dictation',
@@ -124,7 +123,13 @@ export default function PracticeScreen() {
         contentContainerStyle={{ paddingBottom: TAB_BAR_CLEARANCE + insets.bottom }}
       >
         {/* Page title */}
-        <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg, marginBottom: Spacing.lg }}>
+        <View
+          style={{
+            paddingHorizontal: Spacing.lg,
+            paddingTop: Spacing.lg,
+            marginBottom: Spacing.lg,
+          }}
+        >
           <Text
             style={{
               fontFamily: Fonts.baloo.extrabold,
@@ -177,7 +182,13 @@ export default function PracticeScreen() {
 
         {/* Wide — Opposites */}
         <View style={{ paddingHorizontal: Spacing.lg, marginTop: moderateScale(11) }}>
-          <GameCard game={WIDE_GAME} width="100%" minHeight={96} locked={!hasUnlocked} onPress={() => go('opposites')} />
+          <GameCard
+            game={WIDE_GAME}
+            width="100%"
+            minHeight={96}
+            locked={!hasUnlocked}
+            onPress={() => go('opposites')}
+          />
         </View>
 
         <Text
@@ -266,16 +277,30 @@ function FeaturedQuiz({ locked, onPress }: { locked: boolean; onPress: () => voi
               marginBottom: moderateScale(10),
             }}
           >
-            <Icons.gameQuickQuiz size={moderateScale(26)} color={Colors.secondary} strokeWidth={2.2} />
+            <Icons.gameQuickQuiz
+              size={moderateScale(26)}
+              color={Colors.secondary}
+              strokeWidth={2.2}
+            />
           </View>
           <Text
-            style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(21), color: Colors.onSecondaryContainer, letterSpacing: -0.3 }}
+            style={{
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(21),
+              color: Colors.onSecondaryContainer,
+              letterSpacing: -0.3,
+            }}
             maxFontSizeMultiplier={1.2}
           >
             Quick quiz
           </Text>
           <Text
-            style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(13), color: Colors.onSecondaryContainer, marginTop: moderateScale(1) }}
+            style={{
+              fontFamily: Fonts.dmSans.medium,
+              fontSize: moderateScale(13),
+              color: Colors.onSecondaryContainer,
+              marginTop: moderateScale(1),
+            }}
             maxFontSizeMultiplier={1.3}
           >
             Test your speed.
@@ -332,7 +357,14 @@ function GameCard({
   onPress: () => void;
 }) {
   const inner = (
-    <View style={{ minHeight: moderateScale(minHeight), padding: moderateScale(16), justifyContent: 'flex-end', overflow: 'hidden' }}>
+    <View
+      style={{
+        minHeight: moderateScale(minHeight),
+        padding: moderateScale(16),
+        justifyContent: 'flex-end',
+        overflow: 'hidden',
+      }}
+    >
       <Text
         aria-hidden
         style={{
@@ -350,14 +382,24 @@ function GameCard({
       </Text>
       {locked ? <LockBadge /> : null}
       <Text
-        style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(18), color: game.fg, letterSpacing: -0.2 }}
+        style={{
+          fontFamily: Fonts.baloo.bold,
+          fontSize: moderateScale(18),
+          color: game.fg,
+          letterSpacing: -0.2,
+        }}
         maxFontSizeMultiplier={1.2}
         numberOfLines={1}
       >
         {game.title}
       </Text>
       <Text
-        style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12), color: game.fg, marginTop: moderateScale(1) }}
+        style={{
+          fontFamily: Fonts.dmSans.medium,
+          fontSize: moderateScale(12),
+          color: game.fg,
+          marginTop: moderateScale(1),
+        }}
         maxFontSizeMultiplier={1.3}
         numberOfLines={2}
       >

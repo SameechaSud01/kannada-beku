@@ -29,7 +29,7 @@ export function useTtsRate() {
         Toasts.preferenceSaveFailed();
       }
     },
-    [userId, setTtsRate]
+    [userId, setTtsRate],
   );
 
   /** Advance to the next rate in `RATE_OPTIONS`, wrapping around. */

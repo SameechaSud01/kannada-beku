@@ -11,7 +11,7 @@ export interface Phrase {
   /** Optional cultural/grammar note for PhraseDetailSheet. */
   note?: string;
   /** Optional atom-level gloss for PhraseDetailSheet. */
-  gloss?: Array<{ atom: string; en: string; transliteration?: string }>;
+  gloss?: { atom: string; en: string; transliteration?: string }[];
 }
 
 /**
@@ -82,8 +82,8 @@ export interface LessonRow {
   real_world_prompt: string;
   content_json: {
     reference: {
-      words: Array<{ english: string; kannada: string; transliteration: string }>;
-      phrases: Array<{ english: string; kannada: string; transliteration: string }>;
+      words: { english: string; kannada: string; transliteration: string }[];
+      phrases: { english: string; kannada: string; transliteration: string }[];
       verified?: boolean;
       source?: string;
     };

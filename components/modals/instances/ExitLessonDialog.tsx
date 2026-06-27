@@ -31,17 +31,16 @@ const COPY: Record<ExitLessonVariant, { title: string; body: string; confirm: st
  * the actual `router.back()` from onConfirm. Red primary confirm (destructive) +
  * secondary-tan Cancel; the well is redPale — this is a true loss, not a warning.
  */
-export function ExitLessonDialog({ variant = 'lesson', onConfirm, onCancel }: ExitLessonDialogProps) {
+export function ExitLessonDialog({
+  variant = 'lesson',
+  onConfirm,
+  onCancel,
+}: ExitLessonDialogProps) {
   const copy = COPY[variant];
   return (
     <View style={{ gap: moderateScale(14) }}>
       <View style={{ alignItems: 'center' }}>
-        <Halo
-          icon="x"
-          iconColor={Colors.primary}
-          bg={Colors.errorContainerLow}
-          stroke={2.4}
-        />
+        <Halo icon="x" iconColor={Colors.primary} bg={Colors.errorContainerLow} stroke={2.4} />
       </View>
       <DialogTitle>{copy.title}</DialogTitle>
       <DialogBody>{copy.body}</DialogBody>

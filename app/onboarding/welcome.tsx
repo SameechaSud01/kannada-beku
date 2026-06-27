@@ -16,9 +16,24 @@ import { useCopy } from '../../hooks/useCopy';
 type Hook = { Icon: TablerIcon; title: string; sub: string; rotate: string };
 
 const HOOKS: Hook[] = [
-  { Icon: Icons.tabPractice, title: 'Speak from day one', sub: 'Real phrases, not grammar drills', rotate: '-3deg' },
-  { Icon: Icons.emergency, title: 'Never get stuck', sub: 'Survival phrases · works offline', rotate: '2.5deg' },
-  { Icon: Icons.streak, title: '5 minutes a day', sub: 'Small streaks, real progress', rotate: '-1.5deg' },
+  {
+    Icon: Icons.tabPractice,
+    title: 'Speak from day one',
+    sub: 'Real phrases, not grammar drills',
+    rotate: '-3deg',
+  },
+  {
+    Icon: Icons.emergency,
+    title: 'Never get stuck',
+    sub: 'Survival phrases · works offline',
+    rotate: '2.5deg',
+  },
+  {
+    Icon: Icons.streak,
+    title: '5 minutes a day',
+    sub: 'Small streaks, real progress',
+    rotate: '-1.5deg',
+  },
 ];
 
 export default function WelcomeScreen() {
@@ -55,15 +70,31 @@ export default function WelcomeScreen() {
         >
           ಬೇ
         </Text>
-        <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: moderateScale(6), marginTop: Spacing.sm }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'baseline',
+            gap: moderateScale(6),
+            marginTop: Spacing.sm,
+          }}
+        >
           <Text
-            style={{ fontFamily: Fonts.baloo.extrabold, fontSize: moderateScale(33), letterSpacing: -0.8, color: Colors.onPrimary }}
+            style={{
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(33),
+              letterSpacing: -0.8,
+              color: Colors.onPrimary,
+            }}
             maxFontSizeMultiplier={1.1}
           >
             Kannada
           </Text>
           <Text
-            style={{ fontFamily: Fonts.notoSansKannada.bold, fontSize: moderateScale(35), color: Colors.secondaryContainer }}
+            style={{
+              fontFamily: Fonts.notoSansKannada.bold,
+              fontSize: moderateScale(35),
+              color: Colors.secondaryContainer,
+            }}
             maxFontSizeMultiplier={1.1}
           >
             ಬೇಕು
@@ -116,14 +147,24 @@ export default function WelcomeScreen() {
               </View>
               <View style={{ flex: 1 }}>
                 <Text
-                  style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(15.5), color: Colors.onSurface, letterSpacing: -0.2 }}
+                  style={{
+                    fontFamily: Fonts.baloo.bold,
+                    fontSize: moderateScale(15.5),
+                    color: Colors.onSurface,
+                    letterSpacing: -0.2,
+                  }}
                   maxFontSizeMultiplier={1.3}
                   numberOfLines={1}
                 >
                   {hook.title}
                 </Text>
                 <Text
-                  style={{ fontFamily: Fonts.dmSans.medium, fontSize: moderateScale(12.5), color: Colors.tertiary, marginTop: moderateScale(1) }}
+                  style={{
+                    fontFamily: Fonts.dmSans.medium,
+                    fontSize: moderateScale(12.5),
+                    color: Colors.tertiary,
+                    marginTop: moderateScale(1),
+                  }}
                   maxFontSizeMultiplier={1.3}
                   numberOfLines={1}
                 >

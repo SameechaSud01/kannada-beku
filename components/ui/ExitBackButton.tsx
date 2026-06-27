@@ -6,7 +6,10 @@ import { Colors } from '../../constants/colors';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { useModal } from '../../components/modals/ModalHost';
-import { ExitLessonDialog, type ExitLessonVariant } from '../../components/modals/instances/ExitLessonDialog';
+import {
+  ExitLessonDialog,
+  type ExitLessonVariant,
+} from '../../components/modals/instances/ExitLessonDialog';
 
 interface ExitBackButtonProps {
   /** Skip the confirm dialog entirely (e.g., on screens that aren't mid-flow). */

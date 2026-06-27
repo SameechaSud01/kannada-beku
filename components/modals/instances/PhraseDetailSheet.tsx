@@ -88,11 +88,7 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
             {speakable(phrase.kannada) || phrase.kannada}
           </Text>
         </View>
-        <AudioOrb
-          size={48}
-          onPress={handlePlay}
-          accessibilityLabel={`Hear: ${phrase.english}`}
-        />
+        <AudioOrb size={48} onPress={handlePlay} accessibilityLabel={`Hear: ${phrase.english}`} />
       </View>
 
       {phrase.gloss && phrase.gloss.length > 0 ? (

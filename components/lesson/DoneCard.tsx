@@ -9,10 +9,7 @@ import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import type { Lesson } from '../../constants/lessons/types';
 import { lessonSlugByNo } from '../../constants/lessons/lessonContent';
-import {
-  PLANNED_LESSON_SLOTS,
-  TOTAL_LESSON_SLOTS,
-} from '../../constants/lessons/plannedLessons';
+import { PLANNED_LESSON_SLOTS, TOTAL_LESSON_SLOTS } from '../../constants/lessons/plannedLessons';
 import type { LessonRunner } from '../../hooks/useLessonRunner';
 import { ChunkyCircle } from '../ui/ChunkyLip';
 import { ChunkyPressable } from '../ui/ChunkyPressable';
@@ -31,17 +28,7 @@ const SEG_W = moderateScale(3);
 const SEG_H = moderateScale(30);
 const SEG_INDENT = (PIP - SEG_W) / 2;
 
-const NUMBER_WORDS = [
-  'zero',
-  'one',
-  'two',
-  'three',
-  'four',
-  'five',
-  'six',
-  'seven',
-  'eight',
-];
+const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'];
 const numberWord = (n: number) => NUMBER_WORDS[n] ?? String(n);
 
 interface DoneCardProps {
@@ -128,8 +115,7 @@ export function DoneCard({ lesson }: DoneCardProps) {
     go();
   };
 
-  const goToNextLesson = () =>
-    navigateTo(() => router.replace(`/lesson/${nextLessonSlug}`));
+  const goToNextLesson = () => navigateTo(() => router.replace(`/lesson/${nextLessonSlug}`));
   const goToGames = () => navigateTo(() => router.replace('/(tabs)/practice'));
   const goHome = () => navigateTo(() => router.replace('/(tabs)'));
 
@@ -206,11 +192,7 @@ export function DoneCard({ lesson }: DoneCardProps) {
           </>
         ) : null}
 
-        <DoneNode
-          title={lesson.title}
-          subtitle={`Just finished · Lesson ${lessonNo}`}
-          highlight
-        />
+        <DoneNode title={lesson.title} subtitle={`Just finished · Lesson ${lessonNo}`} highlight />
 
         {hasNext ? (
           <>
@@ -387,7 +369,11 @@ function FinishedNode() {
         bg={Colors.secondaryContainer}
         lipColor={Colors.goldLip}
       >
-        <Icons.trophy size={moderateScale(20)} color={Colors.onSecondaryContainer} strokeWidth={2.4} />
+        <Icons.trophy
+          size={moderateScale(20)}
+          color={Colors.onSecondaryContainer}
+          strokeWidth={2.4}
+        />
       </ChunkyCircle>
       <View style={{ flex: 1, minWidth: 0 }}>
         <Text

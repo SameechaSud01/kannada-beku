@@ -14,11 +14,11 @@ import type { Tile } from '../hooks/useDictationGame';
 import type { AnswerState } from '../types';
 
 type Props = {
-  tray:         Tile[];
-  placed:       string[];
+  tray: Tile[];
+  placed: string[];
   aksharaCount: number;
-  answerState:  AnswerState;
-  onRemove:     (index: number) => void;
+  answerState: AnswerState;
+  onRemove: (index: number) => void;
 };
 
 const AnswerRow: React.FC<Props> = ({ tray, placed, aksharaCount, answerState, onRemove }) => {

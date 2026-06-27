@@ -5,11 +5,7 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
-import {
-  VOWEL_LONERS_NOTE,
-  type VowelPair,
-  type VowelLoner,
-} from '../../constants/guide';
+import { VOWEL_LONERS_NOTE, type VowelPair, type VowelLoner } from '../../constants/guide';
 import { useIsMounted } from '../../hooks/useIsMounted';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { Toasts } from '../modals/instances/toastCatalog';
@@ -114,11 +110,7 @@ export function StepVowels({
               onPlay={() => playVowel(pair.short)}
             />
 
-            <Icons.forward
-              size={moderateScale(20)}
-              color={Colors.goldLip}
-              strokeWidth={2.4}
-            />
+            <Icons.forward size={moderateScale(20)} color={Colors.goldLip} strokeWidth={2.4} />
 
             <VowelGlyph
               kannada={pair.long.kannada}

@@ -1,12 +1,6 @@
 import { supabase } from './supabase';
 
-export type FunFactCategory =
-  | 'History'
-  | 'Food'
-  | 'Cinema'
-  | 'Literature'
-  | 'Culture'
-  | 'Nature';
+export type FunFactCategory = 'History' | 'Food' | 'Cinema' | 'Literature' | 'Culture' | 'Nature';
 
 export type FunFact = {
   id: string;

@@ -77,15 +77,39 @@ function buildSteps(lesson: Lesson, intro: boolean, outro: boolean): LessonRunne
       steps.push({ ...BASE_STATE, phase: 'teach_words', sectionIndex, wordIndex }),
     );
     section.words.forEach((_, practiceWordIndex) => {
-      steps.push({ ...BASE_STATE, phase: 'practice_words', sectionIndex, practiceWordIndex, practiceWordStep: 'listen' });
-      steps.push({ ...BASE_STATE, phase: 'practice_words', sectionIndex, practiceWordIndex, practiceWordStep: 'say' });
+      steps.push({
+        ...BASE_STATE,
+        phase: 'practice_words',
+        sectionIndex,
+        practiceWordIndex,
+        practiceWordStep: 'listen',
+      });
+      steps.push({
+        ...BASE_STATE,
+        phase: 'practice_words',
+        sectionIndex,
+        practiceWordIndex,
+        practiceWordStep: 'say',
+      });
     });
     section.phrases.forEach((_, phraseIndex) =>
       steps.push({ ...BASE_STATE, phase: 'teach_phrases', sectionIndex, phraseIndex }),
     );
     section.phrases.forEach((_, practicePhrasesIndex) => {
-      steps.push({ ...BASE_STATE, phase: 'practice_phrases', sectionIndex, practicePhrasesIndex, practicePhrasesStep: 'listen' });
-      steps.push({ ...BASE_STATE, phase: 'practice_phrases', sectionIndex, practicePhrasesIndex, practicePhrasesStep: 'say' });
+      steps.push({
+        ...BASE_STATE,
+        phase: 'practice_phrases',
+        sectionIndex,
+        practicePhrasesIndex,
+        practicePhrasesStep: 'listen',
+      });
+      steps.push({
+        ...BASE_STATE,
+        phase: 'practice_phrases',
+        sectionIndex,
+        practicePhrasesIndex,
+        practicePhrasesStep: 'say',
+      });
     });
   });
 
@@ -112,10 +136,7 @@ export function useLessonRunner(
   }, [lesson]);
 
   const lastIndex = Math.max(0, steps.length - 1);
-  const advance = useCallback(
-    () => setIndex((i) => Math.min(i + 1, lastIndex)),
-    [lastIndex],
-  );
+  const advance = useCallback(() => setIndex((i) => Math.min(i + 1, lastIndex)), [lastIndex]);
   const goPrevious = useCallback(
     // `done` is terminal — it owns its own close, so there is no step back.
     () => setIndex((i) => (steps[i]?.phase === 'done' ? i : Math.max(i - 1, 0))),
@@ -128,7 +149,7 @@ export function useLessonRunner(
 
   const section =
     lesson && SECTION_PHASES.has(state.phase)
-      ? lesson.sections[state.sectionIndex] ?? null
+      ? (lesson.sections[state.sectionIndex] ?? null)
       : null;
 
   const canGoPrevious = clampedIndex > 0 && state.phase !== 'done';

@@ -2,14 +2,8 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useProgressStore } from '../stores/progressStore';
-import {
-  fetchGameMasteryByLesson,
-  type GameMasteryByLesson,
-} from '../services/api/gameMastery';
-import {
-  computeOverallMastery,
-  type OverallMastery,
-} from '../services/progress/overallMastery';
+import { fetchGameMasteryByLesson, type GameMasteryByLesson } from '../services/api/gameMastery';
+import { computeOverallMastery, type OverallMastery } from '../services/progress/overallMastery';
 
 /**
  * Client-side overall progress (per-lesson mastery rollup). Replaces

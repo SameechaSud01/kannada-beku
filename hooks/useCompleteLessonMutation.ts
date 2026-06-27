@@ -33,12 +33,7 @@ export function useCompleteLessonMutation() {
 
   return useMutation({
     mutationKey: ['completeLesson'],
-    mutationFn: async ({
-      slug,
-      score,
-      phrasesLearned,
-      minutesPracticed,
-    }: CompleteLessonInput) => {
+    mutationFn: async ({ slug, score, phrasesLearned, minutesPracticed }: CompleteLessonInput) => {
       const userId = useAuthStore.getState().user?.id;
       if (!userId) throw new Error('Not signed in.');
 

@@ -149,12 +149,7 @@ export function GuideStepShell({
           paddingBottom: insets.bottom + Spacing.lg,
         }}
       >
-        <LipButton
-          label={ctaLabel}
-          onPress={onCta}
-          variant="primary"
-          disabled={ctaDisabled}
-        />
+        <LipButton label={ctaLabel} onPress={onCta} variant="primary" disabled={ctaDisabled} />
       </View>
     </View>
   );

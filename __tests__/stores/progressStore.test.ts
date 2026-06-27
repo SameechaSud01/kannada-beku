@@ -10,12 +10,12 @@
  * the metrics on every replay.
  */
 
+import { useProgressStore } from '../../stores/progressStore';
+
 jest.mock('@react-native-async-storage/async-storage', () =>
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 );
-
-import { useProgressStore } from '../../stores/progressStore';
 
 describe('useProgressStore.completeLesson — C6 idempotency', () => {
   beforeEach(() => {
@@ -66,10 +66,7 @@ describe('useProgressStore.hydrateFromServerCompletions', () => {
 
   it('merges server slugs into completedLessons without duplicates', () => {
     useProgressStore.getState().completeLesson('greetings', 100, 5, 5);
-    useProgressStore.getState().hydrateFromServerCompletions([
-      'greetings',
-      'ordering-coffee',
-    ]);
+    useProgressStore.getState().hydrateFromServerCompletions(['greetings', 'ordering-coffee']);
 
     const slugs = useProgressStore.getState().completedLessons;
     expect(slugs).toContain('greetings');

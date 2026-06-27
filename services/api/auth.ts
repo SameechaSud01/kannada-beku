@@ -14,7 +14,8 @@ type GoogleSigninModule = typeof import('@react-native-google-signin/google-sign
 let googleModule: GoogleSigninModule | null = null;
 function getGoogleModule(): GoogleSigninModule {
   if (!googleModule) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // Lazy native require keeps this module out of the web/SSR bundle.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     googleModule = require('@react-native-google-signin/google-signin');
   }
   return googleModule!;
@@ -33,10 +34,9 @@ function getGoogleModule(): GoogleSigninModule {
  */
 export async function requestPasswordReset(email: string): Promise<void> {
   const redirectTo = Linking.createURL('reset-password');
-  const { error } = await supabase.auth.resetPasswordForEmail(
-    email.trim().toLowerCase(),
-    { redirectTo },
-  );
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+    redirectTo,
+  });
   if (error) throw error;
 }
 
@@ -59,9 +59,7 @@ export async function setNewPassword(password: string): Promise<void> {
 // ---------------------------------------------------------------------------
 
 export type SocialResult =
-  | { status: 'signedIn' }
-  | { status: 'cancelled' }
-  | { status: 'error'; error: unknown };
+  { status: 'signedIn' } | { status: 'cancelled' } | { status: 'error'; error: unknown };
 
 let googleConfigured = false;
 function configureGoogle(): void {

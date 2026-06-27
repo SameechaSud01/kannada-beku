@@ -22,7 +22,10 @@ export function isStreakMilestone(n: number): n is StreakMilestone {
  * unified Celebration overlay (spec_playful_redesign Phase 3) can reuse the same
  * words for its streak variant — the copy stays single-sourced and locked.
  */
-export const STREAK_MILESTONE_COPY: Record<StreakMilestone, { title: string; body: string; word: string }> = {
+export const STREAK_MILESTONE_COPY: Record<
+  StreakMilestone,
+  { title: string; body: string; word: string }
+> = {
   3: {
     word: 'three',
     title: 'Three days.',
@@ -90,7 +93,12 @@ export function StreakMilestoneTakeover({
       >
         <Confetti />
         <View
-          style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: moderateScale(14) }}
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: moderateScale(14),
+          }}
         >
           <Text
             style={{

@@ -127,7 +127,7 @@ describe('useLessonRunner — sub-sections', () => {
   // Walk the whole lesson, recording one entry per screen.
   function walk(lesson: Lesson) {
     const { result } = renderHook(() => useLessonRunner(lesson));
-    const steps: Array<{ phase: string; sectionIndex: number; sectionLabel: string }> = [];
+    const steps: { phase: string; sectionIndex: number; sectionLabel: string }[] = [];
     for (let i = 0; i < 200; i++) {
       steps.push({
         phase: result.current.phase,
@@ -145,17 +145,13 @@ describe('useLessonRunner — sub-sections', () => {
     const sectionSteps = steps.filter((s) => SECTION_PHASES.includes(s.phase));
 
     // 1c (index 2) has no words — never a word screen there.
-    expect(
-      sectionSteps.some(
-        (s) => s.sectionIndex === 2 && s.phase.endsWith('_words'),
-      ),
-    ).toBe(false);
+    expect(sectionSteps.some((s) => s.sectionIndex === 2 && s.phase.endsWith('_words'))).toBe(
+      false,
+    );
     // 1a (index 0) has no phrases — never a phrase screen there.
-    expect(
-      sectionSteps.some(
-        (s) => s.sectionIndex === 0 && s.phase.endsWith('_phrases'),
-      ),
-    ).toBe(false);
+    expect(sectionSteps.some((s) => s.sectionIndex === 0 && s.phase.endsWith('_phrases'))).toBe(
+      false,
+    );
 
     // Sections are visited in non-decreasing order, 0 → 2.
     const indices = sectionSteps.map((s) => s.sectionIndex);
@@ -206,9 +202,7 @@ describe('useLessonRunner — sub-sections', () => {
   });
 
   it('intro/outro:false drops the situation and real_world screens (part run)', () => {
-    const { result } = renderHook(() =>
-      useLessonRunner(LESSON, { intro: false, outro: false }),
-    );
+    const { result } = renderHook(() => useLessonRunner(LESSON, { intro: false, outro: false }));
     const phases: string[] = [];
     for (let i = 0; i < 50; i++) {
       phases.push(result.current.phase);

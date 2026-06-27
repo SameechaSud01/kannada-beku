@@ -32,7 +32,10 @@ interface TeachPhrasesPhaseProps {
 const HIGHLIGHT_MS = 600;
 
 function normalize(s: string): string {
-  return s.trim().toLowerCase().replace(/[?.,!]+$/g, '');
+  return s
+    .trim()
+    .toLowerCase()
+    .replace(/[?.,!]+$/g, '');
 }
 
 export function TeachPhrasesPhase({
@@ -54,10 +57,13 @@ export function TeachPhrasesPhase({
 
   const chips = useMemo(() => {
     if (!phrase) return [];
-    return phrase.transliteration.split(/\s+/).filter(Boolean).map((chip) => {
-      const match = words.find((w) => normalize(w.transliteration) === normalize(chip));
-      return { chip, match };
-    });
+    return phrase.transliteration
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((chip) => {
+        const match = words.find((w) => normalize(w.transliteration) === normalize(chip));
+        return { chip, match };
+      });
   }, [phrase, words]);
 
   useEffect(() => {
@@ -101,7 +107,9 @@ export function TeachPhrasesPhase({
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
-      <View style={{ paddingTop: insets.top + BACK_CHIP_TOP_RESERVE, paddingHorizontal: Spacing.lg }}>
+      <View
+        style={{ paddingTop: insets.top + BACK_CHIP_TOP_RESERVE, paddingHorizontal: Spacing.lg }}
+      >
         <LessonProgressBar
           current={phraseIndex + 1}
           total={total}

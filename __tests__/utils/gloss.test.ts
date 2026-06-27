@@ -31,7 +31,7 @@ describe('splitGloss', () => {
 
   it('returns a null tag when there is no qualifier', () => {
     expect(splitGloss('Stop here')).toEqual({ text: 'Stop here', tag: null });
-    expect(splitGloss('No, don\'t want')).toEqual({ text: "No, don't want", tag: null });
+    expect(splitGloss("No, don't want")).toEqual({ text: "No, don't want", tag: null });
   });
 
   it('trims surrounding whitespace', () => {

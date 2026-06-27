@@ -11,10 +11,7 @@ import { useCompletedLessons } from '../../hooks/progress';
 import { useStreakCelebration } from '../../hooks/useStreakCelebration';
 import { useDbLessons } from '../../hooks/useLessons';
 import { useProgressStore } from '../../stores/progressStore';
-import {
-  PLANNED_LESSON_SLOTS,
-  TOTAL_LESSON_SLOTS,
-} from '../../constants/lessons/plannedLessons';
+import { PLANNED_LESSON_SLOTS, TOTAL_LESSON_SLOTS } from '../../constants/lessons/plannedLessons';
 import { TS_LESSONS_BY_SLUG } from '../../constants/lessons/lessonContent';
 import { computePartStates } from '../../constants/lessons/parts';
 import { useModal } from '../../components/modals/ModalHost';
@@ -152,7 +149,7 @@ export default function LearnScreen() {
         locked: row.state === 'locked',
         prevLessonNumber: row.state === 'locked' ? prevSlot : undefined,
         prevLessonTitle:
-          row.state === 'locked' ? row.prevTitle ?? `Lesson ${prevSlot}` : undefined,
+          row.state === 'locked' ? (row.prevTitle ?? `Lesson ${prevSlot}`) : undefined,
         onDismiss: () => modal.dismiss(),
       },
       dim: 0.4,
@@ -219,7 +216,13 @@ export default function LearnScreen() {
           </Text>
         </View>
 
-        <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg, marginBottom: moderateScale(14) }}>
+        <View
+          style={{
+            paddingHorizontal: Spacing.lg,
+            paddingTop: Spacing.lg,
+            marginBottom: moderateScale(14),
+          }}
+        >
           <BasicsCard />
         </View>
 
@@ -254,7 +257,14 @@ function LessonRowView({
   const titleColor = isLocked ? Colors.textFaint : Colors.onSurface;
 
   const content = (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(13), padding: moderateScale(12) }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: moderateScale(13),
+        padding: moderateScale(12),
+      }}
+    >
       {/* Glyph tile / lock */}
       {isLocked ? (
         <LockTile size={50} radius={moderateScale(14)} />
@@ -284,7 +294,12 @@ function LessonRowView({
 
       <View style={{ flex: 1 }}>
         <Text
-          style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(17), color: titleColor, letterSpacing: -0.2 }}
+          style={{
+            fontFamily: Fonts.baloo.bold,
+            fontSize: moderateScale(17),
+            color: titleColor,
+            letterSpacing: -0.2,
+          }}
           maxFontSizeMultiplier={1.3}
           numberOfLines={1}
         >
@@ -313,7 +328,11 @@ function LessonRowView({
           bg={Colors.secondaryContainer}
           lipColor={Colors.goldLip}
         >
-          <Icons.check size={moderateScale(15)} color={Colors.onSecondaryContainer} strokeWidth={2.6} />
+          <Icons.check
+            size={moderateScale(15)}
+            color={Colors.onSecondaryContainer}
+            strokeWidth={2.6}
+          />
         </ChunkyCircle>
       ) : isActive ? (
         <ChunkyCircle

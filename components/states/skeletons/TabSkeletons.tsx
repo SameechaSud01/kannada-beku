@@ -30,10 +30,18 @@ export function HomeSkeleton({ streak = 0 }: { streak?: number }) {
           <Skeleton w={moderateScale(120)} h={moderateScale(120)} radius={moderateScale(999)} />
           <View style={{ flex: 1, gap: moderateScale(14) }}>
             {[0, 1, 2].map((i) => (
-              <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(10) }}>
+              <View
+                key={i}
+                style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(10) }}
+              >
                 <Skeleton w={moderateScale(10)} h={moderateScale(10)} radius={moderateScale(999)} />
                 <Skeleton w="46%" h={moderateScale(12)} radius={moderateScale(6)} />
-                <Skeleton w={moderateScale(34)} h={moderateScale(18)} radius={moderateScale(6)} style={{ marginLeft: 'auto' }} />
+                <Skeleton
+                  w={moderateScale(34)}
+                  h={moderateScale(18)}
+                  radius={moderateScale(6)}
+                  style={{ marginLeft: 'auto' }}
+                />
               </View>
             ))}
           </View>
@@ -52,7 +60,12 @@ export function HomeSkeleton({ streak = 0 }: { streak?: number }) {
             gap: moderateScale(14),
           }}
         >
-          <Skeleton w={moderateScale(44)} h={moderateScale(44)} radius={moderateScale(999)} {...onRedPale} />
+          <Skeleton
+            w={moderateScale(44)}
+            h={moderateScale(44)}
+            radius={moderateScale(999)}
+            {...onRedPale}
+          />
           <View style={{ flex: 1, gap: moderateScale(8) }}>
             <Skeleton w="62%" h={moderateScale(15)} radius={moderateScale(7)} {...onRedPale} />
             <Skeleton w="44%" h={moderateScale(11)} radius={moderateScale(6)} {...onRedPale} />
@@ -64,11 +77,22 @@ export function HomeSkeleton({ streak = 0 }: { streak?: number }) {
           colors={[Colors.goldBright, Colors.secondaryContainer]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={{ borderRadius: Radius.chunky, borderBottomWidth: 5, borderBottomColor: Colors.goldLip, padding: moderateScale(16), gap: moderateScale(12) }}
+          style={{
+            borderRadius: Radius.chunky,
+            borderBottomWidth: 5,
+            borderBottomColor: Colors.goldLip,
+            padding: moderateScale(16),
+            gap: moderateScale(12),
+          }}
         >
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Skeleton w="50%" h={moderateScale(16)} radius={moderateScale(7)} {...onGold} />
-            <Skeleton w={moderateScale(38)} h={moderateScale(16)} radius={moderateScale(7)} {...onGold} />
+            <Skeleton
+              w={moderateScale(38)}
+              h={moderateScale(16)}
+              radius={moderateScale(7)}
+              {...onGold}
+            />
           </View>
           <Skeleton w="100%" h={moderateScale(9)} radius={moderateScale(99)} {...onGold} />
           <Skeleton w="64%" h={moderateScale(11)} radius={moderateScale(6)} {...onGold} />
@@ -82,11 +106,15 @@ export function HomeSkeleton({ streak = 0 }: { streak?: number }) {
 export function LearnSkeleton({ streak = 0 }: { streak?: number }) {
   return (
     <TabSkeletonShell streak={streak}>
-      <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg, gap: moderateScale(9) }}>
+      <View
+        style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg, gap: moderateScale(9) }}
+      >
         <Skeleton w="46%" h={moderateScale(28)} radius={moderateScale(9)} />
         <Skeleton w="60%" h={moderateScale(13)} radius={moderateScale(7)} />
       </View>
-      <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg, gap: moderateScale(11) }}>
+      <View
+        style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg, gap: moderateScale(11) }}
+      >
         {/* Basics card */}
         <View
           style={{
@@ -108,7 +136,15 @@ export function LearnSkeleton({ streak = 0 }: { streak?: number }) {
         </View>
         {/* Lesson rows */}
         {[0, 1, 2, 3, 4].map((i) => (
-          <SkelCard key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(13), opacity: 1 - i * 0.12 }}>
+          <SkelCard
+            key={i}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: moderateScale(13),
+              opacity: 1 - i * 0.12,
+            }}
+          >
             <Skeleton w={moderateScale(44)} h={moderateScale(44)} radius={moderateScale(13)} />
             <View style={{ flex: 1, gap: moderateScale(8) }}>
               <Skeleton w={`${64 - i * 6}%`} h={moderateScale(14)} radius={moderateScale(7)} />
@@ -142,9 +178,21 @@ export function GamesSkeleton({ streak = 0 }: { streak?: number }) {
             padding: moderateScale(18),
           }}
         >
-          <Skeleton w={moderateScale(52)} h={moderateScale(52)} radius={moderateScale(14)} {...onGold} style={{ marginBottom: moderateScale(12) }} />
+          <Skeleton
+            w={moderateScale(52)}
+            h={moderateScale(52)}
+            radius={moderateScale(14)}
+            {...onGold}
+            style={{ marginBottom: moderateScale(12) }}
+          />
           <Skeleton w="48%" h={moderateScale(18)} radius={moderateScale(8)} {...onGold} />
-          <Skeleton w="34%" h={moderateScale(12)} radius={moderateScale(6)} {...onGold} style={{ marginTop: moderateScale(8) }} />
+          <Skeleton
+            w="34%"
+            h={moderateScale(12)}
+            radius={moderateScale(6)}
+            {...onGold}
+            style={{ marginTop: moderateScale(8) }}
+          />
         </View>
 
         {/* 2-up red grid */}
@@ -198,7 +246,9 @@ export function GamesSkeleton({ streak = 0 }: { streak?: number }) {
 export function ProfileSkeleton({ streak = 0 }: { streak?: number }) {
   return (
     <TabSkeletonShell streak={streak}>
-      <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.xl, gap: moderateScale(16) }}>
+      <View
+        style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.xl, gap: moderateScale(16) }}
+      >
         {/* Name */}
         <View style={{ gap: moderateScale(8) }}>
           <Skeleton w="50%" h={moderateScale(26)} radius={moderateScale(9)} />
@@ -210,11 +260,24 @@ export function ProfileSkeleton({ streak = 0 }: { streak?: number }) {
           colors={[Colors.goldBright, Colors.secondaryContainer]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={{ borderRadius: Radius.chunky, borderBottomWidth: 5, borderBottomColor: Colors.goldLip, padding: moderateScale(18), gap: moderateScale(11) }}
+          style={{
+            borderRadius: Radius.chunky,
+            borderBottomWidth: 5,
+            borderBottomColor: Colors.goldLip,
+            padding: moderateScale(18),
+            gap: moderateScale(11),
+          }}
         >
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+          >
             <Skeleton w="44%" h={moderateScale(11)} radius={moderateScale(6)} {...onGold} />
-            <Skeleton w={moderateScale(48)} h={moderateScale(22)} radius={moderateScale(7)} {...onGold} />
+            <Skeleton
+              w={moderateScale(48)}
+              h={moderateScale(22)}
+              radius={moderateScale(7)}
+              {...onGold}
+            />
           </View>
           <Skeleton w="100%" h={moderateScale(9)} radius={moderateScale(99)} {...onGold} />
           <Skeleton w="56%" h={moderateScale(11)} radius={moderateScale(6)} {...onGold} />
@@ -225,7 +288,12 @@ export function ProfileSkeleton({ streak = 0 }: { streak?: number }) {
           {[0, 1].map((i) => (
             <SkelCard key={i} style={{ flex: 1, gap: moderateScale(7) }}>
               <Skeleton w={moderateScale(22)} h={moderateScale(22)} radius={moderateScale(7)} />
-              <Skeleton w="42%" h={moderateScale(26)} radius={moderateScale(8)} style={{ marginTop: moderateScale(4) }} />
+              <Skeleton
+                w="42%"
+                h={moderateScale(26)}
+                radius={moderateScale(8)}
+                style={{ marginTop: moderateScale(4) }}
+              />
               <Skeleton w="72%" h={moderateScale(10)} radius={moderateScale(5)} />
             </SkelCard>
           ))}
@@ -260,14 +328,25 @@ export function ProfileSkeleton({ streak = 0 }: { streak?: number }) {
               >
                 <Skeleton w={moderateScale(20)} h={moderateScale(20)} radius={moderateScale(6)} />
                 <Skeleton w={`${52 - i * 7}%`} h={moderateScale(13)} radius={moderateScale(7)} />
-                <Skeleton w={moderateScale(16)} h={moderateScale(16)} radius={moderateScale(5)} style={{ marginLeft: 'auto' }} />
+                <Skeleton
+                  w={moderateScale(16)}
+                  h={moderateScale(16)}
+                  radius={moderateScale(5)}
+                  style={{ marginLeft: 'auto' }}
+                />
               </View>
             ))}
           </View>
         </View>
 
         {/* Sign out — tan */}
-        <Skeleton w="100%" h={moderateScale(50)} radius={Radius.lg} c1="rgba(184,149,106,0.30)" c2="rgba(184,149,106,0.16)" />
+        <Skeleton
+          w="100%"
+          h={moderateScale(50)}
+          radius={Radius.lg}
+          c1="rgba(184,149,106,0.30)"
+          c2="rgba(184,149,106,0.16)"
+        />
       </View>
     </TabSkeletonShell>
   );

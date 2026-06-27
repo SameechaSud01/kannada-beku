@@ -53,15 +53,15 @@ function mapRow(row: Row, lessonNo: number): DictationItem {
   };
 }
 
-export async function fetchDictationItemsByLessonNo(
-  lessonNo: number,
-): Promise<DictationItem[]> {
+export async function fetchDictationItemsByLessonNo(lessonNo: number): Promise<DictationItem[]> {
   const lessonId = await lessonIdByNo(lessonNo);
   if (!lessonId) return [];
 
   const { data, error } = await supabase
     .from('dictation_items')
-    .select('id, lesson_id, sort_order, expected_answer, accepted_json, phonetic, audio_url, section')
+    .select(
+      'id, lesson_id, sort_order, expected_answer, accepted_json, phonetic, audio_url, section',
+    )
     .eq('lesson_id', lessonId)
     .gt('sort_order', 0)
     .order('sort_order', { ascending: true });
@@ -74,10 +74,7 @@ export async function fetchDictationItemsByLessonNo(
  * UPSERT into dictation_progress via SECURITY INVOKER RPC.
  * OR-merges is_correct (personal-best); increments attempts; updates last_played.
  */
-export async function recordDictationAttempt(
-  itemId: string,
-  isCorrect: boolean,
-): Promise<void> {
+export async function recordDictationAttempt(itemId: string, isCorrect: boolean): Promise<void> {
   const { error } = await supabase.rpc('record_dictation_attempt', {
     p_item_id: itemId,
     p_is_correct: isCorrect,

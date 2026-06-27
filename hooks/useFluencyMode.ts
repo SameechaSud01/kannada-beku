@@ -10,9 +10,7 @@ export type FluencyMode = 'spoken' | 'fluency';
  *
  * See STATE.md §useUserStore and spec_profile_settings_wiring.md §1.
  */
-export function fluencyFromStore(
-  mode: 'spoken' | 'written' | 'both' | null,
-): FluencyMode | null {
+export function fluencyFromStore(mode: 'spoken' | 'written' | 'both' | null): FluencyMode | null {
   if (mode === null) return null;
   if (mode === 'spoken') return 'spoken';
   return 'fluency';

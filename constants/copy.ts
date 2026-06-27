@@ -1,8 +1,8 @@
 export const COPY = {
   // Onboarding
   onboardingWelcome: {
-    classic: 'Welcome! Let\'s learn Kannada together.',
-    rowdy: 'Gottilla Kannada? No problem. Let\'s fix that.',
+    classic: "Welcome! Let's learn Kannada together.",
+    rowdy: "Gottilla Kannada? No problem. Let's fix that.",
   },
   onboardingWelcomeSubtitle: {
     classic: 'Learn Kannada. Belong in Bengaluru.',
@@ -15,8 +15,8 @@ export const COPY = {
     rowdy: 'Ayyooo! Look at you speaking Kannada!',
   },
   wrongAnswer: {
-    classic: 'Not quite. Let\'s try again!',
-    rowdy: 'Yen idu! That\'s not it, try again \u{1F605}',
+    classic: "Not quite. Let's try again!",
+    rowdy: "Yen idu! That's not it, try again \u{1F605}",
   },
   correctAnswer: {
     classic: 'Correct! Well done.',
@@ -26,16 +26,16 @@ export const COPY = {
   // Streak
   streakReminder: {
     classic: 'Keep your streak going today.',
-    rowdy: 'Ey! Don\'t break the streak now, please.',
+    rowdy: "Ey! Don't break the streak now, please.",
   },
   streakCelebration: {
     classic: 'Amazing streak! Keep it up!',
-    rowdy: 'On fire, guru! Don\'t stop now!',
+    rowdy: "On fire, guru! Don't stop now!",
   },
 
   // Quiz
   quizIntro: {
-    classic: 'Let\'s test what you\'ve learned.',
+    classic: "Let's test what you've learned.",
     rowdy: 'Okay okay, time to see if you were paying attention.',
   },
   quizComplete: {
@@ -45,11 +45,11 @@ export const COPY = {
 
   // Daily goal
   dailyGoalComplete: {
-    classic: 'You\'ve hit your daily goal!',
+    classic: "You've hit your daily goal!",
     rowdy: 'Done for today! Proud of you, go eat some thindi.',
   },
   dailyGoalIncomplete: {
-    classic: 'You\'re making progress. Keep going!',
+    classic: "You're making progress. Keep going!",
     rowdy: 'Swalpa more, come on!',
   },
 
@@ -72,11 +72,11 @@ export const COPY = {
   // Settings
   learningModeUpdated: {
     classic: 'Learning mode updated. Your progress is saved.',
-    rowdy: 'Mode changed! Your XP is safe, don\'t worry.',
+    rowdy: "Mode changed! Your XP is safe, don't worry.",
   },
   modeUpdated: {
     classic: 'App style updated.',
-    rowdy: 'Vibe changed! Let\'s goooo.',
+    rowdy: "Vibe changed! Let's goooo.",
   },
 
   // Home

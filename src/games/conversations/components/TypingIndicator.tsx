@@ -36,7 +36,12 @@ const Dot: React.FC<{ delay: number }> = ({ delay }) => {
 const TypingIndicator: React.FC = () => (
   <View
     accessibilityLabel="typing"
-    style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(4), paddingVertical: moderateScale(4) }}
+    style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: moderateScale(4),
+      paddingVertical: moderateScale(4),
+    }}
   >
     <Dot delay={0} />
     <Dot delay={150} />

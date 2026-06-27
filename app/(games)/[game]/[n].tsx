@@ -13,15 +13,19 @@ import ConversationGame from '@/src/games/conversations';
 
 export default function GameRunnerScreen() {
   const router = useRouter();
-  const { game: gameParam, n: nParam, part } = useLocalSearchParams<{
+  const {
+    game: gameParam,
+    n: nParam,
+    part,
+  } = useLocalSearchParams<{
     game: string;
     n: string;
     part?: string;
   }>();
 
-  // Image Match's runner is dead (dropped DB table, spec_fix_games_flow Phase B);
-  // give a retired-game message rather than the generic not-found so an old
-  // deep link reads clearly until the full removal lands.
+  // Image Match was retired (DB tables dropped; code removed). Old deep links
+  // and bookmarks may still target it, so answer with a clear retired-game
+  // message rather than the generic not-found.
   if (gameParam === 'image-match') {
     return (
       <NotFound

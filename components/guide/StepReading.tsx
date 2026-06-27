@@ -12,13 +12,13 @@ import { AudioOrb } from '../ui/AudioOrb';
 import { GuidePhonemeButton } from './GuidePhonemeButton';
 
 /** A capital/lowercase audio comparison + its one-line insight. */
-const COMPARISONS: Array<{
+const COMPARISONS: {
   pair: [
     { kannada: string; romanization: string; note: string },
     { kannada: string; romanization: string; note: string },
   ];
   insight: string;
-}> = [
+}[] = [
   {
     pair: [
       { kannada: 'ಟ', romanization: 'Ta', note: 'curled' },
@@ -157,7 +157,14 @@ export function StepReading({ tryIt }: { tryIt: GuideTryIt }) {
           >
             Try it
           </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: moderateScale(10), flexWrap: 'wrap' }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'baseline',
+              gap: moderateScale(10),
+              flexWrap: 'wrap',
+            }}
+          >
             <Text
               style={{
                 fontFamily: Fonts.dmSans.bold,

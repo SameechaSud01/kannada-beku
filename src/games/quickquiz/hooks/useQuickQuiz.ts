@@ -10,19 +10,19 @@ type AttemptCallback = (args: { itemId: string; isCorrect: boolean }) => void;
 
 type UseQuickQuizReturn = {
   currentQuestion: QuizQuestion;
-  currentIndex:    number;
-  totalQuestions:  number;
-  score:           number;
-  streak:          number;
-  bestStreak:      number;
-  phase:           GamePhase;
-  answerState:     AnswerState;
-  selectedId:      string | null;
-  secondsLeft:     number;
-  optionState:     (optionId: string) => OptionState;
+  currentIndex: number;
+  totalQuestions: number;
+  score: number;
+  streak: number;
+  bestStreak: number;
+  phase: GamePhase;
+  answerState: AnswerState;
+  selectedId: string | null;
+  secondsLeft: number;
+  optionState: (optionId: string) => OptionState;
   handleOptionTap: (optionId: string) => void;
-  handleNext:      () => void;
-  restart:         () => void;
+  handleNext: () => void;
+  restart: () => void;
 };
 
 export function useQuickQuiz(
@@ -112,10 +112,7 @@ export function useQuickQuiz(
   // Cleanup on unmount.
   useEffect(() => clearTimer, [clearTimer]);
 
-  const handleOptionTap = useCallback(
-    (optionId: string) => commitAnswer(optionId),
-    [commitAnswer],
-  );
+  const handleOptionTap = useCallback((optionId: string) => commitAnswer(optionId), [commitAnswer]);
 
   const handleNext = useCallback(() => {
     if (answerStateRef.current === 'unanswered') return;

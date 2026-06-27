@@ -40,9 +40,7 @@ export function Toast({ kind, title, subtitle, onPress, onDismiss }: ToastProps)
     if (isSuccess) return; // top toast is unaffected by the keyboard
     const showEvt = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
     const hideEvt = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
-    const subShow = Keyboard.addListener(showEvt, (e) =>
-      setKbHeight(e.endCoordinates.height),
-    );
+    const subShow = Keyboard.addListener(showEvt, (e) => setKbHeight(e.endCoordinates.height));
     const subHide = Keyboard.addListener(hideEvt, () => setKbHeight(0));
     return () => {
       subShow.remove();
@@ -165,10 +163,7 @@ export function Toast({ kind, title, subtitle, onPress, onDismiss }: ToastProps)
   }
 
   // Error variant — bottom, card, sticky
-  const errorBottom =
-    kbHeight > 0
-      ? kbHeight + Spacing.lg
-      : insets.bottom + Spacing.xxxl;
+  const errorBottom = kbHeight > 0 ? kbHeight + Spacing.lg : insets.bottom + Spacing.xxxl;
   return (
     <Animated.View
       accessibilityLiveRegion="assertive"
@@ -242,11 +237,7 @@ export function Toast({ kind, title, subtitle, onPress, onDismiss }: ToastProps)
           ) : null}
         </View>
         {onPress ? (
-          <Icons.forward
-            size={moderateScale(18)}
-            color={Colors.tertiary}
-            strokeWidth={2.2}
-          />
+          <Icons.forward size={moderateScale(18)} color={Colors.tertiary} strokeWidth={2.2} />
         ) : null}
       </Pressable>
     </Animated.View>

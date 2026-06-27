@@ -9,26 +9,26 @@ import { useShake, useCorrectLift } from '../../shared/animations';
 import type { ConversationOption, OptionState } from '../types';
 
 type Props = {
-  option:  ConversationOption;
-  state:   OptionState;
+  option: ConversationOption;
+  state: OptionState;
   onPress: () => void;
 };
 
 // chunky_v3: correct = goldPale + 2px goldLip border + gold check; wrong =
 // redPale + 2px primaryContainer border (wrong STAYS red).
 const BG: Record<OptionState, string> = {
-  default:  '#ffffff',
-  correct:  Colors.secondaryFixed,
-  wrong:    Colors.errorContainerLow,
-  reveal:   Colors.secondaryFixed,
+  default: '#ffffff',
+  correct: Colors.secondaryFixed,
+  wrong: Colors.errorContainerLow,
+  reveal: Colors.secondaryFixed,
   disabled: '#ffffff',
 };
 
 const BORDER: Record<OptionState, string> = {
-  default:  Colors.hairline,
-  correct:  Colors.goldLip,
-  wrong:    Colors.primaryContainer,
-  reveal:   Colors.goldLip,
+  default: Colors.hairline,
+  correct: Colors.goldLip,
+  wrong: Colors.primaryContainer,
+  reveal: Colors.goldLip,
   disabled: Colors.hairline,
 };
 
@@ -66,11 +66,22 @@ const ReplyOptionButton: React.FC<Props> = ({ option, state, onPress }) => {
           transform: [{ translateY: pressed && state === 'default' ? 2 : 0 }],
         })}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: Spacing.md }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: Spacing.md,
+          }}
+        >
           <View style={{ flex: 1 }}>
             {option.tr ? (
               <Text
-                style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(16), color: Colors.onSurface }}
+                style={{
+                  fontFamily: Fonts.dmSans.bold,
+                  fontSize: moderateScale(16),
+                  color: Colors.onSurface,
+                }}
                 maxFontSizeMultiplier={1.3}
               >
                 {option.tr}
@@ -89,7 +100,11 @@ const ReplyOptionButton: React.FC<Props> = ({ option, state, onPress }) => {
             </Text>
           </View>
           <Text
-            style={{ fontFamily: Fonts.notoSansKannada.regular, fontSize: moderateScale(16), color: Colors.onSurface }}
+            style={{
+              fontFamily: Fonts.notoSansKannada.regular,
+              fontSize: moderateScale(16),
+              color: Colors.onSurface,
+            }}
             maxFontSizeMultiplier={1.3}
           >
             {option.kn}
@@ -112,7 +127,11 @@ const ReplyOptionButton: React.FC<Props> = ({ option, state, onPress }) => {
               justifyContent: 'center',
             }}
           >
-            <Icons.check size={moderateScale(13)} color={Colors.onSecondaryContainer} strokeWidth={3} />
+            <Icons.check
+              size={moderateScale(13)}
+              color={Colors.onSecondaryContainer}
+              strokeWidth={3}
+            />
           </Animated.View>
         )}
       </Pressable>

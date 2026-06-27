@@ -371,7 +371,11 @@ export default function EmergencyScreen() {
 type Context = { badge: string; rank: number };
 
 const CONTEXT_RULES: { re: RegExp; badge: string; rank: number }[] = [
-  { re: /\b(help|police|emergency|accident|danger|hurt|thief|lost|stop)\b/i, badge: 'SAFETY ISSUE', rank: 0 },
+  {
+    re: /\b(help|police|emergency|accident|danger|hurt|thief|lost|stop)\b/i,
+    badge: 'SAFETY ISSUE',
+    rank: 0,
+  },
   { re: /\bmeter\b/i, badge: 'METER DISPUTE', rank: 1 },
   { re: /\b(how much|price|cost|fare|rupees|eshtu)\b/i, badge: 'ASKING PRICE', rank: 2 },
   { re: /\b(kannada|english|understand|speak)\b/i, badge: 'LANGUAGE GAP', rank: 3 },

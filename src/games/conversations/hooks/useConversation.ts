@@ -6,21 +6,21 @@ import type { AnswerState, GamePhase, OptionState, ConversationTurn } from '../t
 type AttemptCallback = (args: { itemId: string; isCorrect: boolean }) => void;
 
 type UseConversationReturn = {
-  currentTurn:     ConversationTurn;
-  currentIndex:    number;
-  totalTurns:      number;
-  score:           number;
-  streak:          number;
-  bestStreak:      number;
-  phase:           GamePhase;
-  answerState:     AnswerState;
+  currentTurn: ConversationTurn;
+  currentIndex: number;
+  totalTurns: number;
+  score: number;
+  streak: number;
+  bestStreak: number;
+  phase: GamePhase;
+  answerState: AnswerState;
   selectedOptionId: string | null;
   /** Chosen option id per already-answered turn index — drives the chat log. */
-  answers:         Record<number, string>;
-  optionState:     (optionId: string) => OptionState;
+  answers: Record<number, string>;
+  optionState: (optionId: string) => OptionState;
   handleOptionTap: (optionId: string) => void;
-  handleNext:      () => void;
-  restart:         () => void;
+  handleNext: () => void;
+  restart: () => void;
 };
 
 export function useConversation(

@@ -8,9 +8,9 @@ import { Icons } from '@/constants/icons';
 
 type Props = {
   secondsLeft: number;
-  total:       number;
+  total: number;
   /** When the question is answered, freeze the bar (no colour alarm). */
-  frozen?:     boolean;
+  frozen?: boolean;
 };
 
 const TimerBar: React.FC<Props> = ({ secondsLeft, total, frozen }) => {

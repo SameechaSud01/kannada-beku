@@ -24,18 +24,18 @@ type Props = {
 // chunky_v3: correct = goldPale + 2px goldLip border + gold check; wrong =
 // redPale + 2px primaryContainer border (wrong STAYS red).
 const FACE: Record<OptionState, string> = {
-  default:  '#ffffff',
-  correct:  Colors.secondaryFixed,
-  wrong:    Colors.errorContainerLow,
-  reveal:   Colors.secondaryFixed,
+  default: '#ffffff',
+  correct: Colors.secondaryFixed,
+  wrong: Colors.errorContainerLow,
+  reveal: Colors.secondaryFixed,
   disabled: '#ffffff',
 };
 
 const BORDER: Record<OptionState, string> = {
-  default:  Colors.hairline,
-  correct:  Colors.goldLip,
-  wrong:    Colors.primaryContainer,
-  reveal:   Colors.goldLip,
+  default: Colors.hairline,
+  correct: Colors.goldLip,
+  wrong: Colors.primaryContainer,
+  reveal: Colors.goldLip,
   disabled: Colors.hairline,
 };
 
@@ -144,7 +144,11 @@ const OptionButton: React.FC<Props> = ({ option, state, onPress, reserveTag }) =
               justifyContent: 'center',
             }}
           >
-            <Icons.check size={moderateScale(13)} color={Colors.onSecondaryContainer} strokeWidth={3} />
+            <Icons.check
+              size={moderateScale(13)}
+              color={Colors.onSecondaryContainer}
+              strokeWidth={3}
+            />
           </Animated.View>
         )}
       </Pressable>

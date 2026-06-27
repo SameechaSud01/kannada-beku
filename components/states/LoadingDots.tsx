@@ -34,7 +34,17 @@ export function LoadingDots({ color = DOT_GOLD, size = 8 }: LoadingDotsProps) {
   );
 }
 
-function Dot({ i, color, dot, reduced }: { i: number; color: string; dot: number; reduced: boolean }) {
+function Dot({
+  i,
+  color,
+  dot,
+  reduced,
+}: {
+  i: number;
+  color: string;
+  dot: number;
+  reduced: boolean;
+}) {
   const v = useSharedValue(0);
   // Precompute outside the worklet — moderateScale is plain JS and would throw on
   // the UI runtime (a worklet may only call worklets / captured constants).

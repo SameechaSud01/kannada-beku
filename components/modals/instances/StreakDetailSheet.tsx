@@ -93,10 +93,8 @@ export function StreakDetailSheet() {
   const nextMilestone = nextMilestoneFor(streak);
   const daysToNext = nextMilestone != null ? nextMilestone - streak : 0;
 
-  const title =
-    streak === 0 ? 'Start your streak today' : `${streak}-day streak`;
-  const subtitle =
-    streak === 0 ? 'Practise once today to light it up.' : 'Your best run yet';
+  const title = streak === 0 ? 'Start your streak today' : `${streak}-day streak`;
+  const subtitle = streak === 0 ? 'Practise once today to light it up.' : 'Your best run yet';
 
   function onSetReminder() {
     modal.show({ kind: 'sheet', component: RemindersSheet });
@@ -194,7 +192,9 @@ export function StreakDetailSheet() {
       </Text>
 
       {/* Day-dots row — 7 equal cells */}
-      <View style={{ flexDirection: 'row', gap: moderateScale(6), marginBottom: moderateScale(20) }}>
+      <View
+        style={{ flexDirection: 'row', gap: moderateScale(6), marginBottom: moderateScale(20) }}
+      >
         {days.map((d) => (
           <DayDot key={d.iso} cell={d} />
         ))}

@@ -71,7 +71,10 @@ export function Skeleton({
   return (
     <View
       onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
-      style={[{ width: w, height: h, borderRadius: radius, backgroundColor: c1, overflow: 'hidden' }, style]}
+      style={[
+        { width: w, height: h, borderRadius: radius, backgroundColor: c1, overflow: 'hidden' },
+        style,
+      ]}
     >
       {!reduced && width > 0 ? (
         <AnimatedLinearGradient
@@ -86,7 +89,13 @@ export function Skeleton({
 }
 
 /** A white chunky card frame holding skeleton blocks (st-loading.jsx SkelCard). */
-export function SkelCard({ children, style }: { children?: ReactNode; style?: StyleProp<ViewStyle> }) {
+export function SkelCard({
+  children,
+  style,
+}: {
+  children?: ReactNode;
+  style?: StyleProp<ViewStyle>;
+}) {
   return (
     <View
       style={[

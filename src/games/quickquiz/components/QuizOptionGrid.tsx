@@ -5,9 +5,9 @@ import QuizOptionButton from './QuizOptionButton';
 import type { OptionState, QuizOption } from '../types';
 
 type Props = {
-  options:     QuizOption[];
+  options: QuizOption[];
   optionState: (optionId: string) => OptionState;
-  onSelect:    (optionId: string) => void;
+  onSelect: (optionId: string) => void;
 };
 
 function chunk<T>(arr: T[], size: number): T[][] {
