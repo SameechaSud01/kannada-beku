@@ -2,6 +2,16 @@ export interface Word {
   transliteration: string;
   english: string;
   kannada: string;
+  /**
+   * Optional mnemonic shown on the teach-word card (Calm flow) to aid recall,
+   * e.g. "Sounds like 'yaar?' — 'who's there?'". Rendered only when present.
+   */
+  hook?: string;
+  /**
+   * Optional say-along syllable breakdown shown as chips during the speaking
+   * step, e.g. ['yā', 'ru']. Rendered only when present.
+   */
+  syllables?: string[];
 }
 
 export interface Phrase {

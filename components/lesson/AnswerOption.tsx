@@ -21,14 +21,28 @@ export type AnswerOptionProps = {
   picked: number | null;
   correctIndex: number;
   onPick: (index: number) => void;
+  /**
+   * The option's own transliteration. When provided, a wrong pick shows what
+   * the learner actually chose ("yāru") instead of a generic "Try again"
+   * (Calm flow — turn the mistake into a comparison).
+   */
+  transliteration?: string;
 };
 
 /**
  * A multiple-choice option for the practice phases. On reveal the correct option
- * turns gold and bounces; a wrong pick turns red and shakes (INTERACTIONS M2/M3,
- * spec_playful_redesign §Micro-interactions). Logic stays in the parent.
+ * turns green and bounces; a wrong pick turns red and shakes (INTERACTIONS M2/M3,
+ * spec_playful_redesign §Micro-interactions). Green/red carry correctness
+ * unambiguously (owner-approved exception to warm-only). Logic stays in parent.
  */
-export function AnswerOption({ label, index, picked, correctIndex, onPick }: AnswerOptionProps) {
+export function AnswerOption({
+  label,
+  index,
+  picked,
+  correctIndex,
+  onPick,
+  transliteration,
+}: AnswerOptionProps) {
   const reveal = picked !== null;
   const isCorrect = index === correctIndex;
   const isPicked = picked === index;
@@ -60,7 +74,7 @@ export function AnswerOption({ label, index, picked, correctIndex, onPick }: Ans
   }));
 
   // Chunky white option card. On reveal:
-  //  - correct → goldPale fill + 2px goldLip border + a gold check circle
+  //  - correct → greenPale fill + 2px greenLip border + a green check circle
   //  - wrong   → redPale fill + 2px red2 border (wrong stays red — it's an error)
   const showCorrect = reveal && isCorrect;
   const showWrong = reveal && isPicked && !isCorrect;
@@ -70,9 +84,9 @@ export function AnswerOption({ label, index, picked, correctIndex, onPick }: Ans
   let borderColor = Colors.hairline;
   let borderWidth = 1;
   if (showCorrect) {
-    bg = Colors.secondaryFixed;
-    fg = Colors.onSecondaryContainer;
-    borderColor = Colors.goldLip;
+    bg = Colors.successContainerLow;
+    fg = Colors.onSuccessContainer;
+    borderColor = Colors.successLip;
     borderWidth = 2;
   } else if (showWrong) {
     bg = Colors.errorContainerLow;
@@ -98,7 +112,7 @@ export function AnswerOption({ label, index, picked, correctIndex, onPick }: Ans
           borderColor,
           borderBottomWidth: 4,
           borderBottomColor: showCorrect
-            ? Colors.goldLip
+            ? Colors.successLip
             : showWrong
               ? Colors.primaryContainer
               : Colors.cardLip,
@@ -116,7 +130,32 @@ export function AnswerOption({ label, index, picked, correctIndex, onPick }: Ans
             {label}
           </Text>
           {showCorrect ? <FeedbackTag kind="correct" /> : null}
-          {showWrong ? <FeedbackTag kind="wrong" /> : null}
+          {showWrong ? (
+            transliteration ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: Spacing.xs,
+                  marginTop: Spacing.sm,
+                }}
+              >
+                <Icons.wrong size={moderateScale(16)} color={Colors.primary} />
+                <Text
+                  style={{
+                    fontFamily: Fonts.dmSans.bold,
+                    fontSize: moderateScale(13),
+                    color: Colors.primary,
+                  }}
+                  maxFontSizeMultiplier={1.3}
+                >
+                  That’s “{transliteration}”
+                </Text>
+              </View>
+            ) : (
+              <FeedbackTag kind="wrong" />
+            )
+          ) : null}
         </View>
         {showCorrect ? (
           <View
@@ -124,18 +163,14 @@ export function AnswerOption({ label, index, picked, correctIndex, onPick }: Ans
               width: moderateScale(28),
               height: moderateScale(28),
               borderRadius: Radius.full,
-              backgroundColor: Colors.secondaryContainer,
+              backgroundColor: Colors.successContainer,
               borderBottomWidth: 2,
-              borderBottomColor: Colors.goldLip,
+              borderBottomColor: Colors.successLip,
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <Icons.check
-              size={moderateScale(16)}
-              color={Colors.onSecondaryContainer}
-              strokeWidth={2.6}
-            />
+            <Icons.check size={moderateScale(16)} color={Colors.onSuccess} strokeWidth={2.6} />
           </View>
         ) : null}
       </Pressable>

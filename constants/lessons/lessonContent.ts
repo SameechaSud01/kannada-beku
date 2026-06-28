@@ -21,10 +21,18 @@
  */
 import { flattenSections, type Lesson, type LessonSection, type Phrase, type Word } from './types';
 
-const w = (kannada: string, transliteration: string, english: string): Word => ({
+const w = (
+  kannada: string,
+  transliteration: string,
+  english: string,
+  // Optional Calm-flow extras (memory hook, say-along syllables). Authored
+  // per-word over time; omitted entries simply don't render their feature.
+  extra?: Pick<Word, 'hook' | 'syllables'>,
+): Word => ({
   kannada,
   transliteration,
   english,
+  ...extra,
 });
 
 const p = (kannada: string, transliteration: string, english: string): Phrase => ({

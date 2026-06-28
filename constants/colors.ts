@@ -37,6 +37,16 @@ export const Colors = {
   // ── Error states (MODALS §5) ───────────────────────────
   errorContainerLow: '#f3dada', // pale Mysore red — error-state card bg, toast icon bg
 
+  // ── Success — answer correctness (owner-approved exception, 2026-06-28) ──
+  // Green/red carry right-vs-wrong in practice feedback only; gold proved
+  // ambiguous against the gold "encouragement" accent. Scoped to lesson
+  // answer feedback — the rest of the app stays warm-only.
+  successContainer: '#4e9a2f', // green fill (correct check circle)
+  successContainerLow: '#dcefc6', // pale green — correct option / banner bg
+  onSuccessContainer: '#356016', // dark green text on pale green
+  successLip: '#3c7a22', // green chunky lip / border
+  onSuccess: '#ffffff', // text/icon on a successContainer fill
+
   // ── Playful redesign — additive tokens (DESIGN.md, 2026-06-04) ──
   // Strictly red / gold / deep-gold / warm-neutral. No blue/green/teal/coral.
   goldBright: '#ffd24d', // lighter gold highlight (gradients, hi state)
