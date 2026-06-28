@@ -16,7 +16,7 @@ interface FeedbackTagProps {
 export function FeedbackTag({ kind }: FeedbackTagProps) {
   const isCorrect = kind === 'correct';
   const Icon = isCorrect ? Icons.correct : Icons.wrong;
-  const color = isCorrect ? Colors.onSecondaryContainer : Colors.primary;
+  const color = isCorrect ? Colors.onSuccessContainer : Colors.primary;
   const label = isCorrect ? 'Correct' : 'Try again';
 
   return (

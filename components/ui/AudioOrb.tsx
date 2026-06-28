@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable } from 'react-native';
 import Animated, {
   cancelAnimation,
@@ -48,6 +48,10 @@ export function AudioOrb({
   const lip = Math.max(2, Math.round(dim * 0.055)); // ~3px chunky lip at size 56
   const Icon: TablerIcon = icon ?? Icons.audio;
 
+  // Local press state drives the tactile "face drop" so a tap is always visibly
+  // acknowledged — even when playback is silent (e.g. iOS Simulator has no TTS).
+  const [pressed, setPressed] = useState(false);
+
   const ping = useSharedValue(0);
 
   useEffect(() => {
@@ -73,6 +77,8 @@ export function AudioOrb({
   return (
     <Pressable
       onPress={onPress}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
       disabled={disabled}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
@@ -80,7 +86,7 @@ export function AudioOrb({
       hitSlop={moderateScale(8)}
       style={{
         width: dim,
-        height: dim,
+        height: dim + lip,
         alignItems: 'center',
         justifyContent: 'center',
         opacity: disabled ? 0.5 : 1,
@@ -99,7 +105,7 @@ export function AudioOrb({
           ringStyle,
         ]}
       />
-      <ChunkyCircle size={dim} depth={lip} bg={color} lipColor={lipColor}>
+      <ChunkyCircle size={dim} depth={lip} bg={color} lipColor={lipColor} pressed={pressed}>
         <Icon size={moderateScale(size * 0.42)} color={iconColor} strokeWidth={2} />
       </ChunkyCircle>
     </Pressable>

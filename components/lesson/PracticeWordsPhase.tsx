@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Pressable } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
+import { splitGloss } from '../../utils/gloss';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
@@ -17,6 +19,8 @@ import { AudioOrb } from '../ui/AudioOrb';
 import { useUserStore } from '../../stores/useUserStore';
 import { useProgressStore } from '../../stores/progressStore';
 import type { Word } from '../../constants/lessons/types';
+
+type SayRating = 'hard' | 'ok' | 'easy';
 
 interface PracticeWordsPhaseProps {
   words: Word[];
@@ -52,6 +56,8 @@ export function PracticeWordsPhase({
 
   const [picked, setPicked] = useState<number | null>(null);
   const [playing, setPlaying] = useState(false);
+  // Calm "say it" self-check: how the rep felt (no scoring, just self-awareness).
+  const [rating, setRating] = useState<SayRating | null>(null);
   const mounted = useIsMounted();
   const options = useMemo<Word[]>(() => {
     if (!word) return [];
@@ -66,6 +72,7 @@ export function PracticeWordsPhase({
 
   useEffect(() => {
     setPicked(null);
+    setRating(null);
   }, [practiceWordIndex, step]);
 
   useEffect(() => {
@@ -153,6 +160,7 @@ export function PracticeWordsPhase({
               <AnswerOption
                 key={`${opt.english}-${idx}`}
                 label={opt.english}
+                transliteration={opt.transliteration}
                 index={idx}
                 picked={picked}
                 correctIndex={correctIndex}
@@ -162,42 +170,7 @@ export function PracticeWordsPhase({
           </View>
 
           {picked !== null ? (
-            <View
-              style={{
-                backgroundColor: Colors.surfaceCreamLow,
-                borderRadius: Radius.chunky,
-                borderBottomWidth: 4,
-                borderBottomColor: Colors.cardLip,
-                paddingVertical: Spacing.xl,
-                paddingHorizontal: Spacing.lg,
-                alignItems: 'center',
-                marginTop: Spacing.xl,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: Fonts.dmSans.bold,
-                  fontSize: moderateScale(24),
-                  color: Colors.onSurface,
-                  textAlign: 'center',
-                }}
-                maxFontSizeMultiplier={1.2}
-              >
-                {word.transliteration}
-              </Text>
-              <Text
-                style={{
-                  fontFamily: Fonts.notoSansKannada.regular,
-                  fontSize: moderateScale(14),
-                  color: Colors.textFaint,
-                  textAlign: 'center',
-                  marginTop: Spacing.sm,
-                }}
-                maxFontSizeMultiplier={1.3}
-              >
-                {word.kannada}
-              </Text>
-            </View>
+            <WhyBanner word={word} picked={options[picked]} correct={picked === correctIndex} />
           ) : null}
         </ScrollView>
       ) : (
@@ -261,6 +234,43 @@ export function PracticeWordsPhase({
             >
               {word.kannada}
             </Text>
+
+            {word.syllables && word.syllables.length > 0 ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                  gap: Spacing.sm,
+                  marginTop: Spacing.lg,
+                }}
+              >
+                {word.syllables.map((syll, i) => (
+                  <View
+                    key={`${syll}-${i}`}
+                    style={{
+                      backgroundColor: Colors.secondaryFixed,
+                      borderRadius: Radius.tile,
+                      borderBottomWidth: 2,
+                      borderBottomColor: Colors.goldLip,
+                      paddingVertical: moderateScale(6),
+                      paddingHorizontal: Spacing.md,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: Fonts.dmSans.bold,
+                        fontSize: moderateScale(17),
+                        color: Colors.onSecondaryContainer,
+                      }}
+                      maxFontSizeMultiplier={1.3}
+                    >
+                      {syll}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            ) : null}
           </View>
 
           <View style={{ alignItems: 'center', marginTop: Spacing.xxl, gap: Spacing.md }}>
@@ -286,8 +296,22 @@ export function PracticeWordsPhase({
             }}
             maxFontSizeMultiplier={1.3}
           >
-            Say it out loud
+            Listen, then say it out loud
           </Text>
+
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.medium,
+              fontSize: moderateScale(13),
+              color: Colors.tertiary,
+              marginTop: Spacing.xl,
+              textAlign: 'center',
+            }}
+            maxFontSizeMultiplier={1.3}
+          >
+            Said it? How did it feel?
+          </Text>
+          <SelfRate value={rating} onPick={setRating} />
         </ScrollView>
       )}
 
@@ -297,11 +321,128 @@ export function PracticeWordsPhase({
         </View>
       )}
 
-      {step === 'say' && (
+      {step === 'say' && rating !== null && (
         <View style={{ padding: Spacing.lg, paddingBottom: insets.bottom + Spacing.lg }}>
-          <LipButton label="I said it" onPress={handleISaidIt} icon={Icons.forward} />
+          <LipButton label="Next" onPress={handleISaidIt} icon={Icons.forward} />
         </View>
       )}
     </View>
+  );
+}
+
+const SAY_RATINGS: { key: SayRating; label: string; icon: (typeof Icons)['ratingOk'] }[] = [
+  { key: 'hard', label: 'Tricky', icon: Icons.ratingHard },
+  { key: 'ok', label: 'Got it', icon: Icons.ratingOk },
+  { key: 'easy', label: 'Easy', icon: Icons.ratingEasy },
+];
+
+/**
+ * Calm "say it" self-check. No mic, no scoring — the learner just notes how the
+ * rep felt, which keeps the speaking step honest and gives a sense of progress.
+ */
+function SelfRate({ value, onPick }: { value: SayRating | null; onPick: (r: SayRating) => void }) {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        gap: Spacing.sm,
+        marginTop: Spacing.md,
+      }}
+    >
+      {SAY_RATINGS.map(({ key, label, icon: Icon }) => {
+        const active = value === key;
+        return (
+          <Pressable
+            key={key}
+            onPress={() => onPick(key)}
+            accessibilityRole="button"
+            accessibilityState={{ selected: active }}
+            accessibilityLabel={label}
+            style={({ pressed }) => ({
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: Spacing.xs,
+              backgroundColor: active ? Colors.secondaryFixed : '#ffffff',
+              borderRadius: Radius.full,
+              borderWidth: active ? 0 : 1,
+              borderColor: Colors.hairline,
+              borderBottomWidth: 2,
+              borderBottomColor: active ? Colors.goldLip : Colors.cardLip,
+              paddingVertical: moderateScale(8),
+              paddingHorizontal: Spacing.md,
+              transform: [{ translateY: pressed ? 1 : 0 }],
+            })}
+          >
+            <Icon
+              size={moderateScale(17)}
+              color={active ? Colors.onSecondaryContainer : Colors.tertiary}
+              strokeWidth={2}
+            />
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.bold,
+                fontSize: moderateScale(13),
+                color: active ? Colors.onSecondaryContainer : Colors.tertiary,
+              }}
+              maxFontSizeMultiplier={1.3}
+            >
+              {label}
+            </Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
+/**
+ * Calm-flow answer feedback: instead of just revealing the right word, it
+ * explains *why* — naming what the learner chose vs. what they actually heard,
+ * so a wrong pick becomes a comparison rather than a dead end.
+ */
+function WhyBanner({ word, picked, correct }: { word: Word; picked: Word; correct: boolean }) {
+  const heardEn = splitGloss(word.english).text;
+  const pickedEn = splitGloss(picked.english).text;
+  const bold = { fontFamily: Fonts.dmSans.bold, color: Colors.onSurface };
+
+  return (
+    <Animated.View
+      entering={FadeInDown.duration(280)}
+      style={{
+        backgroundColor: correct ? Colors.successContainerLow : '#ffffff',
+        borderRadius: Radius.chunky,
+        borderWidth: correct ? 0 : 1,
+        borderColor: Colors.hairline,
+        borderBottomWidth: 4,
+        borderBottomColor: correct ? Colors.successLip : Colors.cardLip,
+        paddingVertical: Spacing.lg,
+        paddingHorizontal: Spacing.lg,
+        marginTop: Spacing.xl,
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: Fonts.dmSans.regular,
+          fontSize: moderateScale(14),
+          lineHeight: moderateScale(21),
+          color: correct ? Colors.onSuccessContainer : Colors.tertiary,
+        }}
+        maxFontSizeMultiplier={1.3}
+      >
+        {correct ? (
+          <>
+            <Text style={bold}>{word.transliteration}</Text> ({word.kannada}) means{' '}
+            <Text style={bold}>{heardEn}</Text>.
+          </>
+        ) : (
+          <>
+            “{pickedEn}” is <Text style={bold}>{picked.transliteration}</Text>. The word you heard,{' '}
+            <Text style={bold}>{word.transliteration}</Text> ({word.kannada}), means{' '}
+            <Text style={bold}>{heardEn}</Text>.
+          </>
+        )}
+      </Text>
+    </Animated.View>
   );
 }
