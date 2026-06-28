@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 # Pre-push secret scan (audit H2). Fails the push if a likely secret is tracked
 # by git, or if a local secrets file is staged. Scans only git-tracked content
 # so untracked .env files don't trip it. Keep patterns conservative to avoid

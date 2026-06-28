@@ -54,7 +54,7 @@ echo ""
 echo "[ Step 3/4 ] Running security scan..."
 SCRIPT_DIR="$(git rev-parse --show-toplevel)/scripts"
 if [ -f "$SCRIPT_DIR/security-scan.sh" ]; then
-  if bash "$SCRIPT_DIR/security-scan.sh"; then
+  if sh "$SCRIPT_DIR/security-scan.sh"; then
     echo ""
   else
     echo ""
