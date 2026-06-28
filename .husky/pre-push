@@ -1,3 +1,4 @@
+#!/bin/sh
 # Block pushes to protected branches, then run TypeScript + security checks.
 set -eu
 
