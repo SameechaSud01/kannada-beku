@@ -26,9 +26,9 @@ section.
 - T014 [OPEN] Show the alphabet chart in all lessons
 - T015 [OPEN] Let the user tap "respectful" or "neutral" to see the difference between them
 - T016 [OPEN] For any word where the user has to hold the letter, give an option to see the initial basics card showing the difference
-- T017 [OPEN] Figure out why profile load takes so long, see if caching is an option
+
 - T018 [OPEN] When an entire lesson ends the screen has been fixed, need to apply the same to sub parts of the same.
 
 ## Done
-
+- T017 [DONE] Figure out why profile load takes so long, see if caching is an option
 - (move items here with [DONE], keep the ID)
