@@ -1,3 +1,4 @@
+#!/bin/sh
 # Block pushes to protected branches, then run TypeScript + security checks.
 set -eu
 
@@ -29,7 +30,7 @@ echo "========================================="
 echo ""
 
 echo "[ Step 1/4 ] Running TypeScript type check..."
-if npx tsc --noEmit; then
+if tsc --noEmit; then
   echo "  TypeScript: PASS"
 else
   echo "  TypeScript: FAIL"
@@ -40,7 +41,7 @@ fi
 
 echo ""
 echo "[ Step 2/4 ] Running ESLint..."
-if npx eslint .; then
+if node node_modules/eslint/bin/eslint.js .; then
   echo "  ESLint: PASS"
 else
   echo "  ESLint: FAIL"
@@ -53,7 +54,7 @@ echo ""
 echo "[ Step 3/4 ] Running security scan..."
 SCRIPT_DIR="$(git rev-parse --show-toplevel)/scripts"
 if [ -f "$SCRIPT_DIR/security-scan.sh" ]; then
-  if bash "$SCRIPT_DIR/security-scan.sh"; then
+  if sh "$SCRIPT_DIR/security-scan.sh"; then
     echo ""
   else
     echo ""
@@ -67,7 +68,7 @@ fi
 
 echo ""
 echo "[ Step 4/4 ] Running tests..."
-if npm test --silent; then
+if jest --silent; then
   echo "  Tests: PASS"
 else
   echo "  Tests: FAIL"

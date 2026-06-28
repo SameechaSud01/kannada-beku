@@ -1,4 +1,4 @@
-# TODO
+## TODO
 
 Task backlog. IDs are stable (Txx). Close items in the same commit that
 resolves them. Inline code markers use TODO(Txx) and must reference an ID here.
@@ -28,7 +28,9 @@ section.
 - T016 [OPEN] For any word where the user has to hold the letter, give an option to see the initial basics card showing the difference
 
 - T018 [OPEN] When an entire lesson ends the screen has been fixed, need to apply the same to sub parts of the same.
-
+- T019 [OPEN] When user goes offline, save current state locally, and push to DB once back online. (sentry)
+- T020 [OPEN] Make font size dynamic to work with the length of the word
+- T021 [OPEN] Right now, correct is yellow. We need to make correct green and wrong red
 ## Done
 - T017 [DONE] Figure out why profile load takes so long, see if caching is an option
 - (move items here with [DONE], keep the ID)
