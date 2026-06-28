@@ -41,7 +41,7 @@ fi
 
 echo ""
 echo "[ Step 2/4 ] Running ESLint..."
-if eslint .; then
+if node node_modules/eslint/bin/eslint.js .; then
   echo "  ESLint: PASS"
 else
   echo "  ESLint: FAIL"
