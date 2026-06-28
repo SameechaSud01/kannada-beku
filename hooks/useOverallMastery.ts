@@ -21,7 +21,7 @@ export function useOverallMastery(): OverallMastery & { isLoading: boolean } {
     queryKey: ['game-mastery', userId ?? ''],
     queryFn: () => fetchGameMasteryByLesson(userId as string),
     enabled: !!userId,
-    staleTime: 60 * 1000,
+    staleTime: Infinity,
   });
 
   const result = useMemo(

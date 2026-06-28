@@ -34,6 +34,7 @@ import { fetchUserRow } from '../services/api/users';
 import { syncOnboardingToSupabase } from '../services/api/onboarding';
 import { fetchCompletedLessons, recordLessonCompletion } from '../services/api/progress';
 import { fetchLessonIdBySlug } from '../services/api/lessons';
+import { fetchGameMasteryByLesson } from '../services/api/gameMastery';
 import { Audio } from 'expo-av';
 import { isKannadaVoiceAvailable } from '../services/audio/deviceTtsAudioService';
 import { ModalHost, useModal } from '../components/modals/ModalHost';
@@ -233,6 +234,14 @@ function AppGate() {
 
       hydrateCompletions(userId).catch((err) => {
         console.warn('[progress] hydrateCompletions failed', err);
+      });
+
+      // Prefetch game mastery in the background at login so the Profile page
+      // finds it cached and renders without a loading skeleton.
+      queryClient.prefetchQuery({
+        queryKey: ['game-mastery', userId],
+        queryFn: () => fetchGameMasteryByLesson(userId),
+        staleTime: Infinity,
       });
     });
 
