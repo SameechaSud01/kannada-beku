@@ -106,7 +106,6 @@ export default function LessonScreen() {
   const active = runLesson ?? lesson;
   const isLastPart = isPartRun && partIndex === lesson.sections.length - 1;
   const nextSection = isPartRun ? lesson.sections[partIndex + 1] : undefined;
-  const currentPartLabel = isPartRun ? (lesson.sections[partIndex]?.label ?? '') : '';
 
   // Sub-part label rides on the progress bar only during a part run.
   const sectionLabel = isPartRun ? runner.sectionLabel : undefined;
@@ -188,10 +187,11 @@ export default function LessonScreen() {
       if (isPartRun && !isLastPart && nextSection) {
         return (
           <PartDoneCard
-            partLabel={currentPartLabel}
-            nextLabel={nextSection.label}
+            lesson={lesson}
+            partIndex={partIndex}
             onContinue={() => router.replace(`/lesson/${lesson.slug}?part=${nextSection.key}`)}
             onBack={() => router.back()}
+            onHome={() => router.replace('/(tabs)')}
           />
         );
       }

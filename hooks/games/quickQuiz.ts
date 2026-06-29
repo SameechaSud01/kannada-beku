@@ -2,9 +2,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../../stores/useAuthStore';
 import {
   fetchQuickQuizItemsByLessonNo,
-  recordQuickQuizAttempt,
   type QuickQuizItem,
 } from '../../services/api/games/quickQuiz';
+import { recordGameAttemptResilient } from '../../services/progress/syncQueue';
 
 /**
  * Fetch all quick_quiz_items for one lesson, ordered by sort_order.
@@ -32,7 +32,7 @@ export function useRecordQuickQuizAttempt() {
     mutationKey: ['recordQuickQuizAttempt'],
     retry: 2,
     mutationFn: ({ itemId, isCorrect }: { itemId: string; isCorrect: boolean }) =>
-      recordQuickQuizAttempt(itemId, isCorrect),
+      recordGameAttemptResilient('quick_quiz', itemId, isCorrect),
     onSuccess: () => {
       const userId = useAuthStore.getState().user?.id;
       if (userId) {

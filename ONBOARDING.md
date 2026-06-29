@@ -13,7 +13,7 @@ If you hit anything that this guide doesn't cover, DM Samee — and please send 
 Design principles you'll see reflected everywhere:
 - **Warm and forgiving** — no streak shaming, no XP grinds, no "you broke your streak!" dread.
 - **Beginner-first** — every Kannada word ships with a transliteration; no assumed prior exposure.
-- **Karnataka identity** — green/gold palette (the flag), Mysore red accents, Lora italic for transliterations, Noto Serif Kannada for the script itself.
+- **Karnataka identity** — warm gold + Mysore red palette, DM Sans bold for transliterations, Noto Sans Kannada for the script itself.
 
 ---
 
@@ -24,7 +24,7 @@ Design principles you'll see reflected everywhere:
 | Framework | **Expo SDK 54** (managed workflow) | No `ios/` or `android/` folders in git — Expo regenerates them. You never run `pod install` or open Android Studio for our code. |
 | Runtime | **React Native 0.81**, React 19 | New Architecture (Fabric/TurboModules) is **on** — see [app.json](app.json) `newArchEnabled: true`. |
 | Navigation | **Expo Router 6** (file-based) | Files in [app/](app/) become routes. Folder = nested stack. `(parens)` folders are route groups (no URL segment). |
-| Styling | **NativeWind 4** (Tailwind for RN) + design tokens in [constants/](constants/) | Pull colors/spacing from tokens; no hex literals in components. |
+| Styling | **Inline styles + design tokens** in [constants/](constants/) (no NativeWind/Tailwind) | Pull colors/spacing from tokens; no hex literals in components. |
 | Sizing | **react-native-size-matters** | `moderateScale()` / `scale()` / `verticalScale()` instead of raw pixels — this is enforced. |
 | Local state | **Zustand 5** (in [stores/](stores/)) | Persisted via AsyncStorage; secrets via `expo-secure-store`. |
 | Server state | **TanStack Query 5** | Do not fetch in `useEffect` for data that belongs in a query. |
@@ -47,7 +47,6 @@ Install these, in order:
 4. **VS Code** — [code.visualstudio.com](https://code.visualstudio.com/). Recommended extensions:
    - ESLint
    - Prettier
-   - Tailwind CSS IntelliSense (works with NativeWind)
    - Expo Tools
 5. **Android Studio** — [developer.android.com/studio](https://developer.android.com/studio). When the setup wizard runs, accept the **Android SDK**, **Android SDK Platform-Tools**, and **Android Virtual Device** components. We need API level 34+ to match `expo-router`/RN 0.81.
 6. **Environment variables** (Settings → System → About → Advanced system settings → Environment Variables):
@@ -155,7 +154,7 @@ components/
 constants/
   colors.ts           Material 3 tonal palette — single source of truth
   copy.ts             User-facing strings (en) — use via useCopy()
-  fonts.ts            DM Sans / Lora / Noto Serif Kannada font name map
+  fonts.ts            Baloo Tamma 2 / DM Sans / Noto Sans Kannada font name map
   spacing.ts          Spacing scale (used with moderateScale)
   lessons/            Lesson content as typed TS modules (one per lesson)
 

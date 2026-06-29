@@ -5,9 +5,9 @@ import { formatFirstName } from '../../utils/formatName';
 import { personalizeScenarios } from '../../utils/personalize';
 import {
   fetchConversationScenariosByLessonNo,
-  recordConversationAttempt,
   type ConversationScenario,
 } from '../../services/api/games/conversations';
+import { recordGameAttemptResilient } from '../../services/progress/syncQueue';
 
 /**
  * Fetch a lesson's conversation scenarios (with grouped turns).
@@ -41,7 +41,7 @@ export function useRecordConversationAttempt() {
     mutationKey: ['recordConversationAttempt'],
     retry: 2,
     mutationFn: ({ itemId, isCorrect }: { itemId: string; isCorrect: boolean }) =>
-      recordConversationAttempt(itemId, isCorrect),
+      recordGameAttemptResilient('conversation', itemId, isCorrect),
     onSuccess: () => {
       const userId = useAuthStore.getState().user?.id;
       if (userId) {

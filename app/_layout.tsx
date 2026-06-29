@@ -35,6 +35,9 @@ import { syncOnboardingToSupabase } from '../services/api/onboarding';
 import { fetchCompletedLessons, recordLessonCompletion } from '../services/api/progress';
 import { fetchLessonIdBySlug } from '../services/api/lessons';
 import { fetchGameMasteryByLesson } from '../services/api/gameMastery';
+import { useSyncQueueStore } from '../stores/syncQueueStore';
+import { flushSyncQueue } from '../services/progress/syncQueue';
+import * as Network from 'expo-network';
 import { Audio } from 'expo-av';
 import { isKannadaVoiceAvailable } from '../services/audio/deviceTtsAudioService';
 import { ModalHost, useModal } from '../components/modals/ModalHost';
@@ -287,6 +290,21 @@ function AppGate() {
       useProgressStore.getState().reset();
     }
   }, [session?.user?.id, storedUserId, userHydrated, progressHydrated]);
+
+  // Offline outbox (TODO T019): drain any queued progress writes once we're
+  // signed in and the queue has rehydrated — immediately (catch up on launch /
+  // anything parked last session) and again whenever connectivity returns.
+  const syncQueueHydrated = useSyncQueueStore((s) => s.isHydrated);
+  useEffect(() => {
+    if (!session?.user?.id || !syncQueueHydrated) return;
+    flushSyncQueue();
+    const sub = Network.addNetworkStateListener((state) => {
+      if (state.isConnected && state.isInternetReachable !== false) {
+        flushSyncQueue();
+      }
+    });
+    return () => sub.remove();
+  }, [session?.user?.id, syncQueueHydrated]);
 
   useEffect(() => {
     if (authLoading || !userHydrated || !progressHydrated) return;

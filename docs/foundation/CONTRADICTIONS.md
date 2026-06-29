@@ -38,6 +38,8 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 2. Execute steps 2–4 of the migration in CONTENT.md.
 3. Step 5 (Profile/onboarding UI removal) is already a verified no-op — no tone UI exists.
 
+**Resolved (2026-06-28, TODO T001):** Owner picked **classic**. [constants/copy.ts](../../constants/copy.ts) collapsed to single strings (no `classic`/`rowdy` keys); [hooks/useCopy.ts](../../hooks/useCopy.ts) now returns `COPY[key]` directly; [stores/useUserStore.ts](../../stores/useUserStore.ts) dropped the `mode` field/default/`setMode` action and bumped the persisted `user_prefs` to **version 2** with a `migrate` that strips the stale `mode` key on rehydrate. No UI changes were needed (no tone surface existed).
+
 ### C7 — `fill_blank` drill type is a placeholder, not an implementation
 
 **What's wrong:** [CONTENT.md](CONTENT.md#authoring-rules-spec-leads-code--content-must-conform) authoring rule says drills "mix `listen_pick` / `translate_pick` / `fill_blank`." The type ([constants/lessons/types.ts](../../constants/lessons/types.ts)) includes `fill_blank`. Routing in [components/lesson/drill/DrillPhase.tsx](../../components/lesson/drill/DrillPhase.tsx) sends `fill_blank` items to [components/lesson/drill/FillBlankPlaceholder.tsx](../../components/lesson/drill/FillBlankPlaceholder.tsx), which renders the literal text "Fill-in-the-blank / Not yet implemented — skipping." and a Skip button that resolves the drill as wrong. **Verified by reading both files directly.**
@@ -47,6 +49,8 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 **Owning spec:** [CONTENT.md](CONTENT.md#authoring-rules-spec-leads-code--content-must-conform).
 
 **Resolution owed:** Either (a) implement the `fill_blank` drill UI for real, or (b) remove `fill_blank` from the type union and the authoring-rules wording until it's built. Lessons 2–8 should not depend on `fill_blank` until one of those lands.
+
+**Resolved (2026-06-28, TODO T002):** Option (b) — the lesson-flow redesign replaced the entire `DrillPhase` / `fill_blank` system with the multiple-choice `PracticeWordsPhase` / `PracticePhrasesPhase` + `AnswerOption` flow. `fill_blank`, `DrillPhase.tsx`, and `FillBlankPlaceholder.tsx` no longer exist in the codebase, and `constants/lessons/types.ts` has no drill type union. CONTENT.md authoring rule and DESIGN.md component list updated to match.
 
 ### C11 — Beginners' Guide spec landed; code not yet shipped
 
@@ -69,6 +73,8 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 2. Ship the migration, the routes, the components, the `useUserStore` flags, and the Learn-tab basics card per the acceptance criteria in [spec_beginners_guide.md](../../spec_docs/Sameecha/spec_beginners_guide.md).
 3. Close this entry once verified end-to-end on iPhone SE and a larger device.
 
+**Resolved (2026-06-28, TODO T003):** Code shipped — [app/onboarding/basics.tsx](../../app/onboarding/basics.tsx), the full [app/guide/](../../app/guide/) route + [components/guide/](../../components/guide/) set, `useUserStore` `hasSeenBasicsGuide` / `hasSeenBasicsHomeNudge` flags, and the L0 seed + content migrations ([2026-06-01_lesson_0_basics_seed.sql](../../services/api/migrations/2026-06-01_lesson_0_basics_seed.sql), [2026-06-15_basics_guide_content.sql](../../services/api/migrations/2026-06-15_basics_guide_content.sql)). Predicate audit (item 1) **passes**: `recompute_overall_progress` counts `v_lessons_done` from `user_lesson_progress` completions capped at 8 ([2026-06-10_c13_drop_image_match_from_overall.sql](../../services/api/migrations/2026-06-10_c13_drop_image_match_from_overall.sql) L43–48), and L0 basics is never written to `user_lesson_progress` (excluded from completion writes by design), so `lesson_no = 0` cannot inflate the count — no `where lesson_no > 0` guard needed. Residual: final on-device pass (folds into the device-verification items T006/T007).
+
 ### C9 — Stale "NativeWind" text in repo README; CLAUDE.md verified clean
 
 **What's wrong:** The repo's top-level [README.md](../../README.md) still references NativeWind in two places (lines 3 and 153). Code is clean — grep across `*.ts`/`*.tsx`/`*.js`/`*.jsx`/`*.json` for `nativewind` or `className=` returns zero hits outside `node_modules`. NativeWind was removed in commit `818e1ba` and the OppositeGame port finished in commit `01a516e` (see resolved C1). MMKV is similarly absent from both code and [.claude/CLAUDE.md](../../.claude/CLAUDE.md) — the only MMKV strings in the repo are an unrelated SHA in `package-lock.json` and the prior `docs/STATE.md` TODO line that was removed in this revision.
@@ -83,6 +89,8 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 
 **Resolution owed:** Edit [README.md](../../README.md) to drop NativeWind from the stack list (line 3) and from the "Styling" section (line 153), replacing with "inline styles + tokens in `constants/`". No CLAUDE.md edit needed beyond the new top-of-file session-start instruction.
 
+**Resolved (2026-06-28, TODO T004):** README.md and `.claude/CLAUDE.md` are now clean (grep returns zero NativeWind hits). The remaining stale references had migrated to [ONBOARDING.md](../../ONBOARDING.md) — the stack table's "Styling" row and the VS Code "Tailwind CSS IntelliSense" extension line were corrected to "inline styles + tokens." DESIGN.md drift note updated.
+
 ### C12 — CONTENT.md still points game content at deleted local data files
 
 **What's wrong:** [CONTENT.md](CONTENT.md#game-content) describes Opposites as "Consumes word-pair data from [wordPairs.ts](../../src/games/opposites/wordPairs.ts)" with a TODO asking for the word-pair count. As of 2026-06-02 ([spec_content_integrity](../../spec_docs/Sameecha/spec_content_integrity.md) §3.7) the live games consume content **from Supabase** (`fetchOppositesItemsByLessonNo` / `fetchDictationItemsByLessonNo` / `fetchImageMatchItemsByLessonNo`), and the dead local banks were deleted: `src/games/opposites/data/wordPairs.ts` (`RAW_PAIRS`), `src/games/imagematch/data/vocabBank.ts` (`VOCAB_BANK`), `src/games/dictation/data/wordBank.ts` (`WORD_BANK`), plus their tests. The `data/karnataka_fun_facts.json` fallback import was removed from Home (Home is now DB-only with an empty state). The `wordPairs.ts` link in CONTENT.md now points at a non-existent file.
@@ -94,6 +102,8 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 **Resolution owed:** Update CONTENT.md's "Game content" section to point Opposites/Dictation at the DB seed + accessors (and drop the stale `wordPairs.ts` link and word-pair-count TODO). `data/emergency.json` and `data/karnataka_fun_facts.json` are intentionally retained as seed artifacts (per C10 precedent) — not a divergence.
 
 **Note:** `constants/lessons/plannedLessons.ts` was deliberately **left in app code** (drives unlock/progress math); moving it to the DB is out of scope per spec_content_integrity §3.7.
+
+**Resolved (2026-06-28, TODO T005):** CONTENT.md "Game content" section rewritten — Opposites/Dictation now point at the DB accessors + `2026-05-27_db_wiring_games_seed.sql`, the stale `wordPairs.ts` link and word-pair-count TODO are gone, Quick Quiz moved from "planned" to a live game (DB-backed via `2026-06-02_quick_quiz.sql`), and Image Match noted as dropped.
 
 ### C13 — Image Match hidden from Practice, but still 1 of 3 games in the locked overall-progress formula  ✅ RESOLVED 2026-06-10
 
@@ -128,6 +138,8 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 
 **Resolution owed:** Close once the owner confirms the full flow on device. Then merge `app_redesign` → `main`. Decide separately whether to build the deferred optional items.
 
+**Resolved (2026-06-29, TODO T006):** `app_redesign` is **already merged into `main`** (verified: `git merge-base --is-ancestor origin/app_redesign origin/main` passes). Redesign verified rendering on the iOS simulator (iPhone 17 Pro, dev build): Home shows the Baloo display type, the floating red icon-only pill `TabBar`, the gold-gradient cards, the `MultiProgressRing`, chunky-lip CTAs, and the watermark. Residual: owner's small-screen (iPhone SE) pass + the intentionally-deferred optional items above.
+
 ### C15 — Transliteration font moved off Lora italic → DM Sans bold
 
 **What's wrong:** [spec_ui_refinement.md](../../spec_docs/Sameecha/spec_ui_refinement.md) Item 1 (owner sign-off 2026-06-06) amends [DESIGN.md](DESIGN.md#typography) (ethos "One script per font" bullet, Typography families table, "why this split", and the `translit` type-scale row) and the redesign's Amendment A: transliterations render in the **brand sans** (`Fonts.dmSans.bold`, full-strength) distinguished from the muted English gloss by **weight + colour**, instead of Lora serif-italic. The `Fonts.lora` group and the `Lora_*` `useFonts` load are retired.
@@ -139,6 +151,8 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 **Owning spec:** [spec_ui_refinement.md](../../spec_docs/Sameecha/spec_ui_refinement.md) (Item 1), [DESIGN.md](DESIGN.md#typography).
 
 **Resolution owed:** Owner confirms the flashcard / phrase-builder / recap / games read well on device; then close. Ships on `app_redesign` ahead of the C14 merge to `main`.
+
+**Resolved (2026-06-29, TODO T007):** Font swap is complete and live on `main` — `Fonts` has no `lora` group, `TypeScale.translit` + every teach/practice transliteration uses `Fonts.dmSans.bold`, and the `app/_layout.tsx` loader carries no `Lora_*`. The now-dead `@expo-google-fonts/lora` **dependency was removed** (package.json + lockfile) and stale "Lora" doc references were cleaned (ONBOARDING.md, CONTENT.md, INTERACTIONS.md, DESIGN.md drift note). The app **builds and runs on the iOS simulator without Lora** (no missing-font fallback / crash). Residual: owner's eyeball of the large flashcard transliteration on a physical device (the deep lesson-card screen wasn't auto-captured — no UI-tap tooling available in this environment).
 
 ## Resolved
 

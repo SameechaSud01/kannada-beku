@@ -18,7 +18,6 @@ interface UserState {
   learningMode: 'spoken' | 'written' | 'both' | null;
   motivations: string[];
   dailyGoalMinutes: 5 | 10 | 20 | null;
-  mode: 'rowdy' | 'classic';
   /** TTS missing-voice warning shown at boot (MODALS §6.9). One-time per install. */
   hasSeenTtsWarning: boolean;
   /**
@@ -52,7 +51,6 @@ interface UserState {
   setDisplayName: (name: string) => void;
   setLearningMode: (mode: 'spoken' | 'written' | 'both') => void;
   setMotivations: (motivations: string[]) => void;
-  setMode: (mode: 'rowdy' | 'classic') => void;
   setDailyGoalMinutes: (minutes: 5 | 10 | 20) => void;
   setHasSeenTtsWarning: (seen: boolean) => void;
   setHasSeenBasicsGuide: (seen: boolean) => void;
@@ -81,7 +79,6 @@ export const useUserStore = create<UserState>()(
       learningMode: null,
       motivations: [],
       dailyGoalMinutes: null,
-      mode: 'classic',
       hasSeenTtsWarning: false,
       hasSeenBasicsGuide: false,
       hasSeenBasicsHomeNudge: false,
@@ -107,8 +104,6 @@ export const useUserStore = create<UserState>()(
       setLearningMode: (learningMode) => set({ learningMode }),
 
       setMotivations: (motivations) => set({ motivations }),
-
-      setMode: (mode) => set({ mode }),
 
       setDailyGoalMinutes: (dailyGoalMinutes) => set({ dailyGoalMinutes }),
 
@@ -151,7 +146,7 @@ export const useUserStore = create<UserState>()(
           autoReplay: true,
           pendingOnboardingSync: null,
           hasSeenBasicsGuide: false,
-          // mode + permissionDenials + hasSeenTtsWarning + hasSeenBasicsHomeNudge
+          // permissionDenials + hasSeenTtsWarning + hasSeenBasicsHomeNudge
           // are install-scoped, not user-scoped — keep them.
         }),
 
@@ -184,15 +179,25 @@ export const useUserStore = create<UserState>()(
           autoReplay: true,
           pendingOnboardingSync: null,
           hasSeenBasicsGuide: false,
-          // Preserved: mode, hasSeenTtsWarning, hasSeenBasicsHomeNudge,
+          // Preserved: hasSeenTtsWarning, hasSeenBasicsHomeNudge,
           // permissionDenials, isHydrated — device-scoped state survives
           // account switches.
         }),
     }),
     {
       name: 'user_prefs',
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => AsyncStorage),
+      // v1 → v2: the classic/rowdy voice system was removed (TODO T001). Drop the
+      // stale `mode` field so it isn't merged back into a state that no longer
+      // declares it.
+      migrate: (persisted) => {
+        if (persisted && typeof persisted === 'object' && 'mode' in persisted) {
+          const { mode: _drop, ...rest } = persisted as Record<string, unknown>;
+          return rest as unknown as UserState;
+        }
+        return persisted as UserState;
+      },
       // Always release the boot gate, even when rehydration fails (corrupt or
       // locked storage). On error zustand passes `state === undefined`, so reach
       // the store via getState() — otherwise isHydrated stays false and the
