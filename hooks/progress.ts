@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 import { useProgressStore } from '../stores/progressStore';
 import { DAILY_LISTEN_TARGET, DAILY_SPEAK_TARGET, DAILY_PRACTICE_TARGET } from '../constants/goals';
 import { localDateISO } from '../utils/date';
+import { PLANNED_LESSON_SLOTS } from '../constants/lessons/plannedLessons';
+import { lessonSlugByNo } from '../constants/lessons/lessonContent';
 
 type DailyGoal = Readonly<{ completed: number; target: number }>;
 
@@ -26,6 +28,58 @@ export function useXp(): number {
 
 export function useMinutesPracticed(): number {
   return useProgressStore((s) => s.totalMinutesPracticed);
+}
+
+export type CurrentLesson = Readonly<{ slot: number; slug: string; title: string }>;
+
+/**
+ * The lesson the learner should continue with: the lowest-numbered planned slot
+ * that has authored content and isn't completed yet. `null` once every authored
+ * lesson is done. Purely client-side off `PLANNED_LESSON_SLOTS` + the completion
+ * set (same source as `useLessons()`), so it needs no DB fetch.
+ */
+export function useCurrentLesson(): CurrentLesson | null {
+  const completedLessons = useProgressStore((s) => s.completedLessons);
+  return useMemo(() => {
+    for (const slot of PLANNED_LESSON_SLOTS) {
+      const slug = lessonSlugByNo(slot.slot);
+      if (slug && !completedLessons.includes(slug)) {
+        return { slot: slot.slot, slug, title: slot.title };
+      }
+    }
+    return null;
+  }, [completedLessons]);
+}
+
+/** One cell of the Profile week-view. */
+export type WeekDay = Readonly<{ iso: string; label: string; active: boolean; isToday: boolean }>;
+
+const WEEKDAY_INITIALS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'] as const;
+
+/**
+ * Last 7 calendar days (oldest → today) with per-day activity flags, for the
+ * Profile week-view. Reads `progressStore.weeklyActivity` (ISO-date keyed); days
+ * with no recorded activity read as inactive.
+ */
+export function useWeekActivity(): WeekDay[] {
+  const activity = useProgressStore((s) => s.weeklyActivity);
+  const todayIso = localDateISO();
+  return useMemo(() => {
+    const out: WeekDay[] = [];
+    const base = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(base);
+      d.setDate(base.getDate() - i);
+      const iso = localDateISO(d);
+      out.push({
+        iso,
+        label: WEEKDAY_INITIALS[d.getDay()],
+        active: Boolean(activity[iso]),
+        isToday: iso === todayIso,
+      });
+    }
+    return out;
+  }, [activity, todayIso]);
 }
 
 export function useDailyGoalToday(): DailyGoal {

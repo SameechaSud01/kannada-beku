@@ -5,16 +5,17 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
-import { Spacing, Radius } from '../../constants/spacing';
+import { Spacing } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import type { Lesson } from '../../constants/lessons/types';
 import { lessonSlugByNo } from '../../constants/lessons/lessonContent';
 import { PLANNED_LESSON_SLOTS, TOTAL_LESSON_SLOTS } from '../../constants/lessons/plannedLessons';
 import type { LessonRunner } from '../../hooks/useLessonRunner';
 import { ChunkyCircle } from '../ui/ChunkyLip';
-import { ChunkyPressable } from '../ui/ChunkyPressable';
 import { LipButton } from '../ui/LipButton';
 import { Toast } from '../../components/modals/ToastHost';
+import { Toasts } from '../../components/modals/instances/toastCatalog';
+import { DoneNode, NextCard, Connector, numberWord, PIP } from './LessonTrail';
 import {
   useCompleteLessonMutation,
   LessonNotRegisteredError,
@@ -22,14 +23,6 @@ import {
 
 const ESTIMATED_MIN_PER_LESSON = 5;
 const COMPLETION_SCORE = 100;
-
-const PIP = moderateScale(40);
-const SEG_W = moderateScale(3);
-const SEG_H = moderateScale(30);
-const SEG_INDENT = (PIP - SEG_W) / 2;
-
-const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'];
-const numberWord = (n: number) => NUMBER_WORDS[n] ?? String(n);
 
 interface DoneCardProps {
   lesson: Lesson;
@@ -69,10 +62,15 @@ export function DoneCard({ lesson }: DoneCardProps) {
         minutesPracticed: ESTIMATED_MIN_PER_LESSON,
       },
       {
-        onSuccess: () => {
+        onSuccess: (result) => {
+          if (result.queuedOffline) {
+            // Saved locally; the outbox will push it on reconnect (TODO T019).
+            Toasts.lessonSavedOffline();
+          }
           console.log('[lesson] completed', {
             lessonSlug: lesson.slug,
             itemsLearned,
+            queuedOffline: result.queuedOffline,
           });
         },
         onError: (err) => {
@@ -220,7 +218,7 @@ export function DoneCard({ lesson }: DoneCardProps) {
             label="Practice games"
             onPress={goToGames}
             accessibilityLabel="Go to practice games"
-            variant="gold"
+            variant="secondary"
             icon={Icons.tabPractice}
             iconLeading
           />
@@ -237,125 +235,6 @@ export function DoneCard({ lesson }: DoneCardProps) {
         </View>
       </View>
     </View>
-  );
-}
-
-/** A completed (or just-finished) lesson row: gold pip + check, title + caption. */
-function DoneNode({
-  title,
-  subtitle,
-  highlight = false,
-}: {
-  title: string;
-  subtitle: string;
-  highlight?: boolean;
-}) {
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(14) }}>
-      <ChunkyCircle
-        size={PIP}
-        depth={moderateScale(3)}
-        bg={Colors.secondaryFixed}
-        lipColor={Colors.goldLip}
-      >
-        <Icons.check size={moderateScale(20)} color={Colors.onSecondaryContainer} strokeWidth={3} />
-      </ChunkyCircle>
-      <View style={{ flex: 1, minWidth: 0 }}>
-        <Text
-          style={{
-            fontFamily: Fonts.baloo.bold,
-            fontSize: moderateScale(highlight ? 19 : 15.5),
-            color: Colors.onSurface,
-            letterSpacing: -0.2,
-          }}
-          numberOfLines={1}
-          maxFontSizeMultiplier={1.2}
-        >
-          {title}
-        </Text>
-        <Text
-          style={{
-            fontFamily: highlight ? Fonts.dmSans.bold : Fonts.dmSans.medium,
-            fontSize: moderateScale(11.5),
-            color: highlight ? Colors.onSecondaryContainer : Colors.textFaint,
-            marginTop: moderateScale(2),
-          }}
-          numberOfLines={1}
-          maxFontSizeMultiplier={1.2}
-        >
-          {subtitle}
-        </Text>
-      </View>
-    </View>
-  );
-}
-
-/** The "up next" card — the primary continue action (tap to start next lesson). */
-function NextCard({
-  title,
-  subtitle,
-  onPress,
-}: {
-  title: string;
-  subtitle: string;
-  onPress: () => void;
-}) {
-  return (
-    <ChunkyPressable
-      onPress={onPress}
-      bg={Colors.surfaceContainerLowest}
-      lip={5}
-      lipColor={Colors.redLip}
-      border
-      borderColor={Colors.primaryContainer}
-      borderWidth={2}
-      radius={Radius.chunky}
-      accessibilityLabel={`Start next lesson: ${title}`}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: moderateScale(14),
-        paddingVertical: moderateScale(9),
-        paddingLeft: moderateScale(9),
-        paddingRight: moderateScale(12),
-      }}
-    >
-      <ChunkyCircle
-        size={PIP}
-        depth={moderateScale(3)}
-        bg={Colors.primaryContainer}
-        lipColor={Colors.redLip}
-      >
-        <Icons.play size={moderateScale(16)} color={Colors.onPrimary} />
-      </ChunkyCircle>
-      <View style={{ flex: 1, minWidth: 0 }}>
-        <Text
-          style={{
-            fontFamily: Fonts.baloo.bold,
-            fontSize: moderateScale(15.5),
-            color: Colors.onSurface,
-            letterSpacing: -0.2,
-          }}
-          numberOfLines={1}
-          maxFontSizeMultiplier={1.2}
-        >
-          {title}
-        </Text>
-        <Text
-          style={{
-            fontFamily: Fonts.dmSans.bold,
-            fontSize: moderateScale(11.5),
-            color: Colors.primary,
-            marginTop: moderateScale(2),
-          }}
-          numberOfLines={1}
-          maxFontSizeMultiplier={1.2}
-        >
-          {`Up next · ${subtitle}`}
-        </Text>
-      </View>
-      <Icons.forward size={moderateScale(22)} color={Colors.primaryContainer} strokeWidth={2.6} />
-    </ChunkyPressable>
   );
 }
 
@@ -402,22 +281,5 @@ function FinishedNode() {
         </Text>
       </View>
     </View>
-  );
-}
-
-/** Vertical connector through the pip centres. */
-function Connector({ filled = false }: { filled?: boolean }) {
-  return (
-    <View
-      style={{
-        width: SEG_W,
-        height: SEG_H,
-        marginVertical: moderateScale(9),
-        marginLeft: SEG_INDENT,
-        borderRadius: moderateScale(2),
-        backgroundColor: filled ? Colors.goldLip : Colors.hairline,
-        opacity: filled ? 0.5 : 1,
-      }}
-    />
   );
 }

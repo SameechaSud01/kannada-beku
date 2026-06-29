@@ -242,7 +242,7 @@ Anatomy + props + tokens used. Every reusable component lives here.
 > **TODO:** spec each. Visual anatomy, tokens used, animation cross-ref to [INTERACTIONS.md](INTERACTIONS.md).
 > - `ScenarioPhase`
 > - `IntakePhase` + `PhraseDisplay`, `AudioControls`, `SayItControl`, `IntakeFooter`
-> - `DrillPhase` + `ListenPickItem`, `TranslatePickItem`, `FillBlankItem`
+> - `PracticeWordsPhase` / `PracticePhrasesPhase` + `AnswerOption`, `FeedbackTag` (the redesigned lesson flow replaced the old `DrillPhase` / `fill_blank` system — see CONTRADICTIONS C7)
 > - `OutputPhase` + `SpokenResponse`, `TypedResponse`
 > - `DoneCard`
 
@@ -262,7 +262,7 @@ Anatomy + props + tokens used. Every reusable component lives here.
 
 `[OPEN]`
 
-- README and [.claude/CLAUDE.md](../.claude/CLAUDE.md) still mention "NativeWind". NativeWind was ripped out (commit `818e1ba`); we now use inline styles + tokens. Update both.
+- ~~README / CLAUDE.md mention "NativeWind"~~ — resolved (CONTRADICTIONS C9). README and CLAUDE.md are clean; the last stale reference (ONBOARDING.md stack table + VS Code extension list) was corrected to "inline styles + tokens" on 2026-06-28.
 - `OptionCard` and `ProgressDots` use hex literals — migrate to tokens.
 - Type scale codified 2026-06-04 (Amendment A) — `fonts.ts` token group still owed in code (tracked by CONTRADICTIONS C12).
 - Shadow tokens not codified — see TODO above.

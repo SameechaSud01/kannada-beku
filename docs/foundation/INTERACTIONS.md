@@ -169,7 +169,7 @@ Catalogued moments — each has its full animation + audio + haptic + copy spec.
 
 `[PROPOSED]` — implemented per [MODALS](../../spec_docs/Sameecha/MODALS.md) §6.6. Pending promotion to `[LOCKED]`.
 
-- **Visual:** `StreakMilestoneTakeover` — full-screen slide-up (350ms), 220pt radial-gradient medallion with the streak number, per-milestone Lora-italic body copy, static confetti.
+- **Visual:** `StreakMilestoneTakeover` — full-screen slide-up (350ms), 220pt radial-gradient medallion with the streak number, per-milestone body copy in DM Sans bold (Lora retired, C15), static confetti.
 - **Trigger:** `useProgressStore.streak` crosses into a milestone value during `completeLesson` + `updateStreak`. Detected in [components/lesson/DoneCard.tsx](../../components/lesson/DoneCard.tsx) by snapshotting `streak` before/after.
 - **Milestones:** `3, 7, 12, 30, 60, 100, 365`. (Note: spec narrowed from the earlier `1, 3, 7, 30, 100` proposal.)
 - **Audio / haptic:** none yet.

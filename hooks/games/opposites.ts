@@ -2,9 +2,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../../stores/useAuthStore';
 import {
   fetchOppositesItemsByLessonNo,
-  recordOppositesAttempt,
   type OppositesItem,
 } from '../../services/api/games/opposites';
+import { recordGameAttemptResilient } from '../../services/progress/syncQueue';
 
 /**
  * Fetch all opposites_items for one lesson, ordered by sort_order.
@@ -32,7 +32,7 @@ export function useRecordOppositesAttempt() {
     mutationKey: ['recordOppositesAttempt'],
     retry: 2,
     mutationFn: ({ itemId, isCorrect }: { itemId: string; isCorrect: boolean }) =>
-      recordOppositesAttempt(itemId, isCorrect),
+      recordGameAttemptResilient('opposites', itemId, isCorrect),
     onSuccess: () => {
       const userId = useAuthStore.getState().user?.id;
       if (userId) {

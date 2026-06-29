@@ -69,7 +69,7 @@ type Lesson = {
 `[LOCKED]`
 
 - **2–4 phrases per `intake`.** More than 4 = cognitive overload. Less than 2 = not enough material.
-- **5–8 items per `drill`.** Mix `listen_pick` / `translate_pick` / `fill_blank`.
+- **5–8 practice items per section.** Use the multiple-choice `AnswerOption` formats (listen-and-pick / translate-and-pick). The `fill_blank` drill type was never built and is **not** an authoring option — it was removed from the type union with the lesson-flow redesign (CONTRADICTIONS C7).
 - **`output.expectedResponse` must be reachable** from `intake` — no surprise vocab.
 - **`resurfaces`** carries phrases forward from earlier lessons to keep them alive (spaced-repetition seed).
 - **`vocabAtoms`** flags sub-words considered "new" for i+1 sequencing.
@@ -82,7 +82,7 @@ type Lesson = {
 type Phrase = {
   id: PhraseId;              // namespaced: 'phrase.namaskara'
   kannada: string;           // 'ನಮಸ್ಕಾರ'
-  transliteration: string;   // 'Namaskāra' — display in Lora italic
+  transliteration: string;   // 'Namaskāra' — display in DM Sans bold (C15)
   english: string;           // hint, not shown by default
   audioKey?: AudioKey;       // future: recorded audio file ref
   imageKey?: ImageKey;       // future: illustration ref
@@ -108,20 +108,20 @@ All user-facing strings live in [copy.ts](../../constants/copy.ts). Accessed via
 
 ### Voice system
 
-> **`[LOCKED: REMOVAL IN PROGRESS]`** — the two-tone (`classic` / `rowdy`) voice system is decided-for-removal. Do not add new `rowdy`/`classic` variants. Do not propose, re-debate, or build the opposite. Cross-ref [STATE.md](STATE.md#useuserstore) and [INTERACTIONS.md](INTERACTIONS.md#named-moments) and [CONTRADICTIONS.md](CONTRADICTIONS.md) C3.
+> **`[LOCKED: REMOVED]`** — the two-tone (`classic` / `rowdy`) voice system was removed 2026-06-28 (TODO T001, CONTRADICTIONS C3). Owner kept **classic**. All copy is single-voice; do not reintroduce per-voice variants. Cross-ref [STATE.md](STATE.md#useuserstore) and [INTERACTIONS.md](INTERACTIONS.md#named-moments).
 
-#### Migration sequence
+#### Migration sequence — completed 2026-06-28
 
-1. **`[OPEN]`** — Owner picks the single surviving voice. **Do not infer it from existing copy.** Until decided, do not start steps 2–4.
-2. Collapse [constants/copy.ts](../../constants/copy.ts) to single-voice values: replace each `{ classic, rowdy }` object with the chosen string; delete the variant branching. **Not started** — verified against [copy.ts](../../constants/copy.ts): every entry still ships both variants.
-3. Remove tone resolution from [hooks/useCopy.ts](../../hooks/useCopy.ts): the hook should return `COPY[key]` directly, not `COPY[key][mode]`. **Not started** — verified: `useCopy()` still reads `useUserStore((s) => s.mode)` and indexes `COPY[key][mode]`.
-4. Remove `mode` from [stores/useUserStore.ts](../../stores/useUserStore.ts) (field, default, `setMode` action). Persisted-state migration: AsyncStorage key `user_prefs` — drop the `mode` field on rehydrate so old stored values don't crash. **Not started** — verified: `mode: 'rowdy' | 'classic'` is still in `UserState`, default `'classic'`, persisted.
+1. ✅ Owner picked the single surviving voice: **classic**.
+2. ✅ [constants/copy.ts](../../constants/copy.ts) collapsed to single-voice strings; the `{ classic, rowdy }` objects and variant branching are gone.
+3. ✅ [hooks/useCopy.ts](../../hooks/useCopy.ts) returns `COPY[key]` directly (no `mode` read).
+4. ✅ `mode` removed from [stores/useUserStore.ts](../../stores/useUserStore.ts) (field, default, `setMode` action); persisted `user_prefs` bumped to **version 2** with a `migrate` that strips the stale `mode` key on rehydrate.
 
-> **No UI step required.** There is no tone-UI surface to remove. Verified by grepping every `useUserStore` consumer in `app/` and `components/`: the only consumer of `useUserStore.mode` is [hooks/useCopy.ts](../../hooks/useCopy.ts) itself (handled by step 3). No screen reads or writes `mode`; no component calls `setMode` on `useUserStore`. The lone `setMode` identifier elsewhere in the codebase is `OutputPhase`'s unrelated local `'type' | 'speak'` response-mode state, which is not part of this system.
+> **No UI step was required** — there was no tone-UI surface (the only `useUserStore.mode` consumer was `useCopy()` itself; the lone other `setMode` identifier is `OutputPhase`'s unrelated local `'type' | 'speak'` state).
 
 #### Authoring rule going forward
 
-`[LOCKED]` — all new copy is single-voice. No new `classic`/`rowdy` pairs. Existing pairs remain in `copy.ts` only until step 2 of the migration is executed.
+`[LOCKED]` — all copy is single-voice. No `classic`/`rowdy` pairs.
 
 > **TODO:** Coverage audit — does every screen render via `useCopy()`, or are some strings still inline? Run a grep.
 
@@ -156,26 +156,31 @@ Schema:
 
 ## Game content
 
+> **Content source (2026-06-02, [spec_content_integrity](../../spec_docs/Sameecha/spec_content_integrity.md) §3.7):** game content lives in **Supabase**, not local TS banks. The old local data files (`opposites/data/wordPairs.ts`, `imagematch/data/vocabBank.ts`, `dictation/data/wordBank.ts`) were deleted; games fetch per-lesson rows via the accessors in [services/api/games/](../../services/api/games/). Seed data is in the migrations under [services/api/migrations/](../../services/api/migrations/) (e.g. `2026-05-27_db_wiring_games_seed.sql`). See CONTRADICTIONS C12.
+
 ### Dictation — [src/games/dictation/](../../src/games/dictation/)
 
 `[LOCKED]` — describes the live game.
 
-Consumes phrases from completed lessons. User listens (TTS) and types what they hear. Score via fuzzy match ([fuzzyScore.ts](../../src/games/dictation/fuzzyScore.ts)).
+Consumes phrases from completed lessons (DB-backed via `fetchDictationItemsByLessonNo` in [services/api/games/](../../services/api/games/)). User listens (TTS) and types what they hear. Score via fuzzy match ([fuzzyScore.ts](../../src/games/dictation/fuzzyScore.ts)).
 
 ### Opposites — [src/games/opposites/](../../src/games/opposites/)
 
 `[LOCKED]` — describes the live game.
 
-Consumes word-pair data from [wordPairs.ts](../../src/games/opposites/wordPairs.ts). Multiple-choice opposite matching.
+Multiple-choice opposite matching. Word-pair data is read from the `public.opposites_items` table via `fetchOppositesItemsByLessonNo` ([services/api/games/opposites.ts](../../services/api/games/opposites.ts)); seeded by [2026-05-27_db_wiring_games_seed.sql](../../services/api/migrations/2026-05-27_db_wiring_games_seed.sql).
 
-> **TODO:** word-pair list — current count? source language verification?
+### Quick quiz — [src/games/quickquiz/](../../src/games/quickquiz/)
+
+`[LOCKED]` — describes the live game.
+
+Multiple-choice quiz. Items live in the `public.quick_quiz_items` table (schema: [2026-06-02_quick_quiz.sql](../../services/api/migrations/2026-06-02_quick_quiz.sql)).
 
 ### Planned games (not yet implemented)
 
 `[OPEN]`
 
-- Quick quiz
-- Image match
+- Image match (tables dropped — see CONTRADICTIONS / db notes)
 - Conversations
 
 ## Asset conventions

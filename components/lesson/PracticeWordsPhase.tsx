@@ -4,6 +4,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { splitGloss } from '../../utils/gloss';
+import { fitFontSize } from '../../utils/fontScale';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
@@ -199,7 +200,7 @@ export function PracticeWordsPhase({
             <Text
               style={{
                 fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(38),
+                fontSize: moderateScale(fitFontSize(word.transliteration, { max: 38, min: 24, comfortable: 10 })),
                 lineHeight: moderateScale(50),
                 color: Colors.onSurface,
                 textAlign: 'center',

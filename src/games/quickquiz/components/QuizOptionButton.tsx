@@ -14,21 +14,22 @@ type Props = {
   onPress: () => void;
 };
 
-// chunky_v3 §9: correct = goldPale face + goldLip border + gold check; wrong =
-// redPale + 2px primaryContainer border (wrong STAYS red — error ≠ warning).
+// Answer correctness (owner-approved green/red exception, 2026-06-28 — matches
+// lesson AnswerOption): correct = greenPale face + greenLip border + green check;
+// wrong = redPale + 2px red border (wrong STAYS red — error ≠ warning).
 const FACE: Record<OptionState, string> = {
   default: '#ffffff',
-  correct: Colors.secondaryFixed,
+  correct: Colors.successContainerLow,
   wrong: Colors.errorContainerLow,
-  reveal: Colors.secondaryFixed,
+  reveal: Colors.successContainerLow,
   disabled: '#ffffff',
 };
 
 const BORDER: Record<OptionState, string> = {
   default: Colors.hairline,
-  correct: Colors.goldLip,
+  correct: Colors.successLip,
   wrong: Colors.primaryContainer,
-  reveal: Colors.goldLip,
+  reveal: Colors.successLip,
   disabled: Colors.hairline,
 };
 
@@ -105,14 +106,14 @@ const QuizOptionButton: React.FC<Props> = ({ option, state, onPress }) => {
               width: moderateScale(20),
               height: moderateScale(20),
               borderRadius: Radius.full,
-              backgroundColor: Colors.secondaryContainer,
+              backgroundColor: Colors.successContainer,
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
             <Icons.check
               size={moderateScale(13)}
-              color={Colors.onSecondaryContainer}
+              color={Colors.onSuccess}
               strokeWidth={3}
             />
           </View>

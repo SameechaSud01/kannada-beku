@@ -28,6 +28,7 @@ import {
   WordsLearnedSheet,
   type WordsLearnedGroup,
 } from '../../components/modals/instances/WordsLearnedSheet';
+import { RingInfoSheet } from '../../components/modals/instances/RingInfoSheet';
 import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
 import { ChunkyCircle, ChunkyLip } from '../../components/ui/ChunkyLip';
@@ -119,6 +120,13 @@ export default function HomeScreen() {
       props: { groups: learnedGroups, total: wordsLearned, onDismiss: () => modal.dismiss() },
     });
 
+  const openRingInfo = () =>
+    modal.show({
+      kind: 'sheet',
+      component: RingInfoSheet,
+      props: { onDismiss: () => modal.dismiss() },
+    });
+
   // Daily-goal rings now read real per-day activity counts (useDailyGoal):
   // Listen = audio played in-app, Speak = practice-phase reps, Practice = game
   // questions answered. Resets at midnight.
@@ -193,6 +201,7 @@ export default function HomeScreen() {
             listen={`${daily.listen.value}/${daily.listen.target}`}
             speak={`${daily.speak.value}/${daily.speak.target}`}
             practice={`${daily.practice.value}/${daily.practice.target}`}
+            onInfoPress={openRingInfo}
           />
 
           {/* Continue card — the screen's one action-red */}
@@ -440,6 +449,7 @@ function DailyGoalCard({
   listen,
   speak,
   practice,
+  onInfoPress,
 }: {
   listenFrac: number;
   speakFrac: number;
@@ -447,6 +457,7 @@ function DailyGoalCard({
   listen: string;
   speak: string;
   practice: string;
+  onInfoPress: () => void;
 }) {
   // Dot uses the bright ring colour; value text uses a readable-on-white colour
   // (Speak's bright gold fails contrast on white, so its text is dark gold).
@@ -468,17 +479,34 @@ function DailyGoalCard({
         gap: moderateScale(14),
       }}
     >
-      <Text
+      <View
         style={{
-          fontFamily: Fonts.baloo.extrabold,
-          fontSize: moderateScale(22),
-          color: Colors.onSurface,
-          letterSpacing: -0.3,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
-        maxFontSizeMultiplier={1.2}
       >
-        Daily Goal
-      </Text>
+        <Text
+          style={{
+            fontFamily: Fonts.baloo.extrabold,
+            fontSize: moderateScale(22),
+            color: Colors.onSurface,
+            letterSpacing: -0.3,
+          }}
+          maxFontSizeMultiplier={1.2}
+        >
+          Daily Goal
+        </Text>
+        <Pressable
+          onPress={onInfoPress}
+          accessibilityRole="button"
+          accessibilityLabel="How your rings are scored"
+          hitSlop={10}
+          style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+        >
+          <Icons.info size={moderateScale(20)} color={Colors.tertiary} strokeWidth={2} />
+        </Pressable>
+      </View>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(26) }}>
         <MultiProgressRing

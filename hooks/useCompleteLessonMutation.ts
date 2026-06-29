@@ -4,12 +4,20 @@ import { useProgressStore } from '../stores/progressStore';
 import { fetchLessonIdBySlug } from '../services/api/lessons';
 import { recordLessonCompletion } from '../services/api/progress';
 import { recordLearningDay } from '../services/progress/streak';
+import { enqueueLessonCompletion, isCurrentlyOffline } from '../services/progress/syncQueue';
 
 export interface CompleteLessonInput {
   slug: string;
   score: number;
   phrasesLearned: number;
   minutesPracticed: number;
+}
+
+export interface CompleteLessonResult {
+  userId: string;
+  slug: string;
+  /** True when the server write was deferred to the offline outbox (TODO T019). */
+  queuedOffline: boolean;
 }
 
 export class LessonNotRegisteredError extends Error {
@@ -20,35 +28,65 @@ export class LessonNotRegisteredError extends Error {
 }
 
 /**
- * Server-first lesson completion. The DB write must succeed before any
- * client state mutates — preserving the C6 idempotency contract on the
- * Zustand side (replays UPSERT once on the server, and the store's
- * own early-return guards XP/phrase double-counting).
+ * Local-first lesson completion (TODO T019). Progress is written to the Zustand
+ * store immediately so it is never lost — including offline — and the server
+ * write is attempted right after. If the network is down (or the write fails
+ * while offline), the completion is parked in the offline outbox and flushed on
+ * reconnect / next launch; the mutation still resolves so the done screen can
+ * proceed. A genuine "lesson not registered" (id resolves to null while online)
+ * still throws, and the store's own early-return guards keep XP/phrase counts
+ * from double-counting on replay.
  *
  * Mutation key: ['completeLesson'].
- * Invalidates:  ['lesson-completions', userId].
+ * Invalidates:  ['lesson-completions', userId], ['overall-progress', userId].
  */
 export function useCompleteLessonMutation() {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<CompleteLessonResult, Error, CompleteLessonInput>({
     mutationKey: ['completeLesson'],
-    mutationFn: async ({ slug, score, phrasesLearned, minutesPracticed }: CompleteLessonInput) => {
+    mutationFn: async ({ slug, score, phrasesLearned, minutesPracticed }) => {
       const userId = useAuthStore.getState().user?.id;
       if (!userId) throw new Error('Not signed in.');
 
-      const lessonId = await fetchLessonIdBySlug(slug);
+      // Local first: record progress + streak so it survives an offline finish.
+      const applyLocal = () => {
+        useProgressStore.getState().completeLesson(slug, score, phrasesLearned, minutesPracticed);
+        // Advance + server-persist the streak (audit H2/B4) so reinstalls keep it.
+        recordLearningDay();
+      };
+
+      let lessonId: string | null = null;
+      try {
+        lessonId = await fetchLessonIdBySlug(slug);
+      } catch (err) {
+        // Couldn't even resolve the id. Offline → save locally + queue by slug
+        // (the flush resolves the id later). Online → a real error, rethrow.
+        if (await isCurrentlyOffline()) {
+          applyLocal();
+          enqueueLessonCompletion(slug, score);
+          return { userId, slug, queuedOffline: true };
+        }
+        throw err;
+      }
+
       if (!lessonId) throw new LessonNotRegisteredError(slug);
 
-      await recordLessonCompletion(lessonId, score);
+      applyLocal();
 
-      const progress = useProgressStore.getState();
-      progress.completeLesson(slug, score, phrasesLearned, minutesPracticed);
-      // Advance + server-persist the streak (audit H2/B4) instead of the local
-      // updateStreak/recordActivity pair, so reinstalls keep the streak.
-      recordLearningDay();
+      try {
+        await recordLessonCompletion(lessonId, score);
+      } catch (err) {
+        // Server write failed after a local save. Park it in the outbox so it
+        // syncs later rather than blocking the learner or losing the score.
+        if (await isCurrentlyOffline()) {
+          enqueueLessonCompletion(slug, score);
+          return { userId, slug, queuedOffline: true };
+        }
+        throw err;
+      }
 
-      return { userId, slug };
+      return { userId, slug, queuedOffline: false };
     },
     onSuccess: ({ userId }) => {
       queryClient.invalidateQueries({ queryKey: ['lesson-completions', userId] });

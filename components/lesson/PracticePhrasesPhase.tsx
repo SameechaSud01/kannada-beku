@@ -9,6 +9,7 @@ import { Icons } from '../../constants/icons';
 import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
 import { useIsMounted } from '../../hooks/useIsMounted';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
+import { fitFontSize } from '../../utils/fontScale';
 import { LessonProgressBar } from './LessonProgressBar';
 import { SpeedControl } from './SpeedControl';
 import { AnswerOption } from './AnswerOption';
@@ -259,7 +260,7 @@ export function PracticePhrasesPhase({
             <Text
               style={{
                 fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(26),
+                fontSize: moderateScale(fitFontSize(phrase.transliteration, { max: 26, min: 17, comfortable: 18 })),
                 lineHeight: moderateScale(36),
                 color: Colors.onSurface,
                 textAlign: 'center',

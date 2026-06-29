@@ -85,9 +85,9 @@ interface ProgressState {
   lessonProgress: Record<string, number>;
   xp: number;
   totalPhrasesLearned: number;
-  // TODO: tracked via completeLesson but not yet surfaced in UI.
+  /** Surfaced on Profile via `useMinutesPracticed()` (T008). */
   totalMinutesPracticed: number;
-  // TODO: tracked via recordActivity but not yet surfaced in UI.
+  /** Surfaced on the Profile week-view via `useWeekActivity()` (T009). */
   weeklyActivity: Record<string, boolean>;
   /** Minutes practiced today — keyed by ISO date so it resets at midnight (MODALS §6.7). */
   todayMinutes: number;

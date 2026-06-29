@@ -76,7 +76,7 @@ Actions: `setOnboarding(data)`, `setDisplayName(name)`, `setLearningMode(mode)`,
 | `lastGoalCelebrationDate` | `string \| null` | ISO date the `GoalCompleteDialog` last fired. Prevents re-firing the same day. Added for [MODALS](../../spec_docs/Sameecha/MODALS.md) §6.7. |
 | `isHydrated` | `boolean` | Set true by `onRehydrateStorage`. |
 
-Actions: `updateLessonProgress(lessonId, phraseIndex)`, `completeLesson(lessonId, score, phrasesLearned, minutesPracticed)`, `updateStreak()`, `recordActivity()`, `markGoalCelebrated()`, `hydrateFromServerCompletions(slugs)`, `setHydrated(hydrated)`, `reset()`. `reset()` wipes all progress and is called by `AppGate` on sign-out and when the signed-in Supabase user changes; `hydrateFromServerCompletions(slugs)` merges server-fetched completion slugs into `completedLessons` (deduped union, completion-only).
+Actions: `updateLessonProgress(lessonId, phraseIndex)`, `completeLesson(lessonId, score, phrasesLearned, minutesPracticed)`, `updateStreak()`, `recordActivity()`, `markGoalCelebrated()`, `hydrateFromServerCompletions(slugs)`, `setHydrated(hydrated)`, `reset()`. `reset()` wipes all progress and is called when the signed-in Supabase user **changes** (cross-account switch, in `app/_layout.tsx`) — **not** on plain sign-out, which preserves state for same-account re-login (see [Reset / logout](#reset--logout)); `hydrateFromServerCompletions(slugs)` merges server-fetched completion slugs into `completedLessons` (deduped union, completion-only).
 
 > **Note (MODALS §6.7):** `completeLesson` now also increments `todayMinutes` by `minutesPracticed` (with date-rollover). `DoneCard` calls it with an `ESTIMATED_MIN_PER_LESSON = 5` placeholder until per-lesson timing is wired.
 
@@ -117,19 +117,26 @@ Wrap stores; **screens should not read stores directly.** Defined in [hooks/prog
 | `useWordsLearned()` | `number` | `progressStore.totalPhrasesLearned` |
 | `useCompletedLessons()` | `string[]` | `progressStore.completedLessons` |
 | `useDailyGoalToday()` | `{ completed: 0\|1, target: 1 }` | `progressStore.weeklyActivity[today]` |
+| `useXp()` | `number` | `progressStore.xp` |
+| `useMinutesPracticed()` | `number` | `progressStore.totalMinutesPracticed` |
+| `useCurrentLesson()` | `{ slot, slug, title } \| null` | lowest-numbered authored lesson not in `completedLessons` |
+| `useWeekActivity()` | `WeekDay[]` (last 7 days) | `progressStore.weeklyActivity` |
 
 | `useFluencyMode()` | `'spoken' \| 'fluency' \| null` | Collapsed `userStore.learningMode` per [spec_profile_settings_wiring](../../spec_docs/Sameecha/spec_profile_settings_wiring.md) §1 ([hooks/useFluencyMode.ts](../../hooks/useFluencyMode.ts)) |
 
-> **TODO:** add selectors for `useXp()`, `useCurrentLesson()`.
+_(TODO T010 resolved 2026-06-28: `useXp()`, `useMinutesPracticed()`, `useCurrentLesson()`, and `useWeekActivity()` all shipped in [hooks/progress.ts](../../hooks/progress.ts).)_
 
 ## Reset / logout
 
-`[OPEN]`
+**Audited 2026-06-28 (TODO T011).** Current behavior, verified by reading the code:
 
-> **TODO:** Audit current behavior:
-> 1. What clears on sign-out? (Supabase session yes. `useUserStore`? `useProgressStore`?)
-> 2. If a user signs out and back in with the same account, should progress restore? (Yes, but currently only if persisted to server — which doesn't happen yet.)
-> 3. Account deletion — what state lives where?
+1. **What clears on sign-out** ([stores/useAuthStore.ts](../../stores/useAuthStore.ts) `signOut`): only the Supabase session + the in-memory auth state (`session`/`user` → null), plus `resetLessonsCache()`. `useUserStore` and `useProgressStore` are **deliberately preserved** — see the inline comment: wiping them here would make the routing effect briefly see `hasCompletedOnboarding=false` and bounce a returning same-account user through `/onboarding/welcome` before the DB sync resolves.
+2. **Same-account sign-out → sign-in:** progress restores. Both stores persist to AsyncStorage (`kannada-beku-progress`, `user_prefs`) and rehydrate on boot; server completions additionally merge in via `hydrateFromServerCompletions()`. ✅ Works.
+3. **Cross-account switch (leak prevention):** the bind effect in [app/_layout.tsx](../../app/_layout.tsx) compares the persisted `userId` against the freshly signed-in Supabase user id; on mismatch it calls `useUserStore.resetForUser(newId)` **and** `useProgressStore.reset()`, so account B never sees account A's progress. First-ever sign-in calls `bindUser()` (no reset). ✅ Covered.
+
+`[OPEN]` — remaining decisions (not behavior bugs):
+> - **Account deletion** — no delete-account flow exists yet; when built, decide what is purged server-side vs. left in local AsyncStorage.
+> - Device-scoped prefs (`mode`, `hasSeenTtsWarning`, `permissionDenials`) intentionally survive account switches per `resetForUser`; confirm that's the desired product behavior.
 
 ## Server state — Supabase
 
@@ -182,7 +189,20 @@ Client: [services/api/supabase.ts](../../services/api/supabase.ts). Singleton; r
 | `karnataka_fun_facts` | `select` for any authenticated user; no client writes (seed-only via service-role) | [2026-05-27d_karnataka_fun_facts.sql](../../services/api/migrations/2026-05-27d_karnataka_fun_facts.sql) |
 | `user_overall_progress` | `select` own (`auth.uid() = user_id`); no client writes (trigger-managed via `recompute_overall_progress` SECURITY DEFINER function) | [2026-05-27_db_wiring_games_and_overall.sql](../../services/api/migrations/2026-05-27_db_wiring_games_and_overall.sql) |
 
-> **TODO (still-scaffolded tables):** before the first client read/write of `conversation_items/progress` or `quick_quiz_items/progress`, apply the same RLS pattern. The orphaned `word_of_the_day` table was dropped in [2026-05-27d_karnataka_fun_facts.sql](../../services/api/migrations/2026-05-27d_karnataka_fun_facts.sql) once the home-card surface that might have consumed it was replaced.
+### RLS policies — Quick Quiz & Conversations (added 2026-06-02)
+
+`[LOCKED]` — applied when these games were wired (TODO T012 resolved). Items are select-only for authenticated users; progress is own-row select/insert/update (no delete), written through the per-item `record_*_attempt` SECURITY INVOKER RPCs. **Intentionally excluded from `recompute_overall_progress`** (that formula stays locked to opposites + dictation, C13).
+
+| Table | Policy | Source |
+|---|---|---|
+| `quick_quiz_items` | `select` for authenticated; no client writes (seed-only) | [2026-06-02_quick_quiz.sql](../../services/api/migrations/2026-06-02_quick_quiz.sql) |
+| `quick_quiz_progress` | `select`/`insert`/`update` own (`auth.uid() = user_id`); no delete; writes via `record_quick_quiz_attempt` | [2026-06-02_quick_quiz.sql](../../services/api/migrations/2026-06-02_quick_quiz.sql) |
+| `conversation_scenarios` / `conversation_items` | `select` for authenticated; no client writes (seed-only) | [2026-06-02_conversations.sql](../../services/api/migrations/2026-06-02_conversations.sql) |
+| `conversation_progress` | `select`/`insert`/`update` own (`auth.uid() = user_id`); no delete; writes via `record_conversation_attempt` | [2026-06-02_conversations.sql](../../services/api/migrations/2026-06-02_conversations.sql) |
+
+Accessors: [services/api/games/quickQuiz.ts](../../services/api/games/quickQuiz.ts), [services/api/games/conversations.ts](../../services/api/games/conversations.ts).
+
+> **Note:** the orphaned `word_of_the_day` table was dropped in [2026-05-27d_karnataka_fun_facts.sql](../../services/api/migrations/2026-05-27d_karnataka_fun_facts.sql) once the home-card surface that might have consumed it was replaced.
 
 ## TanStack Query
 
@@ -215,12 +235,28 @@ Client: [services/api/supabase.ts](../../services/api/supabase.ts). Singleton; r
 
 ## Cross-store sync rules
 
-`[OPEN]`
+**Documented 2026-06-28 (TODO T013).** Persistence is live; the model is **offline-first client with the server as a durable cross-device backup**. Both Zustand stores persist to AsyncStorage and rehydrate on boot; the server is reconciled around that local state.
 
-> **TODO:** Once Supabase persistence is live, document the sync direction:
-> - Onboarding completion → write to `profiles` → on next launch, hydrate `useUserStore` from server if it diverges.
-> - Lesson completion → write to `progress` → invalidate query.
-> - Conflict resolution: server wins, client wins, or last-write?
+**Write path (client → server), local-first with an offline outbox (TODO T019):**
+- **Lesson completion:** [useCompleteLessonMutation](../../hooks/useCompleteLessonMutation.ts) updates the local store **first** (`progressStore.completeLesson(...)` + `recordLearningDay()`), then attempts `recordLessonCompletion(slug, score)` (RPC `record_lesson_completion`, personal-best UPSERT). If the write fails while offline it's parked in the outbox; a genuine "not registered" (id null while online) still throws. Mutation key `['completeLesson']`.
+- **Game attempts:** each game records per-item through `recordGameAttemptResilient(game, itemId, isCorrect)` ([services/progress/syncQueue.ts](../../services/progress/syncQueue.ts)), which calls the `record_<game>_attempt` SECURITY INVOKER RPC (OR-merge on `is_correct`) and, on a network failure, enqueues the attempt instead of throwing.
+- **Onboarding/profile:** written to `public.users` through [services/api/users.ts](../../services/api/users.ts); `useUserStore` carries a `pendingOnboardingSync` for deferred flush.
+
+**Offline outbox** — [stores/syncQueueStore.ts](../../stores/syncQueueStore.ts) (persisted, AsyncStorage key `sync_queue`): a dedup-keyed map of pending writes (`lesson:<slug>` keeps the higher score; `game:<game>:<itemId>` OR-merges `is_correct`). [flushSyncQueue()](../../services/progress/syncQueue.ts) drains it — guarded against overlap, idempotent (replay-safe), stops on offline, and drops a poison item after 5 failed *online* tries (Sentry-reported). It runs on launch and on every `expo-network` reconnect (both wired in [app/_layout.tsx](../../app/_layout.tsx), gated on a signed-in user + queue hydration).
+
+**Read / reconcile path (server → client), on launch in [app/_layout.tsx](../../app/_layout.tsx):**
+1. `fetchCompletedLessons()` pulls the server completion list.
+2. Any **local-only** completions are backfilled to the server via `recordLessonCompletion(slug, null)` (idempotent personal-best, so it never lowers a score). This covers legacy completions that predate the outbox; freshly-queued offline completions push with their real score via `flushSyncQueue()`.
+3. `progressStore.hydrateFromServerCompletions([...serverSlugs, ...localOnly])` merges into `completedLessons` as a **deduped union** (completion-only — it never removes a local completion). Local-only counters (`xp`, `totalPhrasesLearned`) are rebuilt from the merged slug set when they look stale after a reinstall (audit B4/H1).
+
+**Conflict resolution:**
+- **Completions:** union — once a lesson is complete on either side it stays complete; neither side deletes the other's completion.
+- **Scores:** personal-best (max) via the RPC's UPSERT; a lower score never overwrites a higher one.
+- **Counters** (`xp`, words, minutes, streak, daily activity): **client-owned**, not round-tripped; the server stores completions/scores, and the client derives counters locally.
+
+`[OPEN]` — remaining:
+> - True multi-device live sync (two devices active at once) is not handled beyond launch-time reconcile; a device that completes a lesson while another is open won't see it until the other relaunches.
+> - Account deletion purge (see [Reset / logout](#reset--logout)).
 
 ## Open questions
 

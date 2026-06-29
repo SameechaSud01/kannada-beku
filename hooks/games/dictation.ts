@@ -2,9 +2,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../../stores/useAuthStore';
 import {
   fetchDictationItemsByLessonNo,
-  recordDictationAttempt,
   type DictationItem,
 } from '../../services/api/games/dictation';
+import { recordGameAttemptResilient } from '../../services/progress/syncQueue';
 
 export function useDictationItems(lessonNo: number | null | undefined) {
   return useQuery<DictationItem[]>({
@@ -21,7 +21,7 @@ export function useRecordDictationAttempt() {
     mutationKey: ['recordDictationAttempt'],
     retry: 2,
     mutationFn: ({ itemId, isCorrect }: { itemId: string; isCorrect: boolean }) =>
-      recordDictationAttempt(itemId, isCorrect),
+      recordGameAttemptResilient('dictation', itemId, isCorrect),
     onSuccess: () => {
       const userId = useAuthStore.getState().user?.id;
       if (userId) {

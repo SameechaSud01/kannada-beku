@@ -12,7 +12,7 @@ import { Icons } from '../../constants/icons';
 import type { Icon as TablerIcon } from '@tabler/icons-react-native';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useUserStore } from '../../stores/useUserStore';
-import { useWordsLearned, useCompletedLessons } from '../../hooks/progress';
+import { useWordsLearned, useCompletedLessons, useMinutesPracticed, useWeekActivity, type WeekDay } from '../../hooks/progress';
 import { useStreakCelebration } from '../../hooks/useStreakCelebration';
 import { useOverallMastery } from '../../hooks/useOverallMastery';
 import { useFluencyMode } from '../../hooks/useFluencyMode';
@@ -39,6 +39,8 @@ export default function ProfileScreen() {
   const { streak, onStreakPress } = useStreakCelebration();
   const wordsLearned = useWordsLearned();
   const lessonsDone = useCompletedLessons().length;
+  const minutesPracticed = useMinutesPracticed();
+  const weekActivity = useWeekActivity();
   const overall = useOverallMastery();
   const overallPct = Math.max(0, Math.min(100, Math.round(overall.progressPct)));
   const dbLessons = useDbLessons().data ?? [];
@@ -272,7 +274,7 @@ export default function ProfileScreen() {
           </LinearGradient>
         </View>
 
-        {/* Two stat cards */}
+        {/* Three stat cards */}
         <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(28) }}>
           <View style={{ flexDirection: 'row', gap: moderateScale(11) }}>
             <StatCard
@@ -287,7 +289,19 @@ export default function ProfileScreen() {
               value={wordsLearned}
               label="Words learned"
             />
+            <StatCard
+              Icon={Icons.clock}
+              iconColor={Colors.secondary}
+              value={minutesPracticed}
+              label="Minutes"
+            />
           </View>
+        </View>
+
+        {/* This week — activity strip */}
+        <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(28) }}>
+          <SectionLabel>This week</SectionLabel>
+          <WeekStrip days={weekActivity} />
         </View>
 
         {/* Your goal */}
@@ -468,6 +482,61 @@ function SectionLabel({ children }: { children: string }) {
       >
         {children}
       </Text>
+    </View>
+  );
+}
+
+function WeekStrip({ days }: { days: WeekDay[] }) {
+  const activeCount = days.filter((d) => d.active).length;
+  return (
+    <View
+      accessibilityRole="summary"
+      accessibilityLabel={`This week: active on ${activeCount} of 7 days`}
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: '#ffffff',
+        borderRadius: Radius.chunky,
+        paddingVertical: moderateScale(14),
+        paddingHorizontal: Spacing.md,
+        borderWidth: 1,
+        borderColor: Colors.hairline,
+        borderBottomWidth: 4,
+        borderBottomColor: Colors.cardLip,
+      }}
+    >
+      {days.map((d) => (
+        <View key={d.iso} style={{ alignItems: 'center', gap: moderateScale(7) }}>
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.bold,
+              fontSize: moderateScale(10.5),
+              letterSpacing: 0.5,
+              color: d.isToday ? Colors.onSurface : Colors.textFaint,
+              textTransform: 'uppercase',
+            }}
+            maxFontSizeMultiplier={1.3}
+          >
+            {d.label}
+          </Text>
+          <View
+            style={{
+              width: moderateScale(26),
+              height: moderateScale(26),
+              borderRadius: Radius.full,
+              backgroundColor: d.active ? Colors.secondaryFixed : 'transparent',
+              borderWidth: d.active ? 0 : 1.5,
+              borderColor: d.isToday ? Colors.secondary : Colors.hairline,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            {d.active ? (
+              <Icons.check size={moderateScale(14)} color={Colors.secondary} strokeWidth={3} />
+            ) : null}
+          </View>
+        </View>
+      ))}
     </View>
   );
 }

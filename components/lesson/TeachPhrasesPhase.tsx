@@ -17,6 +17,7 @@ import { AudioOrb } from '../ui/AudioOrb';
 import { useUserStore } from '../../stores/useUserStore';
 import { GlossTag } from '../ui/GlossTag';
 import { splitGloss } from '../../utils/gloss';
+import { fitFontSize } from '../../utils/fontScale';
 import type { Phrase, Word } from '../../constants/lessons/types';
 
 interface TeachPhrasesPhaseProps {
@@ -201,7 +202,7 @@ export function TeachPhrasesPhase({
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(28),
+              fontSize: moderateScale(fitFontSize(phrase.transliteration, { max: 28, min: 18, comfortable: 18 })),
               lineHeight: moderateScale(38),
               color: Colors.onSurface,
               textAlign: 'center',

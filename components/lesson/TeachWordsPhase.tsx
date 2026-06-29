@@ -18,6 +18,7 @@ import { AudioOrb } from '../ui/AudioOrb';
 import { useUserStore } from '../../stores/useUserStore';
 import { GlossTag } from '../ui/GlossTag';
 import { splitGloss } from '../../utils/gloss';
+import { fitFontSize } from '../../utils/fontScale';
 import type { Word } from '../../constants/lessons/types';
 
 interface TeachWordsPhaseProps {
@@ -124,7 +125,7 @@ export function TeachWordsPhase({
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(40),
+              fontSize: moderateScale(fitFontSize(word.transliteration, { max: 40, min: 24, comfortable: 10 })),
               lineHeight: moderateScale(52),
               color: Colors.onSurface,
               textAlign: 'center',
