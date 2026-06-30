@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
@@ -8,6 +8,7 @@ import { useIsMounted } from '../../hooks/useIsMounted';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { Toasts } from '../modals/instances/toastCatalog';
 import { AudioOrb } from '../ui/AudioOrb';
+import { ChunkyPressable } from '../ui/ChunkyPressable';
 
 interface GuidePhonemeButtonProps {
   /** The Kannada glyph/word to play and display (also the audio lookup key). */
@@ -58,17 +59,14 @@ export function GuidePhonemeButton({
   const isRed = accent === 'red';
 
   return (
-    <View
+    <ChunkyPressable
+      accessibilityRole="none"
+      border
+      radius={Radius.chunky}
       style={{
         flex: 1,
         alignItems: 'center',
         gap: moderateScale(6),
-        backgroundColor: '#ffffff',
-        borderRadius: Radius.chunky,
-        borderWidth: 1,
-        borderColor: Colors.hairline,
-        borderBottomWidth: 4,
-        borderBottomColor: Colors.cardLip,
         paddingVertical: moderateScale(14),
         paddingHorizontal: moderateScale(10),
       }}
@@ -116,6 +114,6 @@ export function GuidePhonemeButton({
         onPress={handlePlay}
         accessibilityLabel={`Hear ${romanization}`}
       />
-    </View>
+    </ChunkyPressable>
   );
 }

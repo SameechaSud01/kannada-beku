@@ -33,6 +33,7 @@ import {
   IconCircle,
   IconCircleCheck,
   IconCircleX,
+  IconDeviceMobile,
   IconFlame,
   IconHeadphones,
   IconHelpCircle,
@@ -135,7 +136,8 @@ export const Icons = {
   star: IconStarFilled, // level up
 
   // System states (failure full-screens)
-  refresh: IconRefresh, // "Try again" on error/offline screens
+  refresh: IconRefresh, // "Try again" on error/offline screens; rings reset note
+  device: IconDeviceMobile, // "counts on this device" note (rings info sheet)
   wifiOff: IconWifiOff, // full-screen offline caution well
 } as const;
 

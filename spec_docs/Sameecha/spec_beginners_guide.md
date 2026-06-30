@@ -5,6 +5,7 @@ owner: samee
 last-reviewed: 2026-06-01
 amendments:
   - 2026-06-01 — layout changed from single-scroll to horizontal pager (one section per page) for readability; component list updated; rest of spec (data model, navigation, state, migration, acceptance) unchanged.
+  - 2026-06-30 — partially SUPERSEDED by spec_lesson0_redesign.md (owner-signed): the content shape (4 sections incl. the full 34-consonant chart + pronunciation key), the pager layout, the 13-vowel inventory, and Decision #6 "no audio in v1" are replaced by a paced, listen-first 7-step flow. Navigation, the hasSeenBasicsGuide/hasSeenBasicsHomeNudge state, the Learn-tab re-entry card + home toast, the progress/streak/XP exclusion, and the DB-source content contract all remain in force.
 related:
   - ../../docs/foundation/NAVIGATION.md
   - ../../docs/foundation/CONTENT.md
@@ -16,6 +17,14 @@ related:
 ---
 
 # Beginners' Guide to Kannada
+
+> **⚠️ Partially superseded (2026-06-30) — see [spec_lesson0_redesign.md](spec_lesson0_redesign.md).**
+> The Lesson 0 surface is now a paced, listen-first **7-step** flow, not the 4-section
+> reference chart described below. The redesign spec is canonical for the **content shape,
+> layout, vowel inventory, and audio** decisions (owner-signed). Everything else in this doc —
+> placement/forced-once, the state flags, re-entry surfaces, progress exclusion, and the
+> DB-source content contract — **still governs**. Read this doc for those; read the redesign
+> spec for what the screen renders.
 
 A one-screen reference primer covering the Kannada vowel inventory (Varnamaale), retroflex-vs-dental and geminated consonant rules, a consonant chart, and the pronunciation key. Shown once during onboarding as a forced step, persisted server-side as a Lesson 0 row, re-enterable later from the Learn tab.
 
