@@ -1,9 +1,10 @@
 # Hand-recorded audio clips
 
 Clips here are **committed human recordings**, used instead of Azure TTS for
-strings the neural voice gets wrong. Right now that's the isolated **vowel
-sounds** — both Kannada Azure voices mispronounce a lone vowel letter, and the
-IPA `<phoneme>` hint is ignored, so we record them by hand.
+strings the neural voice gets wrong. That's every isolated **letter** — both
+Kannada Azure voices mispronounce a lone vowel *and* a lone consonant, and the
+IPA `<phoneme>` hint is ignored, so we record them by hand. (Whole words and
+sentences still use Azure synthesis — only the bare letters are recorded.)
 
 ## How it works
 
@@ -31,6 +32,29 @@ these files.
 | `o.mp3`     | ಒ     | o (opener)       |
 | `oo.mp3`    | ಓ     | ō (go)           |
 | `au.mp3`    | ಔ     | au (owl)         |
+
+### Consonants — retroflex vs dental (Lesson 0 step 4)
+
+Stems are case-safe (the macOS filesystem is case-insensitive, so `Ta.mp3` /
+`ta.mp3` would collide). Doubled stem = retroflex (the capital romanisation),
+single = dental.
+
+| file        | glyph | sound                  |
+|-------------|-------|------------------------|
+| `tta.mp3`   | ಟ     | Ta (retroflex, curled) |
+| `ta.mp3`    | ತ     | ta (dental, teeth)     |
+| `dda.mp3`   | ಡ     | Da (retroflex, curled) |
+| `da.mp3`    | ದ     | da (dental, teeth)     |
+
+### Geminated words (Lesson 0 step 5)
+
+The doubled-consonant demo words — Azure doesn't hold the doubled consonant and
+the result doesn't sound Kannada, so these are hand-recorded too.
+
+| file        | glyph  | word            |
+|-------------|--------|-----------------|
+| `appa.mp3`  | ಅಪ್ಪ   | appa (father)   |
+| `amma.mp3`  | ಅಮ್ಮ   | amma (mother)   |
 
 ## Format
 

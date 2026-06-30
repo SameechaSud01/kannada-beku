@@ -69,8 +69,7 @@ export const useSyncQueueStore = create<SyncQueueState>()(
               tries: 0,
             };
           } else {
-            const prevCorrect =
-              existing && existing.kind === 'game' ? existing.isCorrect : false;
+            const prevCorrect = existing && existing.kind === 'game' ? existing.isCorrect : false;
             next = {
               kind: 'game',
               key,

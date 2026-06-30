@@ -115,6 +115,7 @@ function hashInputFor(key) {
 // Map: manifest key (real glyph) -> filename stem under assets/audio/kn/manual/.
 // ---------------------------------------------------------------------------
 const MANUAL_OVERRIDES = {
+  // Vowels (all 13).
   ಅ: 'a',
   ಆ: 'aa',
   ಇ: 'i',
@@ -128,6 +129,19 @@ const MANUAL_OVERRIDES = {
   ಒ: 'o',
   ಓ: 'oo',
   ಔ: 'au',
+  // Retroflex vs dental consonants (Lesson 0 step 4 — "Curl your tongue back").
+  // Lone consonant letters Azure mispronounces just like the vowels, so they're
+  // hand-recorded too. Stems are case-safe lowercase: the macOS filesystem is
+  // case-insensitive, so a `Ta.mp3` / `ta.mp3` pair would collide. Doubled =
+  // retroflex (the capital romanisation), single = dental.
+  ಟ: 'tta', // retroflex "Ta"
+  ತ: 'ta', // dental "ta"
+  ಡ: 'dda', // retroflex "Da"
+  ದ: 'da', // dental "da"
+  // Geminated words (Lesson 0 step 5) — Azure doesn't hold the doubled consonant,
+  // so these are hand-recorded too. Falls through to Azure until the file exists.
+  ಅಪ್ಪ: 'appa', // father
+  ಅಮ್ಮ: 'amma', // mother
 };
 
 // Absolute path to a key's manual recording if one exists on disk, else null.
@@ -194,14 +208,12 @@ function extractKannadaLiterals(src) {
 
 function collectFromTsFiles() {
   const strings = new Set();
-  // Guide step components embed a few fixed "UI chrome" glyphs directly (e.g.
-  // StepThings' doubled-consonant demos ಹಳ್ಳಿ/ಹಲ್ಲಿ). Those are played too, so
-  // they must be scanned or they fall through to runtime (expo) TTS.
-  for (const rel of [
-    'constants/lessons/lessonContent.ts',
-    'constants/guide.ts',
-    'components/guide/StepThings.tsx',
-  ]) {
+  // The Lesson 0 guide content (every Kannada glyph/word/sentence the 7-step flow
+  // plays) lives in constants/guide.ts as the offline fallback; the step
+  // components themselves embed no played Kannada (it all arrives via props), so
+  // scanning the content files covers everything spoken. lessonContent.ts carries
+  // the lesson 1–8 strings.
+  for (const rel of ['constants/lessons/lessonContent.ts', 'constants/guide.ts']) {
     const p = join(ROOT, rel);
     if (!existsSync(p)) {
       console.warn(`  ! TS source not found, skipping: ${rel}`);
@@ -209,14 +221,6 @@ function collectFromTsFiles() {
     }
     const text = readFileSync(p, 'utf8');
     for (const s of extractKannadaLiterals(text)) strings.add(s);
-  }
-  // Combined vowel-pair strings that StepVowels plays ("short long").
-  const guidePath = join(ROOT, 'constants/guide.ts');
-  if (existsSync(guidePath)) {
-    const guide = readFileSync(guidePath, 'utf8');
-    const pairRe = /short:\s*\{\s*kannada:\s*'([^']+)'[\s\S]*?long:\s*\{\s*kannada:\s*'([^']+)'/g;
-    let pm;
-    while ((pm = pairRe.exec(guide)) !== null) strings.add(`${pm[1]} ${pm[2]}`);
   }
   return strings;
 }
@@ -243,6 +247,15 @@ async function collectFromDb(strings) {
   const addOptions = (json) => {
     if (Array.isArray(json)) for (const o of json) add(o?.kn);
   };
+  // Deep-walk an arbitrary object/array and add every Kannada string value. Used
+  // for the Lesson 0 reference.guide payload, whose shape (vowels, shortLong,
+  // retroflexRows, doubles, rhythm…) carries `kannada` fields at several depths.
+  const addDeep = (node) => {
+    if (!node) return;
+    if (typeof node === 'string') return add(node);
+    if (Array.isArray(node)) return node.forEach(addDeep);
+    if (typeof node === 'object') return Object.values(node).forEach(addDeep);
+  };
 
   // L0 basics + any lesson content_json still DB-sourced.
   {
@@ -252,6 +265,12 @@ async function collectFromDb(strings) {
       const ref = row?.content_json?.reference;
       for (const w of ref?.words ?? []) add(w?.kannada);
       for (const ph of ref?.phrases ?? []) add(ph?.kannada);
+      // Lesson 0 guide content (spec_lesson0_redesign.md). Only the redesigned
+      // shape (gated on `welcomePoints`) is walked — a pre-migration DB row still
+      // carries the old chart/sections payload, whose ~34 lone consonants the new
+      // flow never plays and which Azure mispronounces anyway. The TS fallback
+      // (constants/guide.ts) already covers every new string until the migration runs.
+      if (ref?.guide?.welcomePoints) addDeep(ref.guide);
     }
   }
   // Emergency phrases.

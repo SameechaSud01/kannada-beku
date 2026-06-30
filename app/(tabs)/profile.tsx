@@ -12,7 +12,13 @@ import { Icons } from '../../constants/icons';
 import type { Icon as TablerIcon } from '@tabler/icons-react-native';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useUserStore } from '../../stores/useUserStore';
-import { useWordsLearned, useCompletedLessons, useMinutesPracticed, useWeekActivity, type WeekDay } from '../../hooks/progress';
+import {
+  useWordsLearned,
+  useCompletedLessons,
+  useMinutesPracticed,
+  useWeekActivity,
+  type WeekDay,
+} from '../../hooks/progress';
 import { useStreakCelebration } from '../../hooks/useStreakCelebration';
 import { useOverallMastery } from '../../hooks/useOverallMastery';
 import { useFluencyMode } from '../../hooks/useFluencyMode';

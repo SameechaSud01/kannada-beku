@@ -10,10 +10,10 @@ section.
 
 ## Open
 
-- T014 [OPEN] Show the alphabet chart in all lessons
 - T015 [OPEN] Let the user tap "respectful" or "neutral" to see the difference between them
 - T016 [OPEN] For any word where the user has to hold the letter, give an option to see the initial basics card showing the difference
-
+- T022 [OPEN] how can we incorpoaratre images to show along side words
+- T023 [OPEN] carousel posts using claude for testing
 
 ## Done
 - T007 [DONE] Transliteration font swap verified — Lora fully retired (no `Fonts.lora`, all transliteration on `dmSans.bold`); removed dead `@expo-google-fonts/lora` dep + cleaned stale docs; app builds/runs on iOS sim without Lora (C15 resolved)

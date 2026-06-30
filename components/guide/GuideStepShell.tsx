@@ -51,7 +51,7 @@ export function GuideStepShell({
       <View
         style={{
           paddingTop: insets.top + Spacing.sm,
-          paddingHorizontal: Spacing.lg,
+          paddingHorizontal: Spacing.xxl,
           paddingBottom: Spacing.md,
           flexDirection: 'row',
           alignItems: 'center',
@@ -107,7 +107,7 @@ export function GuideStepShell({
       </View>
 
       {/* Gold progress bar */}
-      <View style={{ paddingHorizontal: Spacing.lg, paddingBottom: Spacing.md }}>
+      <View style={{ paddingHorizontal: Spacing.xxl, paddingBottom: Spacing.md }}>
         <View
           style={{
             height: moderateScale(9),
@@ -129,13 +129,17 @@ export function GuideStepShell({
         </View>
       </View>
 
-      {/* Body */}
+      {/* Body — vertically centred so each step fills the screen like the rest
+          of the app (matches the onboarding screens' flex:1/justify-center),
+          still scrolls when a step's content is taller than the viewport. */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingHorizontal: Spacing.lg,
-          paddingTop: Spacing.sm,
-          paddingBottom: Spacing.xxl,
+          flexGrow: 1,
+          justifyContent: 'center',
+          paddingHorizontal: Spacing.xxl,
+          paddingTop: Spacing.lg,
+          paddingBottom: Spacing.xl,
         }}
       >
         {children}
@@ -144,7 +148,7 @@ export function GuideStepShell({
       {/* CTA */}
       <View
         style={{
-          paddingHorizontal: Spacing.lg,
+          paddingHorizontal: Spacing.xxl,
           paddingTop: Spacing.md,
           paddingBottom: insets.bottom + Spacing.lg,
         }}

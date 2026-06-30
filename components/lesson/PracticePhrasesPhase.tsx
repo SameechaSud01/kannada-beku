@@ -260,7 +260,9 @@ export function PracticePhrasesPhase({
             <Text
               style={{
                 fontFamily: Fonts.dmSans.bold,
-                fontSize: moderateScale(fitFontSize(phrase.transliteration, { max: 26, min: 17, comfortable: 18 })),
+                fontSize: moderateScale(
+                  fitFontSize(phrase.transliteration, { max: 26, min: 17, comfortable: 18 }),
+                ),
                 lineHeight: moderateScale(36),
                 color: Colors.onSurface,
                 textAlign: 'center',

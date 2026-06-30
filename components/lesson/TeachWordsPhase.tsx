@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Pressable } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -43,14 +43,7 @@ export function TeachWordsPhase({
   const isLast = wordIndex >= total - 1;
   const autoReplay = useUserStore((s) => s.autoReplay);
   const [playing, setPlaying] = useState(false);
-  // Calm flow: hold the meaning back until the learner taps, so they try to
-  // recall it from the sound first. Resets for each new word.
-  const [revealed, setRevealed] = useState(false);
   const mounted = useIsMounted();
-
-  useEffect(() => {
-    setRevealed(false);
-  }, [word?.kannada]);
 
   useEffect(() => {
     if (!word || !autoReplay) return;
@@ -125,7 +118,9 @@ export function TeachWordsPhase({
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(fitFontSize(word.transliteration, { max: 40, min: 24, comfortable: 10 })),
+              fontSize: moderateScale(
+                fitFontSize(word.transliteration, { max: 40, min: 24, comfortable: 10 }),
+              ),
               lineHeight: moderateScale(52),
               color: Colors.onSurface,
               textAlign: 'center',
@@ -137,79 +132,44 @@ export function TeachWordsPhase({
             {word.transliteration}
           </Text>
 
-          {revealed ? (
-            <Animated.View
-              key={word.kannada}
-              entering={FadeInDown.duration(280)}
-              style={{ alignItems: 'center', alignSelf: 'stretch' }}
+          <Animated.View
+            key={word.kannada}
+            entering={FadeInDown.duration(280)}
+            style={{ alignItems: 'center', alignSelf: 'stretch' }}
+          >
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.medium,
+                fontSize: moderateScale(18),
+                color: Colors.tertiary,
+                textAlign: 'center',
+                marginTop: Spacing.md,
+              }}
+              maxFontSizeMultiplier={1.3}
             >
-              <Text
-                style={{
-                  fontFamily: Fonts.dmSans.medium,
-                  fontSize: moderateScale(18),
-                  color: Colors.tertiary,
-                  textAlign: 'center',
-                  marginTop: Spacing.md,
-                }}
-                maxFontSizeMultiplier={1.3}
-              >
-                {englishText}
-              </Text>
-              {tag ? (
-                <View style={{ marginTop: Spacing.sm }}>
-                  <GlossTag tag={tag} />
-                </View>
-              ) : null}
-              <Text
-                style={{
-                  fontFamily: Fonts.notoSansKannada.regular,
-                  fontSize: moderateScale(14),
-                  color: Colors.textFaint,
-                  textAlign: 'center',
-                  marginTop: Spacing.lg,
-                }}
-                maxFontSizeMultiplier={1.3}
-              >
-                {word.kannada}
-              </Text>
-            </Animated.View>
-          ) : (
-            <Pressable
-              onPress={() => setRevealed(true)}
-              accessibilityRole="button"
-              accessibilityLabel="Tap to reveal meaning"
-              hitSlop={8}
-              style={({ pressed }) => ({
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: Spacing.sm,
-                marginTop: Spacing.xl,
-                backgroundColor: '#ffffff',
-                borderRadius: Radius.full,
-                borderWidth: 1,
-                borderStyle: 'dashed',
-                borderColor: Colors.interactiveSecondary,
-                paddingVertical: moderateScale(8),
-                paddingHorizontal: Spacing.lg,
-                opacity: pressed ? 0.7 : 1,
-              })}
+              {englishText}
+            </Text>
+            {tag ? (
+              <View style={{ marginTop: Spacing.sm }}>
+                <GlossTag tag={tag} />
+              </View>
+            ) : null}
+            <Text
+              style={{
+                fontFamily: Fonts.notoSansKannada.regular,
+                fontSize: moderateScale(14),
+                color: Colors.textFaint,
+                textAlign: 'center',
+                marginTop: Spacing.lg,
+              }}
+              maxFontSizeMultiplier={1.3}
             >
-              <Icons.eye size={moderateScale(16)} color={Colors.tertiary} strokeWidth={2.2} />
-              <Text
-                style={{
-                  fontFamily: Fonts.dmSans.bold,
-                  fontSize: moderateScale(13.5),
-                  color: Colors.tertiary,
-                }}
-                maxFontSizeMultiplier={1.3}
-              >
-                Tap to reveal meaning
-              </Text>
-            </Pressable>
-          )}
+              {word.kannada}
+            </Text>
+          </Animated.View>
         </View>
 
-        {revealed && word.hook ? (
+        {word.hook ? (
           <Animated.View
             entering={FadeInDown.duration(280)}
             style={{

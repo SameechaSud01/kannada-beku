@@ -36,13 +36,7 @@ const sectionItemsLabel = (s: Lesson['sections'][number]): string => {
  * faint/locked. Orientation, not applause. The full lesson celebration + server
  * completion only happens after the last part (DoneCard).
  */
-export function PartDoneCard({
-  lesson,
-  partIndex,
-  onContinue,
-  onBack,
-  onHome,
-}: PartDoneCardProps) {
+export function PartDoneCard({ lesson, partIndex, onContinue, onBack, onHome }: PartDoneCardProps) {
   const insets = useSafeAreaInsets();
 
   const sections = lesson.sections;
@@ -131,10 +125,7 @@ export function PartDoneCard({
           {sections.slice(partIndex + 2).map((s) => (
             <View key={s.key}>
               <Connector />
-              <UpcomingNode
-                title={s.label}
-                subtitle={sectionItemsLabel(s) || `Part ${s.key}`}
-              />
+              <UpcomingNode title={s.label} subtitle={sectionItemsLabel(s) || `Part ${s.key}`} />
             </View>
           ))}
         </View>

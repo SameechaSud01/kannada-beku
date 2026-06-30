@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
-import { GUIDE_STEP_COUNT } from '../../constants/guide';
+import { GUIDE_STEP_COUNT, GUIDE_STEP_CTAS } from '../../constants/guide';
 import { fetchGuideContent, FALLBACK_GUIDE, type GuideContent } from '../../services/api/guide';
 import { GuideStepShell } from './GuideStepShell';
 import { GuideLoading } from './GuideLoading';
-import { StepThings } from './StepThings';
-import { StepVowels } from './StepVowels';
-import { StepReading } from './StepReading';
+import { StepWelcome } from './StepWelcome';
+import { StepVowelSounds } from './StepVowelSounds';
+import { StepShortLong } from './StepShortLong';
+import { StepRetroflex } from './StepRetroflex';
+import { StepDoubles } from './StepDoubles';
+import { StepRhythm } from './StepRhythm';
+import { StepRecap } from './StepRecap';
 
 interface GuideFlowProps {
   /**
@@ -18,17 +22,21 @@ interface GuideFlowProps {
   onFinish: () => void;
   /** Disables the final CTA (e.g. while an onboarding sync is in flight). */
   finishing?: boolean;
+  /**
+   * Overrides the final step's CTA label. Onboarding keeps the default
+   * "Start Lesson 1" framing; the standalone re-entry uses "Back to lessons".
+   */
+  finalCtaLabel?: string;
 }
 
-const STEP_CTAS = ['Show me the vowels', 'Next', 'Done — start Lesson 1'];
-
 /**
- * The 3-step paced Kannada-basics flow — Listen → Notice → Name
- * (onboarding-simplification 2026-06-22). Owns step navigation and renders the
- * shared shell; the two host screens (/guide standalone and /onboarding/basics)
- * supply the exit + finish wiring.
+ * The paced, listen-first Kannada-basics flow — 7 steps: Welcome → Vowel sounds →
+ * Short vs long → Retroflex → Doubles → Rhythm → Recap (redesign 2026-06-30,
+ * spec_lesson0_redesign.md). Owns step navigation and renders the shared shell;
+ * the two host screens (/guide standalone and /onboarding/basics) supply the
+ * exit + finish wiring.
  */
-export function GuideFlow({ onExit, onFinish, finishing = false }: GuideFlowProps) {
+export function GuideFlow({ onExit, onFinish, finishing = false, finalCtaLabel }: GuideFlowProps) {
   // 1-based current step.
   const [step, setStep] = useState(1);
   // Guide content is DB-sourced (falls back to the bundled copy on any failure).
@@ -74,13 +82,19 @@ export function GuideFlow({ onExit, onFinish, finishing = false }: GuideFlowProp
     <GuideStepShell
       step={step}
       onBack={handleBack}
-      ctaLabel={STEP_CTAS[step - 1]}
+      ctaLabel={
+        step >= GUIDE_STEP_COUNT && finalCtaLabel ? finalCtaLabel : GUIDE_STEP_CTAS[step - 1]
+      }
       onCta={handleCta}
       ctaDisabled={step >= GUIDE_STEP_COUNT && finishing}
     >
-      {step === 1 && <StepThings principles={guide.principles} />}
-      {step === 2 && <StepVowels vowelPairs={guide.vowelPairs} vowelLoners={guide.vowelLoners} />}
-      {step === 3 && <StepReading tryIt={guide.tryIt} />}
+      {step === 1 && <StepWelcome welcomePoints={guide.welcomePoints} />}
+      {step === 2 && <StepVowelSounds vowels={guide.vowels} />}
+      {step === 3 && <StepShortLong shortLong={guide.shortLong} />}
+      {step === 4 && <StepRetroflex rows={guide.retroflexRows} />}
+      {step === 5 && <StepDoubles doubles={guide.doubles} />}
+      {step === 6 && <StepRhythm rhythm={guide.rhythm} />}
+      {step === 7 && <StepRecap recap={guide.recap} />}
     </GuideStepShell>
   );
 }
