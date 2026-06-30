@@ -202,7 +202,9 @@ export function TeachPhrasesPhase({
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(fitFontSize(phrase.transliteration, { max: 28, min: 18, comfortable: 18 })),
+              fontSize: moderateScale(
+                fitFontSize(phrase.transliteration, { max: 28, min: 18, comfortable: 18 }),
+              ),
               lineHeight: moderateScale(38),
               color: Colors.onSurface,
               textAlign: 'center',

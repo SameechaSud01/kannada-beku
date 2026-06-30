@@ -140,9 +140,7 @@ export function RingInfoSheet({ onDismiss }: RingInfoSheetProps) {
                 alignItems: 'center',
                 gap: moderateScale(14),
                 paddingVertical: moderateScale(14),
-                ...(idx > 0
-                  ? { borderTopWidth: 1, borderTopColor: Colors.hairline }
-                  : null),
+                ...(idx > 0 ? { borderTopWidth: 1, borderTopColor: Colors.hairline } : null),
               }}
             >
               <View

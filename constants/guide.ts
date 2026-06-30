@@ -100,8 +100,14 @@ export const SHORT_LONG_PAIR: ShortLongPair = {
 
 /** Step 4 — retroflex (Capital, curled) vs dental (lowercase, teeth). */
 export const RETROFLEX_ROWS: RetroflexRow[] = [
-  { curled: { kannada: 'ಟ', transliteration: 'Ta' }, dental: { kannada: 'ತ', transliteration: 'ta' } },
-  { curled: { kannada: 'ಡ', transliteration: 'Da' }, dental: { kannada: 'ದ', transliteration: 'da' } },
+  {
+    curled: { kannada: 'ಟ', transliteration: 'Ta' },
+    dental: { kannada: 'ತ', transliteration: 'ta' },
+  },
+  {
+    curled: { kannada: 'ಡ', transliteration: 'Da' },
+    dental: { kannada: 'ದ', transliteration: 'da' },
+  },
 ];
 
 /** Step 5 — doubled consonants are held a beat longer. */

@@ -28,10 +28,7 @@ export function StepVowelSounds({ vowels }: { vowels: VowelSound[] }) {
 
   return (
     <View>
-      <StepHeading
-        title="The vowel sounds"
-        subtitle="Hear it first, then say it. Tap each one."
-      />
+      <StepHeading title="The vowel sounds" subtitle="Hear it first, then say it. Tap each one." />
 
       <View style={{ alignItems: 'center', marginBottom: Spacing.lg }}>
         <MouthDiagram

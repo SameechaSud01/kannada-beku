@@ -118,7 +118,9 @@ export function TeachWordsPhase({
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(fitFontSize(word.transliteration, { max: 40, min: 24, comfortable: 10 })),
+              fontSize: moderateScale(
+                fitFontSize(word.transliteration, { max: 40, min: 24, comfortable: 10 }),
+              ),
               lineHeight: moderateScale(52),
               color: Colors.onSurface,
               textAlign: 'center',

@@ -46,20 +46,32 @@ export function StepDoubles({ doubles }: { doubles: GuideWord[] }) {
               }}
             >
               <Text
-                style={{ fontFamily: Fonts.notoSansKannada.bold, fontSize: moderateScale(30), color: Colors.onSurface }}
+                style={{
+                  fontFamily: Fonts.notoSansKannada.bold,
+                  fontSize: moderateScale(30),
+                  color: Colors.onSurface,
+                }}
                 maxFontSizeMultiplier={1.2}
               >
                 {word.kannada}
               </Text>
               <View style={{ flex: 1 }}>
                 <Text
-                  style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(18), color: Colors.onSurface }}
+                  style={{
+                    fontFamily: Fonts.dmSans.bold,
+                    fontSize: moderateScale(18),
+                    color: Colors.onSurface,
+                  }}
                   maxFontSizeMultiplier={1.3}
                 >
                   {word.transliteration}
                 </Text>
                 <Text
-                  style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13.5), color: Colors.tertiary }}
+                  style={{
+                    fontFamily: Fonts.dmSans.regular,
+                    fontSize: moderateScale(13.5),
+                    color: Colors.tertiary,
+                  }}
                   maxFontSizeMultiplier={1.4}
                 >
                   {word.english}

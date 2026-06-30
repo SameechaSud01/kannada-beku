@@ -111,11 +111,7 @@ const QuizOptionButton: React.FC<Props> = ({ option, state, onPress }) => {
               justifyContent: 'center',
             }}
           >
-            <Icons.check
-              size={moderateScale(13)}
-              color={Colors.onSuccess}
-              strokeWidth={3}
-            />
+            <Icons.check size={moderateScale(13)} color={Colors.onSuccess} strokeWidth={3} />
           </View>
         )}
       </Pressable>

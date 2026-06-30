@@ -27,7 +27,5 @@ export default function GuideScreen() {
   // which lands on home when the guide was opened from the home tab).
   const finish = () => router.replace('/(tabs)/learn');
 
-  return (
-    <GuideFlow onExit={dismiss} onFinish={finish} finalCtaLabel="Back to lessons" />
-  );
+  return <GuideFlow onExit={dismiss} onFinish={finish} finalCtaLabel="Back to lessons" />;
 }

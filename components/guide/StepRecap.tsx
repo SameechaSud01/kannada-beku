@@ -22,7 +22,11 @@ export function StepRecap({ recap }: { recap: string[] }) {
           lipColor={Colors.goldLip}
           depth={4}
         >
-          <Icons.check size={moderateScale(38)} color={Colors.onSecondaryContainer} strokeWidth={3} />
+          <Icons.check
+            size={moderateScale(38)}
+            color={Colors.onSecondaryContainer}
+            strokeWidth={3}
+          />
         </ChunkyCircle>
       </View>
 
@@ -56,7 +60,11 @@ export function StepRecap({ recap }: { recap: string[] }) {
                 justifyContent: 'center',
               }}
             >
-              <Icons.check size={moderateScale(15)} color={Colors.successContainer} strokeWidth={3.4} />
+              <Icons.check
+                size={moderateScale(15)}
+                color={Colors.successContainer}
+                strokeWidth={3.4}
+              />
             </View>
             <Text
               style={{

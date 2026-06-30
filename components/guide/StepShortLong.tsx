@@ -91,14 +91,20 @@ export function StepShortLong({ shortLong }: { shortLong: ShortLongPair }) {
         >
           <Icons.play size={moderateScale(17)} color={Colors.secondary} />
           <Text
-            style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(15.5), color: Colors.onSurface }}
+            style={{
+              fontFamily: Fonts.baloo.bold,
+              fontSize: moderateScale(15.5),
+              color: Colors.onSurface,
+            }}
             maxFontSizeMultiplier={1.3}
           >
             {played ? 'Play again' : 'Play a sound'}
           </Text>
         </ChunkyPressable>
 
-        <View style={{ flexDirection: 'row', gap: moderateScale(11), marginTop: moderateScale(12) }}>
+        <View
+          style={{ flexDirection: 'row', gap: moderateScale(11), marginTop: moderateScale(12) }}
+        >
           {options.map((opt) => (
             <QuizOption
               key={opt.transliteration}
@@ -171,7 +177,11 @@ function CompareTile({
       }}
     >
       <Text
-        style={{ fontFamily: Fonts.notoSansKannada.bold, fontSize: moderateScale(34), color: accent }}
+        style={{
+          fontFamily: Fonts.notoSansKannada.bold,
+          fontSize: moderateScale(34),
+          color: accent,
+        }}
         maxFontSizeMultiplier={1.2}
       >
         {word.kannada}
@@ -183,7 +193,11 @@ function CompareTile({
         {word.transliteration}
       </Text>
       <Text
-        style={{ fontFamily: Fonts.dmSans.regular, fontSize: moderateScale(13), color: Colors.tertiary }}
+        style={{
+          fontFamily: Fonts.dmSans.regular,
+          fontSize: moderateScale(13),
+          color: Colors.tertiary,
+        }}
         maxFontSizeMultiplier={1.3}
       >
         {word.english}

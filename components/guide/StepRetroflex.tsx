@@ -48,7 +48,10 @@ export function StepRetroflex({ rows }: { rows: RetroflexRow[] }) {
 
       <View style={{ gap: Spacing.md }}>
         {rows.map((row) => (
-          <View key={row.curled.transliteration} style={{ flexDirection: 'row', gap: moderateScale(11) }}>
+          <View
+            key={row.curled.transliteration}
+            style={{ flexDirection: 'row', gap: moderateScale(11) }}
+          >
             <GuidePhonemeButton
               kannada={row.curled.kannada}
               romanization={row.curled.transliteration}

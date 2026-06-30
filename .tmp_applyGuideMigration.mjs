@@ -30,8 +30,14 @@ const GUIDE = {
     long: { kannada: 'ಕಾಲಿ', transliteration: 'kaali', english: 'empty' },
   },
   retroflexRows: [
-    { curled: { kannada: 'ಟ', transliteration: 'Ta' }, dental: { kannada: 'ತ', transliteration: 'ta' } },
-    { curled: { kannada: 'ಡ', transliteration: 'Da' }, dental: { kannada: 'ದ', transliteration: 'da' } },
+    {
+      curled: { kannada: 'ಟ', transliteration: 'Ta' },
+      dental: { kannada: 'ತ', transliteration: 'ta' },
+    },
+    {
+      curled: { kannada: 'ಡ', transliteration: 'Da' },
+      dental: { kannada: 'ದ', transliteration: 'da' },
+    },
   ],
   doubles: [
     { kannada: 'ಅಪ್ಪ', transliteration: 'appa', english: 'father' },
@@ -60,7 +66,7 @@ const { data: before, error: e1 } = await db
 if (e1) throw e1;
 
 const cj = before.content_json ?? {};
-const ref = (cj.reference && typeof cj.reference === 'object') ? cj.reference : {};
+const ref = cj.reference && typeof cj.reference === 'object' ? cj.reference : {};
 const oldGuideShape = ref.guide ? Object.keys(ref.guide).sort().join(',') : '(none)';
 const next = { ...cj, reference: { ...ref, guide: GUIDE } };
 
@@ -81,10 +87,19 @@ console.log('--- after ---');
 console.log('  new guide keys:', g ? Object.keys(g).sort().join(',') : '(none)');
 console.log('  welcomePoints :', g?.welcomePoints?.length);
 console.log('  vowels        :', g?.vowels?.length);
-console.log('  shortLong     :', g?.shortLong ? `${g.shortLong.short?.transliteration}/${g.shortLong.long?.transliteration}` : '(none)');
+console.log(
+  '  shortLong     :',
+  g?.shortLong
+    ? `${g.shortLong.short?.transliteration}/${g.shortLong.long?.transliteration}`
+    : '(none)',
+);
 console.log('  retroflexRows :', g?.retroflexRows?.length);
 console.log('  doubles       :', g?.doubles?.length);
 console.log('  rhythm        :', g?.rhythm?.kannada);
 console.log('  recap         :', g?.recap?.length);
-console.log('  sections kept :', Array.isArray(after.content_json?.reference?.sections), `(${after.content_json?.reference?.sections?.length ?? 0} sections)`);
+console.log(
+  '  sections kept :',
+  Array.isArray(after.content_json?.reference?.sections),
+  `(${after.content_json?.reference?.sections?.length ?? 0} sections)`,
+);
 console.log('  source kept   :', after.content_json?.reference?.source);
