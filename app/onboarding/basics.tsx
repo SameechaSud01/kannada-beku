@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { logger } from '../../lib/logger';
 import { useRouter } from 'expo-router';
 import { GuideFlow } from '../../components/guide/GuideFlow';
 import { useUserStore } from '../../stores/useUserStore';
@@ -55,7 +56,7 @@ export default function BasicsScreen() {
       // spec_security_hardening.md §6: don't trap the user if the sync fails.
       // Capture answers, mark local onboarding done, route forward — boot path
       // retries on next session.
-      console.warn('[onboarding] completeOnboarding failed; queued for retry', err);
+      logger.warn('onboarding', 'completeOnboarding failed; queued for retry', { err });
       useUserStore.getState().setOnboarding({
         displayName: displayName ?? undefined,
         learningMode,

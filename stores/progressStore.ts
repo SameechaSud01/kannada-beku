@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { localDateISO, localYesterdayISO } from '../utils/date';
 import { TS_LESSONS_BY_SLUG } from '../constants/lessons/lessonContent';
+import { logger } from '../lib/logger';
 
 /** Every completed lesson awards a flat 20 XP (completion score is always 100). */
 const LESSON_XP = 20;
@@ -312,7 +313,7 @@ export const useProgressStore = create<ProgressState>()(
       // splash screen hangs forever (audit B1).
       onRehydrateStorage: () => (state, error) => {
         (state ?? useProgressStore.getState()).setHydrated(true);
-        if (error) console.warn('[progress] rehydrate failed', error);
+        if (error) logger.error('progress', 'rehydrate failed', { err: error });
       },
     },
   ),

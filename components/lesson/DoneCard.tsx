@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { logger } from '../../lib/logger';
 import { useRouter } from 'expo-router';
 import { View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -67,7 +68,7 @@ export function DoneCard({ lesson }: DoneCardProps) {
             // Saved locally; the outbox will push it on reconnect (TODO T019).
             Toasts.lessonSavedOffline();
           }
-          console.log('[lesson] completed', {
+          logger.info('lesson', 'completed', {
             lessonSlug: lesson.slug,
             itemsLearned,
             queuedOffline: result.queuedOffline,
@@ -89,7 +90,7 @@ export function DoneCard({ lesson }: DoneCardProps) {
               subtitle: 'Tap a button to retry',
             });
           }
-          console.warn('[lesson] save failed', err);
+          logger.debug('lesson', 'save failed', { err });
         },
       },
     );

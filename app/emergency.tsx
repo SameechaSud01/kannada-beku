@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { logger } from '../lib/logger';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -38,7 +39,7 @@ export default function EmergencyScreen() {
     deviceTtsAudioService
       .play(text)
       .catch((err) => {
-        console.warn('[audio] emergency phrase failed', err);
+        logger.warn('audio', 'emergency phrase failed', { err });
         Toasts.audioFailed(() => play(id, text));
       })
       .finally(() => setPlayingId((cur) => (cur === id ? null : cur)));

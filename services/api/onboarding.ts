@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { logger } from '../../lib/logger';
 
 export interface OnboardingRow {
   userId: string;
@@ -27,7 +28,7 @@ export async function syncOnboardingToSupabase(row: OnboardingRow): Promise<Sync
     .eq('id', row.userId);
 
   if (error) {
-    console.warn('[onboarding] sync to users table failed', error);
+    logger.warn('onboarding', 'sync to users table failed', { err: error });
     return { ok: false, error };
   }
   return { ok: true };

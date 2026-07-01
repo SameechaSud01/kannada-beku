@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { logger } from '../../lib/logger';
 import {
   View,
   Text,
@@ -44,7 +45,7 @@ export default function FeedbackScreen() {
       Toasts.feedbackSent();
       router.replace('/(tabs)/profile');
     } catch (err) {
-      console.warn('[feedback] submit failed', err);
+      logger.warn('feedback', 'submit failed', { err });
       Toasts.preferenceSaveFailed();
       setSubmitting(false);
     }

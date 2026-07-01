@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { logger } from '../../lib/logger';
 import {
   View,
   Text,
@@ -54,7 +55,7 @@ export default function ForgotPasswordScreen() {
       Toasts.resetEmailSent();
       setSent(true);
     } catch (err) {
-      console.warn('[auth] password reset request failed', err);
+      logger.warn('auth', 'password reset request failed', { err });
       Toasts.preferenceSaveFailed();
     } finally {
       setLoading(false);

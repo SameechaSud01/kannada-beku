@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { logger } from '../../lib/logger';
 import {
   View,
   Text,
@@ -94,7 +95,7 @@ export default function ResetPasswordScreen() {
       }
       setReady(true);
     })().catch((err) => {
-      console.warn('[auth] reset verification failed', err);
+      logger.warn('auth', 'reset verification failed', { err });
       Toasts.resetLinkInvalid();
       router.replace('/(auth)/forgot-password');
     });
@@ -123,7 +124,7 @@ export default function ResetPasswordScreen() {
       const onboarded = useUserStore.getState().hasCompletedOnboarding;
       router.replace(onboarded ? '/(tabs)' : '/onboarding/welcome');
     } catch (err) {
-      console.warn('[auth] set new password failed', err);
+      logger.warn('auth', 'set new password failed', { err });
       Toasts.preferenceSaveFailed();
     } finally {
       setSaving(false);

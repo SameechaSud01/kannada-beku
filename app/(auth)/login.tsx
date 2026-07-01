@@ -23,6 +23,7 @@ import { GoogleGLogo } from '../../components/auth/GoogleGLogo';
 import { Icons } from '../../constants/icons';
 import { LipButton } from '../../components/ui/LipButton';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
+import { logger } from '../../lib/logger';
 
 // Shared input chrome for the email + password fields (chunky kit v3):
 // white face, 1px ink@14% border, a 3px ink@6% bottom lip, radius 14.
@@ -87,7 +88,7 @@ export default function LoginScreen() {
     setLoading(false);
     // signedIn → AppGate routes away; cancelled → no-op.
     if (res.status === 'error') {
-      console.warn(`[auth] ${provider} sign-in failed`, res.error);
+      logger.warn('auth', `${provider} sign-in failed`, { err: res.error });
       Toasts.socialSignInFailed();
     }
   };
@@ -154,7 +155,7 @@ export default function LoginScreen() {
         if (error) throw error;
       }
     } catch (error) {
-      console.warn('[auth] error', error);
+      logger.warn('auth', 'email sign-in/sign-up failed', { err: error });
       Toasts.signInFailed();
     } finally {
       setLoading(false);

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { logger } from '../../lib/logger';
 import { View, Text, Pressable, Switch, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -35,7 +36,7 @@ export default function AudioScreen() {
     try {
       await updateAutoReplay(userId, next);
     } catch (err) {
-      console.warn('[audio] updateAutoReplay failed', err);
+      logger.warn('audio', 'updateAutoReplay failed', { err });
       setAutoReplay(previous);
       Toasts.preferenceSaveFailed();
     } finally {
@@ -45,7 +46,7 @@ export default function AudioScreen() {
 
   function handleTryIt() {
     deviceTtsAudioService.play(SAMPLE_KANNADA).catch((err) => {
-      console.warn('[audio] try-it playback failed', err);
+      logger.warn('audio', 'try-it playback failed', { err });
       Toasts.audioFailed(handleTryIt);
     });
   }

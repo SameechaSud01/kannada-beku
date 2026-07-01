@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { logger } from '../../lib/logger';
 import {
   WELCOME_POINTS,
   VOWEL_SOUNDS,
@@ -117,14 +118,14 @@ export async function fetchGuideContent(): Promise<GuideContent> {
     const parsed = parseGuide(raw);
 
     if (!parsed) {
-      console.warn('[guide] DB payload missing/invalid; using bundled fallback');
+      logger.warn('guide', 'DB payload missing/invalid; using bundled fallback');
       return FALLBACK_GUIDE;
     }
 
     cached = parsed;
     return cached;
   } catch (err) {
-    console.warn('[guide] fetch failed; using bundled fallback', err);
+    logger.warn('guide', 'fetch failed; using bundled fallback', { err });
     return FALLBACK_GUIDE;
   }
 }

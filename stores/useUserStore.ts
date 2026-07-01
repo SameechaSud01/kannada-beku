@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { UserRow } from '../services/api/users';
+import { logger } from '../lib/logger';
 
 interface OnboardingData {
   learningMode: 'spoken' | 'written' | 'both';
@@ -204,7 +205,7 @@ export const useUserStore = create<UserState>()(
       // splash screen hangs forever (audit B1).
       onRehydrateStorage: () => (state, error) => {
         (state ?? useUserStore.getState()).setHydrated(true);
-        if (error) console.warn('[user] rehydrate failed', error);
+        if (error) logger.error('user', 'rehydrate failed', { err: error });
       },
     },
   ),

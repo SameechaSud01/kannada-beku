@@ -1,4 +1,5 @@
 import { useAuthStore } from '../../stores/useAuthStore';
+import { logger } from '../../lib/logger';
 import { useProgressStore } from '../../stores/progressStore';
 import { updateStreakOnServer } from '../api/users';
 
@@ -23,6 +24,6 @@ export function recordLearningDay(): void {
   const userId = useAuthStore.getState().user?.id;
   if (!userId) return;
   updateStreakOnServer(userId, after.streak, after.lastActiveDate).catch((err) =>
-    console.warn('[streak] server persist failed', err),
+    logger.warn('streak', 'server persist failed', { err }),
   );
 }

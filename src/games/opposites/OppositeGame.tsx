@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
+import { logger } from '../../../lib/logger';
 import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -103,7 +104,7 @@ function OppositeGameInner({
     // failures shouldn't disrupt play.
     recordAttempt.mutate(
       { itemId, isCorrect },
-      { onError: (err) => console.warn('[opposites] record attempt failed', err) },
+      { onError: (err) => logger.debug('opposites', 'record attempt failed', { err }) },
     );
   });
 

@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { logger } from '../lib/logger';
 
 /** Games whose per-item attempts are recorded through a `record_*_attempt` RPC. */
 export type GameKey = 'opposites' | 'dictation' | 'quick_quiz' | 'conversation';
@@ -111,7 +112,7 @@ export const useSyncQueueStore = create<SyncQueueState>()(
       // useUserStore — a corrupt queue must not wedge the launch flush.
       onRehydrateStorage: () => (state, error) => {
         (state ?? useSyncQueueStore.getState()).setHydrated(true);
-        if (error) console.warn('[sync] queue rehydrate failed', error);
+        if (error) logger.error('sync', 'queue rehydrate failed', { err: error });
       },
     },
   ),

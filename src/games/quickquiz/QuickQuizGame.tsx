@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
+import { logger } from '../../../lib/logger';
 import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -121,7 +122,7 @@ function QuickQuizGameInner({
   } = useQuickQuiz(targetBank, distractorBank, ({ itemId, isCorrect }) => {
     recordAttempt.mutate(
       { itemId, isCorrect },
-      { onError: (err) => console.warn('[quick-quiz] record attempt failed', err) },
+      { onError: (err) => logger.debug('quick-quiz', 'record attempt failed', { err }) },
     );
   });
 

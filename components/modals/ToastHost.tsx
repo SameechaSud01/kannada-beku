@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { logger } from '../../lib/logger';
 import { Toast as ToastComponent, type ToastKind } from './Toast';
 
 export interface ToastShowArgs {
@@ -38,7 +39,7 @@ let bridge: ToastContextValue | null = null;
 export const Toast = {
   show(args: ToastShowArgs) {
     if (!bridge) {
-      console.warn('[toast] show called before ToastHost mounted', args);
+      logger.warn('toast', 'show called before ToastHost mounted', { args });
       return;
     }
     bridge.show(args);

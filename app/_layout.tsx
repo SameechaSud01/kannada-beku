@@ -23,7 +23,7 @@ import {
   BalooTamma2_700Bold,
   BalooTamma2_800ExtraBold,
 } from '@expo-google-fonts/baloo-tamma-2';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, QueryCache, MutationCache } from '@tanstack/react-query';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useAuthStore } from '../stores/useAuthStore';
@@ -47,6 +47,7 @@ import { BrandSplash } from '../components/states/BrandSplash';
 import { ErrorState } from '../components/states/ErrorState';
 import { TTSUnavailableDialog } from '../components/modals/instances/TTSUnavailableDialog';
 import { scheduleDailyReminder, hasNotificationPermission } from '../lib/reminders';
+import { logger } from '../lib/logger';
 import * as Linking from 'expo-linking';
 import { Colors } from '../constants/colors';
 
@@ -56,10 +57,27 @@ SplashScreen.preventAutoHideAsync();
 // and any build missing EXPO_PUBLIC_SENTRY_DSN simply don't report. Disabled in
 // __DEV__ so development errors never reach the dashboard.
 const SENTRY_DSN = process.env.EXPO_PUBLIC_SENTRY_DSN;
+
+// Connectivity blips are expected and already handled in-app (useIsOffline /
+// OfflineState); dropping them keeps the free-tier error quota for real bugs.
+const NETWORK_NOISE =
+  /network request failed|network error|timeout|aborted|internet|offline|failed to fetch/i;
+
 Sentry.init({
   dsn: SENTRY_DSN,
   enabled: !!SENTRY_DSN && !__DEV__,
-  tracesSampleRate: 0.2,
+  // Tag every event with the build channel so preview and production issues
+  // stay separate on the dashboard.
+  environment: process.env.EXPO_PUBLIC_APP_ENV ?? (__DEV__ ? 'development' : 'production'),
+  // Capture all errors; performance tracing isn't in scope, so sample it low.
+  sampleRate: 1.0,
+  tracesSampleRate: 0.1,
+  beforeSend(event) {
+    const message =
+      event.exception?.values?.map((v) => v.value ?? '').join(' ') ?? event.message ?? '';
+    if (NETWORK_NOISE.test(message)) return null;
+    return event;
+  },
 });
 
 /**
@@ -93,7 +111,23 @@ const CreamNavTheme = {
   colors: { ...DefaultTheme.colors, background: Colors.surfaceCream },
 };
 
-const queryClient = new QueryClient();
+// Global capture point for TanStack Query. Every failed query/mutation lands
+// here, so we get network/API failures reported without wrapping each call site.
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error, query) => {
+      logger.error('react-query', 'query failed', { err: error, queryKey: query.queryKey });
+    },
+  }),
+  mutationCache: new MutationCache({
+    onError: (error, _vars, _ctx, mutation) => {
+      logger.error('react-query', 'mutation failed', {
+        err: error,
+        mutationKey: mutation.options.mutationKey,
+      });
+    },
+  }),
+});
 
 /**
  * Server-first hydration for lesson completions (spec_progress_persistence).
@@ -119,12 +153,12 @@ async function hydrateCompletions(userId: string) {
       try {
         const lessonId = await fetchLessonIdBySlug(slug);
         if (!lessonId) {
-          console.warn('[progress] backfill skipped, no lesson for slug', slug);
+          logger.warn('progress', 'backfill skipped, no lesson for slug', { slug });
           return;
         }
         await recordLessonCompletion(lessonId, null);
       } catch (err) {
-        console.warn('[progress] backfill failed for slug', slug, err);
+        logger.warn('progress', 'backfill failed for slug', { slug, err });
       }
     }),
   );
@@ -183,6 +217,11 @@ function AppGate() {
       setSession(session);
       setLoading(false);
 
+      // Attach the Supabase user id (id only — never email/PII) so dashboard
+      // issues show who was affected; clear it on sign-out.
+      const sessionUserId = session?.user?.id;
+      Sentry.setUser(sessionUserId ? { id: sessionUserId } : null);
+
       // DB is the source of truth for onboarding completion. Hydrate the user
       // store from public.users on every session event so the local
       // hasCompletedOnboarding flag can't be stale across accounts. Routing
@@ -227,16 +266,16 @@ function AppGate() {
               const granted = await hasNotificationPermission();
               if (granted) await scheduleDailyReminder(row.daily_reminder_time);
             } catch (err) {
-              console.warn('[reminders] boot re-arm failed', err);
+              logger.warn('reminders', 'boot re-arm failed', { err });
             }
           }
         })
         .catch((err) => {
-          console.warn('[auth] fetchUserRow failed', err);
+          logger.error('auth', 'fetchUserRow failed', { err });
         });
 
       hydrateCompletions(userId).catch((err) => {
-        console.warn('[progress] hydrateCompletions failed', err);
+        logger.error('progress', 'hydrateCompletions failed', { err });
       });
 
       // Prefetch game mastery in the background at login so the Profile page
@@ -261,6 +300,8 @@ function AppGate() {
         if (err?.message?.toLowerCase().includes('refresh token')) {
           await supabase.auth.signOut().catch(() => {});
           setSession(null);
+          Sentry.setUser(null);
+          logger.warn('auth', 'session lost (refresh token invalid)', { err });
           Toasts.sessionLost();
         }
         setLoading(false);
@@ -406,12 +447,12 @@ function RootLayout() {
       allowsRecordingIOS: false,
       staysActiveInBackground: false,
     }).catch((err) => {
-      console.warn('[audio] setAudioModeAsync failed', err);
+      logger.warn('audio', 'setAudioModeAsync failed', { err });
     });
 
     isKannadaVoiceAvailable().then((available) => {
       if (!available) {
-        console.warn('[audio] Kannada TTS voice not available on this device.');
+        logger.warn('audio', 'Kannada TTS voice not available on this device.');
       }
     });
   }, []);
