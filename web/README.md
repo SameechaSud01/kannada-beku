@@ -33,6 +33,12 @@ The `.jsx` files must stay in the same folder as `index.html`.
 Put these files at a repo root → Cloudflare Pages → **Connect to Git** →
 Framework preset **None**, build command empty, output dir **/**.
 
+## Internal waitlist dashboard
+A private team view of signups + survey aggregates lives at `/team` (`team/index.html`),
+backed by the Pages Function at `functions/api/waitlist.js` (serves `/api/waitlist`).
+It reads Supabase with the **service** key via `SUPABASE_URL` / `SUPABASE_SERVICE_KEY`
+Pages Secrets, and should be gated behind Cloudflare Access.
+
 ## Waitlist (Supabase)
 Your Supabase credentials are already baked into `site-questionnaire.jsx`, and
 the `waitlist` table is reachable. Do one live test signup after deploying and
