@@ -1,4 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
+import { logger } from '../../../lib/logger';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
@@ -41,7 +42,7 @@ export function WordsLearnedSheet({ groups, total, onDismiss }: WordsLearnedShee
     const txt = speakable(kannada);
     if (!txt) return;
     deviceTtsAudioService.play(txt).catch((err) => {
-      console.warn('[audio] words-learnt play failed', err);
+      logger.warn('audio', 'words-learnt play failed', { err });
       Toasts.audioFailed(() => play(kannada));
     });
   };

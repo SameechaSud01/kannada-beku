@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { logger } from '../../../lib/logger';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -104,7 +105,7 @@ function DictationGameInner({
   } = useDictationGame(bank, ({ itemId, isCorrect }) => {
     recordAttempt.mutate(
       { itemId, isCorrect },
-      { onError: (err) => console.warn('[dictation] record attempt failed', err) },
+      { onError: (err) => logger.debug('dictation', 'record attempt failed', { err }) },
     );
   });
 

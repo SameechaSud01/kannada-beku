@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { logger } from '../../lib/logger';
 import { View, Text, ScrollView, Pressable, Animated as RNAnimated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Constants from 'expo-constants';
@@ -68,7 +69,7 @@ export default function ProfileScreen() {
             await useAuthStore.getState().signOut();
             Toasts.signedOut();
           } catch (err) {
-            console.warn('[auth] signOut failed', err);
+            logger.warn('auth', 'signOut failed', { err });
           }
         },
         onCancel: () => modal.dismiss(),

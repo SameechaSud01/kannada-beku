@@ -3,6 +3,7 @@ import { Audio } from 'expo-av';
 import type { AudioService, PlayOptions } from './AudioService';
 import { getBundledAudio } from './bundledAudio';
 import { useUserStore } from '../../stores/useUserStore';
+import { logger } from '../../lib/logger';
 
 const DEFAULT_LANGUAGE = 'kn-IN';
 const MIN_RATE = 0.5;
@@ -32,7 +33,7 @@ export async function isKannadaVoiceAvailable(): Promise<boolean> {
     knVoiceAvailable = voices.some((v) => v.language.toLowerCase().startsWith('kn'));
     return knVoiceAvailable;
   } catch (err) {
-    console.warn('[audio] getAvailableVoicesAsync threw', err);
+    logger.warn('audio', 'getAvailableVoicesAsync threw', { err });
     return false;
   }
 }
@@ -89,7 +90,7 @@ export const deviceTtsAudioService: AudioService = {
         onError: (err) => {
           if (settled) return;
           settled = true;
-          console.warn('[audio] onError', { text, err });
+          logger.warn('audio', 'speech onError', { text, err });
           reject(err);
         },
         onStopped: () => {

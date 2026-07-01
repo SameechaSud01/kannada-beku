@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { logger } from '../../../lib/logger';
 import { View, Text, Pressable, Switch, Platform } from 'react-native';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 import { moderateScale } from 'react-native-size-matters';
@@ -72,7 +73,7 @@ export function RemindersSheet() {
       await updateDailyReminderTime(userId, time);
       return true;
     } catch (err) {
-      console.warn('[reminders] updateDailyReminderTime failed', err);
+      logger.warn('reminders', 'updateDailyReminderTime failed', { err });
       setReminder(previous);
       Toasts.preferenceSaveFailed();
       return false;
@@ -89,7 +90,7 @@ export function RemindersSheet() {
         await scheduleDailyReminder(time);
         Toasts.reminderSet(formatTime(time));
       } catch (err) {
-        console.warn('[reminders] scheduleDailyReminder failed', err);
+        logger.warn('reminders', 'scheduleDailyReminder failed', { err });
       }
       return;
     }
@@ -112,7 +113,7 @@ export function RemindersSheet() {
             await scheduleDailyReminder(time);
             Toasts.reminderSet(formatTime(time));
           } catch (err) {
-            console.warn('[reminders] scheduleDailyReminder failed', err);
+            logger.warn('reminders', 'scheduleDailyReminder failed', { err });
           }
         },
         onDeny: () => {
@@ -129,7 +130,7 @@ export function RemindersSheet() {
     try {
       await cancelDailyReminder();
     } catch (err) {
-      console.warn('[reminders] cancelDailyReminder failed', err);
+      logger.warn('reminders', 'cancelDailyReminder failed', { err });
     }
   }
 

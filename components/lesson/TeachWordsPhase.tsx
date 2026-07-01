@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { logger } from '../../lib/logger';
 import { View, Text, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -52,7 +53,7 @@ export function TeachWordsPhase({
     deviceTtsAudioService
       .play(word.kannada)
       .catch((err) => {
-        console.warn('[teach_words] auto-play failed', err);
+        logger.warn('teach_words', 'auto-play failed', { err });
       })
       .finally(() => {
         if (mounted.current) setPlaying(false);
@@ -73,7 +74,7 @@ export function TeachWordsPhase({
     deviceTtsAudioService
       .play(word.kannada)
       .catch((err) => {
-        console.warn('[teach_words] replay failed', err);
+        logger.warn('teach_words', 'replay failed', { err });
         Toasts.audioFailed(handleReplay);
       })
       .finally(() => {

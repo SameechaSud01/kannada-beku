@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { logger } from '../../lib/logger';
 import { Text } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
@@ -48,7 +49,7 @@ export function GuidePhonemeButton({
     deviceTtsAudioService
       .play(kannada)
       .catch((err) => {
-        console.warn('[guide_phoneme] play failed', err);
+        logger.warn('guide_phoneme', 'play failed', { err });
         Toasts.audioFailed(handlePlay);
       })
       .finally(() => {

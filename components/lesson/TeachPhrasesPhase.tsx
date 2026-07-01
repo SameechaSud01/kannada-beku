@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { logger } from '../../lib/logger';
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -71,7 +72,7 @@ export function TeachPhrasesPhase({
     if (!phrase || !autoReplay) return;
     if (lessonNo >= 1) useProgressStore.getState().recordListen();
     deviceTtsAudioService.play(phrase.kannada).catch((err) => {
-      console.warn('[teach_phrases] auto-play failed', err);
+      logger.warn('teach_phrases', 'auto-play failed', { err });
     });
     return () => {
       deviceTtsAudioService.stop().catch(() => undefined);
@@ -88,7 +89,7 @@ export function TeachPhrasesPhase({
     deviceTtsAudioService
       .play(phrase.kannada)
       .catch((err) => {
-        console.warn('[teach_phrases] replay failed', err);
+        logger.warn('teach_phrases', 'replay failed', { err });
         Toasts.audioFailed(handleReplay);
       })
       .finally(() => {

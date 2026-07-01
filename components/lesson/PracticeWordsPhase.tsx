@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { logger } from '../../lib/logger';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -79,7 +80,7 @@ export function PracticeWordsPhase({
   useEffect(() => {
     if (!word || !autoReplay) return;
     deviceTtsAudioService.play(word.kannada).catch((err) => {
-      console.warn('[practice_words] auto-play failed', err);
+      logger.warn('practice_words', 'auto-play failed', { err });
     });
     return () => {
       deviceTtsAudioService.stop().catch(() => undefined);
@@ -93,7 +94,7 @@ export function PracticeWordsPhase({
     deviceTtsAudioService
       .play(word.kannada)
       .catch((err) => {
-        console.warn('[practice_words] replay failed', err);
+        logger.warn('practice_words', 'replay failed', { err });
       })
       .finally(() => {
         if (mounted.current) setPlaying(false);

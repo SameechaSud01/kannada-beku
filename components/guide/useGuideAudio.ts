@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { logger } from '../../lib/logger';
 import { useIsMounted } from '../../hooks/useIsMounted';
 import { deviceTtsAudioService } from '../../services/audio/deviceTtsAudioService';
 import { useUserStore } from '../../stores/useUserStore';
@@ -32,7 +33,7 @@ export function useGuideAudio() {
     deviceTtsAudioService
       .play(text, { rate: Math.min(GUIDE_TTS_RATE, userRate) })
       .catch((err) => {
-        console.warn('[guide_audio] play failed', err);
+        logger.warn('guide_audio', 'play failed', { err });
         Toasts.audioFailed(() => play(key, text));
       })
       .finally(() => {

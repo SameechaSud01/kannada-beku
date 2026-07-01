@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { logger } from '../../../lib/logger';
 import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -135,7 +136,7 @@ function ConversationRound({
   } = useConversation(scenario.turns, ({ itemId, isCorrect }) => {
     recordAttempt.mutate(
       { itemId, isCorrect },
-      { onError: (err) => console.warn('[conversations] record attempt failed', err) },
+      { onError: (err) => logger.debug('conversations', 'record attempt failed', { err }) },
     );
   });
 

@@ -1,4 +1,5 @@
 import * as Speech from 'expo-speech';
+import { logger } from '../../../../lib/logger';
 import { Audio } from 'expo-av';
 import type { DictationWord } from '../types';
 import { getBundledAudio } from '../../../../services/audio/bundledAudio';
@@ -50,7 +51,7 @@ export async function playWord(word: DictationWord): Promise<boolean> {
     });
     return true;
   } catch (err) {
-    console.warn('DictationAudio error:', err);
+    logger.warn('audio', 'dictation playback error', { err });
     return false;
   }
 }

@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { logger } from '../../../lib/logger';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/colors';
@@ -30,7 +31,7 @@ export function PhraseDetailSheet({ phrase, onDismiss }: PhraseDetailSheetProps)
     const txt = speakable(phrase.kannada);
     if (!txt) return;
     deviceTtsAudioService.play(txt).catch((err) => {
-      console.warn('[audio] phrase-detail play failed', err);
+      logger.warn('audio', 'phrase-detail play failed', { err });
       Toasts.audioFailed(handlePlay);
     });
   };

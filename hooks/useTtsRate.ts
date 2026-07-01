@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { logger } from '../lib/logger';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useUserStore } from '../stores/useUserStore';
 import { updateTtsRate } from '../services/api/users';
@@ -24,7 +25,7 @@ export function useTtsRate() {
       try {
         await updateTtsRate(userId, next);
       } catch (err) {
-        console.warn('[audio] updateTtsRate failed', err);
+        logger.warn('audio', 'updateTtsRate failed', { err });
         setTtsRate(previous);
         Toasts.preferenceSaveFailed();
       }
