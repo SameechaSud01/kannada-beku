@@ -97,7 +97,7 @@
   .barwrap .nm { font-size: 13.5px; color: var(--ink); font-weight: 500; }
   .barwrap .ct { font-size: 13px; font-weight: 700; color: var(--sub); font-family: var(--display); }
   .barwrap .track { grid-column: 1 / -1; background: var(--cream-low); border-radius: 999px; height: 8px; overflow: hidden; }
-  .barwrap .fill { height: 100%; border-radius: 999px; }
+  .barwrap .fill { display: block; height: 100%; border-radius: 999px; }
 
   /* chart */
   .chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; }
@@ -238,6 +238,20 @@ function topFromSingle(rows, field, n) {
   for (const r of rows) { const v = (r[field] == null ? "" : String(r[field])).trim(); if (v) m[v] = (m[v]||0)+1; }
   return Object.entries(m).sort((a,b) => b[1]-a[1]).slice(0, n);
 }
+// Cities are free-text, so the same place arrives under many spellings/cases.
+// Fold Bengaluru/Bangalore variants together and title-case the rest so casing
+// differences ("PUNE" vs "pune") don't split into separate rows.
+function normalizeCity(raw) {
+  const s = String(raw ?? "").trim().toLowerCase().replace(/\s+/g, " ");
+  if (!s) return "";
+  if (/^(bengaluru|bengalooru|bengluru|bangalore|banglore|banglaore|blr)$/.test(s)) return "Bengaluru";
+  return s.replace(/\b\w/g, c => c.toUpperCase());
+}
+function topCities(rows, n) {
+  const m = {};
+  for (const r of rows) { const k = normalizeCity(r.city); if (k) m[k] = (m[k]||0)+1; }
+  return Object.entries(m).sort((a,b) => b[1]-a[1]).slice(0, n);
+}
 function renderBars(elId, entries, gold) {
   const el = $(elId);
   if (!entries.length) { el.innerHTML = `<span class="muted" style="font-size:13px">No data yet.</span>`; return; }
@@ -283,7 +297,7 @@ function render() {
   $("sTotal").textContent = allRows.length;
   $("sToday").textContent = today;
   $("sWeek").textContent = week;
-  $("sCities").textContent = topFromSingle(allRows, "city", 9999).length;
+  $("sCities").textContent = topCities(allRows, 99999).length;
   $("sOptin").textContent = optin;
   $("sOptinPct").textContent = allRows.length ? Math.round((optin/allRows.length)*100) + "% of signups" : "";
 
@@ -300,7 +314,7 @@ function render() {
       <span class="cday">${d.label}</span>
     </div>`).join("");
 
-  renderBars("cities", topFromSingle(allRows, "city", 7));
+  renderBars("cities", topCities(allRows, 7));
   renderBars("motivation", topFromArrays(allRows, "motivation", 6));
   renderBars("struggles", topFromArrays(allRows, "struggles", 6));
   renderBars("wants", topFromArrays(allRows, "wants", 6));
