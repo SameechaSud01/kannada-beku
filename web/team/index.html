@@ -98,6 +98,7 @@
   .barwrap .ct { font-size: 13px; font-weight: 700; color: var(--sub); font-family: var(--display); }
   .barwrap .track { grid-column: 1 / -1; background: var(--cream-low); border-radius: 999px; height: 8px; overflow: hidden; }
   .barwrap .fill { display: block; height: 100%; border-radius: 999px; }
+  .barwrap .nm.indent { padding-left: 18px; font-size: 13px; color: var(--sub); }
 
   /* chart */
   .chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; }
@@ -152,10 +153,10 @@
 
   <main id="app" class="hide">
     <section class="stats">
-      <div class="stat card"><div class="label">Total signups</div><div id="sTotal" class="num accent">—</div></div>
+      <div class="stat card"><div class="label">Total signups</div><div id="sTotal" class="num accent">—</div><div id="sTotalSub" class="sub2"></div></div>
       <div class="stat card"><div class="label">Today</div><div id="sToday" class="num">—</div></div>
       <div class="stat card"><div class="label">Last 7 days</div><div id="sWeek" class="num">—</div></div>
-      <div class="stat card"><div class="label">Cities</div><div id="sCities" class="num">—</div></div>
+      <div class="stat card"><div class="label">Cities</div><div id="sCities" class="num">—</div><div id="sCitiesSub" class="sub2"></div></div>
       <div class="stat card"><div class="label">Community opt-in</div><div id="sOptin" class="num">—</div><div id="sOptinPct" class="sub2"></div></div>
     </section>
 
@@ -167,7 +168,7 @@
       </div>
       <div class="card panel">
         <h2>Top cities</h2>
-        <p class="sub">Where signups are based</p>
+        <p class="sub" id="citySub">Where signups are based</p>
         <div id="cities" class="bars"></div>
       </div>
     </section>
@@ -176,7 +177,7 @@
       <div class="card panel"><h2>Motivations</h2><p class="sub">Why they want to learn</p><div id="motivation" class="bars"></div></div>
       <div class="card panel"><h2>Struggles</h2><p class="sub">Where it falls apart today</p><div id="struggles" class="bars"></div></div>
       <div class="card panel"><h2>Goals</h2><p class="sub">What they want to do</p><div id="wants" class="bars"></div></div>
-      <div class="card panel"><h2>Pricing signal</h2><p class="sub">Preferred model · price</p><div id="pricing" class="bars"></div></div>
+      <div class="card panel"><h2>Pricing signal</h2><p class="sub">Every price answer, grouped under its model</p><div id="pricing" class="bars"></div></div>
     </section>
 
     <section class="card">
@@ -213,7 +214,10 @@ function showNotice(title, html) {
   $("noticeTitle").textContent = title; $("noticeBody").innerHTML = html;
 }
 function esc(s) { return String(s ?? "").replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c])); }
-function dayKey(d) { return d.toISOString().slice(0, 10); }
+// FIX (timezone): was d.toISOString().slice(0,10), which buckets days at UTC
+// boundaries. For an IST team that shifted "Today" and the daily chart by
+// 5.5 hours. Now buckets in the viewer's local timezone.
+function dayKey(d) { const p = n => String(n).padStart(2, "0"); return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()); }
 function fmtWhen(iso) { if (!iso) return ""; const d = new Date(iso); return isNaN(d) ? iso : d.toLocaleString(undefined, { month:"short", day:"numeric", hour:"2-digit", minute:"2-digit" }); }
 
 // Postgres arrays come back as JS arrays; be defensive about strings/null too.
@@ -239,12 +243,13 @@ function topFromSingle(rows, field, n) {
   return Object.entries(m).sort((a,b) => b[1]-a[1]).slice(0, n);
 }
 // Cities are free-text, so the same place arrives under many spellings/cases.
-// Fold Bengaluru/Bangalore variants together and title-case the rest so casing
-// differences ("PUNE" vs "pune") don't split into separate rows.
+// FIX (normalization): the old exact-match regex missed compound entries like
+// "Bangalore South", "Bengaluru urban", "Bangalore/Delhi" and misspellings
+// like "Bangaluru" — undercounting Bengaluru. Now matched as a substring.
 function normalizeCity(raw) {
   const s = String(raw ?? "").trim().toLowerCase().replace(/\s+/g, " ");
   if (!s) return "";
-  if (/^(bengaluru|bengalooru|bengluru|bangalore|banglore|banglaore|blr)$/.test(s)) return "Bengaluru";
+  if (s === "blr" || /b[ae]ng[ae]?l[aou]{0,2}r/.test(s)) return "Bengaluru";
   return s.replace(/\b\w/g, c => c.toUpperCase());
 }
 function topCities(rows, n) {
@@ -258,7 +263,7 @@ function renderBars(elId, entries, gold) {
   const max = Math.max(1, ...entries.map(e => e[1]));
   el.innerHTML = entries.map(([nm, ct]) => `
     <div class="barwrap">
-      <span class="nm" title="${esc(nm)}">${esc(nm)}</span>
+      <span class="nm${String(nm).startsWith("↳") ? " indent" : ""}" title="${esc(nm)}">${esc(nm)}</span>
       <span class="ct">${ct}</span>
       <span class="track"><span class="fill${gold ? " gold" : ""}" style="width:${Math.round((ct/max)*100)}%;${gold ? "background:linear-gradient(90deg,var(--gold),var(--gold-lip))" : "background:var(--grad)"}"></span></span>
     </div>`).join("");
@@ -272,7 +277,14 @@ async function load() {
     allRows = Array.isArray(data) ? data : [];
     lastOk = new Date();
     render();
-    setLive("ok", "live · updated " + lastOk.toLocaleTimeString());
+    // FIX (silent truncation guard): PostgREST-style endpoints commonly cap
+    // responses at 1000 rows per request. If we receive exactly 1000, assume
+    // truncation and say so loudly instead of silently under-reporting.
+    if (allRows.length === 1000) {
+      setLive("err", "1000-row cap hit — /api/waitlist likely truncated, add pagination");
+    } else {
+      setLive("ok", "live · updated " + lastOk.toLocaleTimeString());
+    }
   } catch (e) {
     setLive("err", "connection error");
     showNotice("Couldn't load the waitlist", `
@@ -294,10 +306,22 @@ function render() {
     if (c && !isNaN(c)) { if (dayKey(c) === todayKey) today++; if (c >= weekAgo) week++; }
     if (r.community_optin === true || r.community_optin === "true") optin++;
   }
-  $("sTotal").textContent = allRows.length;
+
+  // FIX (duplicates): headline number is now unique people (by email),
+  // with raw row count shown underneath when they differ.
+  const uniq = new Set(allRows.map(r => (r.email || "").trim().toLowerCase()).filter(Boolean)).size;
+  $("sTotal").textContent = uniq;
+  $("sTotalSub").textContent = uniq === allRows.length ? "" : `${allRows.length} rows · ${allRows.length - uniq} duplicate email${allRows.length - uniq > 1 ? "s" : ""}`;
+
   $("sToday").textContent = today;
   $("sWeek").textContent = week;
+
+  // FIX (coverage honesty): city stats describe only rows that gave a city.
+  const withCity = allRows.filter(r => (r.city || "").trim()).length;
   $("sCities").textContent = topCities(allRows, 99999).length;
+  $("sCitiesSub").textContent = allRows.length ? `${withCity} of ${allRows.length} gave a city` : "";
+  $("citySub").textContent = allRows.length ? `Where signups are based · ${withCity} of ${allRows.length} gave a city` : "Where signups are based";
+
   $("sOptin").textContent = optin;
   $("sOptinPct").textContent = allRows.length ? Math.round((optin/allRows.length)*100) + "% of signups" : "";
 
@@ -318,8 +342,30 @@ function render() {
   renderBars("motivation", topFromArrays(allRows, "motivation", 6));
   renderBars("struggles", topFromArrays(allRows, "struggles", 6));
   renderBars("wants", topFromArrays(allRows, "wants", 6));
-  // pricing: combine model + price into one signal list
-  const pricing = topFromSingle(allRows, "pricing_model", 4).concat(topFromSingle(allRows, "price", 4));
+
+  // FIX (pricing): the old panel concatenated top-4 models with top-4 prices
+  // in one flat list. That hid everything below the cutoff (₹599: 42 votes
+  // was invisible) and mixed incomparable counts, and bare labels like
+  // "₹299" lost which branch they came from. Now every price answer is
+  // shown nested under its model, with unanswered counted explicitly.
+  const pm = {};
+  let noAnswer = 0;
+  for (const r of allRows) {
+    const model = (r.pricing_model == null ? "" : String(r.pricing_model)).trim();
+    if (!model) { noAnswer++; continue; }
+    const price = (r.price == null ? "" : String(r.price)).trim() || "(no price picked)";
+    pm[model] = pm[model] || { total: 0, prices: {} };
+    pm[model].total++;
+    pm[model].prices[price] = (pm[model].prices[price] || 0) + 1;
+  }
+  const pricing = [];
+  for (const [model, d] of Object.entries(pm).sort((a, b) => b[1].total - a[1].total)) {
+    pricing.push([model, d.total]);
+    for (const [price, ct] of Object.entries(d.prices).sort((a, b) => b[1] - a[1])) {
+      pricing.push(["↳ " + price, ct]);
+    }
+  }
+  if (noAnswer) pricing.push(["No answer", noAnswer]);
   renderBars("pricing", pricing, true);
 
   applySearch();
