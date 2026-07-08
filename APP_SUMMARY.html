@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kannada Beku — App Summary (July 2026)</title>
+<style>
+  :root {
+    --ink: #2d2a26;
+    --muted: #6f6a62;
+    --green: #1e6b4f;
+    --gold: #b8860b;
+    --bg: #faf8f4;
+    --card: #ffffff;
+    --line: #e8e3da;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 24px 96px; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 4px; color: var(--green); }
+  .subtitle { color: var(--muted); margin: 0 0 40px; font-size: 1.05rem; }
+  h2 {
+    font-size: 1.3rem; margin: 48px 0 12px; color: var(--green);
+    border-bottom: 2px solid var(--line); padding-bottom: 6px;
+  }
+  h3 { font-size: 1.05rem; margin: 28px 0 8px; }
+  p { margin: 0 0 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #f1ede5; font-weight: 600; }
+  code {
+    background: #f1ede5; padding: 1px 6px; border-radius: 4px;
+    font-size: 0.88em; font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  ul { padding-left: 22px; margin: 0 0 14px; }
+  li { margin-bottom: 6px; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 18px 22px; margin: 16px 0;
+  }
+  .note { border-left: 4px solid var(--gold); }
+  .tag {
+    display: inline-block; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.03em;
+    padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle;
+  }
+  .tag.done { background: #e2f0e8; color: var(--green); }
+  .tag.partial { background: #fdf3dc; color: #8a6508; }
+  .tag.stub { background: #eee9e0; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Kannada Beku</h1>
+  <p class="subtitle">What the app is and what it does — snapshot as of July 4, 2026 (branch <code>fix/bug-fixes-and-audits</code>).</p>
+
+  <h2>What it is</h2>
+  <p><strong>Kannada Beku</strong> (formerly "Kannada Baa") is a mobile app that teaches <strong>conversational Kannada</strong> to non-Kannadiga adults living in Bengaluru — people who want to talk to auto drivers, shopkeepers, and in-laws, not pass an exam. The tone is deliberately warm, forgiving, and culturally proud, with a Karnataka green-and-gold identity throughout.</p>
+  <p>It ships for <strong>iOS and Android</strong> (tablet on iOS; no dark mode; web is dev-only). Built with <strong>Expo + Expo Router</strong>, TypeScript strict mode, Zustand (persisted via AsyncStorage) for client state, TanStack Query for server state, and <strong>Supabase</strong> for auth and progress storage. Audio is device text-to-speech (recorded native audio is post-MVP). Sentry error monitoring was wired in recently.</p>
+
+  <h2>Main user journey</h2>
+  <p>Sign up → short onboarding (name, motivation, daily commitment) → Lesson 0 "Basics" → work through 8 lessons → unlock and replay practice games per lesson part → track streaks, daily rings, and overall mastery.</p>
+
+  <h2>Feature areas</h2>
+
+  <h3>1. Onboarding &amp; Auth <span class="tag done">Live</span></h3>
+  <ul>
+    <li>Supabase email/password auth: login, forgot-password, reset-password (<code>app/(auth)/</code>).</li>
+    <li>Five-step onboarding: welcome → name → motivation → daily commitment → basics intro (<code>app/onboarding/</code>).</li>
+  </ul>
+
+  <h3>2. Lessons <span class="tag done">Live</span></h3>
+  <ul>
+    <li><strong>Lesson 0 "Basics"</strong> — a listen-first, 7-step introductory flow (recently redesigned; content DB-sourced).</li>
+    <li><strong>Lessons 1–8</strong>, content canonical in TypeScript (<code>constants/lessons/lessonContent.ts</code>), split into sub-sections: <em>Greetings, Names, Wanting, Pointing, Easy verbs, Questions, Hard verbs, Putting it together</em>.</li>
+    <li>Lesson flow follows scenario → intake → drill → output → done; unlocking is linear.</li>
+    <li>Content aligned to the owner's <em>Kannada-Beku-Content.docx</em> with ISO diacritic transliteration.</li>
+  </ul>
+
+  <h3>3. Practice games <span class="tag done">Live</span></h3>
+  <ul>
+    <li>Four game types defined in <code>constants/games.ts</code>: <strong>quiz, dictation, conversations, opposites</strong>.</li>
+    <li>Games unlock per completed lesson part and are replayable from the Practice tab (<code>app/(games)/[game]/[n]</code>).</li>
+    <li>Correct/wrong answers use green/red feedback (an approved exception to the warm-only palette).</li>
+  </ul>
+
+  <h3>4. Progress, streaks &amp; mastery <span class="tag done">Live</span></h3>
+  <ul>
+    <li><strong>Daily rings</strong> — real per-day Listen / Speak / Practice tracking, computed client-side.</li>
+    <li><strong>Streak</strong> — counts learning days (not raw app-open days).</li>
+    <li><strong>Overall mastery %</strong> — content-derived client-side rollup across all four games (<code>services/progress/overallMastery.ts</code>); the old server trigger is unused.</li>
+    <li>XP from game scores; offline actions sync through a queue store (<code>stores/syncQueueStore.ts</code>).</li>
+  </ul>
+
+  <h3>5. Reference content</h3>
+  <ul>
+    <li><strong>Emergency phrase guide</strong> <span class="tag done">Live</span> — offline phrase list in 3 categories, English-first, with TTS playback (<code>app/emergency.tsx</code>).</li>
+    <li><strong>Beginner's Guide</strong> <span class="tag done">Live</span> — script/alphabet reference, DB as source of truth with an offline TS fallback (<code>app/guide/</code>).</li>
+    <li><strong>Heritage section</strong> <span class="tag stub">Stub</span> — cultural notes per topic; routing exists (<code>app/heritage/[id]</code>), content still TBD.</li>
+  </ul>
+
+  <h3>6. App shell &amp; polish</h3>
+  <ul>
+    <li>Four tabs: <strong>Home</strong> (rings, streak), <strong>Learn</strong> (lesson path), <strong>Practice</strong> (games), <strong>Profile</strong>.</li>
+    <li>Settings: audio, feedback, help; local reminders (<code>lib/reminders.ts</code>).</li>
+    <li>System states built out: splash, loading, failure, empty (<code>components/states/</code>).</li>
+    <li>Playful "chunky" visual system: Baloo typeface, floating tab bar, scaled sizing everywhere via <code>react-native-size-matters</code>.</li>
+    <li>Production logging: centralized <code>lib/logger.ts</code> + Sentry (owner still owes the auth token / alert rule).</li>
+  </ul>
+
+  <h2>Explicit non-goals</h2>
+  <ul>
+    <li>No exam prep, no leaderboards or streak shaming, no dark mode, no other Indian languages, no recorded audio in v1.</li>
+  </ul>
+
+  <div class="card note">
+    <strong>Spec drift worth knowing:</strong> the foundation <code>SCOPE.md</code> (last reviewed 2026-05-19) still says "1/8 lessons implemented" and "5 game types" — the code has since moved to all 8 lessons in TypeScript and a locked set of 4 games. The live Supabase DB has also drifted from repo migrations (image-match tables dropped, 2-game trigger patch, seed content). These divergences are the kind of thing <code>CONTRADICTIONS.md</code> tracks.
+  </div>
+
+  <h2>Where things stand right now</h2>
+  <p>Current branch <code>fix/bug-fixes-and-audits</code> carries three fresh audit documents (competitive weakness, legal, testing plan) and an <code>app.json</code> change. Recent merges brought in the Lesson 0 listen-first redesign and Sentry production logging. Open roadmap items from the spec: spaced repetition (Leitner SRS), recorded audio + illustrations, and heritage content.</p>
+</main>
+</body>
+</html>

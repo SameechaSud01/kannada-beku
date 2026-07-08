@@ -6,6 +6,7 @@ import { Colors } from '../../../constants/colors';
 import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
 import { Icons } from '../../../constants/icons';
+import { ChunkyCircle } from '../../ui/ChunkyLip';
 import { deviceTtsAudioService } from '../../../services/audio/deviceTtsAudioService';
 import { Toasts } from './toastCatalog';
 
@@ -60,24 +61,27 @@ export function WordsLearnedSheet({ groups, total, onDismiss }: WordsLearnedShee
     >
       {/* Header — back button + title */}
       <View style={{ gap: moderateScale(12) }}>
+        {/* White chunky circle — same family as ExitBackButton/PhaseBackButton. */}
         <Pressable
           onPress={onDismiss}
           accessibilityRole="button"
           accessibilityLabel="Close"
           hitSlop={8}
-          style={({ pressed }) => ({
-            width: moderateScale(38),
-            height: moderateScale(38),
-            borderRadius: Radius.full,
-            backgroundColor: Colors.surfaceCreamLow,
-            borderWidth: 1,
-            borderColor: Colors.hairline,
-            alignItems: 'center',
-            justifyContent: 'center',
-            opacity: pressed ? 0.7 : 1,
-          })}
+          style={{ width: moderateScale(40), height: moderateScale(40) }}
         >
-          <Icons.back size={moderateScale(20)} color={Colors.onSurface} />
+          {({ pressed }) => (
+            <ChunkyCircle
+              size={moderateScale(38)}
+              depth={moderateScale(3)}
+              bg="#ffffff"
+              lipColor={Colors.cardLip}
+              border
+              borderColor={Colors.hairline}
+              pressed={pressed}
+            >
+              <Icons.back size={moderateScale(20)} color={Colors.onSurface} />
+            </ChunkyCircle>
+          )}
         </Pressable>
 
         <View>
@@ -110,7 +114,7 @@ export function WordsLearnedSheet({ groups, total, onDismiss }: WordsLearnedShee
 
       {groups.map((group) => (
         <View key={group.title} style={{ gap: moderateScale(8) }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(8) }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(6) }}>
             <Text
               style={{
                 fontFamily: Fonts.dmSans.bold,
@@ -123,26 +127,17 @@ export function WordsLearnedSheet({ groups, total, onDismiss }: WordsLearnedShee
             >
               {group.title}
             </Text>
-            <View
+            <Text
               style={{
-                backgroundColor: Colors.secondaryFixed,
-                borderRadius: Radius.full,
-                paddingHorizontal: moderateScale(7),
-                paddingVertical: moderateScale(1),
+                fontFamily: Fonts.dmSans.medium,
+                fontSize: moderateScale(11),
+                color: Colors.tertiary,
+                fontVariant: ['tabular-nums'],
               }}
+              maxFontSizeMultiplier={1.3}
             >
-              <Text
-                style={{
-                  fontFamily: Fonts.dmSans.bold,
-                  fontSize: moderateScale(11),
-                  color: Colors.onSecondaryContainer,
-                  fontVariant: ['tabular-nums'],
-                }}
-                maxFontSizeMultiplier={1.3}
-              >
-                {group.items.length}
-              </Text>
-            </View>
+              · {group.items.length}
+            </Text>
           </View>
 
           {group.items.map((item, idx) => (
@@ -156,8 +151,6 @@ export function WordsLearnedSheet({ groups, total, onDismiss }: WordsLearnedShee
                 borderRadius: Radius.tile,
                 borderWidth: 1,
                 borderColor: Colors.hairline,
-                borderLeftWidth: moderateScale(3),
-                borderLeftColor: Colors.secondaryContainer,
                 paddingVertical: moderateScale(10),
                 paddingHorizontal: moderateScale(13),
                 flexDirection: 'row',
@@ -202,18 +195,16 @@ export function WordsLearnedSheet({ groups, total, onDismiss }: WordsLearnedShee
                   {item.english}
                 </Text>
               </View>
-              <View
-                style={{
-                  width: moderateScale(36),
-                  height: moderateScale(36),
-                  borderRadius: Radius.full,
-                  backgroundColor: Colors.secondaryFixed,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+              {/* Canonical gold audio look (TeachWordsPhase recipe) — decorative;
+                  the row Pressable stays the single touch target. */}
+              <ChunkyCircle
+                size={moderateScale(36)}
+                depth={moderateScale(2)}
+                bg={Colors.secondaryFixed}
+                lipColor={Colors.goldLip}
               >
-                <Icons.audio size={moderateScale(18)} color={Colors.onSecondaryContainer} />
-              </View>
+                <Icons.audio size={moderateScale(18)} color={Colors.secondary} />
+              </ChunkyCircle>
             </Pressable>
           ))}
         </View>

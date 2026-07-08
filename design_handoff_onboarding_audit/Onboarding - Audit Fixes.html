@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="design_doc_mode" content="canvas">
+<title>Onboarding — Audit Fixes</title>
+<link rel="stylesheet" href="_ds/kannada-beku-design-system-28dc8163-9329-474b-8df0-dfddc28632c5/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/kannada-beku-design-system-28dc8163-9329-474b-8df0-dfddc28632c5/tokens/colors.css">
+<link rel="stylesheet" href="_ds/kannada-beku-design-system-28dc8163-9329-474b-8df0-dfddc28632c5/tokens/typography.css">
+<link rel="stylesheet" href="_ds/kannada-beku-design-system-28dc8163-9329-474b-8df0-dfddc28632c5/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/kannada-beku-design-system-28dc8163-9329-474b-8df0-dfddc28632c5/tokens/elevation.css">
+<link rel="stylesheet" href="_ds/kannada-beku-design-system-28dc8163-9329-474b-8df0-dfddc28632c5/styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="_ds/kannada-beku-design-system-28dc8163-9329-474b-8df0-dfddc28632c5/_ds_bundle.js"></script>
+<style>
+  body { margin: 0; }
+  .frame-label {
+    position: absolute; top: -30px; left: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; color: #6f6c58;
+  }
+  .before-shot {
+    display: block; width: 390px; height: auto; border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(27,29,14,0.14);
+  }
+  .after-frame {
+    width: 390px; border-radius: 24px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(27,29,14,0.14);
+  }
+  .notes-card {
+    background: #ffffff; border: 1px solid rgba(27,29,14,0.08); border-radius: 16px;
+    box-shadow: 0 4px 0 rgba(27,29,14,0.10); padding: 20px 22px;
+    font-family: 'DM Sans', sans-serif; color: #1b1d0e;
+  }
+  .notes-card h3 {
+    margin: 0 0 10px; font-family: 'Baloo Tamma 2', sans-serif;
+    font-weight: 700; font-size: 17px;
+  }
+  .notes-card ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+  <!-- ═══ AUDIT SUMMARY ═══ -->
+  <div style="position: absolute; left: 60px; top: 80px; width: 640px;" data-screen-label="Audit summary">
+    <div class="frame-label">Onboarding audit &middot; findings</div>
+    <div class="notes-card" style="padding: 26px 28px;">
+      <h3 style="font-size: 21px;">What's working</h3>
+      <ul style="margin-bottom: 18px;">
+        <li>Strong brand throughout — chunky lips, Baloo titles, cream canvas, kolam texture.</li>
+        <li>Basics lesson pacing is excellent: one idea per screen, listen-first, honest copy.</li>
+        <li>Short intake (4 steps) with clear Back/Continue; lesson header + progress bar is clean.</li>
+      </ul>
+      <h3 style="font-size: 21px;">Top issues (severity order)</h3>
+      <ul>
+        <li><strong>1 &middot; Two competing progress systems.</strong> Dots at top say "screen 2 of 5" while the eyebrow says "Step 1 of 4" — off by one on every step. Keep exactly one: a 4-segment bar.</li>
+        <li><strong>2 &middot; Name screen is half empty.</strong> Content is vertically centered, pushing the title below mid-screen; when the keyboard opens it jumps. Top-anchor all intake steps.</li>
+        <li><strong>3 &middot; Red input border reads as an error.</strong> Red = action/validation in this system. Default input should be neutral (hairline + lip); red only on focus. The caret is also OS-blue — tint it red.</li>
+        <li><strong>4 &middot; Personalization isn't skippable.</strong> Steps 2–3 gate progress behind disabled Continue. Add Skip — motivation and goal are nice-to-have, not required.</li>
+        <li><strong>5 &middot; Step 2 hides options.</strong> Oversized cards push option 5+ below the fold with no scroll cue. Compact rows fit all six; checkbox affordance shows multi-select; "(0/3 selected)" becomes a counter that appears only after the first pick.</li>
+        <li><strong>6 &middot; Step 3's (i) icons are dead weight.</strong> A tap-target inside a tap-target, and the payoff is hidden. Put it inline ("about one scenario") and preselect the recommended goal so Continue is never disabled here.</li>
+        <li><strong>7 &middot; Off-palette green + grey.</strong> "You're ready" uses green checks (green is scoped to answer feedback only) and the quiz answer chips on 3/7 are flat grey (reads disabled). Both should be warm: gold reward circles; white chunky chips.</li>
+        <li><strong>8 &middot; Vowel grid gives no feedback.</strong> "Tap each one" but tiles show no audio affordance and no heard/unheard state; red transliteration labels spend the one-red-moment 8 times. Add a speaker glyph, a gold "heard" state, a "3 of 8 heard" counter; labels go ink.</li>
+        <li><strong>9 &middot; Welcome cards collide.</strong> The tilted value cards overlap each other and the bottom sheet clips card 3. Keep the playful tilt at &plusmn;1&deg; with safe spacing.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 760px; top: 80px; width: 460px;" data-screen-label="Also recommended">
+    <div class="frame-label">Also recommended</div>
+    <div class="notes-card">
+      <ul>
+        <li><strong>3/7, 6/7 and the post-intake greeting are now mocked below (row 4).</strong></li>
+        <li><strong>Name step</strong> — autofocus the field so the keyboard is already up.</li>
+        <li><strong>Vowel tiles</strong> — require hearing all 8 before Next, or let Next pulse once the counter completes.</li>
+        <li><strong>Splash</strong> — solid; consider the gold ಕ mark instead of ಬೇ on Welcome so splash → welcome feels continuous.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══ ROW 1 ═══ -->
+  <div style="position: absolute; left: 60px; top: 1600px; width: 390px;" data-screen-label="Welcome before">
+    <div class="frame-label">Welcome &middot; before</div>
+    <img class="before-shot" src="scratch/ob/a37.jpeg" alt="Welcome screen before">
+  </div>
+  <div style="position: absolute; left: 490px; top: 1600px; width: 390px;" data-screen-label="Welcome after">
+    <div class="frame-label">Welcome &middot; after</div>
+    <div class="after-frame" id="root-welcome"></div>
+  </div>
+  <div style="position: absolute; left: 60px; top: 2510px; width: 820px;">
+    <div class="notes-card">
+      <h3>Welcome — what changed</h3>
+      <ul>
+        <li>Cards keep a playful &plusmn;0.8&deg; tilt but no longer overlap each other or clip under the sheet.</li>
+        <li>Progress dots removed — this screen isn't a "step", and the dots duplicated the in-sheet dots.</li>
+        <li>Kannada wordmark set in Noto Sans Kannada (ಬೇಕು), gold reserved for it alone.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 1000px; top: 1600px; width: 390px;" data-screen-label="Step 1 before">
+    <div class="frame-label">Step 1 &middot; name &middot; before</div>
+    <img class="before-shot" src="scratch/ob/a37-1.jpeg" alt="Name step before">
+  </div>
+  <div style="position: absolute; left: 1430px; top: 1600px; width: 390px;" data-screen-label="Step 1 after">
+    <div class="frame-label">Step 1 &middot; name &middot; after</div>
+    <div class="after-frame" id="root-name"></div>
+  </div>
+  <div style="position: absolute; left: 1000px; top: 2510px; width: 820px;">
+    <div class="notes-card">
+      <h3>Step 1 · Name — what changed</h3>
+      <ul>
+        <li>Top-anchored: eyebrow + title start right under the progress bar; no half-screen of dead space, no jump when the keyboard opens.</li>
+        <li>One progress system: the 4-segment gold bar alone (gold = progress); both the off-by-one dots and the "Step 1 of 4" eyebrow are gone.</li>
+        <li>Input default is neutral — hairline border + card lip; red is saved for the caret and Continue.</li>
+        <li>Subtitle earns its place ("so lessons can greet you properly"); helper line lowers the stakes.</li>
+        <li>Continue enables the moment there's a name — shown here in its enabled red-lip state.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══ ROW 2 ═══ -->
+  <div style="position: absolute; left: 60px; top: 2850px; width: 390px;" data-screen-label="Step 2 before">
+    <div class="frame-label">Step 2 &middot; why &middot; before</div>
+    <img class="before-shot" src="scratch/ob/a38.jpeg" alt="Why step before">
+  </div>
+  <div style="position: absolute; left: 490px; top: 2850px; width: 390px;" data-screen-label="Step 2 after">
+    <div class="frame-label">Step 2 &middot; why &middot; after</div>
+    <div class="after-frame" id="root-why"></div>
+  </div>
+  <div style="position: absolute; left: 60px; top: 3760px; width: 820px;">
+    <div class="notes-card">
+      <h3>Step 2 · Why — what changed</h3>
+      <ul>
+        <li>Compact rows with icons — all six motivations visible at once, nothing cut off below the fold.</li>
+        <li>Checkbox affordance signals multi-select; selected = pale-red fill + red border (the system's own select pattern).</li>
+        <li>"Pick up to 3 (0/3 selected)" → warm subtitle; a "2 of 3 picked" counter appears only after the first pick.</li>
+        <li>Skip added top-right — motivation is a nice-to-have, never a gate.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 1000px; top: 2850px; width: 390px;" data-screen-label="Step 3 before">
+    <div class="frame-label">Step 3 &middot; time &middot; before</div>
+    <img class="before-shot" src="scratch/ob/a38-1.jpeg" alt="Time step before">
+  </div>
+  <div style="position: absolute; left: 1430px; top: 2850px; width: 390px;" data-screen-label="Step 3 after">
+    <div class="frame-label">Step 3 &middot; time &middot; after</div>
+    <div class="after-frame" id="root-time"></div>
+  </div>
+  <div style="position: absolute; left: 1000px; top: 3760px; width: 820px;">
+    <div class="notes-card">
+      <h3>Step 3 · Time — what changed</h3>
+      <ul>
+        <li>(i) icons removed — the detail they hid now sits inline ("about one scenario", "scenario + practice").</li>
+        <li>10 min preselected with a gold "Most popular" badge — a sensible default means Continue is never disabled here.</li>
+        <li>Radio affordance makes single-select obvious; whole card is the tap target.</li>
+        <li>Subtitle reassures: "you can change it anytime in Profile."</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══ ROW 3 ═══ -->
+  <div style="position: absolute; left: 60px; top: 4100px; width: 390px;" data-screen-label="Vowels before">
+    <div class="frame-label">Basics 2/7 &middot; vowels &middot; before</div>
+    <img class="before-shot" src="scratch/ob/a38-3.jpeg" alt="Vowel sounds before">
+  </div>
+  <div style="position: absolute; left: 490px; top: 4100px; width: 390px;" data-screen-label="Vowels after">
+    <div class="frame-label">Basics 2/7 &middot; vowels &middot; after</div>
+    <div class="after-frame" id="root-vowels"></div>
+  </div>
+  <div style="position: absolute; left: 60px; top: 5010px; width: 820px;">
+    <div class="notes-card">
+      <h3>Basics 2/7 · Vowels — what changed</h3>
+      <ul>
+        <li>Each tile carries a small speaker glyph — the tap affordance "Tap each one" promised.</li>
+        <li>Heard tiles turn pale gold with a check (gold = reward); "3 of 8 heard" tracks progress.</li>
+        <li>Transliteration labels back to ink — 8 red labels spent the one-red-moment 8 times; red now belongs to Next alone.</li>
+        <li>Mouth diagram sits in a card beside its caption instead of floating; saves ~120px so the grid never scrolls.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 1000px; top: 4100px; width: 390px;" data-screen-label="Ready before">
+    <div class="frame-label">Basics 7/7 &middot; ready &middot; before</div>
+    <img class="before-shot" src="scratch/ob/a38-10.jpeg" alt="You're ready before">
+  </div>
+  <div style="position: absolute; left: 1430px; top: 4100px; width: 390px;" data-screen-label="Ready after">
+    <div class="frame-label">Basics 7/7 &middot; ready &middot; after</div>
+    <div class="after-frame" id="root-ready"></div>
+  </div>
+  <div style="position: absolute; left: 1000px; top: 5010px; width: 820px;">
+    <div class="notes-card">
+      <h3>Basics 7/7 · Ready — what changed</h3>
+      <ul>
+        <li>Green check circles → gold with a hard lip. Green is scoped strictly to answer-correctness feedback; completion is a <em>reward</em>, and reward is gold.</li>
+        <li>Hero check gets the sanctioned gold gradient + lip — a celebration moment, consistent with streaks.</li>
+        <li>CTA keeps its forward arrow: "Start Lesson 1 · Greetings →".</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══ ROW 4 ═══ -->
+  <div style="position: absolute; left: 60px; top: 5350px; width: 390px;" data-screen-label="Short vs long before">
+    <div class="frame-label">Basics 3/7 &middot; short vs long &middot; before</div>
+    <img class="before-shot" src="scratch/ob/a38-7.jpeg" alt="Short vs long before">
+  </div>
+  <div style="position: absolute; left: 490px; top: 5350px; width: 390px;" data-screen-label="Short vs long after">
+    <div class="frame-label">Basics 3/7 &middot; short vs long &middot; after</div>
+    <div class="after-frame" id="root-shortlong"></div>
+  </div>
+  <div style="position: absolute; left: 60px; top: 6260px; width: 820px;">
+    <div class="notes-card">
+      <h3>Basics 3/7 · Short vs long — what changed</h3>
+      <ul>
+        <li>Flat grey answer chips (read as disabled) → white chunky chips with hairline + lip, clearly tappable.</li>
+        <li>Answered state shown: "kaali" gets the sanctioned feedback green (pale fill, green border + lip, check) with "Correct! Well done." — the one place green is allowed.</li>
+        <li>Red "ಕಾಲಿ" glyph → ink; red stays reserved for Next.</li>
+        <li>Both listen cards get gold play orbs with lips, matching 5/7's pattern.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 1000px; top: 5350px; width: 390px;" data-screen-label="Rhythm before">
+    <div class="frame-label">Basics 6/7 &middot; rhythm &middot; before</div>
+    <img class="before-shot" src="scratch/ob/a38-9.jpeg" alt="The rhythm before">
+  </div>
+  <div style="position: absolute; left: 1430px; top: 5350px; width: 390px;" data-screen-label="Rhythm after">
+    <div class="frame-label">Basics 6/7 &middot; rhythm &middot; after</div>
+    <div class="after-frame" id="root-rhythm"></div>
+  </div>
+  <div style="position: absolute; left: 1000px; top: 6260px; width: 820px;">
+    <div class="notes-card">
+      <h3>Basics 6/7 · Rhythm — what changed</h3>
+      <ul>
+        <li>Gold "Hear the beat" button demoted — gold = reward, never a competing CTA. Now a white pill with a small gold play orb; red Next is the screen's one action moment again.</li>
+        <li>First syllable chip shown in its gold "beating" state — gold as live progress feedback while audio plays.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 1900px; top: 5350px; width: 390px;" data-screen-label="Greeting new">
+    <div class="frame-label">Post-intake greeting &middot; new screen</div>
+    <div class="after-frame" id="root-greeting"></div>
+  </div>
+  <div style="position: absolute; left: 1900px; top: 6260px; width: 390px;">
+    <div class="notes-card">
+      <h3>Greeting — why add it</h3>
+      <ul>
+        <li>Sits between Step 4 and Kannada basics: the intake visibly pays off — greeted by name, picks echoed back as chips.</li>
+        <li>Gold ಕ mark on the red gradient ties splash → onboarding → app.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script type="text/babel" src="ob-fixes-intake.jsx"></script>
+  <script type="text/babel" src="ob-fixes-basics.jsx"></script>
+  <script type="text/babel" src="ob-fixes-extra.jsx"></script>
+  <script type="text/babel">
+    ReactDOM.createRoot(document.getElementById('root-welcome')).render(<ObWelcomeAfter></ObWelcomeAfter>);
+    ReactDOM.createRoot(document.getElementById('root-name')).render(<ObNameAfter></ObNameAfter>);
+    ReactDOM.createRoot(document.getElementById('root-why')).render(<ObWhyAfter></ObWhyAfter>);
+    ReactDOM.createRoot(document.getElementById('root-time')).render(<ObTimeAfter></ObTimeAfter>);
+    ReactDOM.createRoot(document.getElementById('root-vowels')).render(<ObVowelsAfter></ObVowelsAfter>);
+    ReactDOM.createRoot(document.getElementById('root-ready')).render(<ObReadyAfter></ObReadyAfter>);
+    ReactDOM.createRoot(document.getElementById('root-shortlong')).render(<ObShortLongAfter></ObShortLongAfter>);
+    ReactDOM.createRoot(document.getElementById('root-rhythm')).render(<ObRhythmAfter></ObRhythmAfter>);
+    ReactDOM.createRoot(document.getElementById('root-greeting')).render(<ObGreetingAfter></ObGreetingAfter>);
+  </script>
+</body>
+</html>

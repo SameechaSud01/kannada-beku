@@ -1,5 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
@@ -11,21 +17,43 @@ import { ChunkyPressable } from '../ui/ChunkyPressable';
 import { ChunkyCircle } from '../ui/ChunkyLip';
 import { useGuideAudio } from './useGuideAudio';
 
+// Precomputed outside the worklet — never call moderateScale inside one.
+const SHAKE_PX = moderateScale(6);
+const CHIP_LIP = moderateScale(4);
+
+type AnswerState = 'idle' | 'correct' | 'wrong';
+
 /**
- * Step 3 — "Short vs. long". Two compare tiles (kali vs kaali) plus a
- * "Which did you hear?" listening self-check. The quiz gives green/red feedback
- * but never gates the CTA, and there is no recording — it plays the long word
- * and the learner taps which they heard (spec_lesson0_redesign.md).
+ * Step 3 — "Short vs. long". Two listen cards (kali vs kaali) plus a
+ * "Which did you hear?" self-check. Audit fixes (spec_onboarding_audit_fixes.md):
+ * glyphs are ink (not red), play affordances are gold orbs, answer chips are
+ * white chunky (never flat grey), correct is the ONE sanctioned green, and a
+ * wrong pick shakes with encouraging copy and lets the learner retry. The quiz
+ * never gates the CTA.
  */
 export function StepShortLong({ shortLong }: { shortLong: ShortLongPair }) {
-  const { playingKey, play } = useGuideAudio();
+  const { play } = useGuideAudio();
   // The quiz plays the LONG word; the learner picks which they heard.
   const answer = shortLong.long.transliteration;
   const [played, setPlayed] = useState(false);
-  const [pick, setPick] = useState<string | null>(null);
-  const correct = pick === answer;
+  const [answerState, setAnswerState] = useState<AnswerState>('idle');
+  const [shakeToken, setShakeToken] = useState(0);
+  const [wrongPick, setWrongPick] = useState<string | null>(null);
 
   const options = [shortLong.short, shortLong.long];
+
+  const handlePick = (label: string) => {
+    if (answerState === 'correct') return;
+    if (label === answer) {
+      setAnswerState('correct');
+      setWrongPick(null);
+      play('sl:answer', shortLong.long.kannada);
+    } else {
+      setAnswerState('wrong');
+      setWrongPick(label);
+      setShakeToken((t) => t + 1);
+    }
+  };
 
   return (
     <View>
@@ -34,19 +62,12 @@ export function StepShortLong({ shortLong }: { shortLong: ShortLongPair }) {
         subtitle="Hold a vowel longer and the word changes. Listen:"
       />
 
-      <View style={{ flexDirection: 'row', gap: moderateScale(11) }}>
+      <View style={{ flexDirection: 'row', gap: moderateScale(12) }}>
         <CompareTile
           word={shortLong.short}
-          accent={Colors.onSurface}
-          active={playingKey === 'sl:short'}
           onPlay={() => play('sl:short', shortLong.short.kannada)}
         />
-        <CompareTile
-          word={shortLong.long}
-          accent={Colors.primaryContainer}
-          active={playingKey === 'sl:long'}
-          onPlay={() => play('sl:long', shortLong.long.kannada)}
-        />
+        <CompareTile word={shortLong.long} onPlay={() => play('sl:long', shortLong.long.kannada)} />
       </View>
 
       {/* Listening self-check — a flat tinted well. */}
@@ -54,8 +75,9 @@ export function StepShortLong({ shortLong }: { shortLong: ShortLongPair }) {
         style={{
           backgroundColor: Colors.surfaceCreamLow,
           borderRadius: Radius.chunky,
-          paddingVertical: moderateScale(18),
-          paddingHorizontal: moderateScale(18),
+          paddingTop: moderateScale(14),
+          paddingBottom: moderateScale(16),
+          paddingHorizontal: moderateScale(16),
           marginTop: Spacing.lg,
         }}
       >
@@ -63,10 +85,10 @@ export function StepShortLong({ shortLong }: { shortLong: ShortLongPair }) {
           style={{
             fontFamily: Fonts.dmSans.bold,
             fontSize: moderateScale(12),
-            letterSpacing: 1.6,
+            letterSpacing: 1.4,
             textTransform: 'uppercase',
             color: Colors.secondary,
-            marginBottom: moderateScale(12),
+            marginBottom: moderateScale(10),
           }}
           maxFontSizeMultiplier={1.3}
         >
@@ -80,20 +102,28 @@ export function StepShortLong({ shortLong }: { shortLong: ShortLongPair }) {
           }}
           accessibilityLabel={played ? 'Play the sound again' : 'Play a sound'}
           border
+          lip={3}
           radius={Radius.tile}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
             gap: moderateScale(8),
-            paddingVertical: moderateScale(14),
+            paddingVertical: moderateScale(11),
           }}
         >
-          <Icons.play size={moderateScale(17)} color={Colors.secondary} />
+          <ChunkyCircle
+            size={moderateScale(24)}
+            bg={Colors.secondaryContainer}
+            lipColor={Colors.goldLip}
+            depth={2}
+          >
+            <Icons.play size={moderateScale(11)} color={Colors.onSecondaryContainer} />
+          </ChunkyCircle>
           <Text
             style={{
               fontFamily: Fonts.baloo.bold,
-              fontSize: moderateScale(15.5),
+              fontSize: moderateScale(15),
               color: Colors.onSurface,
             }}
             maxFontSizeMultiplier={1.3}
@@ -103,44 +133,33 @@ export function StepShortLong({ shortLong }: { shortLong: ShortLongPair }) {
         </ChunkyPressable>
 
         <View
-          style={{ flexDirection: 'row', gap: moderateScale(11), marginTop: moderateScale(12) }}
+          style={{ flexDirection: 'row', gap: moderateScale(10), marginTop: moderateScale(10) }}
         >
           {options.map((opt) => (
-            <QuizOption
+            <AnswerChip
               key={opt.transliteration}
               label={opt.transliteration}
-              picked={pick}
-              answer={answer}
-              onPick={() => {
-                if (!pick) {
-                  setPick(opt.transliteration);
-                  play('sl:answer', shortLong.long.kannada);
-                }
-              }}
+              correct={answerState === 'correct' && opt.transliteration === answer}
+              locked={answerState === 'correct'}
+              shakeToken={wrongPick === opt.transliteration ? shakeToken : 0}
+              onPick={() => handlePick(opt.transliteration)}
             />
           ))}
         </View>
 
-        {pick ? (
+        {answerState !== 'idle' ? (
           <Text
             style={{
-              fontFamily: Fonts.dmSans.medium,
+              fontFamily: Fonts.dmSans.bold,
               fontSize: moderateScale(13.5),
-              lineHeight: moderateScale(20),
+              textAlign: 'center',
               marginTop: moderateScale(12),
-              borderRadius: Radius.md,
-              overflow: 'hidden',
-              paddingVertical: moderateScale(11),
-              paddingHorizontal: moderateScale(13),
-              backgroundColor: correct ? Colors.successContainerLow : Colors.errorContainerLow,
-              color: correct ? Colors.onSuccessContainer : Colors.primary,
+              color: answerState === 'correct' ? Colors.onSuccessContainer : Colors.primary,
             }}
             maxFontSizeMultiplier={1.4}
             accessibilityLiveRegion="polite"
           >
-            {correct
-              ? `Right! That was “${answer}” — the long one you hold a beat longer.`
-              : `Not quite — that was “${answer}” (the long one). Tap play and listen again.`}
+            {answerState === 'correct' ? 'Correct! Well done.' : "Not quite. Let's try again!"}
           </Text>
         ) : null}
       </View>
@@ -148,31 +167,19 @@ export function StepShortLong({ shortLong }: { shortLong: ShortLongPair }) {
   );
 }
 
-function CompareTile({
-  word,
-  accent,
-  active,
-  onPlay,
-}: {
-  word: GuideWord;
-  accent: string;
-  active: boolean;
-  onPlay: () => void;
-}) {
+function CompareTile({ word, onPlay }: { word: GuideWord; onPlay: () => void }) {
   return (
     <ChunkyPressable
       onPress={onPlay}
       accessibilityLabel={`Hear ${word.transliteration}, meaning ${word.english}`}
       border
-      borderColor={active ? Colors.primaryContainer : Colors.hairline}
-      borderWidth={active ? 2 : 1}
-      lipColor={active ? Colors.primaryContainer : Colors.cardLip}
       radius={Radius.chunky}
       style={{
         flex: 1,
         alignItems: 'center',
-        gap: moderateScale(4),
-        paddingVertical: moderateScale(20),
+        gap: moderateScale(3),
+        paddingTop: moderateScale(18),
+        paddingBottom: moderateScale(14),
         paddingHorizontal: moderateScale(8),
       }}
     >
@@ -180,14 +187,18 @@ function CompareTile({
         style={{
           fontFamily: Fonts.notoSansKannada.bold,
           fontSize: moderateScale(34),
-          color: accent,
+          color: Colors.onSurface,
         }}
         maxFontSizeMultiplier={1.2}
       >
         {word.kannada}
       </Text>
       <Text
-        style={{ fontFamily: Fonts.dmSans.bold, fontSize: moderateScale(18), color: accent }}
+        style={{
+          fontFamily: Fonts.dmSans.bold,
+          fontSize: moderateScale(15),
+          color: Colors.onSurface,
+        }}
         maxFontSizeMultiplier={1.3}
       >
         {word.transliteration}
@@ -195,8 +206,8 @@ function CompareTile({
       <Text
         style={{
           fontFamily: Fonts.dmSans.regular,
-          fontSize: moderateScale(13),
-          color: Colors.tertiary,
+          fontSize: moderateScale(12.5),
+          color: Colors.inkFaint,
         }}
         maxFontSizeMultiplier={1.3}
       >
@@ -205,64 +216,84 @@ function CompareTile({
       <View style={{ marginTop: moderateScale(8) }}>
         <ChunkyCircle
           size={moderateScale(40)}
-          bg={Colors.secondaryFixed}
+          bg={Colors.secondaryContainer}
           lipColor={Colors.goldLip}
           depth={3}
         >
-          <Icons.play size={moderateScale(17)} color={Colors.secondary} />
+          <Icons.play size={moderateScale(16)} color={Colors.onSecondaryContainer} />
         </ChunkyCircle>
       </View>
     </ChunkyPressable>
   );
 }
 
-function QuizOption({
+function AnswerChip({
   label,
-  picked,
-  answer,
+  correct,
+  locked,
+  shakeToken,
   onPick,
 }: {
   label: string;
-  picked: string | null;
-  answer: string;
+  correct: boolean;
+  locked: boolean;
+  /** Increments each time this chip was a wrong pick — triggers the shake. */
+  shakeToken: number;
   onPick: () => void;
 }) {
-  // Neutral until a pick is made; then green for the answer, red for a wrong pick,
-  // muted for the rest (owner-approved green/red answer-feedback exception).
-  let bg = Colors.surfaceContainerHigh;
-  let fg = Colors.secondary;
-  if (picked) {
-    if (label === answer) {
-      bg = Colors.successContainerLow;
-      fg = Colors.onSuccessContainer;
-    } else if (label === picked) {
-      bg = Colors.errorContainerLow;
-      fg = Colors.primary;
-    } else {
-      fg = Colors.textFaint;
+  const offsetX = useSharedValue(0);
+
+  useEffect(() => {
+    if (shakeToken > 0) {
+      offsetX.value = withSequence(
+        withTiming(-SHAKE_PX, { duration: 55 }),
+        withTiming(SHAKE_PX, { duration: 55 }),
+        withTiming(-SHAKE_PX * 0.6, { duration: 55 }),
+        withTiming(SHAKE_PX * 0.6, { duration: 55 }),
+        withTiming(0, { duration: 55 }),
+      );
     }
-  }
+  }, [shakeToken, offsetX]);
+
+  const shakeStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: offsetX.value }],
+  }));
 
   return (
-    <Pressable
-      onPress={onPick}
-      disabled={!!picked}
-      accessibilityRole="button"
-      accessibilityLabel={`I heard ${label}`}
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: bg,
-        borderRadius: Radius.tile,
-        paddingVertical: moderateScale(14),
-      }}
-    >
-      <Text
-        style={{ fontFamily: Fonts.baloo.bold, fontSize: moderateScale(16), color: fg }}
-        maxFontSizeMultiplier={1.3}
+    <Animated.View style={[{ flex: 1 }, shakeStyle]}>
+      <Pressable
+        onPress={onPick}
+        disabled={locked}
+        accessibilityRole="button"
+        accessibilityLabel={`I heard ${label}`}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: moderateScale(8),
+          backgroundColor: correct ? Colors.successContainerLow : '#ffffff',
+          borderWidth: 2,
+          borderColor: correct ? Colors.successContainer : Colors.hairlineStrong,
+          borderBottomWidth: CHIP_LIP,
+          borderBottomColor: correct ? Colors.successLip : Colors.cardLip,
+          borderRadius: Radius.lg,
+          paddingVertical: moderateScale(13),
+        }}
       >
-        {label}
-      </Text>
-    </Pressable>
+        {correct ? (
+          <Icons.check size={moderateScale(15)} color={Colors.onSuccessContainer} strokeWidth={3} />
+        ) : null}
+        <Text
+          style={{
+            fontFamily: Fonts.baloo.bold,
+            fontSize: moderateScale(16.5),
+            color: correct ? Colors.onSuccessContainer : Colors.onSurface,
+          }}
+          maxFontSizeMultiplier={1.3}
+        >
+          {label}
+        </Text>
+      </Pressable>
+    </Animated.View>
   );
 }

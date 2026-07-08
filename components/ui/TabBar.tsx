@@ -26,7 +26,7 @@ const ACTIVE_LIP = 3; // active red circle lip
  * top padding). Scroll screens pad their content by TAB_BAR_CLEARANCE +
  * insets.bottom so nothing hides permanently behind the floating pill.
  */
-export const TAB_BAR_CLEARANCE = moderateScale(88);
+export const TAB_BAR_CLEARANCE = moderateScale(104);
 
 /**
  * Floating chunky tab bar (chunky_v3 § TabBar). A white pill with a hairline

@@ -78,6 +78,9 @@ export function AnswerOption({
   //  - wrong   → redPale fill + 2px red2 border (wrong stays red — it's an error)
   const showCorrect = reveal && isCorrect;
   const showWrong = reveal && isPicked && !isCorrect;
+  // Options that were neither picked nor correct fade back on reveal so they no
+  // longer look tappable (spec_lesson_flow_fixed §2).
+  const muted = reveal && !isCorrect && !isPicked;
 
   let bg = '#ffffff';
   let fg = Colors.onSurface;
@@ -119,6 +122,7 @@ export function AnswerOption({
           paddingVertical: Spacing.lg,
           paddingHorizontal: Spacing.lg,
           minHeight: moderateScale(56),
+          opacity: muted ? 0.5 : 1,
           transform: [{ translateY: pressed && !reveal ? 2 : 0 }],
         })}
       >

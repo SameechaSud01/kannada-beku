@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
@@ -8,33 +9,60 @@ import { StepHeading } from './StepHeading';
 import { ChunkyPressable } from '../ui/ChunkyPressable';
 import { ChunkyCircle } from '../ui/ChunkyLip';
 
+const HERO_SIZE = moderateScale(92);
+const HERO_LIP = moderateScale(6);
+
 /**
- * Step 7 — "You're ready!". A success check + four recap takeaways to keep in
- * your pocket before Lesson 1 (spec_lesson0_redesign.md).
+ * Step 7 — "You're ready!". A gold celebration circle + four recap takeaways.
+ * Audit fix (spec_onboarding_audit_fixes.md finding 7): the per-row checks are
+ * GOLD, not green — completion is a reward; green is scoped to answer feedback
+ * only. The hero uses the sanctioned gold gradient.
  */
 export function StepRecap({ recap }: { recap: string[] }) {
   return (
     <View>
       <View style={{ alignItems: 'center', marginBottom: Spacing.sm }}>
-        <ChunkyCircle
-          size={moderateScale(70)}
-          bg={Colors.secondaryContainer}
-          lipColor={Colors.goldLip}
-          depth={4}
-        >
-          <Icons.check
-            size={moderateScale(38)}
-            color={Colors.onSecondaryContainer}
-            strokeWidth={3}
+        {/* Gold-gradient celebration circle with a chunky lip. */}
+        <View style={{ width: HERO_SIZE, height: HERO_SIZE + HERO_LIP }}>
+          <View
+            style={{
+              position: 'absolute',
+              top: HERO_LIP,
+              width: HERO_SIZE,
+              height: HERO_SIZE,
+              borderRadius: HERO_SIZE / 2,
+              backgroundColor: Colors.goldLip,
+            }}
           />
-        </ChunkyCircle>
+          <LinearGradient
+            colors={[Colors.goldBright, Colors.secondaryContainer]}
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
+            style={{
+              position: 'absolute',
+              top: 0,
+              width: HERO_SIZE,
+              height: HERO_SIZE,
+              borderRadius: HERO_SIZE / 2,
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+            }}
+          >
+            <Icons.check
+              size={moderateScale(44)}
+              color={Colors.onSecondaryContainer}
+              strokeWidth={3}
+            />
+          </LinearGradient>
+        </View>
       </View>
 
       <View style={{ alignItems: 'center' }}>
         <StepHeading title="You're ready!" subtitle="Keep these four in your pocket:" />
       </View>
 
-      <View style={{ gap: moderateScale(11) }}>
+      <View style={{ gap: moderateScale(12) }}>
         {recap.map((point, i) => (
           <ChunkyPressable
             key={i}
@@ -45,32 +73,29 @@ export function StepRecap({ recap }: { recap: string[] }) {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              gap: moderateScale(13),
-              paddingVertical: moderateScale(15),
+              gap: moderateScale(14),
+              paddingVertical: moderateScale(14),
               paddingHorizontal: moderateScale(16),
             }}
           >
-            <View
-              style={{
-                width: moderateScale(26),
-                height: moderateScale(26),
-                borderRadius: Radius.full,
-                backgroundColor: Colors.successContainerLow,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+            {/* Gold reward check — NOT green (green = answer feedback only). */}
+            <ChunkyCircle
+              size={moderateScale(30)}
+              bg={Colors.secondaryContainer}
+              lipColor={Colors.goldLip}
+              depth={2}
             >
               <Icons.check
                 size={moderateScale(15)}
-                color={Colors.successContainer}
-                strokeWidth={3.4}
+                color={Colors.onSecondaryContainer}
+                strokeWidth={3}
               />
-            </View>
+            </ChunkyCircle>
             <Text
               style={{
                 flex: 1,
                 fontFamily: Fonts.dmSans.medium,
-                fontSize: moderateScale(14.5),
+                fontSize: moderateScale(15),
                 lineHeight: moderateScale(21),
                 color: Colors.onSurface,
               }}

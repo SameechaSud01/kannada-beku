@@ -22,8 +22,6 @@ type Ring = {
   disc: string;
   /** Icon colour inside the disc (white on the dark fills, ink-gold on gold). */
   onDisc: string;
-  /** Goal-pill text colour — readable on white. */
-  goalColor: string;
   target: number;
   what: string;
 };
@@ -35,7 +33,6 @@ const RINGS: Ring[] = [
     icon: Icons.audio,
     disc: Colors.primaryContainer,
     onDisc: Colors.onPrimary,
-    goalColor: Colors.primaryContainer,
     target: DAILY_LISTEN_TARGET,
     what: 'Every Kannada word played out loud — your taps and autoplay both count.',
   },
@@ -44,16 +41,14 @@ const RINGS: Ring[] = [
     icon: Icons.mic,
     disc: Colors.secondaryContainer,
     onDisc: Colors.onSecondaryContainer,
-    goalColor: Colors.onSecondaryContainer,
     target: DAILY_SPEAK_TARGET,
     what: 'Each time you tap “I said it” during a lesson’s practice steps.',
   },
   {
     label: 'Practice',
     icon: Icons.tabPractice,
-    disc: Colors.primary,
-    onDisc: Colors.onPrimary,
-    goalColor: Colors.primary,
+    disc: Colors.interactiveSecondary,
+    onDisc: Colors.onSurface,
     target: DAILY_PRACTICE_TARGET,
     what: 'Questions you answer across the practice games.',
   },
@@ -188,7 +183,7 @@ export function RingInfoSheet({ onDismiss }: RingInfoSheetProps) {
                 style={{
                   fontFamily: Fonts.baloo.extrabold,
                   fontSize: moderateScale(20),
-                  color: ring.goalColor,
+                  color: Colors.onSurface,
                   fontVariant: ['tabular-nums'],
                   alignSelf: 'flex-start',
                   marginTop: moderateScale(3),

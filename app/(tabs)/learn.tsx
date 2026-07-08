@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { View, Text, ScrollView, Pressable, Animated } from 'react-native';
+import { View, Text, ScrollView, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
@@ -14,22 +14,16 @@ import { useProgressStore } from '../../stores/progressStore';
 import { PLANNED_LESSON_SLOTS, TOTAL_LESSON_SLOTS } from '../../constants/lessons/plannedLessons';
 import { TS_LESSONS_BY_SLUG } from '../../constants/lessons/lessonContent';
 import { computePartStates } from '../../constants/lessons/parts';
-import { useModal } from '../../components/modals/ModalHost';
-import { LessonLockedDialog } from '../../components/modals/instances/LessonLockedDialog';
-import { LessonInfoDialog } from '../../components/modals/instances/LessonInfoDialog';
 import { BasicsCard } from '../../components/guide/BasicsCard';
 import { Watermark } from '../../components/ui/Watermark';
 import { TopBar } from '../../components/ui/TopBar';
 import { TAB_BAR_CLEARANCE } from '../../components/ui/TabBar';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
-import { ChunkyCircle, ChunkyLip } from '../../components/ui/ChunkyLip';
-import { LockTile } from '../../components/ui/LockTile';
+import { ChunkyCircle } from '../../components/ui/ChunkyLip';
 import { LearnSkeleton } from '../../components/states/skeletons/TabSkeletons';
 import { ErrorState } from '../../components/states/ErrorState';
 import { OfflineState } from '../../components/states/OfflineState';
 import { useIsOffline } from '../../hooks/useIsOffline';
-
-const ESTIMATED_MIN_PER_LESSON = 5;
 
 type RowState = 'done' | 'active' | 'locked';
 
@@ -38,11 +32,7 @@ type LessonRow = {
   state: RowState;
   title: string;
   subtitle: string;
-  char: string;
-  phraseCount: number;
   realLessonSlug?: string;
-  prevTitle?: string;
-  prevSlug?: string;
   /** Sub-part progress for the in-progress lesson (0 when not split / not active). */
   partsDone: number;
   partsTotal: number;
@@ -54,7 +44,6 @@ export default function LearnScreen() {
   const completedLessons = useCompletedLessons();
   const completedParts = useProgressStore((s) => s.completedParts);
   const { streak, onStreakPress } = useStreakCelebration();
-  const modal = useModal();
   const lessonsQuery = useDbLessons();
   const dbLessons = lessonsQuery.data ?? [];
   const offline = useIsOffline();
@@ -73,7 +62,6 @@ export default function LearnScreen() {
 
   const rows: LessonRow[] = PLANNED_LESSON_SLOTS.map((slot, idx) => {
     const real = dbLessons.find((l) => l.lessonNo === slot.slot);
-    const prevReal = dbLessons.find((l) => l.lessonNo === slot.slot - 1);
     const n = idx + 1;
 
     let state: RowState;
@@ -99,61 +87,16 @@ export default function LearnScreen() {
       state,
       title: real?.title ?? slot.title,
       subtitle: slot.subtitle,
-      char: slot.charPlaceholder,
-      phraseCount: real?.phrases.length ?? 0,
       realLessonSlug: real?.slug,
-      prevTitle: idx > 0 ? (prevReal?.title ?? PLANNED_LESSON_SLOTS[idx - 1].title) : undefined,
-      prevSlug: prevReal?.slug,
       partsDone,
       partsTotal,
     };
   });
 
   const handleRowPress = (row: LessonRow) => {
-    if (row.state === 'locked') {
-      const prevSlot = row.slot - 1;
-      modal.show({
-        kind: 'dialog',
-        component: LessonLockedDialog,
-        props: {
-          lessonNumber: row.slot,
-          lessonTitle: row.title,
-          prevLessonNumber: prevSlot,
-          prevLessonTitle: row.prevTitle ?? `Lesson ${prevSlot}`,
-          onGoToPrev: () => {
-            modal.dismiss();
-            if (row.prevSlug) router.push(`/lesson/${row.prevSlug}`);
-          },
-          onDismiss: () => modal.dismiss(),
-        },
-        dim: 0.4,
-      });
-      return;
-    }
-    if (row.realLessonSlug) {
+    if (row.state !== 'locked' && row.realLessonSlug) {
       router.push(`/lesson/${row.realLessonSlug}`);
     }
-  };
-
-  const handleInfoPress = (row: LessonRow) => {
-    const prevSlot = row.slot - 1;
-    modal.show({
-      kind: 'dialog',
-      component: LessonInfoDialog,
-      props: {
-        lessonNumber: row.slot,
-        lessonTitle: row.title,
-        description: row.subtitle,
-        phraseCount: row.phraseCount,
-        estimatedMinutes: ESTIMATED_MIN_PER_LESSON,
-        locked: row.state === 'locked',
-        prevLessonNumber: row.state === 'locked' ? prevSlot : undefined,
-        prevLessonTitle:
-          row.state === 'locked' ? (row.prevTitle ?? `Lesson ${prevSlot}`) : undefined,
-        onDismiss: () => modal.dismiss(),
-      },
-      dim: 0.4,
-    });
   };
 
   // First-load shimmer while lessons fetch — same chrome, no reflow on arrival.
@@ -189,8 +132,17 @@ export default function LearnScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: TAB_BAR_CLEARANCE + insets.bottom }}
       >
-        {/* Page title */}
-        <View style={{ paddingHorizontal: Spacing.lg, paddingTop: Spacing.lg }}>
+        {/* Page title + lessons-done progress header */}
+        <View
+          style={{
+            paddingHorizontal: Spacing.lg,
+            paddingTop: Spacing.lg,
+            flexDirection: 'row',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            gap: Spacing.md,
+          }}
+        >
           <Text
             style={{
               fontFamily: Fonts.baloo.extrabold,
@@ -203,17 +155,41 @@ export default function LearnScreen() {
           >
             Lessons
           </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(15),
-              color: Colors.tertiary,
-              marginTop: moderateScale(2),
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            {TOTAL_LESSON_SLOTS} steps to speaking.
-          </Text>
+          <View style={{ alignItems: 'flex-end', paddingBottom: moderateScale(10) }}>
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.bold,
+                fontSize: moderateScale(13),
+                color: Colors.secondary,
+              }}
+              maxFontSizeMultiplier={1.3}
+            >
+              {completedCount} of {TOTAL_LESSON_SLOTS} done
+            </Text>
+            <View
+              accessibilityRole="progressbar"
+              accessibilityLabel={`${completedCount} of ${TOTAL_LESSON_SLOTS} lessons done`}
+              style={{
+                width: moderateScale(96),
+                height: moderateScale(10),
+                borderRadius: Radius.full,
+                backgroundColor: Colors.surfaceCreamLow,
+                borderWidth: 1,
+                borderColor: Colors.hairline,
+                marginTop: moderateScale(5),
+                overflow: 'hidden',
+              }}
+            >
+              <View
+                style={{
+                  width: `${(completedCount / TOTAL_LESSON_SLOTS) * 100}%`,
+                  height: '100%',
+                  borderRadius: Radius.full,
+                  backgroundColor: Colors.secondaryContainer,
+                }}
+              />
+            </View>
+          </View>
         </View>
 
         <View
@@ -226,14 +202,24 @@ export default function LearnScreen() {
           <BasicsCard />
         </View>
 
+        {/* Tracked eyebrow above the lesson list (replaces the old subtitle). */}
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.bold,
+            fontSize: moderateScale(11),
+            letterSpacing: 1.4,
+            color: Colors.tertiary,
+            paddingHorizontal: Spacing.lg,
+            marginBottom: moderateScale(10),
+          }}
+          maxFontSizeMultiplier={1.4}
+        >
+          {TOTAL_LESSON_SLOTS} STEPS TO SPEAKING
+        </Text>
+
         <View style={{ paddingHorizontal: Spacing.lg, gap: moderateScale(11) }}>
           {rows.map((row) => (
-            <LessonRowView
-              key={`slot-${row.slot}`}
-              row={row}
-              onPress={() => handleRowPress(row)}
-              onInfoPress={() => handleInfoPress(row)}
-            />
+            <LessonRowView key={`slot-${row.slot}`} row={row} onPress={() => handleRowPress(row)} />
           ))}
         </View>
       </ScrollView>
@@ -241,20 +227,13 @@ export default function LearnScreen() {
   );
 }
 
-function LessonRowView({
-  row,
-  onPress,
-  onInfoPress,
-}: {
-  row: LessonRow;
-  onPress: () => void;
-  onInfoPress: () => void;
-}) {
+const BADGE = 46;
+const BADGE_RADIUS = 13;
+
+function LessonRowView({ row, onPress }: { row: LessonRow; onPress: () => void }) {
   const isLocked = row.state === 'locked';
   const isDone = row.state === 'done';
   const isActive = row.state === 'active';
-
-  const titleColor = isLocked ? Colors.textFaint : Colors.onSurface;
 
   const content = (
     <View
@@ -265,39 +244,38 @@ function LessonRowView({
         padding: moderateScale(12),
       }}
     >
-      {/* Glyph tile / lock */}
-      {isLocked ? (
-        <LockTile size={50} radius={moderateScale(14)} />
-      ) : (
-        <ChunkyLip
-          size={moderateScale(50)}
-          radius={moderateScale(14)}
-          depth={moderateScale(3)}
-          bg={isActive ? Colors.primaryContainer : Colors.secondaryFixed}
-          lipColor={isActive ? Colors.redLip : Colors.goldLip}
+      {/* Flat cream number badge — status, not a button (no lip). */}
+      <View
+        style={{
+          width: moderateScale(BADGE),
+          height: moderateScale(BADGE),
+          borderRadius: moderateScale(BADGE_RADIUS),
+          backgroundColor: Colors.surfaceCreamLow,
+          borderWidth: 1,
+          borderColor: Colors.hairline,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: Fonts.baloo.bold,
+            fontSize: moderateScale(20),
+            includeFontPadding: false,
+            color: isLocked ? Colors.textFaint : Colors.onSurface,
+          }}
+          maxFontSizeMultiplier={1.2}
         >
-          <Text
-            style={{
-              fontFamily: Fonts.baloo.extrabold,
-              fontSize: moderateScale(26),
-              includeFontPadding: false,
-              textAlign: 'center',
-              textAlignVertical: 'center',
-              color: isActive ? Colors.onPrimary : Colors.onSecondaryContainer,
-            }}
-            maxFontSizeMultiplier={1.2}
-          >
-            {row.slot}
-          </Text>
-        </ChunkyLip>
-      )}
+          {row.slot}
+        </Text>
+      </View>
 
       <View style={{ flex: 1 }}>
         <Text
           style={{
             fontFamily: Fonts.baloo.bold,
-            fontSize: moderateScale(17),
-            color: titleColor,
+            fontSize: moderateScale(18),
+            color: isLocked ? Colors.textFaint : Colors.onSurface,
             letterSpacing: -0.2,
           }}
           maxFontSizeMultiplier={1.3}
@@ -305,80 +283,94 @@ function LessonRowView({
         >
           {row.title}
         </Text>
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.medium,
+            fontSize: moderateScale(13),
+            color: isLocked ? Colors.textFaint : Colors.tertiary,
+            marginTop: moderateScale(1),
+          }}
+          maxFontSizeMultiplier={1.3}
+          numberOfLines={1}
+        >
+          {row.subtitle}
+        </Text>
         {isActive && row.partsTotal > 1 ? (
           <PartProgressBar done={row.partsDone} total={row.partsTotal} />
         ) : null}
       </View>
 
-      <Pressable
-        onPress={onInfoPress}
-        hitSlop={12}
-        accessibilityRole="button"
-        accessibilityLabel={`About Lesson ${row.slot}: ${row.title}`}
-        style={({ pressed }) => ({ padding: moderateScale(4), opacity: pressed ? 0.5 : 1 })}
-      >
-        <Icons.info size={moderateScale(18)} color={Colors.tertiary} />
-      </Pressable>
-
       {/* Trailing affordance */}
       {isDone ? (
-        <ChunkyCircle
-          size={moderateScale(26)}
-          depth={moderateScale(2)}
-          bg={Colors.secondaryContainer}
-          lipColor={Colors.goldLip}
+        // Flat gold check — earned status, not a button (no lip).
+        <View
+          style={{
+            width: moderateScale(38),
+            height: moderateScale(38),
+            borderRadius: Radius.full,
+            backgroundColor: Colors.secondaryContainer,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
           <Icons.check
-            size={moderateScale(15)}
+            size={moderateScale(19)}
             color={Colors.onSecondaryContainer}
             strokeWidth={2.6}
           />
-        </ChunkyCircle>
+        </View>
       ) : isActive ? (
         <ChunkyCircle
-          size={moderateScale(42)}
+          size={moderateScale(BADGE)}
           depth={moderateScale(3)}
           bg={Colors.primaryContainer}
           lipColor={Colors.redLip}
         >
-          <Icons.play size={moderateScale(16)} color={Colors.onPrimary} />
+          <Icons.play size={moderateScale(17)} color={Colors.onPrimary} />
         </ChunkyCircle>
       ) : (
-        <View style={{ width: moderateScale(26) }} />
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.bold,
+            fontSize: moderateScale(12),
+            color: Colors.textFaint,
+            marginRight: moderateScale(4),
+          }}
+          maxFontSizeMultiplier={1.3}
+        >
+          Soon
+        </Text>
       )}
     </View>
   );
 
-  const a11yLabel = isLocked
-    ? `Locked. Complete ${row.prevTitle ?? 'the previous lesson'} to unlock.`
-    : `${row.slot}. ${row.title}${isDone ? ', completed' : ', start'}`;
-
-  // Locked rows are de-emphasised and flat (no lip / no press-translate).
+  // Locked / not-built rows are flat and inert — "Soon", not an error.
   if (isLocked) {
     return (
-      <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={a11yLabel}>
-        <View
-          style={{
-            backgroundColor: Colors.surfaceCreamLow,
-            borderRadius: Radius.chunky,
-            borderWidth: 1,
-            borderColor: 'rgba(217,123,58,0.30)',
-            opacity: 0.85,
-          }}
-        >
-          {content}
-        </View>
-      </Pressable>
+      <View
+        accessibilityLabel={`Lesson ${row.slot}: ${row.title}. Coming soon.`}
+        style={{
+          backgroundColor: '#ffffff',
+          borderRadius: Radius.chunky,
+          borderWidth: 1,
+          borderColor: Colors.hairline,
+          opacity: 0.65,
+        }}
+      >
+        {content}
+      </View>
     );
   }
 
   return (
     <ChunkyPressable
       onPress={onPress}
-      accessibilityLabel={a11yLabel}
+      accessibilityLabel={`${row.slot}. ${row.title}${isDone ? ', completed' : ', start'}`}
       bg="#ffffff"
-      lip={isActive ? 5 : 4}
-      lipColor={isActive ? Colors.redLip : Colors.cardLip}
+      lip={isActive ? 3 : 4}
+      // The lip doubles as the bottom border edge, so the up-next card's lip
+      // goes red too — otherwise the 2px red border only wraps three sides.
+      lipColor={isActive ? Colors.primaryContainer : Colors.cardLip}
       border
       borderColor={isActive ? Colors.primaryContainer : Colors.hairline}
       borderWidth={isActive ? 2 : 1}

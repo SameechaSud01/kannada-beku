@@ -1,24 +1,25 @@
 import { useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing } from '../../constants/spacing';
-import { Icons } from '../../constants/icons';
-import { ProgressDots } from '../../components/onboarding/ProgressDots';
-import { LipButton } from '../../components/ui/LipButton';
+import { IntakeStepShell } from '../../components/onboarding/IntakeStepShell';
 import { useUserStore } from '../../stores/useUserStore';
 
 const MAX_LEN = 30;
 
+/**
+ * Intake step 1 · Name (spec_onboarding_audit_fixes.md): top-anchored so the
+ * layout doesn't jump when the keyboard opens, autofocused input, and a
+ * neutral input at rest — hairline border + card lip; red is reserved for the
+ * caret and the focus ring (the old red border read as an error state).
+ */
 export default function NameScreen() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const persisted = useUserStore.getState().displayName ?? '';
   const [name, setName] = useState(persisted);
-  const [focused, setFocused] = useState(false);
 
   const trimmed = name.trim();
   const valid = trimmed.length >= 1 && trimmed.length <= MAX_LEN;
@@ -35,64 +36,23 @@ export default function NameScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
+      style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View
-        style={{
-          flex: 1,
-          paddingTop: insets.top + Spacing.xl,
-          paddingBottom: insets.bottom + Spacing.xl,
-          paddingHorizontal: Spacing.xxl,
-        }}
+      <IntakeStepShell
+        step={1}
+        title="What should we call you?"
+        subtitle="So lessons can greet you properly — Namaskāra!"
+        onBack={() => router.back()}
+        onContinue={handleContinue}
+        continueDisabled={!valid}
       >
-        <ProgressDots total={5} current={1} />
-
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(11),
-              letterSpacing: 2,
-              color: Colors.tertiary,
-              textTransform: 'uppercase',
-              marginBottom: Spacing.sm,
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            Step 1 of 4
-          </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.baloo.extrabold,
-              fontSize: moderateScale(27),
-              color: Colors.onSurface,
-              letterSpacing: -0.4,
-              lineHeight: moderateScale(38),
-              marginBottom: Spacing.sm,
-            }}
-            maxFontSizeMultiplier={1.3}
-          >
-            What should we{'\n'}call you?
-          </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.regular,
-              fontSize: moderateScale(15),
-              color: Colors.tertiary,
-              marginBottom: Spacing.xxxl,
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            We'll use this throughout the app.
-          </Text>
-
+        <View style={{ paddingTop: moderateScale(26) }}>
           <TextInput
             value={name}
             onChangeText={setName}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
             onSubmitEditing={handleContinue}
+            autoFocus
             placeholder="Your name"
             placeholderTextColor={Colors.textFaint}
             autoCapitalize="words"
@@ -100,37 +60,37 @@ export default function NameScreen() {
             maxLength={MAX_LEN}
             returnKeyType="done"
             accessibilityLabel="Your name"
+            selectionColor={Colors.primaryContainer}
+            cursorColor={Colors.primaryContainer}
             style={{
               backgroundColor: '#ffffff',
-              borderWidth: moderateScale(2),
-              borderColor: focused ? Colors.primaryContainer : 'rgba(27,29,14,0.10)',
+              // Neutral even while focused — a red border reads as an error
+              // state (audit finding 3); red is the caret's job.
+              borderWidth: 1,
+              borderColor: Colors.hairlineStrong,
               borderRadius: moderateScale(16),
               borderBottomWidth: moderateScale(4),
-              borderBottomColor: focused ? 'rgba(145,0,27,0.20)' : Colors.cardLip,
+              borderBottomColor: Colors.cardLip,
               paddingHorizontal: moderateScale(18),
-              paddingVertical: moderateScale(16),
-              fontFamily: Fonts.dmSans.regular,
-              fontSize: moderateScale(16),
+              paddingVertical: moderateScale(17),
+              fontFamily: Fonts.baloo.bold,
+              fontSize: moderateScale(19),
               color: Colors.onSurface,
             }}
           />
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.regular,
+              fontSize: moderateScale(13.5),
+              color: Colors.inkFaint,
+              marginTop: Spacing.md,
+            }}
+            maxFontSizeMultiplier={1.4}
+          >
+            Just a first name is perfect.
+          </Text>
         </View>
-
-        <View style={{ flexDirection: 'row', gap: Spacing.md }}>
-          <View style={{ flex: 1 }}>
-            <LipButton label="Back" variant="secondary" onPress={() => router.back()} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <LipButton
-              label="Continue"
-              variant="primary"
-              onPress={handleContinue}
-              disabled={!valid}
-              icon={Icons.forward}
-            />
-          </View>
-        </View>
-      </View>
+      </IntakeStepShell>
     </KeyboardAvoidingView>
   );
 }

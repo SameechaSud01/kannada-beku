@@ -21,6 +21,7 @@ module.exports = [
       'spec_docs/**',
       'design_handoff_system_states/**',
       'design_handoff_chunky_v3/**',
+      'design_handoff_onboarding_audit/**',
       '.agents/**',
       'docs/**',
       '*.config.js',

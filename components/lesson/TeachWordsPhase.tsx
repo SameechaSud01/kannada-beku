@@ -90,7 +90,7 @@ export function TeachWordsPhase({
         <LessonProgressBar
           current={wordIndex + 1}
           total={total}
-          label={`${sectionLabel ? `${sectionLabel} · ` : ''}Word ${wordIndex + 1} of ${total}`}
+          label={`${sectionLabel ? `${sectionLabel} · ` : ''}Word ${wordIndex + 1} of ${total} — Learn`}
         />
       </View>
 
@@ -101,7 +101,6 @@ export function TeachWordsPhase({
           paddingTop: Spacing.xxl,
           paddingBottom: Spacing.lg,
           alignItems: 'center',
-          justifyContent: 'center',
         }}
       >
         <View
@@ -170,6 +169,28 @@ export function TeachWordsPhase({
           </Animated.View>
         </View>
 
+        <View style={{ alignItems: 'center', marginTop: Spacing.xxl, gap: Spacing.md }}>
+          <AudioOrb
+            onPress={handleReplay}
+            playing={playing}
+            size={64}
+            color={Colors.secondaryFixed}
+            iconColor={Colors.secondary}
+            lipColor={Colors.goldLip}
+            accessibilityLabel={`Hear ${word.english} again`}
+          />
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.medium,
+              fontSize: moderateScale(14),
+              color: Colors.textFaint,
+            }}
+            maxFontSizeMultiplier={1.3}
+          >
+            Tap to hear it
+          </Text>
+        </View>
+
         {word.hook ? (
           <Animated.View
             entering={FadeInDown.duration(280)}
@@ -181,7 +202,7 @@ export function TeachWordsPhase({
               borderRadius: Radius.chunky,
               paddingVertical: moderateScale(11),
               paddingHorizontal: Spacing.lg,
-              marginTop: Spacing.lg,
+              marginTop: Spacing.xxl,
               width: '100%',
             }}
           >
@@ -203,22 +224,13 @@ export function TeachWordsPhase({
             </Text>
           </Animated.View>
         ) : null}
-
-        <View style={{ marginTop: Spacing.xxl }}>
-          <AudioOrb
-            onPress={handleReplay}
-            playing={playing}
-            size={64}
-            accessibilityLabel={`Hear ${word.english} again`}
-          />
-        </View>
       </ScrollView>
 
       <View style={{ padding: Spacing.lg, paddingBottom: insets.bottom + Spacing.lg }}>
         <LipButton
-          label={isLast ? 'Start practising words' : 'Got it'}
+          label={isLast ? 'Start practising words' : 'Continue'}
           onPress={onAdvance}
-          accessibilityLabel={isLast ? 'Start practising words' : 'Got it, next word'}
+          accessibilityLabel={isLast ? 'Start practising words' : 'Continue to next word'}
           icon={Icons.forward}
         />
       </View>

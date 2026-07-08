@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kannada Beku — Project Timeline</title>
+<style>
+  :root {
+    --ink: #2b2620;
+    --muted: #7a7266;
+    --accent: #2e7d32;
+    --gold: #b8860b;
+    --line: #e4ddd2;
+    --bg: #faf7f2;
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.65 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 24px 96px; }
+  h1 { font-size: 2rem; margin: 0 0 4px; }
+  .subtitle { color: var(--muted); margin: 0 0 40px; }
+  h2 {
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin: 48px 0 16px;
+    border-bottom: 2px solid var(--line);
+    padding-bottom: 6px;
+  }
+  .milestone {
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .milestone:last-child { border-bottom: none; }
+  .date {
+    flex: 0 0 92px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--gold);
+    padding-top: 2px;
+    white-space: nowrap;
+  }
+  .what { flex: 1; }
+  .what strong { display: block; margin-bottom: 2px; }
+  .what p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+  code {
+    background: #f0ebe2;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 0.85em;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+  a:hover { border-bottom-style: solid; }
+  .note {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--gold);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 0.92rem;
+    color: var(--muted);
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Kannada Beku — Project Timeline</h1>
+  <p class="subtitle">Major milestones from initial scaffold (Mar 2026) to today. Generated 2026-07-04 from git history and spec docs.</p>
+
+  <h2>Foundations — March 2026</h2>
+  <div class="milestone">
+    <div class="date">Mar 30</div>
+    <div class="what">
+      <strong>Project scaffolded as "Kannada Baa"</strong>
+      <p>Expo Router app with full UI shell and initial lesson data in <code>app/</code>.</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">Mar 31</div>
+    <div class="what">
+      <strong>Karnataka heritage visual retheme</strong>
+      <p>First complete visual identity pass.</p>
+    </div>
+  </div>
+
+  <h2>Core learning engine — May 2026</h2>
+  <div class="milestone">
+    <div class="date">May 9–13</div>
+    <div class="what">
+      <strong>Store consolidation, lesson runner &amp; TTS</strong>
+      <p>Stores merged into a single <code>progressStore</code> (<code>stores/</code>); "Living Manuscript" color system; on-device TTS via expo-speech; 4-phase lesson-runner state machine wired to progress.</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">May 18–19</div>
+    <div class="what">
+      <strong>First practice games + NativeWind ripout + foundation docs</strong>
+      <p>OppositeGame (PR #1) and DictationGame (PR #2); styling moved to react-native-size-matters with tokens in <code>constants/</code>; <code>docs/foundation/</code> established as fixed source of truth (SCOPE, DESIGN, CONTENT, …).</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">May 20–21</div>
+    <div class="what">
+      <strong>Universal LessonSelector, modal system, Supabase persistence</strong>
+      <p>Reusable lesson selector across games (PRs #3–4, <code>spec_docs/spec_lesson_selector.md</code>); modal/overlay system (PR #5); signup + lesson completions persisted to Supabase (PRs #6–8).</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">May 25–28</div>
+    <div class="what">
+      <strong>Lesson flow v2, Picture game, DB wiring for everything</strong>
+      <p>Teach/practice/say lesson phases (PR #10); Picture game (PR #11); games, overall progress, emergency phrases, fun facts, and profile/settings all wired to the DB (PRs #12–14, <code>spec_docs/spec_db_wiring_games_and_overall_progress.md</code>); EAS project setup.</p>
+    </div>
+  </div>
+
+  <h2>Content depth &amp; hardening — early June 2026</h2>
+  <div class="milestone">
+    <div class="date">Jun 1–3</div>
+    <div class="what">
+      <strong>Text hierarchy, security, Beginners' Guide, new runners</strong>
+      <p>Transliteration made the primary text (PR #18); security hardening baseline (PR #19, <code>spec_docs/spec_security_hardening.md</code>); swipeable Beginners' Guide (PRs #20–21, <code>spec_docs/spec_beginners_guide.md</code>); Conversations &amp; Quick Quiz runners (PR #23).</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">Jun 4</div>
+    <div class="what">
+      <strong>Renamed to "Kannada Beku" + playful redesign (8 phases)</strong>
+      <p>App rename (PR #24); full playful redesign per <code>spec_docs/spec_playful_redesign.md</code> — Baloo fonts, floating TabBar, Celebration overlay, all screens restyled.</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">Jun 5–6</div>
+    <div class="what">
+      <strong>Auth suite complete, redesign merged</strong>
+      <p>Forgot/reset password, Google + Apple social login (PR #25, <code>spec_docs/spec_social_login.md</code>); branded app icon; redesign lands on main (PR #26).</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">Jun 10–13</div>
+    <div class="what">
+      <strong>Lesson sub-parts + chunky-kit v3 redesign</strong>
+      <p>Lessons and games split into sequential sub-sections with a chooser (PRs #27–28, <code>spec_docs/spec_game_subsection_split.md</code>); password strength rules (PR #29); app-wide chunky-kit v3 restyle (PR #30).</p>
+    </div>
+  </div>
+
+  <h2>Polish, web &amp; audio — mid/late June 2026</h2>
+  <div class="milestone">
+    <div class="date">Jun 14–16</div>
+    <div class="what">
+      <strong>Feedback flow, DB-sourced guide, system states</strong>
+      <p>User feedback flow + streak detail sheet (PR #31); Beginners' Guide moved to DB source of truth + app-wide flow audit fixes (PR #33); splash/loading/failure/empty screens in <code>components/states/</code> (PR #34, <code>spec_docs/spec_infra_hardening.md</code>).</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">Jun 17–18</div>
+    <div class="what">
+      <strong>Marketing website + bundled Kannada TTS</strong>
+      <p>Landing/privacy site in <code>web/</code> deployed on Cloudflare Pages (PRs #36–37); pre-generated Azure Kannada TTS audio bundled in <code>assets/audio/</code> with device-TTS fallback (PR #38).</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">Jun 21–22</div>
+    <div class="what">
+      <strong>Waitlist questionnaire + analytics</strong>
+      <p>Web waitlist form with community opt-in, schema-drift guard, and Microsoft Clarity analytics (PR #40).</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">Jun 24–26</div>
+    <div class="what">
+      <strong>Content aligned to owner reference doc</strong>
+      <p>Code + DB aligned to the owner's content reference, ISO diacritics adopted (PR #41, <code>docs/reference/</code>); emergency badges, guide audio fixes, lazy Google Sign-in, designer docs (PR #42); listen-score fix (PR #43); UI/UX polish (PR #44).</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">Jun 27</div>
+    <div class="what">
+      <strong>Codebase hardening &amp; tooling</strong>
+      <p>App-wide testing fixes + full ISO normalization (PR #45); ESLint, Prettier, CI added; Image Match game retired; manual DB process documented in <code>MIGRATIONS.md</code> (PR #46).</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">Jun 28–29</div>
+    <div class="what">
+      <strong>Calm lesson flow + TODO backlog cleared</strong>
+      <p>Profile-load caching (PR #47); Calm lesson-flow refinements with green/red answer feedback (PR #48); TODO backlog T001–T022 resolved incl. offline-first sync (PR #49).</p>
+    </div>
+  </div>
+
+  <h2>Launch prep — July 2026</h2>
+  <div class="milestone">
+    <div class="date">Jun 30</div>
+    <div class="what">
+      <strong>Lesson 0 listen-first redesign</strong>
+      <p>Basics lesson reworked into a 7-step listen-first flow (PR #50, <code>spec_docs/spec_lesson0_redesign.md</code>); DB migration pending owner run.</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">Jul 1</div>
+    <div class="what">
+      <strong>Production error monitoring</strong>
+      <p>Sentry wired with a centralized logger in <code>lib/logger.ts</code> (PR #54); owner still to add auth token + alert rule.</p>
+    </div>
+  </div>
+  <div class="milestone">
+    <div class="date">Jul 4</div>
+    <div class="what">
+      <strong>Current: audits in progress</strong>
+      <p>Branch <code>fix/bug-fixes-and-audits</code> — competitive-weakness audit, legal audit, and testing plan docs drafted (<code>COMPETITIVE_WEAKNESS_AUDIT.html</code>, <code>LEGAL_AUDIT.html</code>, <code>TESTING_PLAN.html</code>).</p>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Key references:</strong> fixed project truth lives in <code>docs/foundation/</code> (start with <code>README.md</code> and <code>CONTRADICTIONS.md</code>); per-feature specs in <code>spec_docs/</code>; DB process in <code>MIGRATIONS.md</code>; designer handoff in <code>docs/DESIGNER_OVERVIEW.md</code>.
+  </div>
+</main>
+</body>
+</html>

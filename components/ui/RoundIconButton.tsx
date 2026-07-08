@@ -4,7 +4,7 @@ import { Colors } from '../../constants/colors';
 import { Radius } from '../../constants/spacing';
 import { Icons, type IconName } from '../../constants/icons';
 
-export type RoundIconButtonVariant = 'primary' | 'ghost';
+export type RoundIconButtonVariant = 'primary' | 'ghost' | 'white';
 
 export interface RoundIconButtonProps {
   icon: IconName;
@@ -27,6 +27,13 @@ const variantColors: Record<RoundIconButtonVariant, { bg: string; fg: string; pr
       bg: Colors.surfaceContainerHighest,
       fg: Colors.primary,
       pressedBg: Colors.surfaceContainerHigh,
+    },
+    // White chip on cream pages (pushed-page back button) — hairline keeps it
+    // reading as a control, not a floating glyph.
+    white: {
+      bg: Colors.surfaceContainerLowest,
+      fg: Colors.onSurface,
+      pressedBg: Colors.surfaceContainerLow,
     },
   };
 
@@ -55,6 +62,8 @@ export function RoundIconButton({
         width: dim,
         height: dim,
         borderRadius: Radius.full,
+        borderWidth: variant === 'white' ? 1 : 0,
+        borderColor: variant === 'white' ? Colors.hairline : undefined,
         backgroundColor: pressed && !disabled ? v.pressedBg : v.bg,
         alignItems: 'center',
         justifyContent: 'center',

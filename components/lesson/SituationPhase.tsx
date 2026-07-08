@@ -97,8 +97,8 @@ export function SituationPhase({ lesson, onAdvance }: SituationPhaseProps) {
             style={{
               backgroundColor: Colors.surface,
               borderRadius: Radius.lg,
-              borderLeftWidth: 4,
-              borderLeftColor: Colors.goldLip,
+              borderWidth: 1,
+              borderColor: Colors.hairline,
               paddingVertical: Spacing.md,
               paddingHorizontal: Spacing.lg,
               marginTop: Spacing.xl,

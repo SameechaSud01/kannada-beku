@@ -14,7 +14,8 @@ export type LipButtonProps = {
   /**
    * Visual rung (chunky_v3 § State semantics):
    * - `primary`   red face / redLip lip (the one action-red per screen)
-   * - `secondary` white face + 2px tan border + tan lip (supporting action)
+   * - `secondary` white face + hairline border + faint lip (supporting action —
+   *               spec_lesson_flow_fixed §5 / spec_home_stats_emergency_polish §4)
    * - `tertiary`  quiet text button, no lip (muted)
    * - `gold`      reward CTA (gold face / goldLip lip)
    */
@@ -54,10 +55,10 @@ const VARIANTS: Record<LipButtonVariant, VariantStyle> = {
   primary: { face: Colors.primaryContainer, lip: Colors.redLip, fg: Colors.onPrimary },
   secondary: {
     face: '#ffffff',
-    lip: Colors.interactiveSecondaryLip,
+    lip: Colors.cardLip,
     fg: Colors.onSurface,
-    borderWidth: 2,
-    borderColor: Colors.interactiveSecondary,
+    borderWidth: 1,
+    borderColor: Colors.hairline,
   },
   tertiary: { face: 'transparent', lip: 'transparent', fg: Colors.tertiary, flat: true },
   gold: { face: Colors.secondaryContainer, lip: Colors.goldLip, fg: Colors.onSecondaryContainer },

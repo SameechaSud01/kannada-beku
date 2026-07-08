@@ -3,8 +3,9 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
-import { Spacing, Radius } from '../../constants/spacing';
+import { Spacing } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
+import { ChunkyCircle } from './ChunkyLip';
 import { useModal } from '../../components/modals/ModalHost';
 import {
   ExitLessonDialog,
@@ -66,24 +67,29 @@ export function ExitBackButton({
       }
     : {};
 
+  // White chunky circle, matching PhaseBackButton so close + back read as one
+  // family of controls (spec_lesson_flow_fixed §2).
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel="Exit lesson"
       hitSlop={12}
-      style={({ pressed }) => ({
-        ...floatingStyle,
-        width: moderateScale(40),
-        height: moderateScale(40),
-        borderRadius: Radius.full,
-        backgroundColor: Colors.surfaceContainerHighest,
-        alignItems: 'center',
-        justifyContent: 'center',
-        transform: [{ scale: pressed ? 0.94 : 1 }],
-      })}
+      style={{ ...floatingStyle, width: moderateScale(40), height: moderateScale(40) }}
     >
-      <Icons.close size={20} color={Colors.primary} />
+      {({ pressed }) => (
+        <ChunkyCircle
+          size={moderateScale(38)}
+          depth={moderateScale(3)}
+          bg="#ffffff"
+          lipColor={Colors.cardLip}
+          border
+          borderColor={Colors.hairline}
+          pressed={pressed}
+        >
+          <Icons.close size={20} color={Colors.primary} />
+        </ChunkyCircle>
+      )}
     </Pressable>
   );
 }

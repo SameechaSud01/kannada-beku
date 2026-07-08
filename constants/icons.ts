@@ -60,6 +60,7 @@ import {
   IconUser,
   IconVolume,
   IconWifiOff,
+  IconWorld,
   IconX,
 } from '@tabler/icons-react-native';
 
@@ -110,6 +111,11 @@ export const Icons = {
   // Onboarding
   info: IconInfoCircle,
   clock: IconClock,
+  // Intake "Why" option rows + greeting plan chips (spec_onboarding_audit_fixes.md)
+  moodHappy: IconMoodHappy,
+  chat: IconMessages,
+  globe: IconWorld,
+  home: IconHome,
 
   // Lesson runner — practice / shadowing feedback glyphs
   correct: IconCircleCheck,

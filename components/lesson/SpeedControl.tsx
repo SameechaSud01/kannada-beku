@@ -24,8 +24,8 @@ export function SpeedControl({ onRateChange }: SpeedControlProps) {
     onRateChange?.();
   };
 
-  // Active speed reads as a goldPale "selected" pill (goldLip border + 3px lip),
-  // matching the redesign's chip recipe (chunky_v3 §6).
+  // Quiet white utility chip — gold is reserved for reward beats, and playback
+  // speed is a setting, not a reward (spec_lesson_flow_fixed §2).
   return (
     <Pressable
       onPress={handlePress}
@@ -37,11 +37,11 @@ export function SpeedControl({ onRateChange }: SpeedControlProps) {
         minHeight: moderateScale(40),
         paddingHorizontal: Spacing.lg,
         borderRadius: Radius.full,
-        backgroundColor: Colors.secondaryFixed,
+        backgroundColor: '#ffffff',
         borderWidth: 1,
-        borderColor: Colors.goldLip,
+        borderColor: Colors.hairline,
         borderBottomWidth: pressed ? 1 : 3,
-        borderBottomColor: Colors.goldLip,
+        borderBottomColor: Colors.cardLip,
         alignItems: 'center',
         justifyContent: 'center',
         transform: [{ translateY: pressed ? 2 : 0 }],
@@ -51,7 +51,7 @@ export function SpeedControl({ onRateChange }: SpeedControlProps) {
         style={{
           fontFamily: Fonts.dmSans.bold,
           fontSize: moderateScale(13),
-          color: Colors.onSecondaryContainer,
+          color: Colors.tertiary,
         }}
         maxFontSizeMultiplier={1.3}
       >

@@ -1,219 +1,176 @@
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
-import { Icons } from '../../constants/icons';
-import { ProgressDots } from '../../components/onboarding/ProgressDots';
+import { IntakeStepShell } from '../../components/onboarding/IntakeStepShell';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
-import { LipButton } from '../../components/ui/LipButton';
-import { useModal } from '../../components/modals/ModalHost';
-import { LearningTimeInfoDialog } from '../../components/modals/instances/LearningTimeInfoDialog';
 import { useUserStore } from '../../stores/useUserStore';
 
 type Minutes = 5 | 10 | 20;
 
-const COMMITMENTS: { value: Minutes; label: string; subtitle: string }[] = [
-  { value: 5, label: '5 min / day', subtitle: 'Quick daily habit' },
-  { value: 10, label: '10 min / day', subtitle: 'Steady progress' },
-  { value: 20, label: '20 min / day', subtitle: 'Serious learner' },
+const DEFAULT_MINUTES: Minutes = 10;
+
+// Detail lives in the subtitle — the old (i) info icons were dead weight
+// (audit finding 6, spec_onboarding_audit_fixes.md).
+const COMMITMENTS: { value: Minutes; label: string; subtitle: string; badge?: string }[] = [
+  { value: 5, label: '5 min / day', subtitle: 'Quick daily habit · about one scenario' },
+  {
+    value: 10,
+    label: '10 min / day',
+    subtitle: 'Steady progress · scenario + practice',
+    badge: 'Most popular',
+  },
+  { value: 20, label: '20 min / day', subtitle: 'Serious learner · everything, daily' },
 ];
 
+/**
+ * Intake step 3 · Time (spec_onboarding_audit_fixes.md): 3 radio cards, 10 min
+ * preselected ("Most popular") so Continue is never disabled, Skip keeps the
+ * default and moves on.
+ */
 export default function CommitmentScreen() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
-  const modal = useModal();
-  const [selected, setSelected] = useState<Minutes | null>(
-    useUserStore.getState().dailyGoalMinutes,
+  const [selected, setSelected] = useState<Minutes>(
+    useUserStore.getState().dailyGoalMinutes ?? DEFAULT_MINUTES,
   );
 
-  const openInfo = (minutes: Minutes) => {
-    modal.show({
-      kind: 'dialog',
-      component: LearningTimeInfoDialog,
-      props: { minutes, onDismiss: () => modal.dismiss() },
-      dim: 0.4,
-    });
-  };
-
-  const handleContinue = () => {
-    if (!selected) return;
+  const proceed = () => {
     useUserStore.getState().setDailyGoalMinutes(selected);
-    router.push('/onboarding/basics');
+    router.push('/onboarding/greeting');
   };
-
-  const canSubmit = !!selected;
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: Colors.surfaceCream,
-        paddingTop: insets.top + Spacing.xl,
-        paddingBottom: insets.bottom + Spacing.xl,
-        paddingHorizontal: Spacing.xxl,
-      }}
+    <IntakeStepShell
+      step={3}
+      title="How much time can you commit?"
+      subtitle="Your daily goal — you can change it anytime in Profile."
+      onSkip={proceed}
+      onBack={() => router.back()}
+      onContinue={proceed}
     >
-      <ProgressDots total={5} current={3} />
-
-      <View style={{ flex: 1, justifyContent: 'center' }}>
-        <Text
-          style={{
-            fontFamily: Fonts.dmSans.bold,
-            fontSize: moderateScale(11),
-            letterSpacing: 2,
-            color: Colors.tertiary,
-            textTransform: 'uppercase',
-            marginBottom: Spacing.sm,
-          }}
-          maxFontSizeMultiplier={1.4}
-        >
-          Step 3 of 4
-        </Text>
-        <Text
-          style={{
-            fontFamily: Fonts.baloo.extrabold,
-            fontSize: moderateScale(27),
-            color: Colors.onSurface,
-            letterSpacing: -0.4,
-            lineHeight: moderateScale(38),
-            marginBottom: Spacing.sm,
-          }}
-          maxFontSizeMultiplier={1.3}
-        >
-          How much time can{'\n'}you commit?
-        </Text>
-        <Text
-          style={{
-            fontFamily: Fonts.dmSans.regular,
-            fontSize: moderateScale(15),
-            color: Colors.tertiary,
-            marginBottom: Spacing.xxxl,
-          }}
-          maxFontSizeMultiplier={1.4}
-        >
-          Set your daily learning goal
-        </Text>
-
-        <View style={{ gap: Spacing.md }}>
-          {COMMITMENTS.map((item) => (
-            <CommitmentCard
-              key={item.value}
-              label={item.label}
-              subtitle={item.subtitle}
-              selected={selected === item.value}
-              onPress={() => setSelected(item.value)}
-              onInfoPress={() => openInfo(item.value)}
-            />
-          ))}
-        </View>
-      </View>
-
-      <View style={{ flexDirection: 'row', gap: Spacing.md }}>
-        <View style={{ flex: 1 }}>
-          <LipButton label="Back" variant="secondary" onPress={() => router.back()} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <LipButton
-            label="Continue"
-            variant="primary"
-            disabled={!canSubmit}
-            icon={Icons.forward}
-            onPress={handleContinue}
-            accessibilityLabel="Continue to the next step"
+      <View style={{ gap: Spacing.md, paddingTop: Spacing.xxl }}>
+        {COMMITMENTS.map((item) => (
+          <CommitmentCard
+            key={item.value}
+            label={item.label}
+            subtitle={item.subtitle}
+            badge={item.badge}
+            selected={selected === item.value}
+            onPress={() => setSelected(item.value)}
           />
-        </View>
+        ))}
       </View>
-    </View>
+    </IntakeStepShell>
   );
 }
 
 interface CommitmentCardProps {
   label: string;
   subtitle: string;
+  badge?: string;
   selected: boolean;
   onPress: () => void;
-  onInfoPress: () => void;
 }
 
-function CommitmentCard({ label, subtitle, selected, onPress, onInfoPress }: CommitmentCardProps) {
-  const InfoIcon = Icons.info;
+function CommitmentCard({ label, subtitle, badge, selected, onPress }: CommitmentCardProps) {
   return (
     <ChunkyPressable
       onPress={onPress}
       accessibilityLabel={label}
-      bg={selected ? '#fff5f5' : '#ffffff'}
-      lip={selected ? 4 : 3}
-      lipColor={selected ? 'rgba(145,0,27,0.25)' : Colors.cardLip}
+      bg={selected ? Colors.redSoft : '#ffffff'}
+      // ChunkyPressable's bottom edge IS the lip — selected needs a 2px red
+      // lip so the border wraps all the way around (no gap at the bottom).
+      lip={selected ? 2 : 3}
+      lipColor={selected ? Colors.primaryContainer : Colors.cardLip}
       border
       borderWidth={2}
       borderColor={selected ? Colors.primaryContainer : 'rgba(27,29,14,0.10)'}
       radius={Radius.chunky}
       style={{
-        padding: moderateScale(18),
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        gap: Spacing.lg,
+        paddingVertical: moderateScale(16),
+        paddingHorizontal: moderateScale(18),
       }}
     >
-      <View style={{ flex: 1, marginRight: Spacing.md }}>
-        <Text
-          style={{
-            fontFamily: Fonts.baloo.bold,
-            fontSize: moderateScale(16),
-            color: Colors.onSurface,
-            marginBottom: Spacing.xs,
-          }}
-          maxFontSizeMultiplier={1.4}
-        >
-          {label}
-        </Text>
+      <View style={{ flex: 1 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: Spacing.sm }}>
+          <Text
+            style={{
+              fontFamily: Fonts.baloo.bold,
+              fontSize: moderateScale(18),
+              color: Colors.onSurface,
+            }}
+            maxFontSizeMultiplier={1.3}
+          >
+            {label}
+          </Text>
+          {badge ? (
+            <View
+              style={{
+                backgroundColor: Colors.secondaryFixed,
+                borderRadius: Radius.full,
+                paddingHorizontal: moderateScale(9),
+                paddingTop: moderateScale(3),
+                paddingBottom: moderateScale(2),
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: Fonts.dmSans.bold,
+                  fontSize: moderateScale(11),
+                  letterSpacing: 0.8,
+                  textTransform: 'uppercase',
+                  color: Colors.onSecondaryContainer,
+                }}
+                numberOfLines={1}
+                maxFontSizeMultiplier={1.2}
+              >
+                {badge}
+              </Text>
+            </View>
+          ) : null}
+        </View>
         <Text
           style={{
             fontFamily: Fonts.dmSans.regular,
-            fontSize: moderateScale(13),
+            fontSize: moderateScale(13.5),
             color: Colors.tertiary,
+            marginTop: moderateScale(3),
           }}
           maxFontSizeMultiplier={1.4}
         >
           {subtitle}
         </Text>
       </View>
-      {selected ? (
-        <View
-          style={{
-            width: moderateScale(26),
-            height: moderateScale(26),
-            borderRadius: Radius.full,
-            backgroundColor: Colors.primaryContainer,
-            borderBottomWidth: 2,
-            borderBottomColor: Colors.redLip,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Icons.check size={moderateScale(15)} color={Colors.onPrimary} strokeWidth={2.8} />
-        </View>
-      ) : (
-        <Pressable
-          onPress={onInfoPress}
-          hitSlop={12}
-          accessibilityRole="button"
-          accessibilityLabel={`More about ${label}`}
-          style={({ pressed }) => ({
-            width: moderateScale(28),
-            height: moderateScale(28),
-            alignItems: 'center',
-            justifyContent: 'center',
-            opacity: pressed ? 0.5 : 1,
-          })}
-        >
-          <InfoIcon size={moderateScale(22)} color={Colors.tertiary} strokeWidth={2} />
-        </Pressable>
-      )}
+      {/* 24px round radio — white dot when selected. */}
+      <View
+        style={{
+          width: moderateScale(24),
+          height: moderateScale(24),
+          borderRadius: Radius.full,
+          backgroundColor: selected ? Colors.primaryContainer : 'transparent',
+          borderWidth: selected ? 0 : 2,
+          borderColor: 'rgba(27,29,14,0.18)',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {selected ? (
+          <View
+            style={{
+              width: moderateScale(8),
+              height: moderateScale(8),
+              borderRadius: Radius.full,
+              backgroundColor: Colors.onPrimary,
+            }}
+          />
+        ) : null}
+      </View>
     </ChunkyPressable>
   );
 }

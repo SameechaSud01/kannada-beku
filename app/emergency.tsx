@@ -17,15 +17,17 @@ import { BrandSpinner } from '../components/states/BrandSpinner';
 import { ErrorState } from '../components/states/ErrorState';
 
 /**
- * Emergency phrases (chunky_v3 §5). Intentionally all-red urgency — no
- * warning-orange anywhere here. Red gradient header with a redLip lip, red lip
- * category chips, then a Mysore-Red-accented context bar whose subtitle tracks
- * the selected category. Cards are sorted most → least urgent (see contextOf)
- * and carry a uniform red left accent. Each card leads with a red situation
- * badge (SAFETY ISSUE / METER DISPUTE / ASKING PRICE …), then a huge
- * transliteration (what you say out loud), a small English gloss (sanity check),
- * and finally the Kannada script demoted to a footnote — these users are
- * learning to speak, not read, and only flash the script to show the driver.
+ * Emergency phrases (chunky_v3 §5, de-redded per spec_home_stats_emergency_polish §3).
+ * Red is reserved for urgency/action moments only: the gradient header (+ redLip),
+ * the active category chip, and the audio orbs. Everything else reads as labels or
+ * text: situation badges are flat pale-red tints (errorContainerLow + primary text,
+ * no lip — lips mean pressable), cards use the standard treatment (no left accent),
+ * and the say-it line is bold ink with a muted gloss below it. Cards are sorted
+ * most → least urgent (see contextOf). Each card leads with the situation badge
+ * (SAFETY ISSUE / METER DISPUTE / ASKING PRICE …), then a huge transliteration
+ * (what you say out loud), the English gloss (sanity check), and finally the
+ * Kannada script demoted to a footnote — these users are learning to speak, not
+ * read, and only flash the script to show the driver.
  */
 export default function EmergencyScreen() {
   const router = useRouter();
@@ -168,46 +170,20 @@ export default function EmergencyScreen() {
             </ScrollView>
           </View>
 
-          {/* Category context bar — Mysore Red left accent, subtitle changes with category */}
-          <View
+          {/* Category context — one plain caption line under the chips */}
+          <Text
             style={{
+              fontFamily: Fonts.dmSans.medium,
+              fontSize: moderateScale(12.5),
+              lineHeight: moderateScale(18),
+              color: Colors.tertiary,
               marginHorizontal: Spacing.lg,
               marginTop: Spacing.md,
-              backgroundColor: '#ffffff',
-              borderRadius: Radius.chunky,
-              paddingVertical: Spacing.md,
-              paddingHorizontal: Spacing.lg,
-              borderWidth: 1,
-              borderColor: Colors.hairline,
-              borderLeftWidth: 6,
-              borderLeftColor: Colors.primaryContainer,
-              borderBottomWidth: 4,
-              borderBottomColor: Colors.cardLip,
             }}
+            maxFontSizeMultiplier={1.3}
           >
-            <Text
-              style={{
-                fontFamily: Fonts.baloo.bold,
-                fontSize: moderateScale(15),
-                color: Colors.onSurface,
-              }}
-              maxFontSizeMultiplier={1.2}
-            >
-              {current?.label}
-            </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.dmSans.medium,
-                fontSize: moderateScale(12.5),
-                lineHeight: moderateScale(18),
-                color: Colors.tertiary,
-                marginTop: moderateScale(2),
-              }}
-              maxFontSizeMultiplier={1.3}
-            >
-              {GROUP_BLURB[current?.id ?? ''] ?? ''}
-            </Text>
-          </View>
+            {GROUP_BLURB[current?.id ?? ''] ?? ''}
+          </Text>
 
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -235,23 +211,19 @@ export default function EmergencyScreen() {
                       paddingHorizontal: Spacing.lg,
                       borderWidth: 1,
                       borderColor: Colors.hairline,
-                      borderLeftWidth: 5,
-                      borderLeftColor: Colors.primaryContainer,
                       borderBottomWidth: 4,
                       borderBottomColor: Colors.cardLip,
                     }}
                   >
                     <View style={{ flex: 1 }}>
-                      {/* Red situation badge — the context, at a glance */}
+                      {/* Situation badge — flat pale-red tint label (not pressable, no lip) */}
                       <View
                         style={{
                           alignSelf: 'flex-start',
-                          backgroundColor: Colors.primaryContainer,
+                          backgroundColor: Colors.errorContainerLow,
                           borderRadius: Radius.full,
                           paddingVertical: moderateScale(4),
                           paddingHorizontal: moderateScale(10),
-                          borderBottomWidth: 2,
-                          borderBottomColor: Colors.redLip,
                           marginBottom: moderateScale(10),
                         }}
                       >
@@ -260,63 +232,39 @@ export default function EmergencyScreen() {
                             fontFamily: Fonts.dmSans.bold,
                             fontSize: moderateScale(10.5),
                             letterSpacing: 1,
-                            color: Colors.onPrimary,
+                            color: Colors.primary,
                           }}
                           maxFontSizeMultiplier={1.2}
                         >
                           {badge}
                         </Text>
                       </View>
-                      {/* Transliteration first (what you say), then English — obvious in any situation */}
-                      <View
+                      {/* Transliteration — what you say out loud (bold ink leads) */}
+                      <Text
                         style={{
-                          flexDirection: 'row',
-                          flexWrap: 'wrap',
-                          alignItems: 'baseline',
-                          columnGap: moderateScale(8),
-                          rowGap: moderateScale(2),
+                          fontFamily: Fonts.dmSans.bold,
+                          fontSize: moderateScale(19),
+                          lineHeight: moderateScale(25),
+                          color: Colors.onSurface,
+                          letterSpacing: -0.2,
                         }}
+                        maxFontSizeMultiplier={1.3}
                       >
-                        {/* Transliteration — what you say out loud */}
-                        <Text
-                          style={{
-                            fontFamily: Fonts.dmSans.bold,
-                            fontSize: moderateScale(19),
-                            lineHeight: moderateScale(25),
-                            color: Colors.primary,
-                            letterSpacing: -0.2,
-                          }}
-                          maxFontSizeMultiplier={1.3}
-                        >
-                          {item.transliteration ?? item.kannada}
-                        </Text>
-                        {/* Visual separator between what you say and what you mean */}
-                        <Text
-                          style={{
-                            fontFamily: Fonts.dmSans.bold,
-                            fontSize: moderateScale(19),
-                            lineHeight: moderateScale(25),
-                            color: Colors.tertiary,
-                            opacity: 0.5,
-                          }}
-                          maxFontSizeMultiplier={1.3}
-                        >
-                          |
-                        </Text>
-                        {/* English — what you mean */}
-                        <Text
-                          style={{
-                            fontFamily: Fonts.dmSans.bold,
-                            fontSize: moderateScale(19),
-                            lineHeight: moderateScale(25),
-                            color: Colors.onSurface,
-                            letterSpacing: -0.2,
-                          }}
-                          maxFontSizeMultiplier={1.3}
-                        >
-                          {item.meaning}
-                        </Text>
-                      </View>
+                        {item.transliteration ?? item.kannada}
+                      </Text>
+                      {/* English gloss — what you mean, muted below */}
+                      <Text
+                        style={{
+                          fontFamily: Fonts.dmSans.medium,
+                          fontSize: moderateScale(14),
+                          lineHeight: moderateScale(19),
+                          color: Colors.tertiary,
+                          marginTop: moderateScale(2),
+                        }}
+                        maxFontSizeMultiplier={1.3}
+                      >
+                        {item.meaning}
+                      </Text>
                       {/* Kannada script — footnote only, for showing the driver */}
                       {item.transliteration ? (
                         <Text
@@ -353,7 +301,7 @@ export default function EmergencyScreen() {
               }}
               maxFontSizeMultiplier={1.3}
             >
-              Audio uses your device&apos;s voice · romanisation pending review.
+              Audio uses your device&apos;s voice.
             </Text>
           </ScrollView>
         </>
