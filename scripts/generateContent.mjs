@@ -104,7 +104,12 @@ export const EMERGENCY_GROUPS: EmergencyGroup[] = ${ts(groups)};
 
     // audio-coverage check against the bundled manifest (same normalize as
     // services/audio/bundledAudio.ts)
-    const normalize = (t) => t.replace(/\[name\]/g, '').normalize('NFC').replace(/\s+/g, ' ').trim();
+    const normalize = (t) =>
+      t
+        .replace(/\[name\]/g, '')
+        .normalize('NFC')
+        .replace(/\s+/g, ' ')
+        .trim();
     const manifestSrc = readFileSync(path.join(ROOT, 'constants/audioManifest.ts'), 'utf8');
     const missing = rows.filter((r) => !manifestSrc.includes(`'${normalize(r.kannada)}'`));
     console.log(
@@ -208,9 +213,11 @@ export const QUICK_QUIZ_ITEMS_BY_LESSON: Record<number, QuickQuizItem[]> = ${ts(
 
   // ---- conversations: scenarios + turns, grouped (mirrors conversations.ts) ----
   {
-    const scenarios = await all('conversation_scenarios', 'id, lesson_id, sort_order, title, section', [
-      'sort_order',
-    ]);
+    const scenarios = await all(
+      'conversation_scenarios',
+      'id, lesson_id, sort_order, title, section',
+      ['sort_order'],
+    );
     const items = await all(
       'conversation_items',
       'id, scenario_id, turn_index, speaker_line_kn, speaker_line_en, options_json, correct_option_id',
