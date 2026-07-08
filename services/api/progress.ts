@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { withTimeout, DEFAULT_TIMEOUT_MS } from '../../lib/withTimeout';
 
 export type LessonCompletion = {
   slug: string;
@@ -24,10 +25,16 @@ export async function recordLessonCompletion(
 }
 
 export async function fetchCompletedLessons(userId: string): Promise<LessonCompletion[]> {
-  const { data, error } = await supabase
-    .from('user_lesson_progress')
-    .select('completed_at, score, lessons:lesson_id ( slug )')
-    .eq('user_id', userId);
+  const { data, error } = await withTimeout(
+    supabase
+      .from('user_lesson_progress')
+      .select('completed_at, score, lessons:lesson_id ( slug )')
+      .eq('user_id', userId)
+      // Defensive cap (Phase 4) — well above the curriculum's lesson count.
+      .limit(500),
+    DEFAULT_TIMEOUT_MS,
+    'fetchCompletedLessons',
+  );
 
   if (error) throw error;
   if (!data) return [];

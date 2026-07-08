@@ -13,6 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "gen:audio": "node --env-file=.env scripts/generateAudio.mjs",
+    "gen:content": "node --env-file=.env scripts/generateContent.mjs",
     "security-scan": "bash scripts/security-scan.sh",
     "pre-push": "npm run typecheck && npm run security-scan",
     "test": "jest",

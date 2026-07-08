@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { EMERGENCY_GROUPS } from '../../constants/emergencyPhrases';
 
 export type EmergencyItem = {
   id: string;
@@ -14,49 +14,12 @@ export type EmergencyGroup = {
   items: EmergencyItem[];
 };
 
-type Row = {
-  id: string;
-  category: string;
-  kannada: string;
-  transliteration: string | null;
-  meaning: string;
-  audio_url: string | null;
-  sort_order: number;
-};
-
-const GROUP_LABELS: Record<string, string> = {
-  auto: 'Auto / cab',
-  trouble: 'In trouble',
-  basics: 'Basics',
-};
-
-const GROUP_ORDER = ['auto', 'trouble', 'basics'] as const;
-
+/**
+ * Bundled-first (spec_scalability_offline_fixes Phase 2): Emergency is the
+ * app's advertised offline surface, so phrases ship in the binary. The
+ * emergency_phrases table remains the source for regeneration only —
+ * `npm run gen:content` after any dashboard content change.
+ */
 export async function fetchEmergencyPhrases(): Promise<EmergencyGroup[]> {
-  const { data, error } = await supabase
-    .from('emergency_phrases')
-    .select('id, category, kannada, transliteration, meaning, audio_url, sort_order')
-    .order('category', { ascending: true })
-    .order('sort_order', { ascending: true });
-
-  if (error) throw error;
-
-  const byCategory = new Map<string, EmergencyItem[]>();
-  for (const r of (data ?? []) as Row[]) {
-    const bucket = byCategory.get(r.category) ?? [];
-    bucket.push({
-      id: r.id,
-      kannada: r.kannada,
-      transliteration: r.transliteration,
-      meaning: r.meaning,
-      audioUrl: r.audio_url,
-    });
-    byCategory.set(r.category, bucket);
-  }
-
-  return GROUP_ORDER.filter((cat) => byCategory.has(cat)).map((cat) => ({
-    id: cat,
-    label: GROUP_LABELS[cat] ?? cat,
-    items: byCategory.get(cat) ?? [],
-  }));
+  return EMERGENCY_GROUPS;
 }

@@ -1,4 +1,5 @@
 import { supabase } from '../supabase';
+import { OPPOSITES_ITEMS_BY_LESSON } from '../../../constants/games/oppositesItems';
 
 export type OppositesOption = {
   kn: string;
@@ -19,70 +20,14 @@ export type OppositesItem = {
   options: OppositesOption[];
 };
 
-type Row = {
-  id: string;
-  lesson_id: string;
-  sort_order: number;
-  word: string;
-  opposite: string;
-  transliteration: string | null;
-  meaning: string | null;
-  section: string | null;
-  options_json: OppositesOption[] | null;
-};
-
-// Module-level cache for lesson_no -> lesson_id. Mirrors the slugToId
-// cache in services/api/lessons.ts. The map is keyed by lesson_no and
-// never invalidated — lessons rows are append-only and stable.
-const lessonNoToId = new Map<number, string>();
-
-async function lessonIdByNo(lessonNo: number): Promise<string | null> {
-  const cached = lessonNoToId.get(lessonNo);
-  if (cached) return cached;
-
-  const { data, error } = await supabase
-    .from('lessons')
-    .select('id')
-    .eq('lesson_no', lessonNo)
-    .maybeSingle();
-
-  if (error) throw error;
-  if (!data) return null;
-
-  lessonNoToId.set(lessonNo, data.id as string);
-  return data.id as string;
-}
-
-function mapRow(row: Row, lessonNo: number): OppositesItem {
-  return {
-    id: row.id,
-    lessonId: row.lesson_id,
-    lessonNo,
-    sortOrder: row.sort_order,
-    word: row.word,
-    opposite: row.opposite,
-    transliteration: row.transliteration,
-    meaning: row.meaning,
-    section: row.section,
-    options: row.options_json ?? [],
-  };
-}
-
+/**
+ * Bundled-first (spec_scalability_offline_fixes Phase 3): items ship in the
+ * binary with their real DB row UUIDs (progress rows + record RPCs key on
+ * them). opposites_items remains the regeneration source — `npm run
+ * gen:content` after any dashboard content change.
+ */
 export async function fetchOppositesItemsByLessonNo(lessonNo: number): Promise<OppositesItem[]> {
-  const lessonId = await lessonIdByNo(lessonNo);
-  if (!lessonId) return [];
-
-  const { data, error } = await supabase
-    .from('opposites_items')
-    .select(
-      'id, lesson_id, sort_order, word, opposite, transliteration, meaning, section, options_json',
-    )
-    .eq('lesson_id', lessonId)
-    .gt('sort_order', 0)
-    .order('sort_order', { ascending: true });
-
-  if (error) throw error;
-  return (data ?? []).map((r) => mapRow(r as unknown as Row, lessonNo));
+  return OPPOSITES_ITEMS_BY_LESSON[lessonNo] ?? [];
 }
 
 /**

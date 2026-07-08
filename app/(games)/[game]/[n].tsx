@@ -1,7 +1,11 @@
+import { useEffect } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { View, Text, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useQueryClient } from '@tanstack/react-query';
 import { moderateScale } from 'react-native-size-matters';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { refreshGameMasteryIfDirty } from '@/services/progress/masteryRefresh';
 import { Colors } from '@/constants/colors';
 import { Spacing, Radius } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
@@ -22,6 +26,15 @@ export default function GameRunnerScreen() {
     n: string;
     part?: string;
   }>();
+  const queryClient = useQueryClient();
+
+  // Mid-game quits skip the ResultScreen refresh; catch them on unmount so
+  // recorded answers still reach the overall-% rollup (no-op if not dirty).
+  useEffect(() => {
+    return () => {
+      void refreshGameMasteryIfDirty(queryClient, useAuthStore.getState().user?.id);
+    };
+  }, [queryClient]);
 
   // Image Match was retired (DB tables dropped; code removed). Old deep links
   // and bookmarks may still target it, so answer with a clear retired-game

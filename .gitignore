@@ -47,6 +47,7 @@ yarn-error.*
 /scripts/*
 !/scripts/postinstall.js
 !/scripts/generateAudio.mjs
+!/scripts/generateContent.mjs
 !/scripts/security-scan.sh
 /namma-app-v1-spec.docx
 

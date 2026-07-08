@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { localDateISO, localYesterdayISO } from '../utils/date';
+import { pruneWeeklyActivity } from '../utils/pruneWeeklyActivity';
 import { TS_LESSONS_BY_SLUG } from '../constants/lessons/lessonContent';
 import { logger } from '../lib/logger';
 
@@ -312,8 +313,15 @@ export const useProgressStore = create<ProgressState>()(
       // the store via getState() — otherwise isHydrated stays false and the
       // splash screen hangs forever (audit B1).
       onRehydrateStorage: () => (state, error) => {
-        (state ?? useProgressStore.getState()).setHydrated(true);
+        const store = state ?? useProgressStore.getState();
+        store.setHydrated(true);
         if (error) logger.error('progress', 'rehydrate failed', { err: error });
+        // Bound the per-day activity map (Phase 4) — only the trailing week is
+        // ever read; entries beyond the keep-window are dead storage weight.
+        const pruned = pruneWeeklyActivity(store.weeklyActivity, localDateISO());
+        if (pruned !== store.weeklyActivity) {
+          useProgressStore.setState({ weeklyActivity: pruned });
+        }
       },
     },
   ),

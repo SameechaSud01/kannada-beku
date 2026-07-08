@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kannada Beku — Scalability Audit (10 users → 1M users)</title>
+<style>
+  :root {
+    --ink: #1f2a24;
+    --muted: #5b6b62;
+    --bg: #fbfaf7;
+    --card: #ffffff;
+    --line: #e4e2da;
+    --green: #1d7a4f;
+    --green-soft: #e8f4ec;
+    --amber: #a05f0b;
+    --amber-soft: #fdf3e0;
+    --red: #b3372f;
+    --red-soft: #fbebe9;
+    --code-bg: #f1efe9;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 40px 20px 80px;
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px; line-height: 1.65;
+  }
+  main { max-width: 820px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; line-height: 1.25; margin: 0 0 6px; }
+  .subtitle { color: var(--muted); margin: 0 0 32px; font-size: 0.95rem; }
+  h2 { font-size: 1.35rem; margin: 48px 0 12px; padding-top: 20px; border-top: 1px solid var(--line); }
+  h3 { font-size: 1.05rem; margin: 26px 0 8px; }
+  p { margin: 0 0 14px; }
+  code {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em; background: var(--code-bg);
+    padding: 1px 5px; border-radius: 4px; white-space: nowrap;
+  }
+  .verdict {
+    background: var(--green-soft); border: 1px solid #bfdccb;
+    border-radius: 12px; padding: 20px 24px; margin: 0 0 8px;
+  }
+  .verdict h2 { border: none; margin: 0 0 8px; padding: 0; font-size: 1.15rem; color: var(--green); }
+  .badge {
+    display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em;
+    text-transform: uppercase; border-radius: 20px; padding: 2px 10px; vertical-align: middle;
+  }
+  .b-ok    { background: var(--green-soft); color: var(--green); }
+  .b-warn  { background: var(--amber-soft); color: var(--amber); }
+  .b-risk  { background: var(--red-soft);  color: var(--red); }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  .tablewrap { overflow-x: auto; }
+  .finding {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 18px 22px; margin: 0 0 16px;
+  }
+  .finding h3 { margin: 0 0 6px; }
+  .finding .meta { font-size: 0.82rem; color: var(--muted); margin-bottom: 10px; }
+  ul, ol { margin: 0 0 14px; padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  .fix { border-left: 3px solid var(--green); padding: 2px 0 2px 14px; margin-top: 10px; font-size: 0.95rem; }
+  .fix strong { color: var(--green); }
+  .footnote { color: var(--muted); font-size: 0.85rem; margin-top: 40px; border-top: 1px solid var(--line); padding-top: 16px; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Scalability Audit: 10 Users vs 1 Million Users</h1>
+<p class="subtitle">Kannada Beku · branch <code>fix/lesson-flow-polish</code> · 2026-07-08 (updated same day: fun facts removed &amp; table dropped; added §2 on rings/streak/profile data; added §6 measured stress-benchmark results — finding #1 downgraded)</p>
+
+<div class="verdict">
+<h2>Verdict: Yes for the user experience — with backend caveats</h2>
+<p><strong>The app will feel essentially identical to an individual user at 10 users and at 1 million users.</strong> The architecture is local-first: lessons 1–8, all 301 audio clips, TTS, progress, streaks, and XP live on the device. There are <strong>zero global/shared-data reads</strong> — no leaderboards, no aggregate counts, nothing that gets slower as the user base grows. Nothing on the boot path blocks on the network, and there's a hard 8-second gate past the splash even if auth hangs.</p>
+<p><strong>The caveat is cost and headroom on Supabase, not user-visible speed.</strong> The main lever, confirmed by a live benchmark (§6), is the ~36-request read fan-out behind the overall-progress number — measured at ~5× the wall-clock and 9× the requests of the bundled alternative, per user session. (The recompute trigger, originally ranked the top risk from static analysis, measured ~0 ms per write and is downgraded to dead-code hygiene.) At 10 users all of this is invisible; at 1M users the fan-out is the piece that pointlessly multiplies your Supabase bill. If the backend ever does get saturated, the failure mode for users is graceful for lessons but a spinner-then-error for the four games.</p>
+</div>
+
+<h2>1 · Why the user experience holds at any scale</h2>
+<p>Per-user latency only degrades at scale if requests touch shared resources that grow with total users. This app almost entirely avoids that:</p>
+
+<div class="tablewrap">
+<table>
+<tr><th>Area</th><th>How it works</th><th>At 1M users</th></tr>
+<tr><td>Lessons 1–8 (core loop)</td><td>Bundled in TypeScript (<code>constants/lessons/lessonContent.ts</code>); <code>fetchAllLessons()</code> never touches the network (<code>services/api/lessons.ts:31-52</code>)</td><td><span class="badge b-ok">Unaffected</span></td></tr>
+<tr><td>Audio &amp; TTS</td><td>301 bundled MP3s via Metro <code>require()</code> + on-device <code>expo-speech</code> fallback. No CDN, no Supabase Storage, no remote audio at all</td><td><span class="badge b-ok">Unaffected</span></td></tr>
+<tr><td>Progress / streak / XP / rings</td><td>Zustand + AsyncStorage is the source of truth; server is a fire-and-forget mirror with an offline outbox (<code>syncQueueStore</code>, dedup + poison-pill after 5 tries)</td><td><span class="badge b-ok">Unaffected</span></td></tr>
+<tr><td>Lesson 0 / Beginners Guide</td><td>DB-as-source with a bundled <code>FALLBACK_GUIDE</code> — renders even if Supabase is down (<code>services/api/guide.ts:104-131</code>)</td><td><span class="badge b-ok">Degrades gracefully</span></td></tr>
+<tr><td>Cold start</td><td>Only bundled font decode gates first render. Auth/data hydration is off the routing path, <code>.catch</code>-guarded, with an 8s hard fallback (<code>app/_layout.tsx:313</code>)</td><td><span class="badge b-ok">Unaffected</span></td></tr>
+<tr><td>Global data reads</td><td>None exist. Every query is user-scoped (<code>.eq('user_id')</code>, RLS-enforced) or content-scoped (bounded by curriculum size)</td><td><span class="badge b-ok">Nothing to slow down</span></td></tr>
+<tr><td>Multi-device conflicts</td><td>All server writes are idempotent personal-best UPSERTs — order-independent, can never lower a score or lose progress</td><td><span class="badge b-ok">Safe</span></td></tr>
+<tr><td>4 games (Opposites, Dictation, Quick Quiz, Conversation)</td><td>Items fetched from DB per lesson, cached 1h, retry ×2 — but <strong>no bundled fallback</strong></td><td><span class="badge b-warn">Only network-dependent content</span></td></tr>
+</table>
+</div>
+
+<p>Auth is also well-behaved: no anonymous sessions, one row created per signup via the <code>handle_new_user</code> trigger, automatic token refresh with a clean sign-out on refresh failure. An app launch does not create rows by itself.</p>
+
+<h2>2 · Rings, streak, and profile data — where those numbers actually come from</h2>
+<p>Everything the user sees on the Home rings, the streak pill, and nearly all of the Profile page is read from the <strong>local persisted Zustand store</strong> (<code>stores/progressStore.ts</code> via the selectors in <code>hooks/progress.ts</code>). None of it waits on the network, so none of it changes at 1M users:</p>
+<div class="tablewrap">
+<table>
+<tr><th>Surface</th><th>Data source</th><th>Network involvement</th></tr>
+<tr><td>Home daily rings (Listen / Speak / Practice)</td><td><code>progressStore.dailyActivity</code> — a single rolling-day record, reset locally when the date changes (<code>hooks/progress.ts:115</code>)</td><td><span class="badge b-ok">None — 100% local</span></td></tr>
+<tr><td>Streak pill (Home + Profile)</td><td><code>progressStore.streak</code> is the source of truth (<code>hooks/progress.ts:14</code>). Server gets a mirror write <strong>at most once per day</strong> (<code>services/progress/streak.ts:22-28</code> → <code>users.ts:73</code>), fire-and-forget</td><td><span class="badge b-ok">Local read; 1 tiny write/day</span></td></tr>
+<tr><td>Streak on a new device / reinstall</td><td>Restored from the <code>users</code> row at login; lexicographic date compare adopts the more recent value (<code>progressStore.ts:279-286</code>), so devices converge</td><td><span class="badge b-ok">1 indexed read at login (already counted)</span></td></tr>
+<tr><td>Profile: words learned, lessons done, minutes practiced, XP</td><td><code>progressStore.totalPhrasesLearned / completedLessons / totalMinutesPracticed / xp</code> (<code>hooks/progress.ts:18-30</code>)</td><td><span class="badge b-ok">None — 100% local</span></td></tr>
+<tr><td>Profile: week-activity view</td><td><code>progressStore.weeklyActivity</code>, ISO-date-keyed booleans, last 7 days read (<code>hooks/progress.ts:61-84</code>)</td><td><span class="badge b-ok">None — 100% local</span></td></tr>
+<tr><td>Profile: overall mastery ring</td><td><code>useOverallMastery</code> — the one network-backed number: learn-half from the local store + practice-half from the game-mastery query (finding #2 below). Prefetched at login, cached <code>staleTime: Infinity</code>; on fetch failure it still renders with the practice-half at 0</td><td><span class="badge b-warn">The login fan-out — see finding #2</span></td></tr>
+</table>
+</div>
+<p>So for this question specifically: <strong>rings, streak, and profile stats render instantly and identically at any user count, online or offline.</strong> The only per-user cost they generate server-side is one streak upsert per active day and the mastery fan-out already ranked as finding #2. The multi-device caveat from §1 applies: XP/words/minutes are local-only counters, so two devices can briefly show slightly different totals (they only ever move up, and completions/streak converge via the server).</p>
+
+<h2>3 · What actually scales with user count — ranked backend findings</h2>
+<p>These don't slow down any individual user directly, but they multiply per-active-user load on Postgres. At 1M registered (say 50–100k daily actives), the constant factors below dominate your Supabase bill and headroom.</p>
+
+<div class="finding">
+<h3><span class="badge b-warn">#1</span> Dead-weight trigger: full recompute on every game tap <span class="badge b-ok">MEASURED: negligible today</span></h3>
+<p class="meta"><code>services/api/migrations/2026-05-27_db_wiring_games_and_overall.sql:272-418</code></p>
+<p>AFTER INSERT/UPDATE triggers on <code>user_lesson_progress</code>, <code>opposites_progress</code>, <code>dictation_progress</code>, and <code>image_match_progress</code> call <code>recompute_overall_progress(user_id)</code> — a 4-way multi-CTE aggregation that scans and groups every <code>*_items</code> table, then UPSERTs <code>user_overall_progress</code>. Since the app records one attempt <strong>per answer tap</strong>, one user playing a game fires this heavy recompute on every single tap, synchronously inside the write transaction.</p>
+<p><strong>The app no longer reads <code>user_overall_progress</code> at all</strong> — overall mastery moved to a client-side rollup (<code>services/progress/overallMastery.ts</code>). The trigger is pure wasted work.</p>
+<p><strong>2026-07-08 measured correction (see §6):</strong> a live A/B benchmark — 100 writes through the triggered RPC vs 100 through the identical untriggered one — showed <strong>~0 ms added latency per write</strong> (49.8 ms vs 49.7 ms mean; trigger verified live by the <code>user_overall_progress</code> row it created). The aggregates scan content tables bounded by curriculum size, not user count, so per-write cost stays roughly constant even at 1M users. This finding is therefore <strong>downgraded from top scale risk to dead-code hygiene</strong>: still worth dropping (unused output, and cost grows if content grows), but not urgent and not the dominant cost the static analysis suggested.</p>
+<div class="fix"><strong>Fix (unchanged, urgency lowered):</strong> drop the <code>trg_recompute_overall_progress</code> triggers + function. One dashboard SQL run; zero app change. Verify the live trigger list first (live DB hand-patched 2026-06-13, diverges from repo migrations).</div>
+</div>
+
+<div class="finding">
+<h3><span class="badge b-risk">#2</span> Login read fan-out: ~36+ requests per session for game mastery</h3>
+<p class="meta"><code>services/api/gameMastery.ts:71-105</code> · <code>app/_layout.tsx:283</code> · <code>hooks/games/*.ts:39</code></p>
+<p><code>fetchGameMasteryByLesson</code> issues 4 <code>*_progress</code> reads plus one item-fetch per game per lesson (4 games × 8 lessons ≈ 32 requests). It is prefetched on <strong>every login</strong>, and although it's cached with <code>staleTime: Infinity</code>, it's invalidated after <strong>every single game answer</strong> — so the next Profile visit re-runs the whole fan-out. Per-user experience is fine (it's prefetched and cached); the problem is ~36 requests/user/session × every active user, mostly re-fetching identical static content tables.</p>
+<div class="fix"><strong>Fix (either is enough):</strong> (a) bundle the game item lists in TS like lessons already are — the fan-out collapses to 4 progress reads; or (b) replace invalidation-on-every-answer with a local cache update / invalidate-on-profile-focus, and fetch all 4 progress tables in one RPC.</div>
+</div>
+
+<div class="finding">
+<h3><span class="badge b-warn">#3</span> Global content tables served from Postgres to every device</h3>
+<p class="meta"><code>services/api/emergency.ts:35</code> · <code>services/api/games/*.ts</code></p>
+<p><code>emergency_phrases</code> and all four <code>*_items</code> tables are identical for every user but are fetched through authenticated PostgREST per device (softened by 1–24h client caches). At 1M users this is millions of redundant reads of the same few hundred rows. Lessons 1–8 already solved this the right way — bundle in the app. (Fun facts previously fell in this bucket; the feature was removed and its table dropped on 2026-07-08, which also removes its read load.)</p>
+<div class="fix"><strong>Fix:</strong> bundle these as TS constants with the DB as an optional refresh, matching the existing <code>TS_LESSONS</code> / <code>FALLBACK_GUIDE</code> pattern. This also closes the offline gaps in finding #6.</div>
+</div>
+
+<div class="finding">
+<h3><span class="badge b-warn">#4</span> No pagination or row limits anywhere</h3>
+<p class="meta">grep: zero <code>.range()</code> / <code>.limit()</code> calls in the codebase</p>
+<p>Safe today because content tables are tiny and per-user reads are naturally small. But <code>fetchCompletedLessons</code> and the four <code>*_progress</code> reads grow with a user's lifetime history, and any future content growth multiplies finding #2. Indexes are adequate for current per-user access patterns (PKs on <code>(user_id, item_id)</code>, composite uniques on <code>(lesson_id, sort_order)</code>), so this is a discipline issue, not a current bug.</p>
+<div class="fix"><strong>Fix:</strong> add <code>.limit()</code> defensively to unbounded selects; keep it as a code-review rule for new queries.</div>
+</div>
+
+<div class="finding">
+<h3><span class="badge b-warn">#5</span> Preview and production share one Supabase project</h3>
+<p class="meta"><code>eas.json:10-37</code></p>
+<p>Dev, preview, and production profiles all point at the same project and database. Preview/testing load and data mix with production. At small scale this is a data-hygiene issue; at large scale a bad preview build can degrade prod. (Correctly, only public-class keys are in the client — anon key, OAuth client IDs, Sentry DSN; no service-role key.)</p>
+<div class="fix"><strong>Fix:</strong> create a separate free-tier Supabase project for preview/dev before user counts matter.</div>
+</div>
+
+<div class="finding">
+<h3><span class="badge b-warn">#6</span> If the backend does choke: games and Emergency are the exposed surfaces</h3>
+<p class="meta"><code>services/api/games/*.ts</code> · <code>services/api/emergency.ts:37</code> · no timeouts in <code>services/</code></p>
+<p>This is the "breaking on user side" scenario. If Supabase is slow or down:</p>
+<ul>
+<li><strong>Lessons, audio, progress, guide, startup: fine</strong> (local or fallback-backed).</li>
+<li><strong>The four games are unplayable</strong> unless their 1h cache is warm — loading spinner, then error, no bundled fallback.</li>
+<li><strong>Emergency phrases</strong> — ironically advertised as the offline practice path from the Learn tab — is itself a DB read with no bundled fallback; fine once its 24h cache is warm, error on first-ever offline launch.</li>
+<li><strong>No request timeout / AbortController anywhere</strong> — a stalled (not failed) connection spins <code>isLoading</code> indefinitely on game screens. Only the boot path has a hard 8s gate.</li>
+</ul>
+<div class="fix"><strong>Fix:</strong> bundling content (finding #3) eliminates most of this; additionally wrap Supabase reads in a ~10s <code>Promise.race</code> timeout so slow ≠ frozen.</div>
+</div>
+
+<div class="finding">
+<h3><span class="badge b-ok">#7</span> Minor: boot-time backfill writes, unbounded weeklyActivity keys</h3>
+<p class="meta"><code>app/_layout.tsx:151-164</code> · <code>stores/progressStore.ts:92</code></p>
+<p>Two small items: (a) on launch, any local-only completed lessons are backfilled to the server via a <code>Promise.all</code> of RPCs — idempotent and usually empty, but it's a write on the hot boot path; (b) <code>weeklyActivity</code> in the persisted store adds one date key per active day and never prunes — a few KB after years of use, cosmetic only.</p>
+</div>
+
+<h2>4 · Rough capacity picture at 1M users</h2>
+<p>Assume 1M registered → roughly 50–100k daily actives, one ~10-minute session each. Per session today: ~3 auth-time reads + ~36 mastery fan-out reads + ~20 per-tap game writes, <em>each write currently triggering the full recompute</em>. Streak writes are already well-designed (max once per day), and per-part lesson activity never hits the network at all.</p>
+<div class="tablewrap">
+<table>
+<tr><th>Load source</th><th>Today (per session)</th><th>After fixes #1–#3</th></tr>
+<tr><td>Reads</td><td>~40 requests, mostly static content</td><td>~6 requests (auth + progress only)</td></tr>
+<tr><td>Writes</td><td>~20 idempotent UPSERTs + ~20 heavy trigger recomputes</td><td>~20 cheap idempotent UPSERTs</td></tr>
+</table>
+</div>
+<p>The write shape after fixes — small, indexed, idempotent, per-user UPSERTs — is about the friendliest workload Postgres can be given, and Supabase's pooler handles the connection side (mobile clients over PostgREST don't hold connections). With content bundled, 100k DAU is comfortable on a mid-tier Supabase compute. The §6 benchmark showed the trigger recompute is <em>not</em> the write-latency threat static analysis suggested (~0 ms at current content size) — the read fan-out is the real per-user cost, and it's fully removable. Also budget for Supabase Auth MAU pricing — at these numbers auth is a billing line, not a performance risk.</p>
+
+<h2>6 · Measured: stress benchmark (2026-07-08, live project)</h2>
+<p>Run against the production Supabase project with an owner-authorized script: one throwaway auth user, ~900 total requests, all writes scoped to the test user and deleted afterwards (verified zero leftover rows). Desktop connection — mobile RTTs will be higher across the board, which <em>amplifies</em> the fan-out deltas below.</p>
+<div class="tablewrap">
+<table>
+<tr><th>Measurement</th><th>Result</th><th>Reading</th></tr>
+<tr><td>Single content read (20×)</td><td>p50 <strong>61 ms</strong> · p95 375 ms</td><td>Healthy baseline; occasional cold spikes</td></tr>
+<tr><td>Mastery fan-out, current shape (36 req, 5×)</td><td>mean <strong>254 ms</strong> · p95 575 ms</td><td>The Profile-blocking read as shipped</td></tr>
+<tr><td>Mastery fan-out, Phase-3 shape (4 req, 5×)</td><td>mean <strong>53 ms</strong> · p95 65 ms</td><td><strong>~5× faster, 9× fewer requests</strong>, far tighter tail</td></tr>
+<tr><td>Write RPC without trigger (<code>record_quick_quiz_attempt</code>, 100×)</td><td>mean 49.7 ms · p95 60 ms</td><td rowspan="2"><strong>Trigger overhead ≈ 0 ms</strong> — trigger confirmed live (created its <code>user_overall_progress</code> row); finding #1 downgraded</td></tr>
+<tr><td>Write RPC with recompute trigger (<code>record_opposites_attempt</code>, 100×)</td><td>mean 49.8 ms · p95 59 ms</td></tr>
+<tr><td>10 concurrent users × full fan-out (360 req burst)</td><td>1.8 s wall-clock, <strong>0 failures</strong></td><td>Backend absorbs bursts fine; no error cliff at this scale</td></tr>
+</table>
+</div>
+<p>What this changes: the biggest scalability lever is confirmed to be <strong>finding #2/#3 (bundle content, collapse the fan-out)</strong> — a measured 5× wall-clock win per user session on a good connection, larger on mobile. The trigger (#1) drops to hygiene. What this doesn't test: sustained load from thousands of concurrent users (needs a separate staging project — finding #5), auth-service throughput, and mobile-network conditions.</p>
+
+<h3>Addendum: post-fix benchmark (same day, after Phases 1–3 were implemented)</h3>
+<p>Re-run after the fixes landed (spec_scalability_offline_fixes Phases 1–3: instant Profile, end-of-game mastery refresh, Emergency + game items bundled). Same method: one throwaway user, full cleanup verified.</p>
+<div class="tablewrap">
+<table>
+<tr><th>Measurement</th><th>Result</th><th>Reading</th></tr>
+<tr><td>Full new-style session (6 reads: user row + lesson progress + 4-read mastery)</td><td>p50 <strong>110 ms</strong></td><td>Entire session's read cost, down from ~40 requests</td></tr>
+<tr><td>End-of-game pattern: 20 attempt writes + one 4-read refetch</td><td>writes 1.27 s total (spread across gameplay in reality) + <strong>53 ms</strong> refetch</td><td>The Phase-1 refresh is imperceptible on the result screen</td></tr>
+<tr><td><strong>25 concurrent users — new shape</strong> (150 requests)</td><td><strong>0.38 s</strong>, 0 failures</td><td rowspan="2"><strong>48× wall-clock difference under burst load.</strong> Single-user latency was similar between shapes; under concurrency the old fan-out queues catastrophically (900 simultaneous requests), the new shape doesn't. This is the direct answer to "10 users vs 1M users."</td></tr>
+<tr><td><strong>25 concurrent users — old shape</strong> (900 requests)</td><td><strong>18.2 s</strong>, 0 failures</td></tr>
+</table>
+</div>
+<p>Emergency phrases and all game items now ship in the app bundle: <strong>zero requests, works in airplane mode</strong> — nothing left to benchmark on those paths.</p>
+
+<h2>5 · Recommended order of work</h2>
+<ol>
+<li><strong>Drop the <code>recompute_overall_progress</code> triggers</strong> — one dashboard SQL statement, zero app change, removes the #1 cost. (Live DB diverges from repo migrations; check the live trigger list first.)</li>
+<li><strong>Bundle game items + emergency phrases in TS</strong> (existing <code>TS_LESSONS</code> pattern) — collapses the login fan-out, kills the redundant global reads, and closes every offline gap in one move.</li>
+<li><strong>Stop invalidating game-mastery on every answer</strong> — update the query cache locally or invalidate on profile focus.</li>
+<li><strong>Add a ~10s timeout to Supabase reads</strong> so a stalled connection shows the error state instead of an endless spinner.</li>
+<li><strong>Split preview from production Supabase</strong> before real users arrive.</li>
+<li>Housekeeping: defensive <code>.limit()</code> on unbounded selects; prune <code>weeklyActivity</code> to a rolling window.</li>
+</ol>
+<p>Items 1–2 are the ones that matter for the 1M-user question; everything else is polish.</p>
+
+<p class="footnote">Method: two parallel code explorations covering (a) every Supabase/network call, the SQL schema, triggers, indexes, and RLS across <code>services/</code>, <code>hooks/</code>, <code>app/</code>, and 30+ migration files, and (b) client-side offline behavior, persisted-storage growth, the cold-start path, audio, and multi-device races. This is static analysis of the repo — no load test was run, and the live DB is known to diverge from repo migrations (hand-patched 2026-06-13), so trigger/function state should be verified in the dashboard before acting on #1.</p>
+
+</main>
+</body>
+</html>

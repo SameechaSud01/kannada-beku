@@ -1,4 +1,5 @@
 import { supabase } from '../supabase';
+import { QUICK_QUIZ_ITEMS_BY_LESSON } from '../../../constants/games/quickQuizItems';
 
 export type QuickQuizItem = {
   id: string;
@@ -11,63 +12,14 @@ export type QuickQuizItem = {
   section: string | null;
 };
 
-type Row = {
-  id: string;
-  lesson_id: string;
-  sort_order: number;
-  kannada: string;
-  transliteration: string | null;
-  meaning: string;
-  section: string | null;
-};
-
-// Module-level cache for lesson_no -> lesson_id. Mirrors the cache in the
-// other game accessors. lessons rows are append-only and stable.
-const lessonNoToId = new Map<number, string>();
-
-async function lessonIdByNo(lessonNo: number): Promise<string | null> {
-  const cached = lessonNoToId.get(lessonNo);
-  if (cached) return cached;
-
-  const { data, error } = await supabase
-    .from('lessons')
-    .select('id')
-    .eq('lesson_no', lessonNo)
-    .maybeSingle();
-
-  if (error) throw error;
-  if (!data) return null;
-
-  lessonNoToId.set(lessonNo, data.id as string);
-  return data.id as string;
-}
-
-function mapRow(row: Row, lessonNo: number): QuickQuizItem {
-  return {
-    id: row.id,
-    lessonId: row.lesson_id,
-    lessonNo,
-    sortOrder: row.sort_order,
-    kannada: row.kannada,
-    transliteration: row.transliteration,
-    meaning: row.meaning,
-    section: row.section,
-  };
-}
-
+/**
+ * Bundled-first (spec_scalability_offline_fixes Phase 3): items ship in the
+ * binary with their real DB row UUIDs (progress rows + record RPCs key on
+ * them). quick_quiz_items remains the regeneration source — `npm run
+ * gen:content` after any dashboard content change.
+ */
 export async function fetchQuickQuizItemsByLessonNo(lessonNo: number): Promise<QuickQuizItem[]> {
-  const lessonId = await lessonIdByNo(lessonNo);
-  if (!lessonId) return [];
-
-  const { data, error } = await supabase
-    .from('quick_quiz_items')
-    .select('id, lesson_id, sort_order, kannada, transliteration, meaning, section')
-    .eq('lesson_id', lessonId)
-    .gt('sort_order', 0)
-    .order('sort_order', { ascending: true });
-
-  if (error) throw error;
-  return (data ?? []).map((r) => mapRow(r as unknown as Row, lessonNo));
+  return QUICK_QUIZ_ITEMS_BY_LESSON[lessonNo] ?? [];
 }
 
 /**
