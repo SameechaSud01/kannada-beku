@@ -1,14 +1,20 @@
 import { View, Text, ScrollView, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
-import { BACK_CHIP_TOP_RESERVE } from '../ui/ExitBackButton';
+import { PLANNED_LESSON_SLOTS } from '../../constants/lessons/plannedLessons';
 import { ChunkyPressable } from '../ui/ChunkyPressable';
 import { ChunkyCircle } from '../ui/ChunkyLip';
-import { LockTile } from '../ui/LockTile';
+import { RoundIconButton } from '../ui/RoundIconButton';
+import { LipButton } from '../ui/LipButton';
+import { useModal } from '../modals/ModalHost';
+import { WordsLearnedSheet } from '../modals/instances/WordsLearnedSheet';
+import { useDbLessons } from '../../hooks/useLessons';
 import type { Lesson } from '../../constants/lessons/types';
 import { useLessonParts, type PartState } from '../../hooks/useLessonParts';
 
@@ -18,47 +24,101 @@ interface LessonPartChooserProps {
 }
 
 /**
- * Sub-part picker shown when a split lesson is opened. Parts unlock in order
- * (spec_lesson_split_map); the learner picks the active one to play.
+ * Lesson detail (parts) page shown when a split lesson is opened. Parts unlock
+ * in order (spec_lesson_split_map); redesigned per
+ * spec_lessons_tab_detail_redesign §2 — pushed-page back header, eyebrow +
+ * title + progress chip, three-state part cards, bottom continue/next CTA.
  */
 export function LessonPartChooser({ lesson, onSelectPart }: LessonPartChooserProps) {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
+  const modal = useModal();
   const parts = useLessonParts(lesson);
+  const lessonsQuery = useDbLessons();
+  const dbLessons = lessonsQuery.data ?? [];
+
   const doneCount = parts.filter((p) => p.done).length;
+  const allDone = doneCount === parts.length;
+  const nextPart = parts.find((p) => p.active);
+
+  // Next lesson (for the all-done CTA). "Built" = has real content in the DB.
+  const nextNo = lesson.lessonNo + 1;
+  const nextReal = dbLessons.find(
+    (l) => l.lessonNo === nextNo && (l.words.length > 0 || l.phrases.length > 0),
+  );
+  const nextTitle =
+    nextReal?.title ?? PLANNED_LESSON_SLOTS.find((s) => s.slot === nextNo)?.title ?? '';
+
+  const openWordsLearned = () =>
+    modal.show({
+      kind: 'sheet',
+      component: WordsLearnedSheet,
+      props: {
+        groups: [{ title: lesson.title, items: [...lesson.words, ...lesson.phrases] }],
+        total: lesson.words.length + lesson.phrases.length,
+        onDismiss: () => modal.dismiss(),
+      },
+    });
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.surfaceCream }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: insets.top + BACK_CHIP_TOP_RESERVE,
+          paddingTop: insets.top + Spacing.sm,
           paddingHorizontal: Spacing.lg,
           paddingBottom: insets.bottom + Spacing.xxxl,
         }}
       >
-        <Text
-          style={{
-            fontFamily: Fonts.baloo.extrabold,
-            fontSize: moderateScale(26),
-            color: Colors.onSurface,
-            letterSpacing: -0.4,
-            lineHeight: moderateScale(36),
+        {/* Pushed page → back, not close. Deep links land here with an empty
+            stack, where back() is a no-op — fall back to the Lessons tab. */}
+        <RoundIconButton
+          icon="back"
+          variant="white"
+          size={44}
+          onPress={() => {
+            if (router.canGoBack()) router.back();
+            else router.replace('/(tabs)/learn');
           }}
-          maxFontSizeMultiplier={1.2}
-        >
-          {lesson.title}
-        </Text>
+          accessibilityLabel="Back to lessons"
+        />
+
         <Text
           style={{
-            fontFamily: Fonts.dmSans.medium,
-            fontSize: moderateScale(13),
+            fontFamily: Fonts.dmSans.bold,
+            fontSize: moderateScale(11),
+            letterSpacing: 1.4,
             color: Colors.tertiary,
-            marginTop: Spacing.xs,
+            marginTop: Spacing.lg,
           }}
-          maxFontSizeMultiplier={1.3}
+          maxFontSizeMultiplier={1.4}
         >
-          {doneCount} of {parts.length} parts done
+          LESSON {lesson.lessonNo}
         </Text>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: Spacing.md,
+            marginTop: moderateScale(2),
+          }}
+        >
+          <Text
+            style={{
+              flex: 1,
+              fontFamily: Fonts.baloo.extrabold,
+              fontSize: moderateScale(36),
+              color: Colors.onSurface,
+              letterSpacing: -0.5,
+              lineHeight: moderateScale(46),
+            }}
+            maxFontSizeMultiplier={1.2}
+          >
+            {lesson.title}
+          </Text>
+          <ProgressChip done={doneCount} total={parts.length} allDone={allDone} />
+        </View>
 
         {lesson.situation ? (
           <Text
@@ -67,7 +127,7 @@ export function LessonPartChooser({ lesson, onSelectPart }: LessonPartChooserPro
               fontSize: moderateScale(13.5),
               color: Colors.tertiary,
               lineHeight: moderateScale(20),
-              marginTop: Spacing.md,
+              marginTop: Spacing.sm,
             }}
             maxFontSizeMultiplier={1.3}
           >
@@ -84,69 +144,144 @@ export function LessonPartChooser({ lesson, onSelectPart }: LessonPartChooserPro
             />
           ))}
         </View>
+
+        <View style={{ marginTop: Spacing.xxl }}>
+          {allDone ? (
+            <>
+              <Pressable
+                onPress={openWordsLearned}
+                accessibilityRole="button"
+                accessibilityLabel="Review words from this lesson"
+                hitSlop={8}
+                style={({ pressed }) => ({
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: Spacing.sm,
+                  alignSelf: 'center',
+                  paddingVertical: Spacing.sm,
+                  opacity: pressed ? 0.6 : 1,
+                })}
+              >
+                <Icons.book size={moderateScale(18)} color={Colors.secondary} />
+                <Text
+                  style={{
+                    fontFamily: Fonts.dmSans.bold,
+                    fontSize: moderateScale(14),
+                    color: Colors.secondary,
+                  }}
+                  maxFontSizeMultiplier={1.3}
+                >
+                  Review words from this lesson
+                </Text>
+              </Pressable>
+              <LipButton
+                label={
+                  nextReal ? `Next: Lesson ${nextNo} · ${nextTitle} →` : 'More lessons coming soon'
+                }
+                disabled={!nextReal}
+                onPress={nextReal ? () => router.push(`/lesson/${nextReal.slug}`) : undefined}
+                style={{ marginTop: Spacing.lg }}
+              />
+            </>
+          ) : nextPart ? (
+            <LipButton
+              label={`Continue · ${nextPart.label}`}
+              icon={Icons.play}
+              iconLeading
+              onPress={() => onSelectPart(nextPart.key)}
+            />
+          ) : null}
+        </View>
       </ScrollView>
     </View>
   );
 }
 
-function PartRow({ part, onPress }: { part: PartState; onPress: () => void }) {
-  const locked = !part.unlocked;
-  const titleColor = locked ? Colors.textFaint : Colors.onSurface;
-  const subColor = locked ? Colors.textFaint : Colors.tertiary;
+function ProgressChip({ done, total, allDone }: { done: number; total: number; allDone: boolean }) {
+  return (
+    <View
+      accessibilityLabel={`${done} of ${total} parts done`}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: moderateScale(5),
+        paddingHorizontal: moderateScale(11),
+        paddingVertical: moderateScale(6),
+        borderRadius: Radius.full,
+        backgroundColor: allDone ? Colors.secondaryFixed : Colors.surfaceContainerLowest,
+        borderWidth: allDone ? 0 : 1,
+        borderColor: allDone ? undefined : Colors.hairline,
+      }}
+    >
+      {allDone ? (
+        <Icons.check
+          size={moderateScale(13)}
+          color={Colors.onSecondaryContainer}
+          strokeWidth={2.8}
+        />
+      ) : null}
+      <Text
+        style={{
+          fontFamily: Fonts.dmSans.bold,
+          fontSize: moderateScale(12),
+          color: allDone ? Colors.onSecondaryContainer : Colors.tertiary,
+        }}
+        maxFontSizeMultiplier={1.3}
+      >
+        {done} of {total} done
+      </Text>
+    </View>
+  );
+}
 
+function partMeta(part: PartState): string {
   const items: string[] = [];
   if (part.wordCount) items.push(`${part.wordCount} ${part.wordCount === 1 ? 'word' : 'words'}`);
   if (part.phraseCount)
     items.push(`${part.phraseCount} ${part.phraseCount === 1 ? 'phrase' : 'phrases'}`);
+  return items.join(' · ');
+}
 
-  const a11yLabel = locked
-    ? `${part.label}, locked. Finish the previous part to unlock.`
-    : `${part.label}${part.done ? ', done' : part.active ? ', continue' : ''}`;
-
-  const content = (
+function PartRowContent({
+  part,
+  idColor,
+  metaColor,
+  trailing,
+}: {
+  part: PartState;
+  idColor: string;
+  metaColor: string;
+  trailing: React.ReactNode;
+}) {
+  return (
     <View
       style={{
         flexDirection: 'row',
         alignItems: 'center',
         gap: moderateScale(13),
-        padding: moderateScale(12),
+        padding: moderateScale(14),
       }}
     >
-      {/* Number tile / lock */}
-      {locked ? (
-        <LockTile size={46} radius={moderateScale(14)} />
-      ) : (
-        <View
-          style={{
-            width: moderateScale(46),
-            height: moderateScale(46),
-            borderRadius: moderateScale(14),
-            backgroundColor: part.active ? Colors.primaryContainer : Colors.secondaryFixed,
-            borderBottomWidth: 3,
-            borderBottomColor: part.active ? Colors.redLip : Colors.goldLip,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: Fonts.baloo.extrabold,
-              fontSize: moderateScale(18),
-              color: part.active ? Colors.onPrimary : Colors.onSecondaryContainer,
-            }}
-            maxFontSizeMultiplier={1.2}
-          >
-            {part.key}
-          </Text>
-        </View>
-      )}
+      {/* Plain text part id — no tile, no underline. */}
+      <Text
+        style={{
+          fontFamily: Fonts.baloo.extrabold,
+          fontSize: moderateScale(20),
+          color: idColor,
+          minWidth: moderateScale(30),
+        }}
+        maxFontSizeMultiplier={1.2}
+      >
+        {part.key}
+      </Text>
 
       <View style={{ flex: 1 }}>
         <Text
           style={{
             fontFamily: Fonts.baloo.bold,
             fontSize: moderateScale(16),
-            color: titleColor,
+            color: Colors.onSurface,
             letterSpacing: -0.2,
           }}
           maxFontSizeMultiplier={1.3}
@@ -158,82 +293,151 @@ function PartRow({ part, onPress }: { part: PartState; onPress: () => void }) {
           style={{
             fontFamily: Fonts.dmSans.medium,
             fontSize: moderateScale(12.5),
-            color: subColor,
+            color: metaColor,
             marginTop: moderateScale(1),
           }}
           maxFontSizeMultiplier={1.3}
           numberOfLines={1}
         >
-          {items.join(' · ')}
+          {partMeta(part)}
         </Text>
       </View>
 
-      <View style={{ width: moderateScale(42), alignItems: 'center', justifyContent: 'center' }}>
-        {part.done ? (
-          <ChunkyCircle
-            size={moderateScale(26)}
-            depth={moderateScale(2)}
-            bg={Colors.secondaryContainer}
-            lipColor={Colors.goldLip}
-          >
-            <Icons.check
-              size={moderateScale(15)}
-              color={Colors.onSecondaryContainer}
-              strokeWidth={2.6}
-            />
-          </ChunkyCircle>
-        ) : part.active ? (
-          <ChunkyCircle
-            size={moderateScale(42)}
-            depth={moderateScale(3)}
-            bg={Colors.primaryContainer}
-            lipColor={Colors.redLip}
-          >
-            <Icons.play size={moderateScale(16)} color={Colors.onPrimary} />
-          </ChunkyCircle>
-        ) : null}
-      </View>
+      {trailing}
     </View>
   );
+}
 
-  // Locked rows are de-emphasised and flat (no lip / no press-translate).
-  if (locked) {
+function PartRow({ part, onPress }: { part: PartState; onPress: () => void }) {
+  // Done — sun-drenched gold gradient face, gold lip; tap replays the part.
+  if (part.done) {
     return (
       <Pressable
         onPress={onPress}
-        disabled
         accessibilityRole="button"
-        accessibilityState={{ disabled: true }}
-        accessibilityLabel={a11yLabel}
+        accessibilityLabel={`Part ${part.key}: ${part.label}, done. Review it.`}
       >
-        <View
-          style={{
-            backgroundColor: Colors.surfaceCreamLow,
-            borderRadius: Radius.chunky,
-            borderWidth: 1,
-            borderColor: 'rgba(217,123,58,0.30)',
-            opacity: 0.85,
-          }}
-        >
-          {content}
-        </View>
+        {({ pressed }) => (
+          <LinearGradient
+            colors={[Colors.goldSunHi, Colors.goldSunLo]}
+            start={{ x: 0.33, y: 0.03 }}
+            end={{ x: 0.67, y: 0.97 }}
+            style={{
+              borderRadius: Radius.chunky,
+              borderBottomWidth: pressed ? 2 : 4,
+              borderBottomColor: Colors.goldLip,
+              transform: [{ translateY: pressed ? 2 : 0 }],
+            }}
+          >
+            <PartRowContent
+              part={part}
+              idColor={Colors.onSecondaryContainer}
+              metaColor={Colors.onSecondaryContainer}
+              trailing={
+                <View style={{ alignItems: 'center' }}>
+                  {/* Flat gold check — earned status, not a button (no lip). */}
+                  <View
+                    style={{
+                      width: moderateScale(40),
+                      height: moderateScale(40),
+                      borderRadius: Radius.full,
+                      backgroundColor: Colors.secondaryContainer,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Icons.check
+                      size={moderateScale(20)}
+                      color={Colors.onSecondaryContainer}
+                      strokeWidth={2.6}
+                    />
+                  </View>
+                  <Text
+                    style={{
+                      fontFamily: Fonts.dmSans.bold,
+                      fontSize: moderateScale(11),
+                      color: Colors.onSecondaryContainer,
+                      marginTop: moderateScale(3),
+                    }}
+                    maxFontSizeMultiplier={1.3}
+                  >
+                    Review
+                  </Text>
+                </View>
+              }
+            />
+          </LinearGradient>
+        )}
       </Pressable>
     );
   }
 
+  // Up next — white face, red border, red play orb.
+  if (part.active) {
+    return (
+      <ChunkyPressable
+        onPress={onPress}
+        accessibilityLabel={`Part ${part.key}: ${part.label}. Start.`}
+        bg="#ffffff"
+        lip={3}
+        // The lip doubles as the bottom border edge — red, so the 2px red
+        // border wraps all four sides instead of stopping at the lip.
+        lipColor={Colors.primaryContainer}
+        border
+        borderColor={Colors.primaryContainer}
+        borderWidth={2}
+        radius={Radius.chunky}
+      >
+        <PartRowContent
+          part={part}
+          idColor={Colors.onSurface}
+          metaColor={Colors.tertiary}
+          trailing={
+            <ChunkyCircle
+              size={moderateScale(48)}
+              depth={moderateScale(3)}
+              bg={Colors.primaryContainer}
+              lipColor={Colors.redLip}
+            >
+              <Icons.play size={moderateScale(18)} color={Colors.onPrimary} />
+            </ChunkyCircle>
+          }
+        />
+      </ChunkyPressable>
+    );
+  }
+
+  // Not started — flat, faded, inert.
   return (
-    <ChunkyPressable
-      onPress={onPress}
-      accessibilityLabel={a11yLabel}
-      bg={part.active ? '#ffffff' : Colors.secondaryFixed}
-      lip={part.active ? 5 : 4}
-      lipColor={part.active ? Colors.redLip : Colors.goldLip}
-      border={part.active}
-      borderColor={Colors.primaryContainer}
-      borderWidth={2}
-      radius={Radius.chunky}
+    <View
+      accessibilityLabel={`Part ${part.key}: ${part.label}, locked. Finish the previous part to unlock.`}
+      style={{
+        backgroundColor: '#ffffff',
+        borderRadius: Radius.chunky,
+        borderWidth: 1,
+        borderColor: Colors.hairline,
+        opacity: 0.85,
+      }}
     >
-      {content}
-    </ChunkyPressable>
+      <PartRowContent
+        part={part}
+        idColor={Colors.textFaint}
+        metaColor={Colors.tertiary}
+        trailing={
+          <View
+            style={{
+              width: moderateScale(40),
+              height: moderateScale(40),
+              borderRadius: Radius.full,
+              backgroundColor: Colors.surfaceCreamLow,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Icons.lock size={moderateScale(16)} color={Colors.textFaint} strokeWidth={2.2} />
+          </View>
+        }
+      />
+    </View>
   );
 }

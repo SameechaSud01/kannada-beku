@@ -115,7 +115,7 @@ export function TeachPhrasesPhase({
         <LessonProgressBar
           current={phraseIndex + 1}
           total={total}
-          label={`${sectionLabel ? `${sectionLabel} · ` : ''}Phrase ${phraseIndex + 1} of ${total}`}
+          label={`${sectionLabel ? `${sectionLabel} · ` : ''}Phrase ${phraseIndex + 1} of ${total} — Learn`}
         />
       </View>
 
@@ -252,6 +252,9 @@ export function TeachPhrasesPhase({
             onPress={handleReplay}
             playing={playing}
             size={64}
+            color={Colors.secondaryFixed}
+            iconColor={Colors.secondary}
+            lipColor={Colors.goldLip}
             accessibilityLabel="Hear the full phrase again"
           />
         </View>
@@ -271,9 +274,9 @@ export function TeachPhrasesPhase({
 
       <View style={{ padding: Spacing.lg, paddingBottom: insets.bottom + Spacing.lg }}>
         <LipButton
-          label={isLast ? 'Start practising phrases' : 'Got it'}
+          label={isLast ? 'Start practising phrases' : 'Continue'}
           onPress={onAdvance}
-          accessibilityLabel={isLast ? 'Start practising phrases' : 'Got it, next phrase'}
+          accessibilityLabel={isLast ? 'Start practising phrases' : 'Continue to next phrase'}
           icon={Icons.forward}
         />
       </View>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Competitive Weakness Audit — Kannada Beku</title>
+<style>
+  :root {
+    --ink: #2b2b2b;
+    --muted: #6b6355;
+    --bg: #faf7f2;
+    --card: #ffffff;
+    --line: #e8e1d5;
+    --red: #b3261e;
+    --amber: #9a6b00;
+    --green: #2e6b34;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 17px/1.65 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 46rem; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  h1 { font-size: 1.9rem; line-height: 1.25; margin: 0 0 .4rem; }
+  .sub { color: var(--muted); margin: 0 0 2.2rem; font-size: .95rem; }
+  h2 { font-size: 1.25rem; margin: 2.6rem 0 .6rem; }
+  h2 .rank {
+    display: inline-block; background: var(--red); color: #fff;
+    border-radius: 999px; width: 1.7rem; height: 1.7rem; line-height: 1.7rem;
+    text-align: center; font-size: .95rem; margin-right: .5rem;
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 1.1rem 1.3rem; margin: .8rem 0 0;
+  }
+  .shot {
+    border-left: 4px solid var(--red); background: #fdf3f2;
+    padding: .7rem 1rem; margin: .9rem 0; border-radius: 0 8px 8px 0;
+    font-size: .95rem;
+  }
+  .shot strong { color: var(--red); }
+  .fix { color: var(--green); font-size: .95rem; margin-top: .8rem; }
+  code {
+    background: #f2ede3; padding: .1em .35em; border-radius: 4px;
+    font: .85em/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .92rem; }
+  th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  .ok { color: var(--green); font-weight: 600; }
+  .note { color: var(--muted); font-size: .9rem; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 2.5rem 0; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>The 5 things a rival would screenshot</h1>
+<p class="sub">Kannada Beku · audited 2 Jul 2026 on <code>main</code> + <code>fix/bug-fixes-and-audits</code> · codebase, foundation specs, and DB seed migrations reviewed</p>
+
+<p><strong>Headline:</strong> the app is in better mechanical shape than expected — all four issues from the 16 Jun flow audit are verified fixed, offline sync works, and there are no dead buttons. The real exposure is not broken flows; it is <em>capabilities the app claims or implies but doesn't have</em>, plus a total absence of any revenue path.</p>
+
+<h2><span class="rank">1</span>Zero monetization — the business model is literally an open question</h2>
+<div class="card">
+<p>There is no monetization code anywhere: no IAP library, no RevenueCat/Stripe, no entitlement or tier field in <code>stores/useUserStore.ts</code> or the <code>users</code> table, no paywall, no ads. The business model sits as an unresolved <code>[OPEN]</code> item — "Monetisation model — free, freemium, paid?" (<code>docs/foundation/SCOPE.md:110</code>). Meanwhile the redesign handoff already promises "Free · no card · works offline" on the welcome sheet (<code>spec_docs/Sameecha/playful_redesign_handoff/README.md:178</code>), and the marketing-site questionnaire is still <em>asking users</em> what they'd pay (<code>web/site-questionnaire.jsx:147–151</code>).</p>
+<div class="shot"><strong>Rival framing:</strong> not a screenshot — a runway chart. A funded competitor doesn't need to beat the product; they can outspend an app with no revenue mechanism and no decided path to one.</div>
+<p class="fix"><strong>Cheapest counter:</strong> close the SCOPE.md decision. Even "free until Lesson 8 is doubled" is a stance; undecided is the only losing position.</p>
+</div>
+
+<h2><span class="rank">2</span>All Kannada audio is the phone's robot voice — and the app admits it on boot</h2>
+<div class="card">
+<p>Every sound in this listen-first language app comes from device text-to-speech (<code>expo-speech</code> via <code>deviceTtsAudioService</code>; e.g. <code>src/games/dictation/utils/audioPlayer.ts:47</code>). There is no recorded native-speaker audio at all. Worse, if the phone lacks a Kannada TTS voice — common on Android — the app opens with a dialog titled <strong>"Kannada voice not installed"</strong> telling the user to go download one in system settings (<code>components/modals/instances/TTSUnavailableDialog.tsx</code>).</p>
+<div class="shot"><strong>Rival screenshot:</strong> that boot dialog, captioned "a listening app that ships without sound," next to their own human-recorded audio.</div>
+<p class="fix"><strong>Cheapest counter:</strong> record the Lesson 0–2 core vocabulary with one native speaker and bundle it; keep TTS as fallback. Even partial human audio removes the screenshot.</p>
+</div>
+
+<h2><span class="rank">3</span>"Speak" practice is an honor-system button — with a ghost mic permission attached</h2>
+<div class="card">
+<p>The daily-goal rings show Listen / <strong>Speak</strong> / Practice, but the Speak ring increments when the learner taps an <em>"I said it"</em> button (<code>components/lesson/PracticeWordsPhase.tsx:109–113</code>, same in <code>PracticePhrasesPhase.tsx:102</code>). Nothing listens, nothing scores pronunciation. Yet the shipped Android manifest requests <code>RECORD_AUDIO</code> (<code>app.json</code>), and a mic permission dialog exists with the copy <em>"We listen on-device while you speak the answer, then forget the recording"</em> (<code>components/modals/instances/PermissionDialog.tsx</code>) — for a feature that doesn't exist; grep shows <code>kind: 'mic'</code> is never invoked.</p>
+<div class="shot"><strong>Rival screenshot:</strong> the "I said it" button beside a Play-Store permission list showing microphone access — "it asks for your mic but speaking practice is a checkbox." Duolingo/Ling-class apps have real speech scoring.</div>
+<p class="fix"><strong>Cheapest counter:</strong> drop <code>RECORD_AUDIO</code> and the mic dialog copy from the build today (removes the bad-faith angle); relabel or rethink the Speak ring separately.</p>
+</div>
+
+<h2><span class="rank">4</span>The whole curriculum is 8 lessons — and the app says "coming soon" when you hit the walls</h2>
+<div class="card">
+<p>Eight lesson slots exist and eight are authored (<code>constants/lessons/plannedLessons.ts</code>); there is no Lesson 9. A committed learner exhausts everything in days and lands on a Home card reading <strong>"All caught up — More lessons coming soon."</strong> (<code>app/(tabs)/index.tsx:288</code>). All four practice games show <strong>"Lesson N — coming soon"</strong> for any lesson whose game items aren't authored (<code>OppositeGame.tsx:292</code>, <code>DictationGame.tsx:409</code>, <code>ConversationGame.tsx:393</code>, <code>QuickQuizGame.tsx:315</code>), and old Image Match links show <strong>"Image Match has been retired."</strong> (<code>app/(games)/[game]/[n].tsx:29–36</code>).</p>
+<div class="shot"><strong>Rival screenshot:</strong> a grid of the app's own "coming soon" and "retired" screens — "here's what's behind the download."</div>
+<p class="fix"><strong>Cheapest counter:</strong> audit which lesson×game combinations actually surface a "coming soon" screen and either gate them from the UI or author the missing items; reframe the end-of-content card around review instead of absence.</p>
+</div>
+
+<h2><span class="rank">5</span>Nothing brings a finished user back — no review, no spaced repetition</h2>
+<div class="card">
+<p>Retention machinery is a streak counter plus one fixed daily notification ("Time for today's lesson." — <code>lib/reminders.ts</code>). There is no spaced-repetition or review system anywhere in the codebase, no streak protection, and once the 8 lessons are done the daily reminder points at a lesson that doesn't exist. Combined with #4, the product has a hard retention cliff at roughly week two, while every serious language-app rival leads with an SRS review loop.</p>
+<div class="shot"><strong>Rival framing:</strong> a retention-curve comparison, or simply their review screen next to Kannada Beku's "All caught up" card.</div>
+<p class="fix"><strong>Cheapest counter:</strong> a lightweight "review yesterday's words" deck reusing the existing practice components — the game runners and per-item progress data already exist to power it.</p>
+</div>
+
+<hr>
+
+<h2>What a rival would <em>not</em> find (verified fixed)</h2>
+<table>
+  <tr><th>Flow</th><th>Status</th><th>Evidence</th></tr>
+  <tr><td>Per-part game unlock</td><td class="ok">Fixed</td><td><code>src/games/shared/parts.ts:49–96</code></td></tr>
+  <tr><td>Streak inflated by app-opens</td><td class="ok">Fixed — learning days only</td><td><code>services/progress/streak.ts:15–29</code></td></tr>
+  <tr><td>Overall % capped below 100</td><td class="ok">Fixed — client-side rollup</td><td><code>services/progress/overallMastery.ts:38–69</code></td></tr>
+  <tr><td>Conversation taps eaten mid-typewriter</td><td class="ok">Fixed — footer button + non-animated scroll</td><td><code>src/games/conversations/ConversationGame.tsx:164–172, 236–252</code></td></tr>
+  <tr><td>Offline / flaky network</td><td class="ok">Handled — sync queue, error states, retry</td><td><code>stores/syncQueueStore.ts</code></td></tr>
+  <tr><td>Lesson 0 listen-first flow</td><td class="ok">Shipped, DB + bundled fallback</td><td><code>components/guide/GuideFlow.tsx</code>, <code>2026-06-30_lesson0_redesign_guide.sql</code></td></tr>
+</table>
+<p class="note">Ranking logic: #1 is existential (business, not UX). #2 and #3 undermine the app's two core promises — hearing Kannada and speaking it. #4 and #5 are the content/retention ceiling that makes churn structural. The retired Image Match screen and per-lesson "coming soon" gaps are folded into #4 rather than ranked separately.</p>
+
+</main>
+</body>
+</html>

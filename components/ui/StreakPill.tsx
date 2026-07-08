@@ -67,7 +67,7 @@ export function StreakPill({ streak, onPress }: StreakPillProps) {
         }}
         maxFontSizeMultiplier={1.2}
       >
-        {streak}
+        {streak} {streak === 1 ? 'day' : 'days'}
       </Text>
     </Pressable>
   );

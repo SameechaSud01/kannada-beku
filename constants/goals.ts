@@ -1,11 +1,9 @@
 /**
  * Goal-related tuning constants.
  *
- * `WEEKLY_WORD_TARGET` backs the Home "Words learnt" reward banner
- * (chunky_v3 — Home §5). Owner decision (2026-06-13): a fixed sensible default
- * for now rather than a per-user stored target; revisit if we personalise it.
+ * (`WEEKLY_WORD_TARGET` removed 2026-07-05 per spec_home_stats_emergency_polish
+ * D1 — the Home words-learnt card is a plain all-time stat, no weekly target.)
  */
-export const WEEKLY_WORD_TARGET = 35;
 
 /**
  * Per-day targets for the three "daily goal" activity dimensions

@@ -51,11 +51,20 @@ export const Colors = {
   // Strictly red / gold / deep-gold / warm-neutral. No blue/green/teal/coral.
   goldBright: '#ffd24d', // lighter gold highlight (gradients, hi state)
   goldLip: '#c98a00', // button "lip" / ring on gold chunky buttons
+  // Sun-drenched done-card gradient stops (spec_lessons_tab_detail_redesign §2).
+  goldSunHi: '#ffe9a8', // gradient start — completed part-card face
+  goldSunLo: '#ffde7a', // gradient end — completed part-card face
   redLip: '#6e0014', // deep maroon — bottom "lip" on red buttons; 4th Practice card
   redLipDeep: '#4a000e', // deepest maroon — Conversations card lip (chunky_v3)
   textFaint: '#908d76', // hints, locked labels (faintest text tier)
   hairline: 'rgba(27,29,14,0.08)', // top-bar border + card insets ("felt, not seen")
+  hairlineStrong: 'rgba(27,29,14,0.12)', // input/chip borders (onboarding audit fixes)
   cardLip: 'rgba(27,29,14,0.18)', // chunky lip for white/neutral cards (reads on cream; chunky_v3)
+
+  // ── Onboarding audit fixes (design_handoff_onboarding_audit, 2026-07-07) ──
+  redSoft: '#fbeaec', // pale-red selected-option fill (intake option/radio cards)
+  goldSoft: '#fff6da', // pale-gold "heard" vowel-tile fill
+  inkFaint: '#6f6c58', // warm faint ink — Skip, helper/gloss text
 
   // ── Chunky kit v3 — warm cream surfaces (2026-06-13) ──────────
   // Warmer than the near-white ramp above; used as the chunky-kit page bg.

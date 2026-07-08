@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { logger } from '../../lib/logger';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -61,6 +61,15 @@ export function PracticeWordsPhase({
   // Calm "say it" self-check: how the rep felt (no scoring, just self-awareness).
   const [rating, setRating] = useState<SayRating | null>(null);
   const mounted = useIsMounted();
+  const listenScrollRef = useRef<ScrollView>(null);
+
+  // The why-explanation lands below the options; on small screens it can sit
+  // under the fold once the Next button appears, so bring it into view.
+  useEffect(() => {
+    if (picked === null) return;
+    const t = setTimeout(() => listenScrollRef.current?.scrollToEnd({ animated: true }), 350);
+    return () => clearTimeout(t);
+  }, [picked]);
   const options = useMemo<Word[]>(() => {
     if (!word) return [];
     const distractors = pickDistractors(distractorPool ?? words, word);
@@ -126,9 +135,9 @@ export function PracticeWordsPhase({
 
       {step === 'listen' ? (
         <ScrollView
+          ref={listenScrollRef}
           contentContainerStyle={{
             flexGrow: 1,
-            justifyContent: 'center',
             paddingHorizontal: Spacing.lg,
             paddingTop: Spacing.xxl,
             paddingBottom: Spacing.lg,
@@ -139,6 +148,9 @@ export function PracticeWordsPhase({
               onPress={handleReplay}
               playing={playing}
               size={72}
+              color={Colors.secondaryFixed}
+              iconColor={Colors.secondary}
+              lipColor={Colors.goldLip}
               accessibilityLabel="Replay audio"
             />
             <SpeedControl onRateChange={handleReplay} />
@@ -179,7 +191,6 @@ export function PracticeWordsPhase({
         <ScrollView
           contentContainerStyle={{
             flexGrow: 1,
-            justifyContent: 'center',
             paddingHorizontal: Spacing.lg,
             paddingTop: Spacing.xxl,
             paddingBottom: Spacing.lg,
@@ -289,33 +300,6 @@ export function PracticeWordsPhase({
             />
             <SpeedControl onRateChange={handleReplay} />
           </View>
-
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(15),
-              color: Colors.onSurface,
-              marginTop: Spacing.xl,
-              textAlign: 'center',
-            }}
-            maxFontSizeMultiplier={1.3}
-          >
-            Listen, then say it out loud
-          </Text>
-
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(13),
-              color: Colors.tertiary,
-              marginTop: Spacing.xl,
-              textAlign: 'center',
-            }}
-            maxFontSizeMultiplier={1.3}
-          >
-            Said it? How did it feel?
-          </Text>
-          <SelfRate value={rating} onPick={setRating} />
         </ScrollView>
       )}
 
@@ -325,19 +309,42 @@ export function PracticeWordsPhase({
         </View>
       )}
 
-      {step === 'say' && rating !== null && (
-        <View style={{ padding: Spacing.lg, paddingBottom: insets.bottom + Spacing.lg }}>
-          <LipButton label="Next" onPress={handleISaidIt} icon={Icons.forward} />
+      {step === 'say' && (
+        <View
+          style={{
+            padding: Spacing.lg,
+            paddingBottom: insets.bottom + Spacing.lg,
+            alignItems: 'center',
+            gap: Spacing.md,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: Fonts.dmSans.bold,
+              fontSize: moderateScale(15),
+              color: Colors.onSurface,
+              textAlign: 'center',
+            }}
+            maxFontSizeMultiplier={1.3}
+          >
+            Listen, then say it out loud — how did it feel?
+          </Text>
+          <SelfRate value={rating} onPick={setRating} />
+          {rating !== null && (
+            <View style={{ alignSelf: 'stretch', marginTop: Spacing.sm }}>
+              <LipButton label="Next" onPress={handleISaidIt} icon={Icons.forward} />
+            </View>
+          )}
         </View>
       )}
     </View>
   );
 }
 
-const SAY_RATINGS: { key: SayRating; label: string; icon: (typeof Icons)['ratingOk'] }[] = [
-  { key: 'hard', label: 'Tricky', icon: Icons.ratingHard },
-  { key: 'ok', label: 'Got it', icon: Icons.ratingOk },
-  { key: 'easy', label: 'Easy', icon: Icons.ratingEasy },
+const SAY_RATINGS: { key: SayRating; label: string }[] = [
+  { key: 'hard', label: 'Tricky' },
+  { key: 'ok', label: 'Got it' },
+  { key: 'easy', label: 'Easy' },
 ];
 
 /**
@@ -354,7 +361,7 @@ function SelfRate({ value, onPick }: { value: SayRating | null; onPick: (r: SayR
         marginTop: Spacing.md,
       }}
     >
-      {SAY_RATINGS.map(({ key, label, icon: Icon }) => {
+      {SAY_RATINGS.map(({ key, label }) => {
         const active = value === key;
         return (
           <Pressable
@@ -364,25 +371,18 @@ function SelfRate({ value, onPick }: { value: SayRating | null; onPick: (r: SayR
             accessibilityState={{ selected: active }}
             accessibilityLabel={label}
             style={({ pressed }) => ({
-              flexDirection: 'row',
               alignItems: 'center',
-              gap: Spacing.xs,
               backgroundColor: active ? Colors.secondaryFixed : '#ffffff',
               borderRadius: Radius.full,
               borderWidth: active ? 0 : 1,
               borderColor: Colors.hairline,
               borderBottomWidth: 2,
               borderBottomColor: active ? Colors.goldLip : Colors.cardLip,
-              paddingVertical: moderateScale(8),
-              paddingHorizontal: Spacing.md,
+              paddingVertical: moderateScale(10),
+              paddingHorizontal: Spacing.lg,
               transform: [{ translateY: pressed ? 1 : 0 }],
             })}
           >
-            <Icon
-              size={moderateScale(17)}
-              color={active ? Colors.onSecondaryContainer : Colors.tertiary}
-              strokeWidth={2}
-            />
             <Text
               style={{
                 fontFamily: Fonts.dmSans.bold,

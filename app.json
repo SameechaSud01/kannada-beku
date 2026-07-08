@@ -21,7 +21,7 @@
         "ITSAppUsesNonExemptEncryption": false
       },
       "bundleIdentifier": "com.samsud01.kannadabeku",
-      "buildNumber": "5"
+      "buildNumber": "8"
     },
     "android": {
       "adaptiveIcon": {
@@ -32,7 +32,7 @@
       "predictiveBackGestureEnabled": false,
       "permissions": ["android.permission.RECORD_AUDIO"],
       "package": "com.samsud01.kannadabeku",
-      "versionCode": 4
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -68,7 +68,6 @@
           }
         }
       ],
-      "@sentry/react-native",
       [
         "@sentry/react-native/expo",
         {

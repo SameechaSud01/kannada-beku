@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kannada Beku — Manual Testing Plan</title>
+<style>
+  :root{
+    --green:#2e7d4f; --green-d:#1f5a38; --gold:#c9992b; --ink:#1f2430;
+    --muted:#5b6472; --line:#e4e7ec; --bg:#fbfaf7; --card:#ffffff;
+    --pass:#1f8a4c; --fail:#c0392b; --warn:#b8860b; --chip:#eef4ef;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:32px 24px 96px;}
+  header.doc{
+    background:linear-gradient(135deg,var(--green),var(--green-d));
+    color:#fff; border-radius:16px; padding:32px 34px; margin-bottom:28px;
+    box-shadow:0 6px 24px rgba(31,90,56,.18);
+  }
+  header.doc h1{margin:0 0 6px; font-size:30px; letter-spacing:-.4px;}
+  header.doc p{margin:4px 0 0; opacity:.92;}
+  header.doc .meta{margin-top:14px; font-size:13.5px; opacity:.85;}
+  h2{
+    font-size:23px; margin:40px 0 6px; padding-top:10px;
+    border-top:2px solid var(--line); color:var(--green-d); letter-spacing:-.3px;
+  }
+  h2 .num{color:var(--gold); font-weight:800; margin-right:8px;}
+  h3{font-size:18px; margin:26px 0 8px; color:var(--ink);}
+  p.lead{color:var(--muted); margin:6px 0 14px;}
+  a{color:var(--green); }
+  code{
+    background:#f0f1ee; padding:1px 6px; border-radius:5px;
+    font:13.5px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; color:#38414d;
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:18px 20px; margin:14px 0;
+  }
+  ul.tight{margin:8px 0; padding-left:22px;}
+  ul.tight li{margin:4px 0;}
+  table{
+    width:100%; border-collapse:collapse; margin:12px 0 8px; font-size:14.5px;
+    background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden;
+  }
+  th,td{text-align:left; padding:9px 11px; vertical-align:top; border-bottom:1px solid var(--line);}
+  th{background:var(--chip); color:var(--green-d); font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.4px;}
+  td.id{font:12.5px ui-monospace,Menlo,monospace; color:var(--muted); white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  .res{white-space:nowrap; text-align:center; color:var(--muted); font-size:12.5px;}
+  .pill{display:inline-block; font-size:11.5px; font-weight:700; padding:2px 9px; border-radius:20px; letter-spacing:.3px;}
+  .p-crit{background:#fdecec; color:var(--fail);}
+  .p-high{background:#fff3e0; color:#b25f00;}
+  .p-med{background:#eef4ef; color:var(--green-d);}
+  .toc{columns:2; column-gap:34px; font-size:14.5px;}
+  .toc a{display:block; padding:3px 0; text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+  .note{border-left:4px solid var(--gold); background:#fffaf0; padding:10px 14px; border-radius:0 8px 8px 0; margin:12px 0; font-size:14.5px;}
+  .note.bug{border-color:var(--fail); background:#fdf2f1;}
+  .kbd{font:12.5px ui-monospace,Menlo,monospace; background:#eceef0; border:1px solid #d6dae0; border-bottom-width:2px; border-radius:5px; padding:1px 6px;}
+  footer{margin-top:50px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:13px;}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; font-size:13px; color:var(--muted); margin-top:10px;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .dot{width:10px; height:10px; border-radius:50%;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <h1>Kannada Beku — Manual Testing Plan</h1>
+  <p>A complete, screen-by-screen manual QA pass for the Expo learning app.</p>
+  <div class="meta">
+    Covers onboarding, auth, lessons, all four games, guide, emergency, heritage, progress &amp; sync,
+    audio, offline behaviour, and cross-cutting UI/accessibility checks.<br>
+    Drafted 2026-07-02 · branch <code>feature/lesson-illustrations</code> · Expo SDK 54
+  </div>
+</header>
+
+<div class="card">
+  <strong>How to use this plan.</strong> Work top to bottom on a fresh install, then repeat the
+  device-matrix checks (Suite&nbsp;P) on each target device. Each test has a stable ID
+  (e.g. <code>AUTH-03</code>) — record <em>Pass / Fail / Blocked</em> and, on failure, a note + screenshot.
+  Priorities: <span class="pill p-crit">Critical</span> must pass before release;
+  <span class="pill p-high">High</span> ship-blocking for the affected area;
+  <span class="pill p-med">Medium</span> polish/edge.
+  <div class="legend">
+    <span><span class="dot" style="background:var(--pass)"></span> Pass = matches expected</span>
+    <span><span class="dot" style="background:var(--fail)"></span> Fail = deviates</span>
+    <span><span class="dot" style="background:var(--warn)"></span> Blocked = can't test</span>
+  </div>
+</div>
+
+<h2><span class="num">0</span>Setup &amp; Conventions</h2>
+<div class="toc card">
+  <a href="#s0">0 · Setup &amp; conventions</a>
+  <a href="#sA">A · Onboarding &amp; first run</a>
+  <a href="#sB">B · Authentication</a>
+  <a href="#sC">C · Home / dashboard</a>
+  <a href="#sD">D · Learn tab &amp; lesson unlocks</a>
+  <a href="#sE">E · Lesson runner &amp; audio</a>
+  <a href="#sF">F · Games (all four)</a>
+  <a href="#sG">G · Practice tab</a>
+  <a href="#sH">H · Beginners Guide</a>
+  <a href="#sI">I · Emergency phrases</a>
+  <a href="#sJ">J · Heritage</a>
+  <a href="#sK">K · Profile &amp; Settings</a>
+  <a href="#sL">L · Progress, streak &amp; mastery</a>
+  <a href="#sM">M · Offline &amp; sync queue</a>
+  <a href="#sN">N · Multi-device &amp; server sync</a>
+  <a href="#sO">O · Audio / TTS</a>
+  <a href="#sP">P · Devices, layout &amp; accessibility</a>
+  <a href="#sQ">Q · Non-functional &amp; error states</a>
+</div>
+
+<div id="s0" class="card">
+  <h3>Prerequisites</h3>
+  <ul class="tight">
+    <li><strong>Devices (foundation target matrix):</strong> iPhone SE 2nd/3rd gen (375×667, the small-screen floor), iPhone 15 Pro Max, and a mid-size Android. iOS tablet (iPad) for <code>supportsTablet</code>.</li>
+    <li><strong>Builds:</strong> test on a dev/preview build, not only Expo Go, so Supabase auth, OAuth redirects, deep links, and Sentry behave as in production.</li>
+    <li><strong>Accounts:</strong> at least one fresh email/password account, one Google account, one Apple ID (iOS), plus one <em>existing</em> account with prior progress (for the rebrand/streak-adoption checks).</li>
+    <li><strong>State reset:</strong> know how to fully reset — delete &amp; reinstall the app (clears AsyncStorage: <code>user_prefs</code>, <code>sync_queue</code>, progress) and, for server data, reset the test user's rows in Supabase.</li>
+    <li><strong>Network control:</strong> be able to toggle Airplane mode / Wi-Fi off mid-flow to exercise the offline sync queue.</li>
+    <li><strong>Screenshots:</strong> iOS <code>xcrun simctl io booted screenshot /tmp/screen.png</code>; Android <code>adb exec-out screencap -p &gt; /tmp/screen.png</code>.</li>
+  </ul>
+  <div class="note">Reset between major suites where noted — several tests (first-run, unlock gating, streak) only reproduce on a clean state.</div>
+</div>
+
+<!-- ============ A ONBOARDING ============ -->
+<h2 id="sA"><span class="num">A</span>Onboarding &amp; First Run</h2>
+<p class="lead">Routes: <code>app/onboarding/</code> — welcome → name → motivation → commitment → basics. Verify the flow can't loop or be skipped, and that inputs persist.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">ONB-01</td><td>First launch shows welcome</td><td>Fresh install → app opens on <code>onboarding/welcome</code>, not a tab. Splash resolves cleanly into it.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">ONB-02</td><td>Name capture</td><td>Enter a name → it's stored (used later on Home greeting / profile). Empty name is handled (blocked or a sensible default), not a crash.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">ONB-03</td><td>Name with emoji / long / RTL / whitespace-only</td><td>Layout doesn't break; whitespace-only rejected or trimmed.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">ONB-04</td><td>Motivation &amp; commitment steps</td><td>Each selection advances; selections are visibly retained; Back returns without losing prior answers.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">ONB-05</td><td>Basics step</td><td>The <code>onboarding/basics</code> step renders and completes; leads into the app.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">ONB-06</td><td>No re-loop after completion</td><td>Finish onboarding, land in tabs, force-quit, relaunch → app goes straight to Home, <strong>never back to onboarding</strong> (regression from <code>spec_fix_onboarding_loop</code>).</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">ONB-07</td><td>Kill mid-onboarding</td><td>Force-quit on the motivation step, relaunch → resumes sensibly, no crash, no duplicate account state.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">ONB-08</td><td>Safe areas</td><td>On iPhone SE and a notch device: nothing clipped by notch/home indicator; CTA buttons fully tappable above the home bar.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ B AUTH ============ -->
+<h2 id="sB"><span class="num">B</span>Authentication</h2>
+<p class="lead">Routes: <code>app/(auth)/</code> — login, forgot-password, reset-password. Supabase email/password + Google &amp; Apple OAuth. Store: <code>useAuthStore</code> (session).</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">AUTH-01</td><td>Sign up (email/password)</td><td>Create a new account → succeeds, session established, lands in app. Weak/invalid email &amp; short password show inline errors, not a silent failure.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUTH-02</td><td>Log in (email/password)</td><td>Valid creds sign in. Wrong password shows a user-visible error, not a swallowed one.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUTH-03</td><td>Google OAuth</td><td>Tap Google → system/browser flow → redirects back into the app authenticated. Cancelling mid-flow returns to login cleanly.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUTH-04</td><td>Apple OAuth (iOS)</td><td>Sign in with Apple completes and authenticates. (Confirm required on real device — OAuth redirects often differ from Expo Go.)</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUTH-05</td><td>Forgot password</td><td>Request reset for a known email → confirmation shown; reset email arrives.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUTH-06</td><td>Reset password deep link</td><td>Open the reset link → app opens <code>reset-password</code>, new password accepted, can log in with it. Expired/invalid link shows an error, not a blank screen.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUTH-07</td><td>Session persistence</td><td>Log in, force-quit, relaunch → still authenticated, no re-login prompt.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUTH-08</td><td>Sign out</td><td>Sign out from Profile → returns to auth/login; protected tabs no longer reachable; session cleared. Progress/prefs are <strong>preserved</strong> (not wiped) so the same account can re-login without re-onboarding.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUTH-08b</td><td>Re-login same account</td><td>Sign out then sign back in with the same account → lands on Home directly, <strong>no re-onboarding</strong>, progress intact.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUTH-08c</td><td>Switch to different account</td><td>Sign out, sign in as a <strong>different</strong> account → per-user fields reset (name, onboarding, goal, progress) so User B doesn't see User A's data; install-scoped flags (TTS warning seen, basics nudge) may persist.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUTH-09</td><td>Offline login attempt</td><td>With no network, attempt login → clear "no connection" style error, no crash, no infinite spinner.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUTH-10</td><td>Existing (pre-rebrand) account</td><td>Log in with an account that had progress before the "Kannada Baa → Beku" rebrand → streak / XP / completed lessons are preserved (per <code>progressStore</code> comment).</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+</table>
+<div class="note">Gmail/Calendar MCP connectors are unrelated to app auth — ignore for app testing. OAuth must be verified on a real dev/preview build; Expo Go redirect behaviour is not representative.</div>
+
+<!-- ============ C HOME ============ -->
+<h2 id="sC"><span class="num">C</span>Home / Dashboard</h2>
+<p class="lead">Route: <code>app/(tabs)/index.tsx</code>. Shows greeting, daily rings (Listen/Speak/Practice), streak, XP, overall mastery %, and a fun fact.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">HOME-01</td><td>Greeting + name</td><td>Name from onboarding appears. Long names don't overflow.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">HOME-02</td><td>Daily rings render</td><td>Listen / Speak / Practice rings show real per-day activity (client-derived), starting empty on a fresh day.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">HOME-03</td><td>Rings update after activity</td><td>Complete a lesson/game, return Home → the matching ring advances without a manual refresh.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">HOME-04</td><td>Streak display</td><td>Streak matches the streak rule (see Suite L). Shows correctly at 0, 1, and multi-day.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">HOME-05</td><td>Overall mastery %</td><td>Overall progress reflects the client-side content rollup across all four games + lessons; increases as you complete content; never exceeds 100%.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">HOME-06</td><td>Fun fact</td><td>Karnataka fun-fact card renders from DB (<code>karnataka_fun_facts</code>, per <code>spec_home_fun_fact</code>); rotates daily; offline shows last cached fact, not an empty box.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">HOME-06b</td><td>Emergency card</td><td>"Stuck right now?" emergency card is present and taps through to the Emergency screen.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">HOME-06c</td><td>Next-lesson entry</td><td>Home surfaces the next lesson to do and deep-links straight into it.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">HOME-06d</td><td>Post-onboarding nudge</td><td>Immediately after finishing onboarding, a one-time toast points to the Learn-tab Basics card; it does not re-show on later launches (<code>hasSeenBasicsHomeNudge</code>).</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">HOME-07</td><td>Home ↔ Profile consistency</td><td>Streak, XP, overall % shown on Home match Profile exactly (regression from <code>spec_fix_home_profile_sync</code>).</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">HOME-08</td><td>Loading / empty state</td><td>On first paint before data hydrates, a proper loading state shows (not a flash of zeros then jump). Check the system-states components.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ D LEARN ============ -->
+<h2 id="sD"><span class="num">D</span>Learn Tab &amp; Lesson Unlocks</h2>
+<p class="lead">Route: <code>app/(tabs)/learn.tsx</code> → lesson cards → <code>app/lesson/[id]</code>. Lessons L0 (basics) through L8. Verify unlock gating.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">LRN-01</td><td>Lesson list renders</td><td>Basics card pinned at top, then the 8 lessons (Greetings, Names, Wanting, Pointing, Easy verbs, Questions, Hard verbs, Putting it together) with correct titles/state (locked/active/done). No <code>.map()</code> jank; scrolls smoothly.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LRN-01b</td><td>Basics re-entry</td><td>Tapping the pinned Basics card re-opens the Beginners Guide (same content as onboarding step, no progress indicators), and returns cleanly.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LRN-02</td><td>Initial lock state</td><td>Fresh account: only the first lesson(s) unlocked; later ones show locked and are not tappable into content.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LRN-03</td><td>Unlock on completion</td><td>Complete a lesson → the next unlocks (regression from <code>spec_fix_lesson_unlock</code>). Locked lesson becomes available without app restart.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LRN-04</td><td>Completed marker</td><td>Finished lessons show a completed indicator, consistent with progress store.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LRN-05</td><td>Lesson card layout</td><td>Cards match <code>spec_learn_lesson_card</code> / text hierarchy; illustrations (this branch's focus) load with explicit dimensions, no 0×0 collapse.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LRN-06</td><td>Deep link to locked lesson</td><td>Navigating directly to a locked <code>lesson/[id]</code> is refused/redirected, not shown.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ E LESSON RUNNER ============ -->
+<h2 id="sE"><span class="num">E</span>Lesson Runner &amp; Audio</h2>
+<p class="lead">Route: <code>app/lesson/[id].tsx</code>. Content is TS-canonical (<code>lessonContent.ts</code>, split into sub-sections). L0 is the listen-first 7-step redesign.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">LES-01</td><td>L0 listen-first flow</td><td>Lesson 0 runs the 7-step listen-first sequence (per <code>spec_lesson0_redesign</code>); each step advances correctly and completion registers.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LES-02</td><td>Sub-section navigation</td><td>Lessons split into sub-sections advance in order; progress within a lesson is retained if you leave and return.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LES-03</td><td>Kannada script + transliteration</td><td>Kannada glyphs render (no tofu boxes); ISO transliteration matches the normalized content (e.g. <em>illi</em>, not <em>iḷḷi</em>); no stray "namaste" reappearing.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LES-04</td><td>Audio playback in lesson</td><td>Tapping a play/audio control speaks the Kannada word (expo-speech/expo-av). Audio actually plays; replaying works; no overlap of two clips.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LES-05</td><td>Lesson completion → progress</td><td>Finishing a lesson marks it complete, awards XP, advances Listen ring, and enqueues a server sync.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LES-06</td><td>Exit mid-lesson</td><td>Back out partway → exit-confirm dialog appears (per <code>MODALS.md</code>); confirming returns to Learn; cancelling stays. Mid-lesson position is saved to <code>lessonProgress</code> for resume.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LES-06b</td><td>Android hardware back</td><td>Android back button mid-lesson triggers the same exit-confirm dialog (destructive-action intercept), not an instant drop.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LES-06c</td><td>Resume mid-lesson</td><td>Exit partway, re-open the lesson → resumes at the saved position, not from the start.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LES-07</td><td>Runner UX polish</td><td>Matches <code>spec_lesson_runner_ux</code> / <code>spec_lesson_engagement</code>: progress indicator, button states, no dead-end screens.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">LES-08</td><td>Illustrations (current branch)</td><td>New lesson illustrations render on SE and large screens without pushing content off-screen or taking disproportionate vertical space.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ F GAMES ============ -->
+<h2 id="sF"><span class="num">F</span>Games — Quick Quiz, Dictation, Conversations, Opposites</h2>
+<p class="lead">Routes: <code>app/(games)/[game]/index.tsx</code> and <code>[n].tsx</code>. Four games (<code>constants/games.ts</code>): <strong>Quick quiz</strong>, <strong>Dictation</strong>, <strong>Conversations</strong>, <strong>Opposites</strong>. Games split into parts with per-part unlock; all four count toward overall mastery.</p>
+
+<h3>F.1 — Shared game behaviour (run per game)</h3>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">GAM-01</td><td>Part chooser</td><td><code>GamePartChooser</code> lists parts; part 1 unlocked, later parts locked initially (per <code>spec_game_subsection_split</code> + per-part unlock audit).</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">GAM-02</td><td>Per-part unlock</td><td>Complete part <em>n</em> → part <em>n+1</em> unlocks without restart. Locked part can't be entered.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">GAM-03</td><td>Scoring / correctness feedback</td><td>Correct answer = green, wrong = red (owner-approved override). Feedback is immediate and unambiguous.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">GAM-04</td><td>Completion → mastery</td><td>Finishing a part updates <code>game-mastery</code> and the content-derived overall %; Home/Profile reflect it.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">GAM-05</td><td>Exit &amp; resume mid-game</td><td>Leave mid-part, return → no crash; progress handled per spec; no double-count of a completed part.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">GAM-06</td><td>Replay a completed part</td><td>Re-entering a finished part works and does not corrupt or inflate mastery beyond 100%.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+</table>
+
+<h3>F.2 — Game-specific</h3>
+<div class="note bug"><strong>Build-status caveat.</strong> Per the current inventory, only <strong>Dictation</strong> and <strong>Opposites</strong> are fully playable and are the two games that feed the server mastery formula (25% each). <strong>Quick Quiz</strong> and <strong>Conversations</strong> are scaffolded (DB tables + services exist, runners planned). <strong>Image Match</strong> is scaffolded but unused. First step for QUIZ-01 / CONV-01: confirm whether the runner is actually shipped on this build — if it's a placeholder/coming-soon, mark those cases N/A rather than Fail, and verify the tile shows an honest state (not a dead tap).</div>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">DICT-01</td><td>Dictation / syllable builder</td><td>Audio prompt plays; syllable-builder input assembles the answer (<code>spec_dictation_syllable_builder</code>); correct assembly validates; per-item attempts/is_correct recorded; Speak activity + mastery update.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">DICT-02</td><td>Dictation wrong answer</td><td>Wrong assembly is marked incorrect with clear feedback and does not falsely mark the item complete; retry works.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">OPP-01</td><td>Opposites</td><td>Match Kannada word to its opposite; correct=green/wrong=red; per-item attempts recorded; completion feeds mastery.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">QUIZ-01</td><td>Quick quiz (if shipped)</td><td><em>If the runner is live:</em> MCQ renders, single correct answer per <code>spec_quick_quiz_runner</code>, wrong answers don't advance falsely, final score correct. Else confirm the tile shows a non-dead placeholder state.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">CONV-01</td><td>Conversations (if shipped)</td><td><em>If live:</em> dialogue turns advance (<code>spec_conversations_runner</code>), audio lines play, completion recorded. Else confirm honest placeholder.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">CONV-02</td><td>Conversation scroll</td><td>If the runner is live: long conversations scroll to reveal all turns and the continue control — verify the known scroll bug from the flow audit is fixed (nothing trapped below the fold).</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ G PRACTICE ============ -->
+<h2 id="sG"><span class="num">G</span>Practice Tab</h2>
+<p class="lead">Route: <code>app/(tabs)/practice.tsx</code> — entry point into the games.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">PRC-01</td><td>Practice hub renders</td><td>All four games listed with correct titles and lock/progress state; each opens the right runner.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">PRC-02</td><td>Progress reflected</td><td>Per-game progress shown here matches actual completion; Practice ring on Home is consistent.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">PRC-03</td><td>Empty/first-time state</td><td>Before any play, a sensible zero-state shows (not broken layout).</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ H GUIDE ============ -->
+<h2 id="sH"><span class="num">H</span>Beginners Guide</h2>
+<p class="lead">Route: <code>app/guide/index.tsx</code>. DB is source of truth; <code>guide.ts</code> is an offline fallback (per <code>spec_beginners_guide</code>).</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">GID-01</td><td>Guide loads from DB</td><td>Online → guide content loads from Supabase; sections/consonant fixes match the corrected content.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">GID-02</td><td>Offline fallback</td><td>Airplane mode → guide still renders from the bundled <code>guide.ts</code> fallback, no error screen.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">GID-03</td><td>Content integrity</td><td>Consonants/vowels/examples match the owner content reference; no wrong transliterations; audio (if present) matches the glyph.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">GID-04</td><td>Scroll &amp; layout</td><td>Long guide scrolls fully; safe-area padding correct; text not crammed on SE.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ I EMERGENCY ============ -->
+<h2 id="sI"><span class="num">I</span>Emergency Phrases</h2>
+<p class="lead">Route: <code>app/emergency.tsx</code>. English-first ordering was owner-approved.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">EMG-01</td><td>Screen opens</td><td>Emergency screen reachable and renders the phrase list.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">EMG-02</td><td>English-first order</td><td>Each phrase shows English first, then Kannada + transliteration (approved order).</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">EMG-03</td><td>Audio</td><td>Play control speaks the Kannada phrase clearly.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">EMG-04</td><td>Offline</td><td>Emergency phrases available offline (they're safety content) — verify no network dependency to read them.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ J HERITAGE ============ -->
+<h2 id="sJ"><span class="num">J</span>Heritage <span style="font-size:14px;color:var(--muted);font-weight:400;">(verify it's still wired)</span></h2>
+<p class="lead">Route <code>app/heritage/[id].tsx</code> exists in the tree but did <strong>not</strong> surface in the navigation inventory (no tab/card links to it found). First confirm whether it's reachable from the UI at all — if it's legacy/dead, flag it for the owner rather than testing further.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">HER-00</td><td>Reachability</td><td>Search the UI for any entry point into heritage. If none exists, record "unreachable / likely legacy" and skip HER-01/02.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">HER-01</td><td>Heritage detail renders</td><td>If reachable: each item opens its detail with correct content and images (explicit dimensions, no 0×0 collapse).</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">HER-02</td><td>Invalid id</td><td>If reachable: a non-existent id shows a graceful not-found/empty state, not a crash.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ K PROFILE SETTINGS ============ -->
+<h2 id="sK"><span class="num">K</span>Profile &amp; Settings</h2>
+<p class="lead">Routes: <code>app/(tabs)/profile.tsx</code>, <code>app/settings</code>. Stores: <code>useUserStore</code> (<code>user_prefs</code>), <code>useAuthStore</code>.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">PRO-01</td><td>Profile stats</td><td>Name, streak, XP, overall mastery %, lessons completed shown and match Home (regression <code>spec_fix_home_profile_sync</code>).</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">PRO-02</td><td>Onboarding recap</td><td>Profile shows the onboarding answers (name, learning mode, motivations, daily goal) accurately.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">SET-01</td><td>Audio settings wiring</td><td><code>settings/audio</code>: TTS rate + auto-replay persist (see AUD-02/03); daily-reminder time can be set and schedules a notification.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">SET-02</td><td>Feedback screen</td><td><code>settings/feedback</code>: contact mailto opens, version string correct, policy/link items work (per <code>spec_profile_settings_wiring</code>).</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">SET-03</td><td>Daily reminder notification</td><td>Set a reminder time a minute or two ahead → local notification fires. (Note as manual/permission-dependent; verify permission prompt + denied-state copy.)</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">PRO-03</td><td>Sign out from here</td><td>Sign out works (see AUTH-08); returns to login.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">PRO-04</td><td>Preference persistence</td><td>Change a preference, force-quit, relaunch → retained (AsyncStorage <code>user_prefs</code>).</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">PRO-05</td><td>No secrets exposed</td><td>No tokens, session strings, or PII rendered/logged in profile or settings.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ L PROGRESS ============ -->
+<h2 id="sL"><span class="num">L</span>Progress, Streak &amp; Mastery Logic</h2>
+<p class="lead">Store: <code>stores/progressStore.ts</code>. Streak rule (from code): same-day activity = no change; last active = yesterday → streak +1; otherwise → reset to 1. Overall % is a client-side content rollup; the DB overall formula is locked.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">STK-01</td><td>Streak starts at 1</td><td>First activity of a fresh account sets streak = 1, <code>lastActiveDate</code> = today.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">STK-02</td><td>Same-day no double count</td><td>Do two activities the same day → streak stays the same (not +2).</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">STK-03</td><td>Consecutive-day increment</td><td>Activity today, then activity "tomorrow" (advance device date by 1 day) → streak = 2.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">STK-04</td><td>Gap resets</td><td>Skip a day (advance date by 2+ days) then act → streak resets to 1, not continues.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">STK-05</td><td>Streak counts learning days</td><td>Confirm the streak is tied to actual learning activity (audit definition), not merely opening the app.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">MAS-01</td><td>Overall % monotonic</td><td>Overall mastery only rises as content is completed; never regresses on a simple re-open; caps at 100%.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">MAS-02</td><td>Games contribute to mastery</td><td>Completing Dictation and Opposites moves the overall % (server formula = 50% lessons + 25% opposites + 25% dictation, ≥80% correct = "mastered"). If Quiz/Conversations ship and the client rollup counts them, verify they contribute too — see the note below on client-vs-server divergence.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">MAS-03</td><td>XP accrual</td><td>XP increases on lesson/game completion and is consistent between Home and Profile.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">MAS-04</td><td>Persistence across relaunch</td><td>All of streak/XP/overall survive force-quit + relaunch offline (AsyncStorage <code>kannada-beku-progress</code>).</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">XP-01</td><td>XP award tiers</td><td>Completing a lesson with score ≥80% awards 20 XP; below 80% awards 10 XP (flat per lesson).</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">XP-02</td><td>XP idempotence on replay</td><td>Replaying an already-completed lesson does <strong>not</strong> award XP or bump the streak again.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+</table>
+<div class="note">Changing the device date is the reliable way to exercise STK-03/04. Reset the date afterwards. Watch for timezone edge cases around midnight (streak/daily activity reset at local midnight).</div>
+
+<h3>L.2 — Celebrations &amp; milestones</h3>
+<p class="lead">Modals per <code>MODALS.md</code>: streak-milestone full-screen takeovers at 3/7/12/30/60/100/365 days, and a daily-goal celebration fired once per day.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">CEL-01</td><td>Daily-goal celebration</td><td>Reach the daily goal (todayMinutes ≥ target) → celebration modal fires once; "I'm done" / "One more" both behave; does <strong>not</strong> re-fire later the same day (<code>lastGoalCelebrationDate</code>).</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">CEL-02</td><td>Streak milestone takeover</td><td>Use date changes to land on a milestone (e.g. 3 or 7) → full-screen medallion + haptics/confetti shows once. Non-milestone days don't trigger it.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">CEL-03</td><td>No double-celebration</td><td>When a streak milestone and daily goal would fire on the same lesson, only one shows (goal suppressed by milestone).</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ M OFFLINE ============ -->
+<h2 id="sM"><span class="num">M</span>Offline &amp; Sync Queue</h2>
+<p class="lead">Store: <code>stores/syncQueueStore.ts</code> — enqueues writes offline, flushes when back online. Hydration gate releases even on corrupt queue.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">OFF-01</td><td>Complete content offline</td><td>Airplane mode → complete a lesson &amp; a game part → progress reflects locally immediately; writes queued.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">OFF-02</td><td>Flush on reconnect</td><td>Re-enable network → queue flushes; server rows update; no duplicate or lost completions.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">OFF-03</td><td>Kill before flush</td><td>Go offline, complete content, force-quit before reconnecting → relaunch offline shows progress intact; reconnect still flushes.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">OFF-04</td><td>Launch flush</td><td>With queued items, relaunch online → launch-time flush runs; queue drains.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">OFF-05</td><td>Corrupt queue doesn't wedge</td><td>App still launches and is usable even if the persisted queue is unreadable (hydration gate releases — see store comment).</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">OFF-06</td><td>Flaky network mid-flush</td><td>Drop network during a flush → partial flush recovers on next attempt without duplicating already-sent writes.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ N MULTIDEVICE ============ -->
+<h2 id="sN"><span class="num">N</span>Multi-device &amp; Server Sync</h2>
+<p class="lead">Progress merges local + server; streak adoption prefers the equal-or-more-recent server value (per <code>progressStore</code> merge logic).</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">SYN-01</td><td>Progress follows account</td><td>Log the same account into a second device → completed lessons/games appear (deduped union), not a blank slate.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">SYN-02</td><td>Streak adoption</td><td>If server has a more-recent last-active + streak, the client adopts it on login rather than overwriting with a stale local 0.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">SYN-03</td><td>No downgrade of local</td><td>A device with more-recent local activity is not clobbered by an older server streak.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">SYN-04</td><td>Overall % consistency</td><td>Overall mastery is consistent (or converges) across two devices after both sync.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+</table>
+<div class="note bug">Live Supabase data has known drift from repo seed migrations (image_match tables dropped, overall formula patched to a 2-game server trigger while the app uses a client rollup). When server and client numbers disagree, the <strong>client-derived overall %</strong> is the intended display value — confirm the UI shows that, not the server trigger's number.</div>
+
+<!-- ============ O AUDIO ============ -->
+<h2 id="sO"><span class="num">O</span>Audio / TTS (Kannada Pronunciation)</h2>
+<p class="lead">Device-native TTS via <code>expo-speech</code> / <code>expo-av</code> (<code>deviceTtsAudioService</code>), no recorded audio in MVP. Controlled from <code>app/settings/audio</code>: rate 0.50–1.50 (persisted to <code>users.tts_rate</code>), auto-replay toggle (<code>users.auto_replay</code>). Boot probes for a Kannada voice.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">AUD-01</td><td>Playback works everywhere</td><td>Audio plays in lesson intake, listen-pick drills, dictation, guide, and emergency. No silent failures.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUD-02</td><td>Auto-replay on mount</td><td>With auto-replay ON, lesson/drill cards auto-play on mount; turning it OFF stops auto-play but "Replay" still works. Setting persists across relaunch and to the server.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUD-03</td><td>TTS rate control</td><td>In <code>settings/audio</code>, change rate → "Try it" sample (ನಮಸ್ಕಾರ) audibly changes speed; value persists across relaunch.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUD-04</td><td>Missing Kannada voice</td><td>On a device without a Kannada TTS voice → one-time <em>TTS unavailable</em> dialog shows (gated by <code>hasSeenTtsWarning</code>), with a link to device TTS settings; app stays usable.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUD-05</td><td>Playback failure toast</td><td>Force a playback failure → non-blocking "audio failed / tap to retry" toast, not a crash or silent swallow.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUD-06</td><td>Silent switch / volume / rapid taps</td><td>iOS silent switch + volume behave; spamming play doesn't stack overlapping clips or leak sessions; backgrounding mid-clip returns responsive.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">AUD-07</td><td>Pronunciation correctness</td><td>Spot-check spoken audio matches the displayed glyph + transliteration (per <code>tts_fix.md</code>).</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ P DEVICES ============ -->
+<h2 id="sP"><span class="num">P</span>Devices, Layout &amp; Accessibility</h2>
+<p class="lead">Run this suite on <strong>every</strong> target: iPhone SE, iPhone 15 Pro Max, mid-size Android, iPad. Foundation rules: scaled sizing, explicit safe-area insets, 44×44 touch targets.</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">UI-01</td><td>iPhone SE floor</td><td>Every screen usable at 375×667: nothing clipped, no element taking disproportionate vertical space, text not crammed.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">UI-02</td><td>Large device</td><td>15 Pro Max: layouts don't look sparse/stretched; content centered/padded sensibly.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">UI-03</td><td>Android</td><td>Mid-size Android: fonts, safe areas, back button, and the floating tab bar all behave.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">UI-04</td><td>iPad / tablet</td><td>Runs with <code>supportsTablet</code>; no absurd stretching; touch targets fine.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">UI-05</td><td>Safe areas everywhere</td><td>Top notch and bottom home indicator respected on all screens (not just tabs) — nothing drawn under them.</td><td><span class="pill p-crit">Crit</span></td><td class="res">☐</td></tr>
+<tr><td class="id">UI-06</td><td>Large accessibility text</td><td>Bump system font to the largest setting → key screens stay usable; text with <code>maxFontSizeMultiplier</code> doesn't shatter layout.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">UI-07</td><td>Touch targets</td><td>All interactive elements ≥ 44×44pt; icon-only buttons have accessibility labels (VoiceOver/TalkBack reads them).</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">UI-08</td><td>Tab bar navigation</td><td>Floating tab bar switches Home/Learn/Practice/Profile; active state correct; deep screens (lesson/game) push over tabs as designed.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">UI-09</td><td>Orientation</td><td>Rotate device → app behaves per intended lock (verify it doesn't break if rotation is allowed).</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">UI-10</td><td>Dark mode / system theme</td><td>If the app follows or ignores system dark mode, confirm it's consistent — no unreadable low-contrast text.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+</table>
+
+<!-- ============ Q NONFUNCTIONAL ============ -->
+<h2 id="sQ"><span class="num">Q</span>Non-functional &amp; Error States</h2>
+<p class="lead">System states (splash / loading / failure / empty) live in <code>components/states/</code>. Sentry error monitoring is wired (branch <code>chore/production-log</code>).</p>
+<table>
+<tr><th>ID</th><th>Test</th><th>Steps &amp; expected result</th><th>Pri</th><th class="res">Result</th></tr>
+<tr><td class="id">NF-01</td><td>Splash → app</td><td>Splash resolves into the correct first screen (onboarding vs Home) with no white flash or stuck splash.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">NF-02</td><td>Loading states</td><td>Data-loading screens (Home, Learn, Guide) show a proper loading component, not blank or a flash of zeros.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">NF-03</td><td>Failure state</td><td>Force a server error (bad network / kill Supabase) on a data screen → a user-visible error/retry state shows, error is not silently swallowed.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">NF-04</td><td>Empty state</td><td>Screens with no data yet show the intended empty state, not a broken layout.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">NF-05</td><td>Reanimated stability</td><td>Animated screens (tab bar, rings, transitions) don't crash natively — no JS-in-worklet regressions.</td><td><span class="pill p-high">High</span></td><td class="res">☐</td></tr>
+<tr><td class="id">NF-06</td><td>Sentry capture</td><td>In a preview build, trigger a handled error path → confirm it surfaces in Sentry (owner-side verification; note if unverifiable here).</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">NF-07</td><td>Cold-start performance</td><td>Cold launch feels responsive on SE; lists (lessons, guide) scroll at ~60fps with no long blank frames.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">NF-08</td><td>Memory / long session</td><td>Play through several lessons + all games in one session → no progressive slowdown or crash.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+<tr><td class="id">NF-09</td><td>Interruptions</td><td>Incoming call / notification / lock-unlock mid-lesson → app resumes correctly, audio and progress intact.</td><td><span class="pill p-med">Med</span></td><td class="res">☐</td></tr>
+</table>
+
+<h2><span class="num">✦</span>Regression Smoke (run every build)</h2>
+<div class="card">
+  A fast pass to catch the highest-value breakages before deeper testing:
+  <ul class="tight">
+    <li><strong>ONB-06</strong> — no onboarding re-loop after completion.</li>
+    <li><strong>AUTH-02 / AUTH-07</strong> — login works, session persists.</li>
+    <li><strong>LRN-03 / GAM-02</strong> — completing content unlocks the next lesson / game part.</li>
+    <li><strong>HOME-03 / HOME-07</strong> — rings update after activity; Home and Profile agree.</li>
+    <li><strong>LES-04 / AUD-01</strong> — audio plays.</li>
+    <li><strong>CONV-02</strong> — conversation content fully scrollable.</li>
+    <li><strong>OFF-01 / OFF-02</strong> — offline completion, then flush on reconnect.</li>
+    <li><strong>STK-02</strong> — same-day activity doesn't double the streak.</li>
+    <li><strong>UI-01 / UI-05</strong> — iPhone SE layout + safe areas.</li>
+  </ul>
+</div>
+
+<h3>Bug report template</h3>
+<div class="card">
+<code>ID</code>: test id (e.g. GAM-02) · <code>Device/OS</code>: iPhone SE / iOS 18 · <code>Build</code>: preview #… ·
+<code>Steps</code>: 1… 2… 3… · <code>Expected</code>: … · <code>Actual</code>: … ·
+<code>Screenshot/recording</code>: attached · <code>Severity</code>: Crit/High/Med ·
+<code>Network</code>: online/offline · <code>Account</code>: fresh/existing.
+</div>
+
+<footer>
+Kannada Beku manual testing plan · generated from the current app structure
+(<code>app/</code> routes, <code>stores/</code>, <code>constants/games.ts</code>, foundation &amp; spec docs).
+Update the ID tables as features change; keep the Regression Smoke list short and current.
+</footer>
+
+</div>
+</body>
+</html>

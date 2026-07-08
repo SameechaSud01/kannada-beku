@@ -90,16 +90,14 @@ export default function LessonScreen() {
     return <LessonNotFound onBack={() => router.back()} />;
   }
 
-  // Split lesson, no part chosen yet → sub-part chooser.
+  // Split lesson, no part chosen yet → lesson detail (parts) page. It renders
+  // its own ← back header (pushed page, not a modal).
   if (!part && lesson.sections.length > 1) {
     return (
-      <View style={{ flex: 1 }}>
-        <LessonPartChooser
-          lesson={lesson}
-          onSelectPart={(key) => router.push(`/lesson/${lesson.slug}?part=${key}`)}
-        />
-        <ExitBackButton skipConfirm />
-      </View>
+      <LessonPartChooser
+        lesson={lesson}
+        onSelectPart={(key) => router.push(`/lesson/${lesson.slug}?part=${key}`)}
+      />
     );
   }
 

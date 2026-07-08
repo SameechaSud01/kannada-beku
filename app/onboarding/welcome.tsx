@@ -7,7 +7,6 @@ import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
-import { ProgressDots } from '../../components/onboarding/ProgressDots';
 import { BrandGradient } from '../../components/ui/BrandGradient';
 import { Watermark } from '../../components/ui/Watermark';
 import { LipButton } from '../../components/ui/LipButton';
@@ -15,24 +14,26 @@ import { useCopy } from '../../hooks/useCopy';
 
 type Hook = { Icon: TablerIcon; title: string; sub: string; rotate: string };
 
+// ±0.8° tilt with safe spacing — the old ±3° tilts overlapped/clipped
+// neighbouring cards (audit finding 9, spec_onboarding_audit_fixes.md).
 const HOOKS: Hook[] = [
   {
     Icon: Icons.tabPractice,
     title: 'Speak from day one',
     sub: 'Real phrases, not grammar drills',
-    rotate: '-3deg',
+    rotate: '-0.8deg',
   },
   {
     Icon: Icons.emergency,
     title: 'Never get stuck',
     sub: 'Survival phrases · works offline',
-    rotate: '2.5deg',
+    rotate: '0.8deg',
   },
   {
     Icon: Icons.streak,
     title: '5 minutes a day',
     sub: 'Small streaks, real progress',
-    rotate: '-1.5deg',
+    rotate: '-0.8deg',
   },
 ];
 
@@ -59,8 +60,8 @@ export default function WelcomeScreen() {
         <Text
           style={{
             fontFamily: Fonts.notoSansKannada.bold,
-            fontSize: moderateScale(72),
-            lineHeight: moderateScale(116),
+            fontSize: moderateScale(64),
+            lineHeight: moderateScale(104),
             color: Colors.onPrimary,
             textShadowColor: 'rgba(110,0,20,0.35)',
             textShadowOffset: { width: 0, height: 2 },
@@ -116,40 +117,44 @@ export default function WelcomeScreen() {
         </Text>
 
         {/* Three tilted white hook cards */}
-        <View style={{ marginTop: Spacing.xxl, alignSelf: 'stretch', gap: moderateScale(12) }}>
+        <View style={{ marginTop: Spacing.xxl, alignSelf: 'stretch', gap: moderateScale(14) }}>
           {HOOKS.map((hook) => (
             <View
               key={hook.title}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                gap: moderateScale(13),
+                gap: moderateScale(14),
                 backgroundColor: '#ffffff',
                 borderRadius: Radius.chunky,
-                paddingVertical: moderateScale(13),
-                paddingHorizontal: moderateScale(14),
-                borderBottomWidth: 4,
-                borderBottomColor: 'rgba(0,0,0,0.30)',
+                paddingVertical: moderateScale(14),
+                paddingHorizontal: moderateScale(18),
+                borderBottomWidth: 5,
+                borderBottomColor: 'rgba(74,0,14,0.45)',
                 transform: [{ rotate: hook.rotate }],
               }}
             >
               <View
                 style={{
-                  width: moderateScale(42),
-                  height: moderateScale(42),
+                  width: moderateScale(44),
+                  height: moderateScale(44),
                   borderRadius: Radius.tile,
                   backgroundColor: Colors.secondaryFixed,
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <hook.Icon size={moderateScale(22)} color={Colors.secondary} strokeWidth={2.1} />
+                <hook.Icon
+                  size={moderateScale(22)}
+                  color={Colors.onSecondaryContainer}
+                  strokeWidth={2}
+                />
               </View>
               <View style={{ flex: 1 }}>
                 <Text
                   style={{
                     fontFamily: Fonts.baloo.bold,
-                    fontSize: moderateScale(15.5),
+                    fontSize: moderateScale(17),
                     color: Colors.onSurface,
                     letterSpacing: -0.2,
                   }}
@@ -160,8 +165,8 @@ export default function WelcomeScreen() {
                 </Text>
                 <Text
                   style={{
-                    fontFamily: Fonts.dmSans.medium,
-                    fontSize: moderateScale(12.5),
+                    fontFamily: Fonts.dmSans.regular,
+                    fontSize: moderateScale(13.5),
                     color: Colors.tertiary,
                     marginTop: moderateScale(1),
                   }}
@@ -182,23 +187,21 @@ export default function WelcomeScreen() {
           backgroundColor: '#ffffff',
           borderTopLeftRadius: moderateScale(28),
           borderTopRightRadius: moderateScale(28),
-          paddingTop: Spacing.xxl,
-          paddingHorizontal: Spacing.xl,
+          paddingTop: moderateScale(26),
+          paddingHorizontal: Spacing.xxl,
           paddingBottom: insets.bottom + Spacing.xxl,
           overflow: 'hidden',
         }}
       >
-        <View style={{ alignItems: 'center', marginBottom: Spacing.lg }}>
-          <ProgressDots total={5} current={0} />
-        </View>
+        {/* No progress indicator on this screen (audit finding 1). */}
         <Text
           style={{
             fontFamily: Fonts.baloo.extrabold,
-            fontSize: moderateScale(22),
+            fontSize: moderateScale(25),
             color: Colors.onSurface,
             textAlign: 'center',
             letterSpacing: -0.3,
-            lineHeight: moderateScale(30),
+            lineHeight: moderateScale(33),
           }}
           maxFontSizeMultiplier={1.2}
         >
@@ -207,11 +210,11 @@ export default function WelcomeScreen() {
         <Text
           style={{
             fontFamily: Fonts.dmSans.medium,
-            fontSize: moderateScale(13.5),
+            fontSize: moderateScale(14.5),
             color: Colors.tertiary,
             textAlign: 'center',
-            marginTop: moderateScale(3),
-            marginBottom: Spacing.xl,
+            marginTop: moderateScale(4),
+            marginBottom: moderateScale(18),
           }}
           maxFontSizeMultiplier={1.3}
         >

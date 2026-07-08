@@ -7,6 +7,7 @@ import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
 import { GUIDE_STEP_COUNT } from '../../constants/guide';
+import { ChunkyCircle } from '../ui/ChunkyLip';
 import { LipButton } from '../ui/LipButton';
 import { Watermark } from '../ui/Watermark';
 
@@ -63,19 +64,20 @@ export function GuideStepShell({
           accessibilityRole="button"
           accessibilityLabel={step <= 1 ? 'Close' : 'Back'}
           hitSlop={12}
-          style={({ pressed }) => ({
-            width: moderateScale(40),
-            height: moderateScale(40),
-            borderRadius: Radius.full,
-            backgroundColor: '#ffffff',
-            borderWidth: 1,
-            borderColor: Colors.hairline,
-            alignItems: 'center',
-            justifyContent: 'center',
-            transform: [{ scale: pressed ? 0.94 : 1 }],
-          })}
         >
-          <Icons.back size={moderateScale(20)} color={Colors.primary} />
+          {({ pressed }) => (
+            <ChunkyCircle
+              size={moderateScale(40)}
+              bg="#ffffff"
+              lipColor={Colors.cardLip}
+              depth={3}
+              border
+              borderColor={Colors.hairline}
+              pressed={pressed}
+            >
+              <Icons.back size={moderateScale(18)} color={Colors.primary} strokeWidth={2.4} />
+            </ChunkyCircle>
+          )}
         </Pressable>
 
         <Text
@@ -95,7 +97,7 @@ export function GuideStepShell({
         <Text
           style={{
             fontFamily: Fonts.dmSans.bold,
-            fontSize: moderateScale(13),
+            fontSize: moderateScale(14),
             color: Colors.tertiary,
             fontVariant: ['tabular-nums'],
           }}
@@ -110,9 +112,9 @@ export function GuideStepShell({
       <View style={{ paddingHorizontal: Spacing.xxl, paddingBottom: Spacing.md }}>
         <View
           style={{
-            height: moderateScale(9),
+            height: moderateScale(8),
             borderRadius: Radius.full,
-            backgroundColor: 'rgba(27,29,14,0.10)',
+            backgroundColor: Colors.hairline,
             overflow: 'hidden',
           }}
           accessibilityRole="progressbar"

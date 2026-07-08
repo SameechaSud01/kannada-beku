@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { View, Text, ScrollView, Pressable, Animated as RNAnimated } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   Easing,
@@ -19,7 +19,6 @@ import { useAuthStore } from '../../stores/useAuthStore';
 import { useDbLessons } from '../../hooks/useLessons';
 import { useUserStore } from '../../stores/useUserStore';
 import { PLANNED_LESSON_SLOTS, TOTAL_LESSON_SLOTS } from '../../constants/lessons/plannedLessons';
-import { WEEKLY_WORD_TARGET } from '../../constants/goals';
 import { formatFirstName } from '../../utils/formatName';
 import { useCompletedLessons, useWordsLearned, useDailyGoal } from '../../hooks/progress';
 import { useStreakCelebration } from '../../hooks/useStreakCelebration';
@@ -103,9 +102,6 @@ export default function HomeScreen() {
   const handleStartNext = () => {
     if (nextLessonSlot) router.push(`/lesson/${nextLessonSlot.slug}`);
   };
-
-  // Words-learnt reward banner — progress toward a fixed weekly word target.
-  const wordPct = Math.max(0, Math.min(100, Math.round((wordsLearned / WEEKLY_WORD_TARGET) * 100)));
 
   // Every word & phrase from completed lessons, grouped by lesson, for the
   // "Words learnt" sheet. Mirrors the count (words + phrases per lesson).
@@ -290,106 +286,60 @@ export default function HomeScreen() {
             </View>
           )}
 
-          {/* Words-learnt banner — gold reward; tap to see every word learnt */}
+          {/* Words-learnt card — white archive entry point with a gold reward
+              count badge (mirrors the Stuck card's icon-square anatomy). */}
           <Pressable
             onPress={openWordsLearned}
             accessibilityRole="button"
             accessibilityLabel={`Words learnt: ${wordsLearned}. Tap to see all words learnt.`}
-            style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1 })}
+            style={({ pressed }) => ({
+              backgroundColor: '#ffffff',
+              borderRadius: Radius.chunky,
+              borderWidth: 1,
+              borderColor: Colors.hairline,
+              borderBottomWidth: 4,
+              borderBottomColor: Colors.cardLip,
+              padding: moderateScale(16),
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: Spacing.md,
+              opacity: pressed ? 0.85 : 1,
+            })}
           >
-            <LinearGradient
-              colors={[Colors.goldBright, Colors.secondaryContainer]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
+            <WordCountBadge count={wordsLearned} />
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.baloo.extrabold,
+                  fontSize: moderateScale(19),
+                  color: Colors.onSurface,
+                  letterSpacing: -0.2,
+                }}
+                maxFontSizeMultiplier={1.2}
+              >
+                Words learnt
+              </Text>
+            </View>
+            <View
               style={{
-                borderRadius: Radius.chunky,
-                borderBottomWidth: 5,
-                borderBottomColor: Colors.goldLip,
-                padding: moderateScale(16),
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: moderateScale(2),
+                flexShrink: 0,
               }}
             >
-              <View
+              <Text
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'baseline',
+                  fontFamily: Fonts.dmSans.bold,
+                  fontSize: moderateScale(14),
+                  color: Colors.goldLip,
                 }}
+                maxFontSizeMultiplier={1.3}
               >
-                <Text
-                  style={{
-                    fontFamily: Fonts.baloo.extrabold,
-                    fontSize: moderateScale(19),
-                    color: Colors.onSecondaryContainer,
-                    letterSpacing: -0.2,
-                  }}
-                  maxFontSizeMultiplier={1.2}
-                >
-                  Words learnt: {wordsLearned}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: Fonts.baloo.extrabold,
-                    fontSize: moderateScale(19),
-                    color: Colors.onSecondaryContainer,
-                    fontVariant: ['tabular-nums'],
-                  }}
-                  maxFontSizeMultiplier={1.2}
-                >
-                  {wordPct}%
-                </Text>
-              </View>
-              <View
-                style={{
-                  height: moderateScale(9),
-                  backgroundColor: 'rgba(108,80,0,0.22)',
-                  borderRadius: Radius.full,
-                  overflow: 'hidden',
-                  marginTop: Spacing.sm,
-                }}
-              >
-                <View
-                  style={{
-                    height: '100%',
-                    width: `${wordPct}%`,
-                    backgroundColor: Colors.primaryContainer,
-                    borderRadius: Radius.full,
-                  }}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginTop: Spacing.sm,
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: Fonts.dmSans.medium,
-                    fontSize: moderateScale(12),
-                    color: Colors.onSecondaryContainer,
-                    flexShrink: 1,
-                  }}
-                  maxFontSizeMultiplier={1.3}
-                >
-                  of your weekly target achieved
-                </Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(2) }}>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.dmSans.bold,
-                      fontSize: moderateScale(12),
-                      color: Colors.onSecondaryContainer,
-                    }}
-                    maxFontSizeMultiplier={1.3}
-                  >
-                    See all
-                  </Text>
-                  <Icons.forward size={moderateScale(14)} color={Colors.onSecondaryContainer} />
-                </View>
-              </View>
-            </LinearGradient>
+                See all
+              </Text>
+              <Icons.forward size={moderateScale(15)} color={Colors.goldLip} />
+            </View>
           </Pressable>
 
           {/* Stuck right now? — the single urgent red surface (not a warning) */}
@@ -460,11 +410,17 @@ function DailyGoalCard({
   onInfoPress: () => void;
 }) {
   // Dot uses the bright ring colour; value text uses a readable-on-white colour
-  // (Speak's bright gold fails contrast on white, so its text is dark gold).
+  // (Speak's bright gold and Practice's tan both fail contrast on white, so
+  // their texts use the darker sibling token).
   const metrics = [
     { label: 'Listen', value: listen, dot: Colors.primaryContainer, text: Colors.primaryContainer },
     { label: 'Speak', value: speak, dot: Colors.secondaryContainer, text: Colors.secondary },
-    { label: 'Practice', value: practice, dot: Colors.primary, text: Colors.primary },
+    {
+      label: 'Practice',
+      value: practice,
+      dot: Colors.interactiveSecondary,
+      text: Colors.interactiveSecondaryLip,
+    },
   ];
   return (
     <View
@@ -476,7 +432,7 @@ function DailyGoalCard({
         borderBottomWidth: 4,
         borderBottomColor: Colors.cardLip,
         padding: moderateScale(16),
-        gap: moderateScale(14),
+        gap: moderateScale(10),
       }}
     >
       <View
@@ -508,20 +464,20 @@ function DailyGoalCard({
         </Pressable>
       </View>
 
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(26) }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(16) }}>
         <MultiProgressRing
-          size={158}
-          strokeWidth={12}
-          gap={9}
+          size={120}
+          strokeWidth={9}
+          gap={6}
           animated
           rings={[
             { progress: listenFrac, color: Colors.primaryContainer },
             { progress: speakFrac, color: Colors.secondaryContainer },
-            { progress: practiceFrac, color: Colors.primary },
+            { progress: practiceFrac, color: Colors.interactiveSecondary },
           ]}
         />
 
-        <View style={{ flex: 1, gap: moderateScale(12) }}>
+        <View style={{ flex: 1, gap: Spacing.sm }}>
           {metrics.map((m) => (
             <View key={m.label}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(6) }}>
@@ -562,6 +518,47 @@ function DailyGoalCard({
         </View>
       </View>
     </View>
+  );
+}
+
+/**
+ * Gold reward squircle showing the words-learnt count — same ChunkyLip anatomy
+ * as the Stuck card's red icon square so the two cards read as one family.
+ * Width grows with the digit count (3–4 digits widen the badge, never shrink
+ * the numeral).
+ */
+function WordCountBadge({ count }: { count: number }) {
+  const digits = String(count).length;
+  // ~12 per Baloo-extrabold digit at size 20, plus 10 horizontal padding a side.
+  const width = Math.max(moderateScale(52), moderateScale(20 + digits * 12));
+  const radius = moderateScale(14);
+  return (
+    <ChunkyLip
+      width={width}
+      height={moderateScale(52)}
+      radius={radius}
+      depth={moderateScale(4)}
+      bg={Colors.secondaryContainer}
+      lipColor={Colors.goldLip}
+    >
+      <LinearGradient
+        colors={[Colors.goldBright, Colors.secondaryContainer]}
+        start={{ x: 0.3, y: 0 }}
+        end={{ x: 0.6, y: 1 }}
+        style={{ position: 'absolute', width: '100%', height: '100%', borderRadius: radius }}
+      />
+      <Text
+        style={{
+          fontFamily: Fonts.baloo.extrabold,
+          fontSize: moderateScale(20),
+          color: Colors.onSecondaryContainer,
+          fontVariant: ['tabular-nums'],
+        }}
+        maxFontSizeMultiplier={1.2}
+      >
+        {count}
+      </Text>
+    </ChunkyLip>
   );
 }
 

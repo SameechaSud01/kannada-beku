@@ -32,14 +32,9 @@ export default function BasicsScreen() {
     // Learning-focus selection was removed — we only teach spoken Kannada now.
     const learningMode = useUserStore.getState().learningMode ?? 'spoken';
 
-    if (motivations.length === 0) {
-      router.replace('/onboarding/motivation');
-      return;
-    }
-    if (!dailyGoalMinutes) {
-      router.replace('/onboarding/commitment');
-      return;
-    }
+    // Personalization is skippable (spec_onboarding_audit_fixes.md): empty
+    // motivations are a valid answer, and the time step defaults to 10.
+    const goalMinutes = dailyGoalMinutes ?? 10;
 
     setSubmitting(true);
     try {
@@ -47,7 +42,7 @@ export default function BasicsScreen() {
         name: displayName ?? null,
         learning_mode: learningMode,
         motivations,
-        daily_goal_minutes: dailyGoalMinutes,
+        daily_goal_minutes: goalMinutes,
       });
       useUserStore.getState().hydrateFromUserRow(row);
       useUserStore.getState().setHasSeenBasicsGuide(true);
@@ -61,13 +56,13 @@ export default function BasicsScreen() {
         displayName: displayName ?? undefined,
         learningMode,
         motivations,
-        dailyGoalMinutes,
+        dailyGoalMinutes: goalMinutes,
       });
       useUserStore.getState().setPendingOnboardingSync({
         displayName: displayName ?? undefined,
         learningMode,
         motivations,
-        dailyGoalMinutes,
+        dailyGoalMinutes: goalMinutes,
       });
       router.replace('/(tabs)');
     }
@@ -75,8 +70,8 @@ export default function BasicsScreen() {
 
   return (
     <GuideFlow
-      // Step-1 back returns to the previous onboarding step.
-      onExit={() => router.replace('/onboarding/commitment')}
+      // Step-1 back returns to the previous onboarding step (the greeting).
+      onExit={() => router.replace('/onboarding/greeting')}
       onFinish={() => void finishOnboarding()}
       finishing={submitting}
     />

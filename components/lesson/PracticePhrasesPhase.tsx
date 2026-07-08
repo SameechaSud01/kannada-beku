@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { logger } from '../../lib/logger';
 import { View, Text, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -54,6 +54,15 @@ export function PracticePhrasesPhase({
   const [picked, setPicked] = useState<number | null>(null);
   const [playing, setPlaying] = useState(false);
   const mounted = useIsMounted();
+  const listenScrollRef = useRef<ScrollView>(null);
+
+  // The answer-reveal card lands below the options; on small screens it can sit
+  // under the fold once the Next button appears, so bring it into view.
+  useEffect(() => {
+    if (picked === null) return;
+    const t = setTimeout(() => listenScrollRef.current?.scrollToEnd({ animated: true }), 350);
+    return () => clearTimeout(t);
+  }, [picked]);
 
   const options = useMemo<Phrase[]>(() => {
     if (!phrase) return [];
@@ -117,9 +126,9 @@ export function PracticePhrasesPhase({
 
       {step === 'listen' ? (
         <ScrollView
+          ref={listenScrollRef}
           contentContainerStyle={{
             flexGrow: 1,
-            justifyContent: 'center',
             paddingHorizontal: Spacing.lg,
             paddingTop: Spacing.xxl,
             paddingBottom: Spacing.lg,
@@ -130,6 +139,9 @@ export function PracticePhrasesPhase({
               onPress={handleReplay}
               playing={playing}
               size={72}
+              color={Colors.secondaryFixed}
+              iconColor={Colors.secondary}
+              lipColor={Colors.goldLip}
               accessibilityLabel="Replay audio"
             />
             <SpeedControl onRateChange={handleReplay} />

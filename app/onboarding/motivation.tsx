@@ -1,256 +1,177 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
+import type { Icon as TablerIcon } from '@tabler/icons-react-native';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
 import { Icons } from '../../constants/icons';
-import { ProgressDots } from '../../components/onboarding/ProgressDots';
-import { OptionCard } from '../../components/onboarding/OptionCard';
+import { MOTIVATION_OPTIONS, MAX_MOTIVATIONS } from '../../constants/intake';
+import { IntakeStepShell } from '../../components/onboarding/IntakeStepShell';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
-import { LipButton } from '../../components/ui/LipButton';
 import { useUserStore } from '../../stores/useUserStore';
 
-const MOTIVATIONS = [
-  "Don't want to feel like an outsider",
-  'Connect better with Kannadiga friends',
-  'Navigate daily life in Bengaluru',
-  'Stop getting overcharged (auto, markets)',
-  'Impress someone special',
-  'Understand Kannada slang and humour',
-  'Read signboards and menus',
-  'Career / professional reasons',
-];
-
-const OTHER_LABEL = 'Other';
-const MAX_SELECTIONS = 3;
-const OTHER_MAX_LEN = 60;
-
+/**
+ * Intake step 2 · Why (spec_onboarding_audit_fixes.md): 6 compact icon rows so
+ * every option is visible above the fold, checkbox affordance, an "n of 3
+ * picked" counter that appears only after the first pick, and a Skip
+ * affordance — personalization is optional, so Continue is never disabled.
+ */
 export default function MotivationScreen() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
 
-  // Seed from store so selections survive back-nav. A stored value not in the
-  // preset list is the user's previous "Other" free text — restore it as such.
+  // Seed from store so selections survive back-nav (values not in the preset
+  // list — old presets or legacy "Other" free text — are dropped).
   const [selected, setSelected] = useState<string[]>(() => {
     const stored = useUserStore.getState().motivations;
-    return stored.filter((m) => MOTIVATIONS.includes(m));
+    return stored.filter((m) => MOTIVATION_OPTIONS.some((o) => o.label === m));
   });
-  const initialOther = (() => {
-    const stored = useUserStore.getState().motivations;
-    return stored.find((m) => !MOTIVATIONS.includes(m)) ?? '';
-  })();
-  const [otherChecked, setOtherChecked] = useState(initialOther.length > 0);
-  const [otherText, setOtherText] = useState(initialOther);
-
-  const otherTrimmed = otherText.trim();
-  const filledCount = selected.length + (otherChecked && otherTrimmed.length > 0 ? 1 : 0);
 
   const toggleMotivation = (motivation: string) => {
     setSelected((prev) => {
       if (prev.includes(motivation)) {
         return prev.filter((m) => m !== motivation);
       }
-      if (prev.length >= MAX_SELECTIONS) {
+      if (prev.length >= MAX_MOTIVATIONS) {
         return prev;
       }
       return [...prev, motivation];
     });
   };
 
-  const toggleOther = () => {
-    setOtherChecked((prev) => !prev);
+  const handleContinue = () => {
+    useUserStore.getState().setMotivations(selected);
+    router.push('/onboarding/commitment');
   };
 
-  const canContinue = filledCount > 0;
-
-  const handleContinue = () => {
-    if (!canContinue) return;
-    const finalList = [...selected];
-    if (otherChecked && otherTrimmed.length > 0) {
-      finalList.push(otherTrimmed);
-    }
-    useUserStore.getState().setMotivations(finalList);
+  const handleSkip = () => {
+    useUserStore.getState().setMotivations([]);
     router.push('/onboarding/commitment');
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: Colors.surfaceCream }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <IntakeStepShell
+      step={2}
+      title="Why are you learning Kannada?"
+      subtitle="Pick what fits — we'll shape your lessons around it."
+      onSkip={handleSkip}
+      onBack={() => router.back()}
+      onContinue={handleContinue}
     >
-      <View
-        style={{
-          flex: 1,
-          paddingTop: insets.top + Spacing.xl,
-          paddingBottom: insets.bottom + Spacing.xl,
-          paddingHorizontal: Spacing.xxl,
-        }}
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingTop: Spacing.lg, paddingBottom: Spacing.md }}
+        showsVerticalScrollIndicator={false}
       >
-        <ProgressDots total={5} current={2} />
-
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: 'center',
-            paddingVertical: Spacing.xl,
-          }}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
+        <View style={{ gap: moderateScale(10) }}>
+          {MOTIVATION_OPTIONS.map((option) => (
+            <MotivationRow
+              key={option.label}
+              label={option.label}
+              Icon={option.Icon}
+              selected={selected.includes(option.label)}
+              onPress={() => toggleMotivation(option.label)}
+            />
+          ))}
+        </View>
+        {/* Counter appears only after the first pick (audit finding 5). */}
+        {selected.length > 0 ? (
           <Text
             style={{
               fontFamily: Fonts.dmSans.bold,
-              fontSize: moderateScale(11),
-              letterSpacing: 2,
-              color: Colors.tertiary,
-              textTransform: 'uppercase',
-              marginBottom: Spacing.sm,
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            Step 2 of 4
-          </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.baloo.extrabold,
-              fontSize: moderateScale(27),
-              color: Colors.onSurface,
-              letterSpacing: -0.4,
-              lineHeight: moderateScale(38),
-              marginBottom: Spacing.sm,
+              fontSize: moderateScale(13),
+              color: Colors.secondary,
+              marginTop: Spacing.md,
             }}
             maxFontSizeMultiplier={1.3}
+            accessibilityLiveRegion="polite"
           >
-            Why are you learning{'\n'}Kannada?
+            {selected.length} of {MAX_MOTIVATIONS} picked
           </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.regular,
-              fontSize: moderateScale(15),
-              color: Colors.tertiary,
-              marginBottom: Spacing.xxl,
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            Pick up to {MAX_SELECTIONS} ({filledCount}/{MAX_SELECTIONS} selected)
-          </Text>
-
-          <View style={{ gap: moderateScale(10) }}>
-            {MOTIVATIONS.map((motivation) => (
-              <OptionCard
-                key={motivation}
-                label={motivation}
-                selected={selected.includes(motivation)}
-                onPress={() => toggleMotivation(motivation)}
-              />
-            ))}
-            <OtherOptionCard
-              checked={otherChecked}
-              text={otherText}
-              onToggle={toggleOther}
-              onChangeText={setOtherText}
-            />
-          </View>
-        </ScrollView>
-
-        <View style={{ flexDirection: 'row', gap: Spacing.md, marginTop: Spacing.xl }}>
-          <View style={{ flex: 1 }}>
-            <LipButton label="Back" variant="secondary" onPress={() => router.back()} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <LipButton
-              label="Continue"
-              variant="primary"
-              disabled={!canContinue}
-              icon={Icons.forward}
-              onPress={handleContinue}
-            />
-          </View>
-        </View>
-      </View>
-    </KeyboardAvoidingView>
+        ) : null}
+      </ScrollView>
+    </IntakeStepShell>
   );
 }
 
-interface OtherOptionCardProps {
-  checked: boolean;
-  text: string;
-  onToggle: () => void;
-  onChangeText: (value: string) => void;
+interface MotivationRowProps {
+  label: string;
+  Icon: TablerIcon;
+  selected: boolean;
+  onPress: () => void;
 }
 
-function OtherOptionCard({ checked, text, onToggle, onChangeText }: OtherOptionCardProps) {
+function MotivationRow({ label, Icon, selected, onPress }: MotivationRowProps) {
   return (
     <ChunkyPressable
-      onPress={onToggle}
-      accessibilityLabel={OTHER_LABEL}
-      bg={checked ? '#fff5f5' : '#ffffff'}
-      lip={checked ? 4 : 3}
-      lipColor={checked ? 'rgba(145,0,27,0.25)' : Colors.cardLip}
+      onPress={onPress}
+      accessibilityLabel={label}
+      bg={selected ? Colors.redSoft : '#ffffff'}
+      // ChunkyPressable's bottom edge IS the lip — selected needs a 2px red
+      // lip so the border wraps all the way around (no gap at the bottom).
+      lip={selected ? 2 : 3}
+      lipColor={selected ? Colors.primaryContainer : Colors.cardLip}
       border
       borderWidth={2}
-      borderColor={checked ? Colors.primaryContainer : 'rgba(27,29,14,0.10)'}
+      borderColor={selected ? Colors.primaryContainer : 'rgba(27,29,14,0.10)'}
       radius={Radius.chunky}
-      style={{ padding: moderateScale(18) }}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: Spacing.md,
+        paddingVertical: moderateScale(10),
+        paddingHorizontal: moderateScale(14),
+      }}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Text
-          style={{
-            flex: 1,
-            fontFamily: Fonts.baloo.bold,
-            fontSize: moderateScale(16),
-            color: Colors.onSurface,
-            marginRight: Spacing.md,
-          }}
-          maxFontSizeMultiplier={1.4}
-        >
-          {OTHER_LABEL}
-        </Text>
-        {checked && (
-          <View
-            style={{
-              width: moderateScale(26),
-              height: moderateScale(26),
-              borderRadius: Radius.full,
-              backgroundColor: Colors.primaryContainer,
-              borderBottomWidth: 2,
-              borderBottomColor: Colors.redLip,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Icons.check size={moderateScale(15)} color={Colors.onPrimary} strokeWidth={2.8} />
-          </View>
-        )}
-      </View>
-      {checked && (
-        <TextInput
-          value={text}
-          onChangeText={onChangeText}
-          placeholder="Tell us your reason…"
-          placeholderTextColor={Colors.textFaint}
-          autoCapitalize="sentences"
-          autoCorrect
-          maxLength={OTHER_MAX_LEN}
-          accessibilityLabel="Your own reason"
-          style={{
-            marginTop: Spacing.md,
-            backgroundColor: '#ffffff',
-            borderWidth: moderateScale(1),
-            borderColor: 'rgba(27,29,14,0.10)',
-            borderRadius: moderateScale(10),
-            paddingHorizontal: moderateScale(12),
-            paddingVertical: moderateScale(10),
-            fontFamily: Fonts.dmSans.regular,
-            fontSize: moderateScale(15),
-            color: Colors.onSurface,
-          }}
+      <View
+        style={{
+          width: moderateScale(36),
+          height: moderateScale(36),
+          borderRadius: Radius.md,
+          backgroundColor: selected ? '#ffffff' : Colors.surfaceCreamLow,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Icon
+          size={moderateScale(19)}
+          color={selected ? Colors.primaryContainer : Colors.tertiary}
+          strokeWidth={2}
         />
-      )}
+      </View>
+      <Text
+        style={{
+          flex: 1,
+          fontFamily: Fonts.baloo.bold,
+          fontSize: moderateScale(15.5),
+          color: Colors.onSurface,
+        }}
+        // Compact single-line rows so all 6 options stay above the fold
+        // (audit finding 5) — shrink slightly rather than wrap.
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.75}
+        maxFontSizeMultiplier={1.3}
+      >
+        {label}
+      </Text>
+      <View
+        style={{
+          width: moderateScale(22),
+          height: moderateScale(22),
+          borderRadius: moderateScale(7),
+          backgroundColor: selected ? Colors.primaryContainer : 'transparent',
+          borderWidth: selected ? 0 : 2,
+          borderColor: 'rgba(27,29,14,0.18)',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {selected ? (
+          <Icons.check size={moderateScale(13)} color={Colors.onPrimary} strokeWidth={3} />
+        ) : null}
+      </View>
     </ChunkyPressable>
   );
 }

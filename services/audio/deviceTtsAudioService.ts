@@ -61,12 +61,17 @@ export const deviceTtsAudioService: AudioService = {
       }
       // The user's speed setting still applies, with pitch correction so slowed
       // clips don't drop in pitch.
-      const { sound } = await Audio.Sound.createAsync(asset, {
+      const { sound, status } = await Audio.Sound.createAsync(asset, {
         shouldPlay: true,
         rate,
         shouldCorrectPitch: true,
       });
       currentPlaybackSound = sound;
+      // Effective playback length = intrinsic clip length stretched by rate.
+      options?.onStart?.({
+        durationMillis:
+          status.isLoaded && status.durationMillis ? status.durationMillis / rate : undefined,
+      });
       sound.setOnPlaybackStatusUpdate((status) => {
         if (status.isLoaded && status.didJustFinish) {
           sound.unloadAsync().catch(() => undefined);
@@ -82,6 +87,9 @@ export const deviceTtsAudioService: AudioService = {
       Speech.speak(text, {
         language,
         rate,
+        onStart: () => {
+          options?.onStart?.({});
+        },
         onDone: () => {
           if (settled) return;
           settled = true;

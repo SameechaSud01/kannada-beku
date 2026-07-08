@@ -6,79 +6,90 @@ import { moderateScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/colors';
 import { Fonts } from '../../constants/fonts';
 import { Spacing, Radius } from '../../constants/spacing';
-import { useCompletedLessons } from '../../hooks/progress';
-import { useProgressStore } from '../../stores/progressStore';
 import { useStreakCelebration } from '../../hooks/useStreakCelebration';
-import { useDbLessons } from '../../hooks/useLessons';
-import { GamesLockedEmpty } from '../../components/states/empties/TabEmpties';
+import { useLessons } from '../../hooks/useLessons';
 import { Icons } from '../../constants/icons';
 import { Watermark } from '../../components/ui/Watermark';
 import { TopBar } from '../../components/ui/TopBar';
 import { TAB_BAR_CLEARANCE } from '../../components/ui/TabBar';
 import { ChunkyPressable } from '../../components/ui/ChunkyPressable';
-import { ChunkyCircle } from '../../components/ui/ChunkyLip';
-import type { Icon as TablerIcon } from '@tabler/icons-react-native';
 
 type GameId = 'quiz' | 'dictation' | 'conversations' | 'opposites';
 
-type GameDef = {
+type SignDef = {
   id: GameId;
   title: string;
-  subtitle: string;
-  Icon: TablerIcon;
+  /** Kannada shop name, painted beside the English title on the board. */
+  kannada: string;
+  desc: string;
+  glyph: string;
+  /** Signboard tilt — each board hangs slightly off-level. */
+  tilt: string;
   bg: string;
   lip: string;
-  fg: string;
-  glyph: string;
-  /** Glyph watermark tint. */
-  glyphColor: string;
+  ink: string;
+  /** Glyph tile fill. */
+  tile: string;
 };
 
-// The featured Quick quiz renders separately; these three fill the grid + wide row.
-const GRID_GAMES: GameDef[] = [
+// Game Street signboards, in street order (spec_game_street §1). No featured
+// game — the street is flat; the quiz leads because it's first.
+const SIGNS: SignDef[] = [
+  {
+    id: 'quiz',
+    title: 'Quick quiz',
+    kannada: 'ವೇಗ',
+    desc: 'Test your speed.',
+    glyph: 'ಪ',
+    tilt: '-1.2deg',
+    bg: Colors.secondaryContainer,
+    lip: Colors.goldLip,
+    ink: Colors.onSecondaryContainer,
+    tile: 'rgba(255,255,255,0.45)',
+  },
   {
     id: 'dictation',
     title: 'Dictation',
-    subtitle: 'Hear it. Type it.',
-    Icon: Icons.gameDictation,
+    kannada: 'ಕೇಳಿ',
+    desc: 'Hear it. Type it.',
+    glyph: 'ಕ',
+    tilt: '1deg',
     bg: Colors.primaryContainer,
     lip: Colors.redLip,
-    fg: Colors.onPrimary,
-    glyph: 'ಕ',
-    glyphColor: 'rgba(255,255,255,0.22)',
+    ink: Colors.onPrimary,
+    tile: 'rgba(255,255,255,0.18)',
   },
   {
     id: 'conversations',
     title: 'Conversations',
-    subtitle: 'Roleplay real scenes.',
-    Icon: Icons.gameConversations,
+    kannada: 'ಮಾತು',
+    desc: 'Roleplay real scenes.',
+    glyph: 'ಮ',
+    tilt: '-0.8deg',
     bg: Colors.primary,
     lip: Colors.redLipDeep,
-    fg: Colors.onPrimary,
-    glyph: 'ಮ',
-    glyphColor: 'rgba(255,255,255,0.22)',
+    ink: Colors.onPrimary,
+    tile: 'rgba(255,255,255,0.16)',
+  },
+  {
+    id: 'opposites',
+    title: 'Opposites',
+    kannada: 'ವಿರುದ್ಧ',
+    desc: 'Match contrasts.',
+    glyph: 'ವ',
+    tilt: '1.1deg',
+    bg: Colors.secondaryFixed,
+    lip: Colors.goldLip,
+    ink: Colors.onSecondaryContainer,
+    tile: 'rgba(255,255,255,0.6)',
   },
 ];
-
-const WIDE_GAME: GameDef = {
-  id: 'opposites',
-  title: 'Opposites',
-  subtitle: 'Match contrasts.',
-  Icon: Icons.gameOpposites,
-  bg: Colors.secondaryFixed,
-  lip: Colors.goldLip,
-  fg: Colors.onSecondaryContainer,
-  glyph: 'ವ',
-  glyphColor: 'rgba(120,89,0,0.20)',
-};
 
 export default function PracticeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const completedLessons = useCompletedLessons();
-  const completedParts = useProgressStore((s) => s.completedParts);
   const { streak, onStreakPress } = useStreakCelebration();
-  const dbLessons = useDbLessons().data ?? [];
+  const lessons = useLessons();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(4)).current;
@@ -90,20 +101,10 @@ export default function PracticeScreen() {
     ]).start();
   }, []);
 
-  const hasUnlocked = completedParts.length > 0 || completedLessons.length > 0;
   const go = (id: GameId) => router.push(`/${id}`);
 
-  // Nothing unlocked yet → a single "Games unlock as you learn" empty whose one
-  // action starts Lesson 1 (falls back to the Learn tab if lessons aren't loaded).
-  if (!hasUnlocked) {
-    const firstSlug = dbLessons.find((l) => l.lessonNo === 1)?.slug ?? dbLessons[0]?.slug;
-    return (
-      <GamesLockedEmpty
-        streak={streak}
-        onStart={() => router.push(firstSlug ? `/lesson/${firstSlug}` : '/(tabs)/learn')}
-      />
-    );
-  }
+  const unlockedCount = lessons.filter((l) => l.unlocked).length;
+  const meta = `${unlockedCount} ${unlockedCount === 1 ? 'LESSON' : 'LESSONS'} READY`;
 
   return (
     <Animated.View
@@ -142,53 +143,13 @@ export default function PracticeScreen() {
           >
             Games
           </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(15),
-              color: Colors.tertiary,
-              marginTop: moderateScale(2),
-            }}
-            maxFontSizeMultiplier={1.4}
-          >
-            Every game matches your lessons, one to one.
-          </Text>
         </View>
 
-        {/* Featured — Quick quiz */}
-        <View style={{ paddingHorizontal: Spacing.lg, marginBottom: moderateScale(11) }}>
-          <FeaturedQuiz locked={!hasUnlocked} onPress={() => go('quiz')} />
-        </View>
-
-        {/* 2-up grid */}
-        <View
-          style={{
-            paddingHorizontal: Spacing.lg,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          {GRID_GAMES.map((game) => (
-            <GameCard
-              key={game.id}
-              game={game}
-              width="48%"
-              minHeight={150}
-              locked={!hasUnlocked}
-              onPress={() => go(game.id)}
-            />
+        {/* The street */}
+        <View style={{ paddingHorizontal: Spacing.lg, gap: moderateScale(16) }}>
+          {SIGNS.map((sign) => (
+            <Sign key={sign.id} sign={sign} meta={meta} onPress={() => go(sign.id)} />
           ))}
-        </View>
-
-        {/* Wide — Opposites */}
-        <View style={{ paddingHorizontal: Spacing.lg, marginTop: moderateScale(11) }}>
-          <GameCard
-            game={WIDE_GAME}
-            width="100%"
-            minHeight={96}
-            locked={!hasUnlocked}
-            onPress={() => go('opposites')}
-          />
         </View>
 
         <Text
@@ -202,242 +163,131 @@ export default function PracticeScreen() {
           }}
           maxFontSizeMultiplier={1.4}
         >
-          {hasUnlocked
-            ? 'Each game draws only from phrases you’ve already learned.'
-            : 'Finish a lesson part on the Learn tab to unlock your games.'}
+          Each game draws only from phrases you’ve already learned.
         </Text>
       </ScrollView>
     </Animated.View>
   );
 }
 
-/** Small burnt-orange lock badge for a locked (colour-coded) game tile. */
-function LockBadge() {
+/** One shop signboard on Game Street. */
+function Sign({ sign, meta, onPress }: { sign: SignDef; meta: string; onPress: () => void }) {
   return (
-    <View
-      style={{
-        position: 'absolute',
-        top: moderateScale(12),
-        left: moderateScale(12),
-        width: moderateScale(30),
-        height: moderateScale(30),
-        borderRadius: Radius.full,
-        backgroundColor: Colors.warningContainerLow,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Icons.locked size={moderateScale(16)} color={Colors.warningContainer} strokeWidth={2} />
-    </View>
-  );
-}
-
-function RedPlayOrb() {
-  return (
-    <ChunkyCircle
-      size={moderateScale(46)}
-      depth={moderateScale(3)}
-      bg={Colors.primaryContainer}
-      lipColor={Colors.redLip}
-    >
-      <Icons.play size={moderateScale(18)} color={Colors.onPrimary} />
-    </ChunkyCircle>
-  );
-}
-
-function FeaturedQuiz({ locked, onPress }: { locked: boolean; onPress: () => void }) {
-  const inner = (
-    <View style={{ padding: moderateScale(18), overflow: 'hidden' }}>
-      <Text
-        aria-hidden
-        style={{
-          position: 'absolute',
-          top: moderateScale(-6),
-          right: moderateScale(6),
-          fontFamily: Fonts.notoSansKannada.bold,
-          fontSize: moderateScale(88),
-          lineHeight: moderateScale(96),
-          color: 'rgba(120,89,0,0.18)',
-        }}
-        maxFontSizeMultiplier={1}
+    // Tilt lives on a wrapper — ChunkyPressable's press animation owns transform.
+    <View style={{ transform: [{ rotate: sign.tilt }] }}>
+      <ChunkyPressable
+        onPress={onPress}
+        accessibilityLabel={`${sign.title} — ${sign.desc}`}
+        bg={sign.bg}
+        lip={5}
+        lipColor={sign.lip}
+        radius={Radius.chunky}
       >
-        ಪ
-      </Text>
-      {locked ? <LockBadge /> : null}
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(14) }}>
-        <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: moderateScale(14),
+            paddingVertical: moderateScale(15),
+            paddingHorizontal: moderateScale(16),
+          }}
+        >
+          {/* Painted inner outline, inset from the board edge */}
+          <View
+            pointerEvents="none"
+            style={{
+              position: 'absolute',
+              top: moderateScale(6),
+              left: moderateScale(6),
+              right: moderateScale(6),
+              bottom: moderateScale(6),
+              borderWidth: 1,
+              borderColor: 'rgba(255,255,255,0.35)',
+              borderRadius: Radius.chunky - moderateScale(6),
+            }}
+          />
+
+          {/* Glyph tile */}
           <View
             style={{
-              width: moderateScale(52),
-              height: moderateScale(52),
+              width: moderateScale(54),
+              height: moderateScale(54),
               borderRadius: Radius.tile,
-              backgroundColor: 'rgba(255,255,255,0.45)',
+              backgroundColor: sign.tile,
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: moderateScale(10),
             }}
           >
-            <Icons.gameQuickQuiz
-              size={moderateScale(26)}
-              color={Colors.secondary}
-              strokeWidth={2.2}
-            />
+            <Text
+              style={{
+                fontFamily: Fonts.notoSansKannada.bold,
+                fontSize: moderateScale(27),
+                color: sign.ink,
+              }}
+              maxFontSizeMultiplier={1}
+            >
+              {sign.glyph}
+            </Text>
           </View>
-          <Text
-            style={{
-              fontFamily: Fonts.baloo.extrabold,
-              fontSize: moderateScale(21),
-              color: Colors.onSecondaryContainer,
-              letterSpacing: -0.3,
-            }}
-            maxFontSizeMultiplier={1.2}
-          >
-            Quick quiz
-          </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.dmSans.medium,
-              fontSize: moderateScale(13),
-              color: Colors.onSecondaryContainer,
-              marginTop: moderateScale(1),
-            }}
-            maxFontSizeMultiplier={1.3}
-          >
-            Test your speed.
-          </Text>
+
+          <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: moderateScale(8) }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.baloo.extrabold,
+                  fontSize: moderateScale(21),
+                  color: sign.ink,
+                  letterSpacing: -0.3,
+                }}
+                maxFontSizeMultiplier={1.2}
+                numberOfLines={1}
+              >
+                {sign.title}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: Fonts.notoSansKannada.regular,
+                  fontSize: moderateScale(13),
+                  color: sign.ink,
+                  opacity: 0.75,
+                }}
+                maxFontSizeMultiplier={1}
+              >
+                {sign.kannada}
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.medium,
+                fontSize: moderateScale(12.5),
+                color: sign.ink,
+                opacity: 0.82,
+                marginTop: moderateScale(2),
+              }}
+              maxFontSizeMultiplier={1.3}
+              numberOfLines={1}
+            >
+              {sign.desc}
+            </Text>
+            <Text
+              style={{
+                fontFamily: Fonts.dmSans.bold,
+                fontSize: moderateScale(11.5),
+                color: sign.ink,
+                opacity: 0.65,
+                marginTop: moderateScale(4),
+                letterSpacing: 0.3,
+              }}
+              maxFontSizeMultiplier={1.2}
+              numberOfLines={1}
+            >
+              {meta}
+            </Text>
+          </View>
+
+          <Icons.forward size={moderateScale(19)} color={sign.ink} />
         </View>
-        {!locked ? <RedPlayOrb /> : null}
-      </View>
+      </ChunkyPressable>
     </View>
-  );
-
-  if (locked) {
-    return (
-      <View
-        accessibilityRole="button"
-        accessibilityLabel="Quick quiz — locked. Finish a lesson part on the Learn tab to unlock."
-        accessibilityState={{ disabled: true }}
-        style={{
-          borderRadius: Radius.chunky,
-          backgroundColor: Colors.secondaryContainer,
-          borderBottomWidth: 5,
-          borderBottomColor: Colors.goldLip,
-          opacity: 0.55,
-        }}
-      >
-        {inner}
-      </View>
-    );
-  }
-  return (
-    <ChunkyPressable
-      onPress={onPress}
-      accessibilityLabel="Quick quiz — test your speed."
-      bg={Colors.secondaryContainer}
-      lip={5}
-      lipColor={Colors.goldLip}
-      radius={Radius.chunky}
-    >
-      {inner}
-    </ChunkyPressable>
-  );
-}
-
-function GameCard({
-  game,
-  width,
-  minHeight,
-  locked,
-  onPress,
-}: {
-  game: GameDef;
-  width: '48%' | '100%';
-  minHeight: number;
-  locked: boolean;
-  onPress: () => void;
-}) {
-  const inner = (
-    <View
-      style={{
-        minHeight: moderateScale(minHeight),
-        padding: moderateScale(16),
-        justifyContent: 'flex-end',
-        overflow: 'hidden',
-      }}
-    >
-      <Text
-        aria-hidden
-        style={{
-          position: 'absolute',
-          top: moderateScale(8),
-          right: moderateScale(12),
-          fontFamily: Fonts.notoSansKannada.bold,
-          fontSize: moderateScale(64),
-          lineHeight: moderateScale(72),
-          color: game.glyphColor,
-        }}
-        maxFontSizeMultiplier={1}
-      >
-        {game.glyph}
-      </Text>
-      {locked ? <LockBadge /> : null}
-      <Text
-        style={{
-          fontFamily: Fonts.baloo.bold,
-          fontSize: moderateScale(18),
-          color: game.fg,
-          letterSpacing: -0.2,
-        }}
-        maxFontSizeMultiplier={1.2}
-        numberOfLines={1}
-      >
-        {game.title}
-      </Text>
-      <Text
-        style={{
-          fontFamily: Fonts.dmSans.medium,
-          fontSize: moderateScale(12),
-          color: game.fg,
-          marginTop: moderateScale(1),
-        }}
-        maxFontSizeMultiplier={1.3}
-        numberOfLines={2}
-      >
-        {game.subtitle}
-      </Text>
-    </View>
-  );
-
-  if (locked) {
-    return (
-      <View
-        accessibilityRole="button"
-        accessibilityLabel={`${game.title} — locked. Finish a lesson part on the Learn tab to unlock.`}
-        accessibilityState={{ disabled: true }}
-        style={{
-          width,
-          borderRadius: Radius.chunky,
-          backgroundColor: game.bg,
-          borderBottomWidth: 5,
-          borderBottomColor: game.lip,
-          opacity: 0.55,
-        }}
-      >
-        {inner}
-      </View>
-    );
-  }
-  return (
-    <ChunkyPressable
-      onPress={onPress}
-      accessibilityLabel={`${game.title} — ${game.subtitle}`}
-      bg={game.bg}
-      lip={5}
-      lipColor={game.lip}
-      radius={Radius.chunky}
-      style={{ width }}
-    >
-      {inner}
-    </ChunkyPressable>
   );
 }

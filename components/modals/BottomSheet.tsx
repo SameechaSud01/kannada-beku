@@ -1,5 +1,6 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef, type ReactNode } from 'react';
 import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import GorhomBottomSheet, {
   BottomSheetBackdrop,
@@ -19,7 +20,7 @@ export interface BottomSheetProps {
 
 /**
  * Bottom sheet primitive (MODALS §4.2). Wraps @gorhom/bottom-sheet.
- * - Dynamic sizing to content
+ * - Dynamic sizing to content, capped below the status bar (topInset)
  * - Drag handle styled per spec (38×5, surfaceDim, marginBottom 8)
  * - Backdrop tap and swipe-down both dismiss
  * - Slide-up 250ms ease-out, slide-down 200ms ease-in (defaults from lib)
@@ -29,6 +30,7 @@ export const BottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(funct
   ref,
 ) {
   const sheetRef = useRef<GorhomBottomSheet>(null);
+  const insets = useSafeAreaInsets();
 
   useImperativeHandle(ref, () => ({
     close: () => sheetRef.current?.close(),
@@ -59,6 +61,7 @@ export const BottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(funct
       ref={sheetRef}
       index={0}
       enableDynamicSizing
+      topInset={insets.top + moderateScale(12)}
       enablePanDownToClose
       animateOnMount
       onChange={handleChange}

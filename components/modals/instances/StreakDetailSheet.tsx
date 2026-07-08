@@ -45,12 +45,16 @@ const WEEKDAY_NAMES = [
 const getTodayISO = () => localDateISO();
 
 /**
- * Build the current week Mon→Sun from the persisted `weeklyActivity` map.
- * `todayISO` is the local calendar day (matching how the store now stamps day
- * keys — audit H3); the UTC arithmetic below is pure calendar math on that
- * date string, so a day-dot never drifts off its stored key.
+ * Build the current week Mon→Sun. `todayISO` is the local calendar day
+ * (matching how the store stamps day keys — audit H3); the UTC arithmetic
+ * below is pure calendar math on that date string, so a day-dot never drifts
+ * off its stored key.
+ *
+ * D4 (spec_home_stats_emergency_polish): a day lights up only if it belongs to
+ * the *current run* — the row always agrees with the headline streak count. A
+ * practised day that isn't part of the run renders as empty, same as a miss.
  */
-function buildWeek(todayISO: string, weeklyActivity: Record<string, boolean>): DayCell[] {
+function buildWeek(todayISO: string, runDays: Set<string>): DayCell[] {
   const base = new Date(`${todayISO}T00:00:00Z`);
   const mondayOffset = (base.getUTCDay() + 6) % 7; // days since this week's Monday
   const monday = new Date(base);
@@ -60,12 +64,27 @@ function buildWeek(todayISO: string, weeklyActivity: Record<string, boolean>): D
     const d = new Date(monday);
     d.setUTCDate(monday.getUTCDate() + i);
     const iso = d.toISOString().split('T')[0];
-    const done = weeklyActivity[iso] === true;
+    const done = runDays.has(iso);
     const isToday = iso === todayISO;
-    // A past missed day renders as future/empty (spec) — only `done` or today are special.
     const state: CellState = done ? 'done' : isToday ? 'today' : 'future';
     return { iso, letter, full: WEEKDAY_NAMES[i], state };
   });
+}
+
+/**
+ * ISO dates of the current run: `streak` consecutive days ending today (if
+ * today is already done) or yesterday (streak alive, today still pending).
+ */
+function currentRunDays(todayISO: string, streak: number, todayDone: boolean): Set<string> {
+  const days = new Set<string>();
+  if (streak <= 0) return days;
+  const anchor = new Date(`${todayISO}T00:00:00Z`);
+  if (!todayDone) anchor.setUTCDate(anchor.getUTCDate() - 1);
+  for (let i = 0; i < streak; i++) {
+    days.add(anchor.toISOString().split('T')[0]);
+    anchor.setUTCDate(anchor.getUTCDate() - 1);
+  }
+  return days;
 }
 
 /** First milestone above the current streak, or null past the top of the ladder. */
@@ -88,13 +107,18 @@ export function StreakDetailSheet() {
   );
 
   const todayISO = getTodayISO();
-  const days = buildWeek(todayISO, weeklyActivity);
   const todayDone = weeklyActivity[todayISO] === true;
+  const days = buildWeek(todayISO, currentRunDays(todayISO, streak, todayDone));
   const nextMilestone = nextMilestoneFor(streak);
   const daysToNext = nextMilestone != null ? nextMilestone - streak : 0;
 
   const title = streak === 0 ? 'Start your streak today' : `${streak}-day streak`;
-  const subtitle = streak === 0 ? 'Practise once today to light it up.' : 'Your best run yet';
+  const subtitle =
+    streak === 0
+      ? 'Practise once today to light it up.'
+      : streak === 1
+        ? 'Day one — nice start.'
+        : 'Keep it going.';
 
   function onSetReminder() {
     modal.show({ kind: 'sheet', component: RemindersSheet });
@@ -350,7 +374,7 @@ function MilestoneNudge({
         paddingHorizontal: moderateScale(16),
       }}
     >
-      <Icons.bolt size={moderateScale(20)} color={Colors.primaryContainer} strokeWidth={2.4} />
+      <Icons.bolt size={moderateScale(20)} color={GOLD_DEEP} strokeWidth={2.4} />
       {nextMilestone != null ? (
         <Text style={textStyle} maxFontSizeMultiplier={1.3}>
           <Text style={numberStyle}>{daysToNext}</Text>

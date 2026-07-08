@@ -3,6 +3,13 @@ export type PlayOptions = {
   language?: string;
   /** Speech rate. Defaults to 0.9 (slightly slower than normal). */
   rate?: number;
+  /**
+   * Called when playback actually starts. `durationMillis` is the effective
+   * wall-clock playback length (rate-adjusted) when known — bundled clips
+   * report it; device TTS can't, so it's undefined there. Lets UI sync visual
+   * cues (e.g. the rhythm beat chips) to the real audio pace.
+   */
+  onStart?: (info: { durationMillis?: number }) => void;
 };
 
 export interface AudioService {

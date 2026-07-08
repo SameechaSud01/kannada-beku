@@ -27,14 +27,18 @@ export function useGuideAudio() {
     };
   }, []);
 
-  const play = (key: string, text: string) => {
+  const play = (
+    key: string,
+    text: string,
+    onStart?: (info: { durationMillis?: number }) => void,
+  ) => {
     setPlayingKey(key);
     const userRate = useUserStore.getState().ttsRate ?? 1.0;
     deviceTtsAudioService
-      .play(text, { rate: Math.min(GUIDE_TTS_RATE, userRate) })
+      .play(text, { rate: Math.min(GUIDE_TTS_RATE, userRate), onStart })
       .catch((err) => {
         logger.warn('guide_audio', 'play failed', { err });
-        Toasts.audioFailed(() => play(key, text));
+        Toasts.audioFailed(() => play(key, text, onStart));
       })
       .finally(() => {
         if (mounted.current) setPlayingKey((cur) => (cur === key ? null : cur));
