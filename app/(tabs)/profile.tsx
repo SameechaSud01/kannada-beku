@@ -34,7 +34,6 @@ import { Toasts } from '../../components/modals/instances/toastCatalog';
 import { SignOutDialog } from '../../components/modals/instances/SignOutDialog';
 import { RemindersSheet } from '../../components/modals/instances/RemindersSheet';
 import { GoalSummarySheet } from '../../components/modals/instances/GoalSummarySheet';
-import { ProfileSkeleton } from '../../components/states/skeletons/TabSkeletons';
 
 const appVersion = Constants.expoConfig?.version ?? '1.0.0';
 
@@ -108,9 +107,6 @@ export default function ProfileScreen() {
   ]
     .filter(Boolean)
     .join(' · ');
-
-  // First-load shimmer while overall progress fetches — same chrome, no reflow.
-  if (overall.isLoading) return <ProfileSkeleton streak={streak} />;
 
   const settingsItems: { id: string; label: string; Icon: TablerIcon; onPress: () => void }[] = [
     {

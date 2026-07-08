@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { withTimeout, DEFAULT_TIMEOUT_MS } from '../../lib/withTimeout';
 
 export type LearningMode = 'spoken' | 'written' | 'both';
 export type DailyGoalMinutes = 5 | 10 | 20;
@@ -25,11 +26,11 @@ const USER_SELECT =
   'id, email, name, avatar_url, learning_mode, motivations, daily_goal_minutes, current_streak, last_active_date, onboarding_completed_at, created_at, daily_reminder_time, tts_rate, auto_replay';
 
 export async function fetchUserRow(userId: string): Promise<UserRow | null> {
-  const { data, error } = await supabase
-    .from('users')
-    .select(USER_SELECT)
-    .eq('id', userId)
-    .maybeSingle();
+  const { data, error } = await withTimeout(
+    supabase.from('users').select(USER_SELECT).eq('id', userId).maybeSingle(),
+    DEFAULT_TIMEOUT_MS,
+    'fetchUserRow',
+  );
 
   if (error) throw error;
   return (data as UserRow | null) ?? null;

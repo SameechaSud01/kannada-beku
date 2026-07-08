@@ -1,4 +1,5 @@
 import { supabase } from '../supabase';
+import { DICTATION_ITEMS_BY_LESSON } from '../../../constants/games/dictationItems';
 
 export type DictationItem = {
   id: string;
@@ -12,62 +13,14 @@ export type DictationItem = {
   section: string | null;
 };
 
-type Row = {
-  id: string;
-  lesson_id: string;
-  sort_order: number;
-  expected_answer: string;
-  accepted_json: string[] | null;
-  phonetic: string | null;
-  audio_url: string | null;
-  section: string | null;
-};
-
-const lessonNoToId = new Map<number, string>();
-
-async function lessonIdByNo(lessonNo: number): Promise<string | null> {
-  const cached = lessonNoToId.get(lessonNo);
-  if (cached) return cached;
-  const { data, error } = await supabase
-    .from('lessons')
-    .select('id')
-    .eq('lesson_no', lessonNo)
-    .maybeSingle();
-  if (error) throw error;
-  if (!data) return null;
-  lessonNoToId.set(lessonNo, data.id as string);
-  return data.id as string;
-}
-
-function mapRow(row: Row, lessonNo: number): DictationItem {
-  return {
-    id: row.id,
-    lessonId: row.lesson_id,
-    lessonNo,
-    sortOrder: row.sort_order,
-    expectedAnswer: row.expected_answer,
-    acceptedSpellings: row.accepted_json ?? [],
-    phonetic: row.phonetic,
-    audioUrl: row.audio_url,
-    section: row.section,
-  };
-}
-
+/**
+ * Bundled-first (spec_scalability_offline_fixes Phase 3): items ship in the
+ * binary with their real DB row UUIDs (progress rows + record RPCs key on
+ * them). dictation_items remains the regeneration source — `npm run
+ * gen:content` after any dashboard content change.
+ */
 export async function fetchDictationItemsByLessonNo(lessonNo: number): Promise<DictationItem[]> {
-  const lessonId = await lessonIdByNo(lessonNo);
-  if (!lessonId) return [];
-
-  const { data, error } = await supabase
-    .from('dictation_items')
-    .select(
-      'id, lesson_id, sort_order, expected_answer, accepted_json, phonetic, audio_url, section',
-    )
-    .eq('lesson_id', lessonId)
-    .gt('sort_order', 0)
-    .order('sort_order', { ascending: true });
-
-  if (error) throw error;
-  return (data ?? []).map((r) => mapRow(r as unknown as Row, lessonNo));
+  return DICTATION_ITEMS_BY_LESSON[lessonNo] ?? [];
 }
 
 /**

@@ -1,10 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useAuthStore } from '../../stores/useAuthStore';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   fetchDictationItemsByLessonNo,
   type DictationItem,
 } from '../../services/api/games/dictation';
 import { recordGameAttemptResilient } from '../../services/progress/syncQueue';
+import { markMasteryDirty } from '../../services/progress/masteryRefresh';
 
 export function useDictationItems(lessonNo: number | null | undefined) {
   return useQuery<DictationItem[]>({
@@ -16,18 +16,14 @@ export function useDictationItems(lessonNo: number | null | undefined) {
 }
 
 export function useRecordDictationAttempt() {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['recordDictationAttempt'],
     retry: 2,
     mutationFn: ({ itemId, isCorrect }: { itemId: string; isCorrect: boolean }) =>
       recordGameAttemptResilient('dictation', itemId, isCorrect),
     onSuccess: () => {
-      const userId = useAuthStore.getState().user?.id;
-      if (userId) {
-        // Refresh the content-derived overall % (audit H4 + rollup port).
-        queryClient.invalidateQueries({ queryKey: ['game-mastery', userId] });
-      }
+      // Content-derived overall % refetches once at game end (masteryRefresh).
+      markMasteryDirty();
     },
   });
 }

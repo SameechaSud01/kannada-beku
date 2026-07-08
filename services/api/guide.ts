@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import { logger } from '../../lib/logger';
+import { withTimeout, DEFAULT_TIMEOUT_MS } from '../../lib/withTimeout';
 import {
   WELCOME_POINTS,
   VOWEL_SOUNDS,
@@ -105,11 +106,11 @@ export async function fetchGuideContent(): Promise<GuideContent> {
   if (cached) return cached;
 
   try {
-    const { data, error } = await supabase
-      .from('lessons')
-      .select('content_json')
-      .eq('slug', 'basics')
-      .maybeSingle();
+    const { data, error } = await withTimeout(
+      supabase.from('lessons').select('content_json').eq('slug', 'basics').maybeSingle(),
+      DEFAULT_TIMEOUT_MS,
+      'fetchGuideContent',
+    );
 
     if (error) throw error;
 

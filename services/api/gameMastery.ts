@@ -1,4 +1,6 @@
 import { supabase } from './supabase';
+import { logger } from '../../lib/logger';
+import { withTimeout, DEFAULT_TIMEOUT_MS } from '../../lib/withTimeout';
 import { TS_LESSONS } from '../../constants/lessons/lessonContent';
 import { fetchOppositesItemsByLessonNo } from './games/opposites';
 import { fetchDictationItemsByLessonNo } from './games/dictation';
@@ -22,11 +24,17 @@ type ProgressTable =
 /** Item ids the user has ever answered correctly for one game (RLS scopes the
  *  read to this user; we also filter on user_id defensively). Read-only. */
 async function fetchCorrectItemIds(table: ProgressTable, userId: string): Promise<Set<string>> {
-  const { data, error } = await supabase
-    .from(table)
-    .select('item_id')
-    .eq('user_id', userId)
-    .eq('is_correct', true);
+  const { data, error } = await withTimeout(
+    supabase
+      .from(table)
+      .select('item_id')
+      .eq('user_id', userId)
+      .eq('is_correct', true)
+      // Defensive cap (Phase 4) — well above any game's total item count.
+      .limit(2000),
+    DEFAULT_TIMEOUT_MS,
+    `fetchCorrectItemIds:${table}`,
+  );
   if (error) throw error;
   return new Set((data ?? []).map((r) => (r as { item_id: string }).item_id));
 }
@@ -60,15 +68,16 @@ async function gameMastery(
 }
 
 /**
- * Sum every game's {correct, total} per lesson. Read-only — reuses the
- * existing per-lesson item fetchers for totals + the item→lesson map, and one
- * plain select per `*_progress` table for correctness. No DDL, no writes.
+ * Sum every game's {correct, total} per lesson. Read-only — the per-lesson
+ * item fetchers now resolve from bundled constants (Phase 3), so this issues
+ * exactly four network reads (one per `*_progress` table). No DDL, no writes.
  *
  * Every game with content for a lesson counts, weighted by its real item
  * volume — there is no per-game weighting constant to tune. This is the
  * "practice" half of the overall-progress rollup (see overallMastery.ts).
  */
 export async function fetchGameMasteryByLesson(userId: string): Promise<GameMasteryByLesson> {
+  const start = Date.now();
   const games = await Promise.all([
     gameMastery(
       'opposites_progress',
@@ -101,5 +110,8 @@ export async function fetchGameMasteryByLesson(userId: string): Promise<GameMast
       merged[no] = { correct: cur.correct + m.correct, total: cur.total + m.total };
     }
   }
+  logger.info('progress', 'game-mastery computed (4 progress reads, bundled items)', {
+    ms: Math.round(Date.now() - start),
+  });
   return merged;
 }

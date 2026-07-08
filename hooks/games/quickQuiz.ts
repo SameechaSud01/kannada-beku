@@ -1,10 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useAuthStore } from '../../stores/useAuthStore';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   fetchQuickQuizItemsByLessonNo,
   type QuickQuizItem,
 } from '../../services/api/games/quickQuiz';
 import { recordGameAttemptResilient } from '../../services/progress/syncQueue';
+import { markMasteryDirty } from '../../services/progress/masteryRefresh';
 
 /**
  * Fetch all quick_quiz_items for one lesson, ordered by sort_order.
@@ -21,23 +21,19 @@ export function useQuickQuizItems(lessonNo: number | null | undefined) {
 
 /**
  * Record one per-item attempt via the record_quick_quiz_attempt RPC.
- * Personal-best on the server side. Quick Quiz now counts toward the
- * content-derived overall rollup, so this invalidates ['game-mastery', userId]
- * to refresh the headline %. Retries transient failures (audit H4).
+ * Personal-best on the server side. Quick Quiz counts toward the
+ * content-derived overall rollup, so this marks it dirty — the headline %
+ * refetches once at game end (masteryRefresh). Retries transient failures
+ * (audit H4).
  */
 export function useRecordQuickQuizAttempt() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationKey: ['recordQuickQuizAttempt'],
     retry: 2,
     mutationFn: ({ itemId, isCorrect }: { itemId: string; isCorrect: boolean }) =>
       recordGameAttemptResilient('quick_quiz', itemId, isCorrect),
     onSuccess: () => {
-      const userId = useAuthStore.getState().user?.id;
-      if (userId) {
-        queryClient.invalidateQueries({ queryKey: ['game-mastery', userId] });
-      }
+      markMasteryDirty();
     },
   });
 }

@@ -8,7 +8,10 @@
 import React, { useEffect } from 'react';
 import { Animated, View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useQueryClient } from '@tanstack/react-query';
 import { moderateScale } from 'react-native-size-matters';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { refreshGameMasteryIfDirty } from '@/services/progress/masteryRefresh';
 import { Colors } from '@/constants/colors';
 import { Spacing, Radius } from '@/constants/spacing';
 import { Fonts } from '@/constants/fonts';
@@ -51,11 +54,15 @@ const ResultScreen: React.FC<Props> = ({
   replayLabel = 'Play again ▸',
 }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { opacity, scale } = useEntrance();
 
   useEffect(() => {
     haptics.complete();
-  }, []);
+    // Warm the overall-% rollup while the player reads their score, so
+    // Profile is fresh before they can reach it (spec_scalability_offline_fixes §1).
+    void refreshGameMasteryIfDirty(queryClient, useAuthStore.getState().user?.id);
+  }, [queryClient]);
 
   return (
     <Animated.View
