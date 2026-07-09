@@ -3,6 +3,7 @@ node_modules/
 dist/
 web-build/
 build/
+coverage/
 ios/
 android/
 package-lock.json

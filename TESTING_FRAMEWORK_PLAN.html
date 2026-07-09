@@ -1,0 +1,239 @@
+<title>Kannada Beku — Testing Framework Plan</title>
+<style>
+  :root {
+    --ground: #FBFAF7;
+    --panel: #F2F1EA;
+    --ink: #232B26;
+    --muted: #5D6A61;
+    --green: #1B6B47;
+    --green-soft: #E3EEE7;
+    --gold: #A97B0B;
+    --gold-soft: #F5ECD6;
+    --line: #DDDDD2;
+    --code-bg: #EEEDE4;
+    --have: #1B6B47;
+    --gap: #A9440B;
+    --gap-soft: #F6E4D8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #141815;
+      --panel: #1B211D;
+      --ink: #E5E9E4;
+      --muted: #9AA79D;
+      --green: #6FC79A;
+      --green-soft: #1E2E25;
+      --gold: #DFB554;
+      --gold-soft: #2E2818;
+      --line: #2C332E;
+      --code-bg: #1E241F;
+      --have: #6FC79A;
+      --gap: #E08B5A;
+      --gap-soft: #33251B;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #141815; --panel: #1B211D; --ink: #E5E9E4; --muted: #9AA79D;
+    --green: #6FC79A; --green-soft: #1E2E25; --gold: #DFB554; --gold-soft: #2E2818;
+    --line: #2C332E; --code-bg: #1E241F; --have: #6FC79A; --gap: #E08B5A; --gap-soft: #33251B;
+  }
+  :root[data-theme="light"] {
+    --ground: #FBFAF7; --panel: #F2F1EA; --ink: #232B26; --muted: #5D6A61;
+    --green: #1B6B47; --green-soft: #E3EEE7; --gold: #A97B0B; --gold-soft: #F5ECD6;
+    --line: #DDDDD2; --code-bg: #EEEDE4; --have: #1B6B47; --gap: #A9440B; --gap-soft: #F6E4D8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font: 16px/1.65 "Seravek", "Avenir Next", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+  header.doc { border-bottom: 3px solid var(--green); padding-bottom: 1.75rem; margin-bottom: 2.5rem; }
+  .eyebrow {
+    text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.72rem;
+    font-weight: 700; color: var(--gold); margin: 0 0 0.75rem;
+  }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 0.75rem; letter-spacing: -0.015em; text-wrap: balance; }
+  .meta { color: var(--muted); font-size: 0.88rem; margin: 0; }
+  .meta code { font-size: 0.84rem; }
+  h2 {
+    font-size: 1.32rem; margin: 3rem 0 1rem; letter-spacing: -0.01em; text-wrap: balance;
+    display: flex; align-items: baseline; gap: 0.65rem;
+  }
+  h2 .phase-tag {
+    flex: none; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--green); background: var(--green-soft); border-radius: 999px; padding: 0.2rem 0.65rem;
+    transform: translateY(-2px);
+  }
+  h3 { font-size: 1.02rem; margin: 1.75rem 0 0.5rem; }
+  p, ul, ol { margin: 0 0 1rem; }
+  ul, ol { padding-left: 1.35rem; }
+  li { margin-bottom: 0.4rem; }
+  li::marker { color: var(--green); }
+  a { color: var(--green); }
+  strong { font-weight: 650; }
+  code, pre {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.86em; font-variant-ligatures: none;
+  }
+  code { background: var(--code-bg); border-radius: 4px; padding: 0.1em 0.35em; }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px;
+    padding: 0.9rem 1.1rem; overflow-x: auto; line-height: 1.55; margin: 0 0 1rem;
+  }
+  pre code { background: none; padding: 0; }
+  table {
+    border-collapse: collapse; width: 100%; font-size: 0.9rem; margin: 0 0 1.25rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .table-wrap { overflow-x: auto; }
+  th {
+    text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.09em;
+    color: var(--muted); font-weight: 700; padding: 0.45rem 0.9rem 0.45rem 0; border-bottom: 2px solid var(--line);
+  }
+  td { padding: 0.55rem 0.9rem 0.55rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .chip {
+    display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em;
+    border-radius: 999px; padding: 0.1rem 0.6rem; white-space: nowrap;
+  }
+  .chip.have { color: var(--have); background: var(--green-soft); }
+  .chip.gap { color: var(--gap); background: var(--gap-soft); }
+  .chip.partial { color: var(--gold); background: var(--gold-soft); }
+  .callout {
+    background: var(--panel); border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0;
+    padding: 0.9rem 1.1rem; margin: 0 0 1.25rem; font-size: 0.94rem;
+  }
+  .callout strong:first-child { color: var(--gold); }
+  .decision {
+    background: var(--green-soft); border-left: 4px solid var(--green); border-radius: 0 8px 8px 0;
+    padding: 0.9rem 1.1rem; margin: 0 0 1.25rem; font-size: 0.94rem;
+  }
+  .kn { color: var(--green); font-weight: 600; }
+  footer { margin-top: 3.5rem; border-top: 1px solid var(--line); padding-top: 1rem; color: var(--muted); font-size: 0.82rem; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<main>
+  <header class="doc">
+    <p class="eyebrow">Kannada Beku <span class="kn">· ಕನ್ನಡ ಬೇಕು</span> — Engineering plan</p>
+    <h1>A complete testing framework, built in five phases</h1>
+    <p class="meta">Drafted 2026-07-08 · branch <code>chore/testing-framework</code> · Expo SDK 54 · plan-only, no code written yet</p>
+  </header>
+
+  <h2>Where we are today</h2>
+  <p>The foundation is already real, and it's healthy: <strong>14 suites, 102 tests, all passing in ~0.5&nbsp;s</strong>. What's missing is everything above the unit layer — nothing renders a component, nothing exercises the offline sync queue end-to-end, and nothing drives the actual app.</p>
+  <div class="table-wrap"><table>
+    <tr><th>Layer</th><th>Status</th><th>Detail</th></tr>
+    <tr><td>Unit tests (logic)</td><td><span class="chip have">HAVE</span></td><td>Jest + <code>jest-expo</code>; game hooks, progress store, mastery rollup, utils, <code>lib/</code> — 102 tests</td></tr>
+    <tr><td>Test infrastructure</td><td><span class="chip have">HAVE</span></td><td><code>jest.setup.js</code> mocks AsyncStorage + Sentry; <code>@/</code> path mapping works</td></tr>
+    <tr><td>CI gate</td><td><span class="chip have">HAVE</span></td><td>GitHub Actions on every PR: typecheck → lint → format check → test</td></tr>
+    <tr><td>Local gate</td><td><span class="chip have">HAVE</span></td><td>Husky pre-push runs tsc + ESLint + security scan + Jest; direct commits to main blocked</td></tr>
+    <tr><td>Manual QA plan</td><td><span class="chip have">HAVE</span></td><td><code>TESTING_PLAN.html</code> — screen-by-screen suites with stable IDs (ONB-01, AUTH-07…)</td></tr>
+    <tr><td>Component tests</td><td><span class="chip gap">GAP</span></td><td><code>@testing-library/react-native</code> is installed but zero tests render UI</td></tr>
+    <tr><td>Content integrity</td><td><span class="chip gap">GAP</span></td><td>Nothing validates <code>lessonContent.ts</code> — the product's canonical data</td></tr>
+    <tr><td>Integration (sync/offline)</td><td><span class="chip gap">GAP</span></td><td>Sync queue, reconnect flush, per-user reset — only tested by hand</td></tr>
+    <tr><td>Coverage visibility</td><td><span class="chip gap">GAP</span></td><td>No coverage collection or thresholds; we can't see what's untested</td></tr>
+    <tr><td>End-to-end (device)</td><td><span class="chip gap">GAP</span></td><td>No automated flows on a simulator; everything above the unit layer is manual</td></tr>
+  </table></div>
+
+  <p>The five phases below fill the gaps in order of value-per-effort. Each phase is independently shippable and ends with a hand-off for you to review before the next begins.</p>
+
+  <div class="table-wrap"><table>
+    <tr><th>Phase</th><th>What lands</th><th>Effort</th><th>Catches</th></tr>
+    <tr><td><strong>1</strong> Coverage + content integrity</td><td>Coverage thresholds; schema tests for lesson content</td><td>~½ day</td><td>Bad content data, silent coverage decay</td></tr>
+    <tr><td><strong>2</strong> Component tests</td><td>RNTL render tests for shared components + Reanimated/gesture mocks</td><td>~1–2 days</td><td>Broken UI states, missing a11y labels</td></tr>
+    <tr><td><strong>3</strong> Integration tests</td><td>Offline sync queue + progress flows against a fake Supabase</td><td>~1–2 days</td><td>Data loss, cross-account leakage, sync bugs</td></tr>
+    <tr><td><strong>4</strong> E2E with Maestro</td><td>5–6 YAML flows for the critical paths, run on the iOS simulator</td><td>~2 days</td><td>Onboarding loops, unlock regressions, real crashes</td></tr>
+    <tr><td><strong>5</strong> CI wiring + docs</td><td>Coverage gate in CI, nightly E2E, a testing README</td><td>~½ day</td><td>Process drift</td></tr>
+  </table></div>
+
+  <h2><span class="phase-tag">Phase 1</span> Coverage + content integrity tests</h2>
+  <p>Two cheap wins that pay off immediately.</p>
+  <h3>Coverage with a ratchet, not a wall</h3>
+  <p>Turn on coverage collection scoped to the pure-logic folders where 100% of the current tests live, and set thresholds slightly <em>below</em> today's numbers so the build fails only when coverage <em>drops</em>. No retrofitting tests to hit an arbitrary number.</p>
+  <pre><code>// package.json → "jest"
+"collectCoverageFrom": [
+  "lib/**/*.ts", "stores/**/*.ts", "utils/**/*.ts",
+  "hooks/**/*.ts", "src/**/*.ts",
+  "!**/*.d.ts"
+],
+"coverageThreshold": { "global": { /* set from the Phase-1 baseline run */ } }</code></pre>
+  <p>Plus two scripts: <code>test:watch</code> and <code>test:coverage</code>.</p>
+
+  <h3>Content integrity tests — the highest-value suite this app can have</h3>
+  <p>The lessons in <code>lessonContent.ts</code> <em>are</em> the product, they're canonical in TypeScript (not the DB), and content bugs have bitten before (the <code>iḷḷi→illi</code> fix, the ISO diacritic normalization pass). A schema suite makes every future content edit self-checking:</p>
+  <ul>
+    <li>Every lesson/sub-section/item has a unique, stable ID; no duplicates across lessons.</li>
+    <li>Transliterations conform to the ISO diacritic conventions adopted 2026-06-26 (no banned characters, no stray ASCII approximations).</li>
+    <li>Every referenced audio asset actually exists in the bundle; no orphaned audio files.</li>
+    <li>Kannada fields contain Kannada script; English fields don't; no empty strings.</li>
+    <li>Game content (quiz options, opposites pairs, dictation aksharas) is well-formed — e.g. the correct answer is always among the options.</li>
+  </ul>
+
+  <h2><span class="phase-tag">Phase 2</span> Component tests with React Native Testing Library</h2>
+  <p>RNTL is installed and unused. The setup work is the real cost here — Reanimated v4 and gesture-handler need their Jest mocks wired in <code>jest.setup.js</code> before anything that touches an animated component will render. Once that's done, tests target the shared building blocks, not whole screens:</p>
+  <ul>
+    <li><strong>System-state components</strong> (<code>components/states/</code>): loading, failure, empty each render their message and retry action.</li>
+    <li><strong>Answer feedback</strong>: correct → green treatment, wrong → red, per the locked owner override.</li>
+    <li><strong>Lesson runner steps</strong>: given a step, the right variant renders and "continue" fires.</li>
+    <li><strong>Accessibility as assertion</strong>: query by role/label (per CLAUDE.md), which makes missing <code>accessibilityLabel</code>s test failures for free.</li>
+  </ul>
+  <div class="callout"><strong>Not doing:</strong> full-screen snapshot tests — CLAUDE.md rules them out as brittle, and they'd fight every visual polish pass you do.</div>
+
+  <h2><span class="phase-tag">Phase 3</span> Integration tests: sync queue and progress flows</h2>
+  <p>This is where the scariest bugs live — the ones the manual plan's Suites M/N (offline &amp; multi-device) exist for. The approach: a shared <strong>fake Supabase client</strong> in <code>__tests__/testUtils/</code> (an in-memory table + controllable failure/latency switches, injected via <code>jest.mock</code> of <code>lib/supabase</code>), then test the real stores against it:</p>
+  <ul>
+    <li>Complete a game offline → writes queue locally → reconnect → queue flushes once, in order, no duplicates.</li>
+    <li>Flush fails mid-way → queue retains the unflushed tail; nothing is dropped.</li>
+    <li>End-of-game mastery refresh recomputes the client-side rollup and Home's rings see it.</li>
+    <li>Sign out / sign in as a different user → per-user state fully resets (the AUTH-08c leak scenario).</li>
+    <li>Lesson completion unlocks the next lesson without restart (the LRN-03 regression).</li>
+  </ul>
+  <p>Each of these encodes a bug class this project has actually had, and they run in milliseconds with no simulator.</p>
+
+  <h2><span class="phase-tag">Phase 4</span> End-to-end flows with Maestro</h2>
+  <p><strong>Recommendation: Maestro, not Detox.</strong> Maestro drives a dev build on the simulator from plain YAML, needs no native test harness compiled into the app, and survives Expo SDK upgrades — Detox with RN 0.81/new-architecture is a maintenance tax this one-person project shouldn't pay. Flows live in <code>.maestro/</code> and map 1:1 to the critical IDs in the manual plan:</p>
+  <div class="table-wrap"><table>
+    <tr><th>Flow</th><th>Covers manual IDs</th></tr>
+    <tr><td>Fresh install → onboarding → lands on Home; relaunch doesn't re-loop</td><td>ONB-01, ONB-06</td></tr>
+    <tr><td>Email login; force-quit; relaunch still authenticated</td><td>AUTH-02, AUTH-07</td></tr>
+    <tr><td>Complete a lesson → next lesson unlocks</td><td>LRN-03</td></tr>
+    <tr><td>Play one game to completion → rings/mastery advance on Home</td><td>HOME-03, F-suite</td></tr>
+    <tr><td>Airplane mode mid-game → finish → reconnect → progress synced</td><td>M-suite</td></tr>
+  </table></div>
+  <pre><code># .maestro/lesson-unlock.yaml
+appId: com.kannadabeku.app
+---
+- launchApp
+- tapOn: "Learn"
+- tapOn: "Greetings"
+- runFlow: helpers/complete-lesson.yaml
+- assertVisible: "Names"        # next lesson now unlocked</code></pre>
+  <p>What E2E deliberately <em>won't</em> cover: OAuth (Google/Apple system sheets aren't automatable), real audio output, and the physical-device matrix — those stay in the manual plan, which shrinks to the things only a human can check.</p>
+  <div class="decision"><strong>Decision needed:</strong> the auth flows need a strategy — a dedicated Supabase test account (simplest; I'd seed one and keep its creds in <code>.env</code>, never committed), or a dev-only auth bypass. I'd start with the test account.</div>
+
+  <h2><span class="phase-tag">Phase 5</span> Wire it into CI and write it down</h2>
+  <ul>
+    <li><strong>PR pipeline</strong> (unchanged runtime): swap <code>npm test -- --ci</code> for the coverage run so the ratchet gates merges. Unit + component + integration all run here — they're fast.</li>
+    <li><strong>E2E cadence</strong>: not on every PR. Maestro needs a macOS runner (~10× the per-minute cost of Linux) and a built app. Run it nightly or on-demand via <code>workflow_dispatch</code>; a later option is EAS Workflows' hosted Maestro job.</li>
+    <li><strong>Pre-push hook</strong>: already runs Jest; it picks up the new suites automatically. No change.</li>
+    <li><strong><code>docs/TESTING.md</code></strong>: one page — the layers, how to run each, where fakes live, when to add which kind of test, and the split between automated coverage and the manual plan.</li>
+  </ul>
+
+  <h2>What I'm deliberately leaving out</h2>
+  <ul>
+    <li><strong>Database-level tests</strong> — migrations are run by hand in the Supabase dashboard and the live DB has known drift from the repo's SQL; there's no CLI-managed shadow DB to test against. Not worth faking.</li>
+    <li><strong>Visual regression / screenshot diffing</strong> — high flake, low payoff while the UI is still being actively redesigned. Revisit post-launch if at all.</li>
+    <li><strong>Storybook</strong> — a component workbench, not a test layer; adds a dependency surface without catching bugs the RNTL tests won't.</li>
+  </ul>
+
+  <h2>Confirm before I start</h2>
+  <ol>
+    <li><strong>Scope</strong> — all five phases, or trim? (Phases 1–3 are the core; 4 is the biggest lift and the biggest payoff.)</li>
+    <li><strong>E2E auth strategy</strong> — dedicated test account (my recommendation) vs. dev-only bypass.</li>
+    <li><strong>Hand-off points</strong> — I'll pause after each phase for you to review and run things yourself, per our usual rhythm.</li>
+  </ol>
+
+  <footer>Kannada Beku · testing framework plan · 2026-07-08 · lives at <code>TESTING_FRAMEWORK_PLAN.html</code> alongside the manual <code>TESTING_PLAN.html</code></footer>
+</main>

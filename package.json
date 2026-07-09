@@ -17,6 +17,8 @@
     "security-scan": "bash scripts/security-scan.sh",
     "pre-push": "npm run typecheck && npm run security-scan",
     "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "prepare": "husky",
     "postinstall": "node scripts/postinstall.js"
   },
@@ -93,6 +95,22 @@
     ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/$1"
+    },
+    "collectCoverageFrom": [
+      "lib/**/*.ts",
+      "stores/**/*.ts",
+      "utils/**/*.ts",
+      "hooks/**/*.ts",
+      "src/**/*.ts",
+      "!**/*.d.ts"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 44,
+        "branches": 39,
+        "functions": 31,
+        "lines": 46
+      }
     }
   },
   "private": true
