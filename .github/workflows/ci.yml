@@ -37,5 +37,7 @@ jobs:
       - name: Format check
         run: npm run format:check
 
-      - name: Test
-        run: npm test -- --ci
+      # Coverage thresholds act as a ratchet (see package.json "coverageThreshold"):
+      # the build fails only if coverage DROPS below the pinned floor.
+      - name: Test (with coverage gate)
+        run: npm run test:coverage -- --ci
