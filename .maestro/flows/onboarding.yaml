@@ -1,0 +1,47 @@
+# ONB-01…06: fresh-account intake completes and never re-loops on relaunch.
+# Requires a test account that has NOT completed onboarding (reset its users
+# row in the Supabase dashboard between runs).
+appId: com.samsud01.kannadabeku
+---
+- launchApp:
+    clearState: true
+- assertVisible: 'Welcome back'
+- tapOn: 'Email'
+- inputText: ${MAESTRO_TEST_EMAIL}
+- tapOn: 'Password'
+- inputText: ${MAESTRO_TEST_PASSWORD}
+- tapOn: 'Log in'
+
+# ONB-01: a never-onboarded session lands on the welcome step.
+- extendedWaitUntil:
+    visible: 'Get Started'
+    timeout: 15000
+- tapOn: 'Get Started'
+
+# ONB-02: name capture.
+- tapOn: 'Your name'
+- inputText: 'Maestro'
+- tapOn: 'Continue'
+
+# ONB-04: motivation and commitment (Continue is never disabled by design).
+- tapOn: 'Continue'
+- tapOn: 'Continue'
+
+# ONB-05: greeting/basics hand-off into the app.
+- extendedWaitUntil:
+    visible: 'Start Kannada basics'
+    timeout: 10000
+- tapOn: 'Start Kannada basics'
+
+# Eventually the tabs are reachable.
+- extendedWaitUntil:
+    visible: 'Learn'
+    timeout: 30000
+
+# ONB-06: relaunch goes straight to tabs, never back into onboarding.
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: 'Learn'
+    timeout: 15000
+- assertNotVisible: 'Get Started'

@@ -1,0 +1,13 @@
+# LRN-01/02: the Learn tab lists the lesson catalogue and the first lesson opens.
+appId: com.samsud01.kannadabeku
+---
+- runFlow: login.yaml
+- tapOn: 'Learn'
+- assertVisible: 'Greetings'
+- assertVisible: 'Names'
+- tapOn: 'Greetings'
+# Lesson detail/intro renders (title carries over).
+- extendedWaitUntil:
+    visible: 'Greetings'
+    timeout: 10000
+- back
