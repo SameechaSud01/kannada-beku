@@ -26,11 +26,51 @@ const LIP = moderateScale(6);
 // bottom. Negative offsets intentionally bleed the palace / town hall off-screen.
 // aspectRatio is the source PNG's width/height so a fixed width yields the right height.
 const STICKERS = [
-  { src: require('../../assets/stickers/vidhana-soudha.png'), width: 200, left: 92, bottom: 66, rotate: '0deg', z: 3, ratio: 270 / 195 },
-  { src: require('../../assets/stickers/mysore-palace.png'), width: 170, left: -32, bottom: 78, rotate: '-2deg', z: 1, ratio: 360 / 250 },
-  { src: require('../../assets/stickers/town-hall.png'), width: 152, right: -30, bottom: 90, rotate: '2deg', z: 4, ratio: 320 / 258 },
-  { src: require('../../assets/stickers/dosa.png'), width: 92, right: 20, bottom: 50, rotate: '-6deg', z: 2, ratio: 304 / 149 },
-  { src: require('../../assets/stickers/filter-coffee.png'), width: 58, left: 36, bottom: 54, rotate: '9deg', z: 5, ratio: 151 / 145 },
+  {
+    src: require('../../assets/stickers/vidhana-soudha.png'),
+    width: 200,
+    left: 92,
+    bottom: 66,
+    rotate: '0deg',
+    z: 3,
+    ratio: 270 / 195,
+  },
+  {
+    src: require('../../assets/stickers/mysore-palace.png'),
+    width: 170,
+    left: -32,
+    bottom: 78,
+    rotate: '-2deg',
+    z: 1,
+    ratio: 360 / 250,
+  },
+  {
+    src: require('../../assets/stickers/town-hall.png'),
+    width: 152,
+    right: -30,
+    bottom: 90,
+    rotate: '2deg',
+    z: 4,
+    ratio: 320 / 258,
+  },
+  {
+    src: require('../../assets/stickers/dosa.png'),
+    width: 92,
+    right: 20,
+    bottom: 50,
+    rotate: '-6deg',
+    z: 2,
+    ratio: 304 / 149,
+  },
+  {
+    src: require('../../assets/stickers/filter-coffee.png'),
+    width: 58,
+    left: 36,
+    bottom: 54,
+    rotate: '9deg',
+    z: 5,
+    ratio: 151 / 145,
+  },
 ] as const;
 
 /**
@@ -61,7 +101,12 @@ export function BrandSplash() {
   const glyphLine = moderateScale(174);
 
   return (
-    <View style={[StyleSheet.absoluteFill, { backgroundColor: Colors.splashCreamTop, overflow: 'hidden' }]}>
+    <View
+      style={[
+        StyleSheet.absoluteFill,
+        { backgroundColor: Colors.splashCreamTop, overflow: 'hidden' },
+      ]}
+    >
       {/* Cream canvas — subtle top→foot warm gradient (approximates the radial). */}
       <LinearGradient
         colors={[Colors.splashCreamTop, Colors.splashCreamBottom]}
@@ -93,7 +138,9 @@ export function BrandSplash() {
               width: moderateScale(s.width),
               aspectRatio: s.ratio,
               bottom: moderateScale(s.bottom),
-              ...('left' in s ? { left: moderateScale(s.left) } : { right: moderateScale(s.right) }),
+              ...('left' in s
+                ? { left: moderateScale(s.left) }
+                : { right: moderateScale(s.right) }),
               transform: [{ rotate: s.rotate }],
               zIndex: s.z,
               shadowColor: Colors.splashStickerShadow,
@@ -122,13 +169,25 @@ export function BrandSplash() {
             aria-hidden
             accessibilityElementsHidden
             importantForAccessibility="no"
-            style={[styles.glyph, { fontSize: glyph, lineHeight: glyphLine, position: 'absolute', top: LIP, color: Colors.secondaryContainer }]}
+            style={[
+              styles.glyph,
+              {
+                fontSize: glyph,
+                lineHeight: glyphLine,
+                position: 'absolute',
+                top: LIP,
+                color: Colors.secondaryContainer,
+              },
+            ]}
             maxFontSizeMultiplier={1}
           >
             ಕ
           </Text>
           <Text
-            style={[styles.glyph, { fontSize: glyph, lineHeight: glyphLine, color: Colors.primaryContainer }]}
+            style={[
+              styles.glyph,
+              { fontSize: glyph, lineHeight: glyphLine, color: Colors.primaryContainer },
+            ]}
             maxFontSizeMultiplier={1}
           >
             ಕ
@@ -208,5 +267,7 @@ function Rise({
   }));
 
   if (reduced) return <View style={[{ alignItems: 'center' }, style]}>{children}</View>;
-  return <Animated.View style={[{ alignItems: 'center' }, style, aStyle]}>{children}</Animated.View>;
+  return (
+    <Animated.View style={[{ alignItems: 'center' }, style, aStyle]}>{children}</Animated.View>
+  );
 }
