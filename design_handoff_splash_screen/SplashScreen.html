@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kannada Beku — Splash (Rangoli × Skyline)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --kb-red: #be0027;
+    --kb-red-deep: #91001b;
+    --kb-red-lip: #6e0014;
+    --kb-gold: #fdc003;
+    --kb-gold-bright: #ffd24d;
+    --kb-ink: #1b1d0e;
+    --kb-ink-faint: #6f6c58;
+    --kb-gradient-red: linear-gradient(135deg, #91001b 0%, #be0027 100%);
+
+    --sf-display: "Baloo Tamma 2", system-ui, sans-serif;
+    --sf-body: "DM Sans", system-ui, sans-serif;
+    --sf-kn: "Noto Sans Kannada", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    display: flex; align-items: center; justify-content: center;
+    background: #2a2a28; font-family: var(--sf-body);
+  }
+  a { color: var(--kb-red); }
+  a:hover { color: var(--kb-red-deep); }
+
+  /* Phone viewport — 402 × 874 (iPhone logical size). In the real app this is
+     the full device screen; the frame here is only for preview. */
+  .screen {
+    position: relative; width: 402px; height: 874px; overflow: hidden;
+    border-radius: 46px; box-shadow: 0 24px 70px rgba(0,0,0,0.45);
+    background: radial-gradient(125% 80% at 50% 28%, #fbf4e2 0%, #f1e6c9 100%);
+  }
+
+  /* Warm ground shadow under the skyline. */
+  .ground {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 250px;
+    background: linear-gradient(180deg, transparent 0%, rgba(120,89,0,0.05) 45%, rgba(120,89,0,0.11) 100%);
+  }
+
+  .stickers { position: absolute; inset: 0; }
+  .stickers img {
+    position: absolute; filter: drop-shadow(0 7px 12px rgba(40,30,20,0.16));
+  }
+
+  .mark {
+    position: absolute; top: 0; left: 0; right: 0;
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 196px;
+  }
+  .glyph {
+    font-family: var(--sf-kn); font-weight: 700; font-size: 132px; line-height: 1;
+    color: var(--kb-red); text-shadow: 0 6px 0 var(--kb-gold);
+  }
+  .wordmark {
+    font-family: var(--sf-display); font-weight: 800; font-size: 34px;
+    color: var(--kb-ink); margin-top: 22px; line-height: 1;
+  }
+  .wordmark b { color: var(--kb-red); font-weight: 800; }
+  .kn-line {
+    font-family: var(--sf-kn); font-weight: 400; font-size: 14px;
+    color: var(--kb-ink-faint); margin-top: 12px;
+  }
+
+  .dots { display: flex; gap: 8px; margin-top: 28px; }
+  .dots span {
+    width: 8px; height: 8px; border-radius: 99px; background: var(--kb-gold);
+    animation: dot 1.1s ease-in-out infinite;
+  }
+  .dots span:nth-child(2) { animation-delay: 160ms; }
+  .dots span:nth-child(3) { animation-delay: 320ms; }
+
+  /* Entrance — visible end-state is the base; animate FROM hidden. */
+  @media (prefers-reduced-motion: no-preference) {
+    .rise { animation: rise 460ms cubic-bezier(0.2,0.9,0.3,1) both; animation-delay: var(--d, 400ms); }
+    .pop  { animation: pop 640ms cubic-bezier(0.2,0.9,0.3,1) both; }
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+  @keyframes pop  { from { opacity: 0; transform: scale(0.86); } }
+  @keyframes dot  { 0%,100% { opacity: 0.35; transform: scale(0.85); } 40% { opacity: 1; transform: scale(1); } }
+</style>
+</head>
+<body>
+  <div class="screen" role="img" aria-label="Kannada Beku splash screen">
+    <div class="ground"></div>
+
+    <div class="stickers rise" style="--d: 260ms;">
+      <img src="assets/mysore-palace.png"   alt="" style="width:170px; left:-32px; bottom:78px; transform:rotate(-2deg); z-index:1;">
+      <img src="assets/town-hall.png"       alt="" style="width:152px; right:-30px; bottom:90px; transform:rotate(2deg);  z-index:4;">
+      <img src="assets/vidhana-soudha.png"  alt="" style="width:200px; left:92px;  bottom:66px; transform:rotate(0deg);  z-index:3;">
+      <img src="assets/filter-coffee.png"   alt="" style="width:58px;  left:36px;  bottom:54px; transform:rotate(9deg);  z-index:5;">
+      <img src="assets/dosa.png"            alt="" style="width:92px;  right:20px; bottom:50px; transform:rotate(-6deg); z-index:2;">
+    </div>
+
+    <div class="mark">
+      <div class="glyph pop">ಕ</div>
+      <div class="wordmark rise" style="--d: 480ms;">Kannada <b>Beku</b></div>
+      <div class="kn-line rise" style="--d: 620ms;">ಕನ್ನಡ ಬೇಕು</div>
+      <div class="dots rise" style="--d: 920ms;">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
