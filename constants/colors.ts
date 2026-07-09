@@ -81,4 +81,13 @@ export const Colors = {
   onWarning: '#3a1d07', // ink-brown for text/icons ON a warningContainer fill
   interactiveSecondaryLip: '#7e6440', // ≈ interactiveSecondary @ 72% + black — tan lip
   // Disabled state reuses surfaceContainerHighest (fill) + textFaint (label) — no new token.
+
+  // ── Splash "Rangoli × Skyline" (design_handoff_splash_screen, 2026-07-09) ──
+  // Cream launch canvas + warm ground shadow under the Bengaluru skyline stickers.
+  // Kept out of the surface ramp: these are splash-only and warmer than surfaceCream.
+  splashCreamTop: '#fbf4e2', // radial-approx gradient start (top)
+  splashCreamBottom: '#f1e6c9', // radial-approx gradient end (foot)
+  splashGroundMid: 'rgba(120,89,0,0.05)', // ground shadow @ 45% — `secondary` tinted
+  splashGroundLow: 'rgba(120,89,0,0.11)', // ground shadow @ foot
+  splashStickerShadow: 'rgba(40,30,20,0.16)', // sticker soft drop shadow
 };
