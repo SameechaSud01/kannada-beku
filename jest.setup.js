@@ -15,3 +15,14 @@ jest.mock('@sentry/react-native', () => ({
   captureException: jest.fn(),
   setUser: jest.fn(),
 }));
+
+// Reanimated's native worklet runtime doesn't exist under jest; the official
+// mock renders Animated.* as plain views and no-ops the animation helpers, so
+// component tests exercise render output and press handling, not motion.
+jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));
+
+// Safe-area insets for components that call useSafeAreaInsets() (all insets 0).
+jest.mock(
+  'react-native-safe-area-context',
+  () => require('react-native-safe-area-context/jest/mock').default,
+);

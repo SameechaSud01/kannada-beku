@@ -1,0 +1,10 @@
+# AUTH-07: force-quit + relaunch keeps the session (no re-login prompt).
+appId: com.samsud01.kannadabeku
+---
+- runFlow: login.yaml
+- stopApp
+- launchApp # no clearState — keep AsyncStorage + Supabase session
+- extendedWaitUntil:
+    visible: 'Learn'
+    timeout: 15000
+- assertNotVisible: 'Welcome back'
