@@ -154,6 +154,12 @@ Numbering is monotonic and never reused. Gaps in the sequence (C2, C4, C5, C8…
 
 **Resolved (2026-06-29, TODO T007):** Font swap is complete and live on `main` — `Fonts` has no `lora` group, `TypeScale.translit` + every teach/practice transliteration uses `Fonts.dmSans.bold`, and the `app/_layout.tsx` loader carries no `Lora_*`. The now-dead `@expo-google-fonts/lora` **dependency was removed** (package.json + lockfile) and stale "Lora" doc references were cleaned (ONBOARDING.md, CONTENT.md, INTERACTIONS.md, DESIGN.md drift note). The app **builds and runs on the iOS simulator without Lora** (no missing-font fallback / crash). Residual: owner's eyeball of the large flashcard transliteration on a physical device (the deep lesson-card screen wasn't auto-captured — no UI-tap tooling available in this environment).
 
+### C16 — Onboarding NAVIGATION docs reconciled with live route tree ✅
+
+**What was wrong:** [NAVIGATION.md](NAVIGATION.md)'s onboarding route table and journey **J1** had drifted from the shipped flow. The table listed a `/onboarding/goal` (`goal.tsx`) "learning mode" step that no longer exists — [name.tsx](../../app/onboarding/name.tsx) now defaults everyone to `'spoken'` and navigates straight to `motivation` — and it omitted the real [greeting.tsx](../../app/onboarding/greeting.tsx) plan-confirmation screen. Step numbering was inconsistent (`4/5`, `5/5` vs a 3-segment `IntakeStepShell` bar).
+
+**Resolution (2026-07-09):** As part of the reminder-step amendment ([spec_onboarding_reminder_step](../../spec_docs/Sameecha/spec_onboarding_reminder_step.md), owner-approved), the route table + J1 were rewritten to the live sequence `welcome → name (1/4) → motivation (2/4) → commitment (3/4) → reminder (4/4) → greeting → basics`, dropping the stale `goal.tsx` row and adding `reminder.tsx` + `greeting.tsx`. `INTAKE_STEP_COUNT` is 4. No code change to the pre-existing screens beyond `commitment.tsx` now pushing to `/onboarding/reminder`.
+
 ## Resolved
 
 ### C10 — `emergency_phrases` table now read by app code ✅

@@ -51,8 +51,10 @@ Loads fonts, sets audio mode (`playsInSilentModeIOS: true`), probes Kannada TTS 
 | `/onboarding/name` | [name.tsx](../../app/onboarding/name.tsx) | ↑ | none | Display name (step 1/4). See [spec_onboarding_tweaks](../../spec_docs/Sameecha/spec_onboarding_tweaks.md). |
 | `/onboarding/goal` | [goal.tsx](../../app/onboarding/goal.tsx) | ↑ | none | Learning mode (step 2/4) |
 | `/onboarding/motivation` | [motivation.tsx](../../app/onboarding/motivation.tsx) | ↑ | none | Motivation (step 3/4, max 3, supports "Other") |
-| `/onboarding/commitment` | [commitment.tsx](../../app/onboarding/commitment.tsx) | ↑ | none | Daily goal (step 4/5, info dialog per choice) |
-| `/onboarding/basics` | [basics.tsx](../../app/onboarding/basics.tsx) | ↑ | none | Beginners' Guide primer (step 5/5). See [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md). |
+| `/onboarding/commitment` | [commitment.tsx](../../app/onboarding/commitment.tsx) | ↑ | none | Daily goal (intake step 3/4, info dialog per choice) |
+| `/onboarding/reminder` | [reminder.tsx](../../app/onboarding/reminder.tsx) | ↑ | none | Daily reminder soft opt-in (intake step 4/4), time chosen on the shared TimeWheelPicker. "Remind me" runs the notification permission → schedule flow; "Not now" skips. See [spec_onboarding_reminder_step](../../spec_docs/Sameecha/spec_onboarding_reminder_step.md). |
+| `/onboarding/greeting` | [greeting.tsx](../../app/onboarding/greeting.tsx) | ↑ | none | Post-intake plan confirmation (no progress bar). See [spec_onboarding_audit_fixes](../../spec_docs/Sameecha/spec_onboarding_audit_fixes.md). |
+| `/onboarding/basics` | [basics.tsx](../../app/onboarding/basics.tsx) | ↑ | none | Beginners' Guide primer (last step, fires `setOnboarding()`). See [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md). |
 | `/guide` | [guide.tsx](../../app/guide.tsx) | root stack | Screen-owned back chip + title | Voluntary re-entry to the Beginners' Guide from `/(tabs)/learn`. Identical content to `/onboarding/basics`, no `ProgressDots`. |
 | `/lesson/[id]` | [[id].tsx](../../app/lesson/%5Bid%5D.tsx) | root stack | TODO | Lesson runner. Param: `id` = `LessonId` |
 | `/practice/[id]` | [[id].tsx](../../app/practice/%5Bid%5D.tsx) | root stack | TODO | Game detail. Param: `id` = game id |
@@ -137,14 +139,16 @@ Named multi-screen flows. Each names entry → exit.
 
 ### J1: First-time sign-up
 
-`[LOCKED]` — describes the live flow. Amended 2026-06-01 to add the Beginners' Guide as step 5/5 (see [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md)).
+`[LOCKED]` — describes the live flow. Amended 2026-06-01 to add the Beginners' Guide as the final step (see [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md)). Amended 2026-07-09 to add the reminder soft opt-in as intake step 4/4 (see [spec_onboarding_reminder_step](../../spec_docs/Sameecha/spec_onboarding_reminder_step.md)).
 
 1. App launch → `AppGate` → no session → `/(auth)/login`
 2. User taps "Create account" toggle → fills email/password → submits
 3. Supabase confirms (no email-verification flow in MVP — TODO confirm)
 4. `setSession()` fires → `AppGate` reruns → not onboarded → `/onboarding/welcome`
-5. Welcome → Name → Goal → Motivation → Commitment → Basics → `setOnboarding()` → `/(tabs)`
+5. Welcome → Name (1/4) → Motivation (2/4) → Commitment (3/4) → **Reminder (4/4)** → Greeting → Basics → `setOnboarding()` → `/(tabs)`
 6. On first arrival at `/(tabs)/` after this flow, a one-time home toast fires pointing to the Learn-tab basics card (`hasSeenBasicsHomeNudge` gates re-fire). See [spec_beginners_guide](../../spec_docs/Sameecha/spec_beginners_guide.md).
+
+_The reminder step is skippable ("Not now") and never blocks; every branch — granted, denied, or skipped — advances to Greeting. Notification permission uses the in-app `PermissionDialog` before the OS prompt, per [MODALS](../../spec_docs/Sameecha/MODALS.md) §6.8._
 
 ### J2: Complete a lesson
 

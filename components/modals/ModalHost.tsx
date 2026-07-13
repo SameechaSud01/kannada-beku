@@ -25,6 +25,8 @@ interface BaseShowArgs<P> {
   blockBackdropDismiss?: boolean;
   /** Disable Android hardware back dismissal (destructive confirms). */
   blockHardwareBack?: boolean;
+  /** Sheets only: let vertically-scrolling content own its drags (see BottomSheet). */
+  disableContentPanning?: boolean;
 }
 
 interface ShowArgs<P> extends BaseShowArgs<P> {
@@ -40,6 +42,7 @@ interface ModalEntry {
   dim?: number;
   blockBackdropDismiss?: boolean;
   blockHardwareBack?: boolean;
+  disableContentPanning?: boolean;
 }
 
 interface ModalContextValue {
@@ -84,6 +87,7 @@ export function ModalHost({ children }: { children: ReactNode }) {
       dim: args.dim,
       blockBackdropDismiss: args.blockBackdropDismiss,
       blockHardwareBack: args.blockHardwareBack,
+      disableContentPanning: args.disableContentPanning,
     };
     setEntry(next);
   }, []);
@@ -126,6 +130,7 @@ export function ModalHost({ children }: { children: ReactNode }) {
             sheetRef.current = handle;
           }}
           onDismiss={onSheetExternallyDismissed}
+          disableContentPanning={entry.disableContentPanning}
         >
           {/* @ts-expect-error props are validated at the show() call site */}
           <Comp {...entry.props} />

@@ -39,7 +39,7 @@ export default function CommitmentScreen() {
 
   const proceed = () => {
     useUserStore.getState().setDailyGoalMinutes(selected);
-    router.push('/onboarding/greeting');
+    router.push('/onboarding/reminder');
   };
 
   return (

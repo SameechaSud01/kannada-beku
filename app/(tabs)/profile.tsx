@@ -113,7 +113,8 @@ export default function ProfileScreen() {
       id: 'reminders',
       label: 'Reminders',
       Icon: Icons.setReminders,
-      onPress: () => modal.show({ kind: 'sheet', component: RemindersSheet }),
+      onPress: () =>
+        modal.show({ kind: 'sheet', component: RemindersSheet, disableContentPanning: true }),
     },
     {
       id: 'audio',

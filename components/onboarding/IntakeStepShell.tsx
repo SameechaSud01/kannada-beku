@@ -9,19 +9,23 @@ import { Icons } from '../../constants/icons';
 import { LipButton } from '../ui/LipButton';
 import { Watermark } from '../ui/Watermark';
 
-/** Number of intake steps (Name, Why, Time). */
-export const INTAKE_STEP_COUNT = 3;
+/** Number of intake steps (Name, Why, Time, Reminder). */
+export const INTAKE_STEP_COUNT = 4;
 
 export interface IntakeStepShellProps {
   /** 1-based intake step index. */
   step: number;
   title: string;
   subtitle: string;
-  /** Renders the top-right "Skip" affordance (steps 2–3 only per the audit). */
+  /** Renders the top-right "Skip" affordance (steps 2–4 only per the audit). */
   onSkip?: () => void;
   onBack: () => void;
   onContinue: () => void;
   continueDisabled?: boolean;
+  /** Footer primary-CTA label. Defaults to "Continue". */
+  continueLabel?: string;
+  /** Top-right skip-affordance label. Defaults to "Skip". */
+  skipLabel?: string;
   children: ReactNode;
 }
 
@@ -40,6 +44,8 @@ export function IntakeStepShell({
   onBack,
   onContinue,
   continueDisabled = false,
+  continueLabel = 'Continue',
+  skipLabel = 'Skip',
   children,
 }: IntakeStepShellProps) {
   const insets = useSafeAreaInsets();
@@ -88,7 +94,7 @@ export function IntakeStepShell({
               }}
               maxFontSizeMultiplier={1.3}
             >
-              Skip
+              {skipLabel}
             </Text>
           </Pressable>
         ) : null}
@@ -142,7 +148,7 @@ export function IntakeStepShell({
         </View>
         <View style={{ flex: 1 }}>
           <LipButton
-            label="Continue"
+            label={continueLabel}
             variant="primary"
             icon={Icons.forward}
             disabled={continueDisabled}
