@@ -15,6 +15,7 @@ CREATE TABLE public.users (
   daily_reminder_time text,
   tts_rate numeric NOT NULL DEFAULT 1.00,
   auto_replay boolean NOT NULL DEFAULT true,
+  last_active_date date,
   CONSTRAINT users_pkey PRIMARY KEY (id)
 );
 CREATE TABLE public.lessons (

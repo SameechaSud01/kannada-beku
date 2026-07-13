@@ -8,6 +8,7 @@ import { Fonts } from '../../../constants/fonts';
 import { Spacing, Radius } from '../../../constants/spacing';
 import { Icons } from '../../../constants/icons';
 import { useProgressStore } from '../../../stores/progressStore';
+import { useUserStore } from '../../../stores/useUserStore';
 import { localDateISO } from '../../../utils/date';
 import { useCompletedLessons } from '../../../hooks/progress';
 import { useDbLessons } from '../../../hooks/useLessons';
@@ -98,6 +99,9 @@ export function StreakDetailSheet() {
 
   const streak = useProgressStore((s) => s.streak);
   const weeklyActivity = useProgressStore((s) => s.weeklyActivity);
+  // Reminder CTA only while none is set (owner 2026-07-13) — once onboarding or
+  // Profile has set one, Profile → Reminders is the single place to change it.
+  const hasReminder = !!useUserStore((s) => s.dailyReminderTime);
 
   const completed = useCompletedLessons();
   const dbLessons = useDbLessons().data ?? [];
@@ -121,7 +125,7 @@ export function StreakDetailSheet() {
         : 'Keep it going.';
 
   function onSetReminder() {
-    modal.show({ kind: 'sheet', component: RemindersSheet });
+    modal.show({ kind: 'sheet', component: RemindersSheet, disableContentPanning: true });
   }
 
   function onKeepLearning() {
@@ -234,14 +238,16 @@ export function StreakDetailSheet() {
 
       {/* Actions */}
       <View style={{ flexDirection: 'row', gap: moderateScale(10), marginTop: moderateScale(20) }}>
-        <View style={{ flex: 1 }}>
-          <LipButton
-            label="Set a reminder"
-            variant="secondary"
-            onPress={onSetReminder}
-            accessibilityLabel="Set a reminder"
-          />
-        </View>
+        {!hasReminder ? (
+          <View style={{ flex: 1 }}>
+            <LipButton
+              label="Set a reminder"
+              variant="secondary"
+              onPress={onSetReminder}
+              accessibilityLabel="Set a reminder"
+            />
+          </View>
+        ) : null}
         <View style={{ flex: 1 }}>
           <LipButton
             label="Keep learning"

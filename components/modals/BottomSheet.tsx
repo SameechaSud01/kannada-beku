@@ -16,6 +16,12 @@ export interface BottomSheetHandle {
 export interface BottomSheetProps {
   children: ReactNode;
   onDismiss: () => void;
+  /**
+   * Disable the sheet's content pan gesture so vertically-scrolling content
+   * (e.g. TimeWheelPicker) owns its drags. Handle drag + backdrop tap still
+   * dismiss.
+   */
+  disableContentPanning?: boolean;
 }
 
 /**
@@ -26,7 +32,7 @@ export interface BottomSheetProps {
  * - Slide-up 250ms ease-out, slide-down 200ms ease-in (defaults from lib)
  */
 export const BottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(function BottomSheet(
-  { children, onDismiss },
+  { children, onDismiss, disableContentPanning = false },
   ref,
 ) {
   const sheetRef = useRef<GorhomBottomSheet>(null);
@@ -63,6 +69,7 @@ export const BottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(funct
       enableDynamicSizing
       topInset={insets.top + moderateScale(12)}
       enablePanDownToClose
+      enableContentPanningGesture={!disableContentPanning}
       animateOnMount
       onChange={handleChange}
       backdropComponent={renderBackdrop}

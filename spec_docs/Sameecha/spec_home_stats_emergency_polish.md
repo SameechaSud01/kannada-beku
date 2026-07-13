@@ -79,6 +79,7 @@ Red inventory today: gradient header + active chip + per-card badges + translite
 - [ ] **Week row disambiguation — `[OPEN]` D4** (lit days are per-day activity, not current-run membership; pick semantics before styling).
 - [ ] **"Set a reminder" → white lip button:** swap `variant="secondary"` (white + tan `interactiveSecondary` border + tan lip) for the standard white treatment already mandated by `spec_lesson_flow_fixed.md` §5 — white face, `hairline` border, faint (`cardLip`) lip. If that means adjusting the shared `secondary` variant itself rather than per-call overrides, do it once in `LipButton.tsx` and re-check its other call-sites in the same pass.
 - [ ] **Nudge banner icon:** the red (`primaryContainer`) lightning bolt on the gold `secondaryFixed` banner becomes **gold-dark (`onSecondaryContainer`)** — one colour family per banner.
+- **"Set a reminder" is conditional** *(amended 2026-07-13, owner-directed)*: the CTA renders only while `dailyReminderTime` is null. Once a reminder exists (set in onboarding or Profile), the button is hidden and "Keep learning" fills the row — Profile → Reminders is the single place to change an existing reminder.
 
 ---
 
