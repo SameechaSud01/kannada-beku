@@ -24,7 +24,7 @@ const CHIP_LIP = moderateScale(4);
 type AnswerState = 'idle' | 'correct' | 'wrong';
 
 /**
- * Step 3 — "Short vs. long". Two listen cards (kali vs kaali) plus a
+ * Step 3 — "Short vs. long". Two listen cards (bala vs baala) plus a
  * "Which did you hear?" self-check. Audit fixes (spec_onboarding_audit_fixes.md):
  * glyphs are ink (not red), play affordances are gold orbs, answer chips are
  * white chunky (never flat grey), correct is the ONE sanctioned green, and a
@@ -185,18 +185,8 @@ function CompareTile({ word, onPlay }: { word: GuideWord; onPlay: () => void }) 
     >
       <Text
         style={{
-          fontFamily: Fonts.notoSansKannada.bold,
-          fontSize: moderateScale(34),
-          color: Colors.onSurface,
-        }}
-        maxFontSizeMultiplier={1.2}
-      >
-        {word.kannada}
-      </Text>
-      <Text
-        style={{
           fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(15),
+          fontSize: moderateScale(34),
           color: Colors.onSurface,
         }}
         maxFontSizeMultiplier={1.3}
@@ -212,6 +202,16 @@ function CompareTile({ word, onPlay }: { word: GuideWord; onPlay: () => void }) 
         maxFontSizeMultiplier={1.3}
       >
         {word.english}
+      </Text>
+      <Text
+        style={{
+          fontFamily: Fonts.notoSansKannada.bold,
+          fontSize: moderateScale(15),
+          color: Colors.onSurface,
+        }}
+        maxFontSizeMultiplier={1.2}
+      >
+        {word.kannada}
       </Text>
       <View style={{ marginTop: moderateScale(8) }}>
         <ChunkyCircle
