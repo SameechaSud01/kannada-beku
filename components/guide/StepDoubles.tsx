@@ -45,21 +45,11 @@ export function StepDoubles({ doubles }: { doubles: GuideWord[] }) {
                 paddingHorizontal: moderateScale(18),
               }}
             >
-              <Text
-                style={{
-                  fontFamily: Fonts.notoSansKannada.bold,
-                  fontSize: moderateScale(30),
-                  color: Colors.onSurface,
-                }}
-                maxFontSizeMultiplier={1.2}
-              >
-                {word.kannada}
-              </Text>
               <View style={{ flex: 1 }}>
                 <Text
                   style={{
                     fontFamily: Fonts.dmSans.bold,
-                    fontSize: moderateScale(18),
+                    fontSize: moderateScale(30),
                     color: Colors.onSurface,
                   }}
                   maxFontSizeMultiplier={1.3}
@@ -77,6 +67,16 @@ export function StepDoubles({ doubles }: { doubles: GuideWord[] }) {
                   {word.english}
                 </Text>
               </View>
+              <Text
+                style={{
+                  fontFamily: Fonts.notoSansKannada.bold,
+                  fontSize: moderateScale(18),
+                  color: Colors.onSurface,
+                }}
+                maxFontSizeMultiplier={1.2}
+              >
+                {word.kannada}
+              </Text>
               <ChunkyCircle
                 size={moderateScale(44)}
                 bg={Colors.secondaryFixed}

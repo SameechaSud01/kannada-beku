@@ -44,8 +44,8 @@ set content_json = jsonb_set(
       {"kannada": "ಒ", "transliteration": "o"}
     ],
     "shortLong": {
-      "short": {"kannada": "ಕಲಿ", "transliteration": "kali", "english": "learn"},
-      "long":  {"kannada": "ಕಾಲಿ", "transliteration": "kaali", "english": "empty"}
+      "short": {"kannada": "ಬಲ", "transliteration": "bala", "english": "strength"},
+      "long":  {"kannada": "ಬಾಲ", "transliteration": "baala", "english": "tail"}
     },
     "retroflexRows": [
       {"curled": {"kannada": "ಟ", "transliteration": "Ta"}, "dental": {"kannada": "ತ", "transliteration": "ta"}},
@@ -64,7 +64,7 @@ set content_json = jsonb_set(
     },
     "recap": [
       "Kannada is phonetic — say what you see.",
-      "Long vowels change the word (kali vs kaali).",
+      "Long vowels change the word (bala vs baala).",
       "Capital letters (Ta, Da, Na, La) mean curl your tongue.",
       "Double letters are held slightly longer."
     ]

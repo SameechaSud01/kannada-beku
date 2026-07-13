@@ -70,13 +70,40 @@ export function StepRhythm({ rhythm }: { rhythm: RhythmSentence }) {
       >
         <Text
           style={{
-            fontFamily: Fonts.notoSansKannada.bold,
+            fontFamily: Fonts.dmSans.bold,
             fontSize: moderateScale(26),
+            lineHeight: moderateScale(34),
             color: Colors.onSurface,
+            textAlign: 'center',
+            marginBottom: moderateScale(4),
+          }}
+          maxFontSizeMultiplier={1.2}
+        >
+          {rhythm.transliteration}
+        </Text>
+
+        <Text
+          style={{
+            fontFamily: Fonts.dmSans.regular,
+            fontSize: moderateScale(16),
+            color: Colors.inkFaint,
+            textAlign: 'center',
+            marginBottom: moderateScale(4),
+          }}
+          maxFontSizeMultiplier={1.4}
+        >
+          {rhythm.english}
+        </Text>
+
+        <Text
+          style={{
+            fontFamily: Fonts.notoSansKannada.bold,
+            fontSize: moderateScale(13.5),
+            color: Colors.inkFaint,
             textAlign: 'center',
             marginBottom: moderateScale(16),
           }}
-          maxFontSizeMultiplier={1.2}
+          maxFontSizeMultiplier={1.4}
         >
           {rhythm.kannada}
         </Text>
@@ -94,19 +121,6 @@ export function StepRhythm({ rhythm }: { rhythm: RhythmSentence }) {
             <BeatChip key={`${syllable}:${i}`} label={syllable} active={beatIndex === i} />
           ))}
         </View>
-
-        <Text
-          style={{
-            fontFamily: Fonts.dmSans.regular,
-            fontSize: moderateScale(13.5),
-            color: Colors.inkFaint,
-            textAlign: 'center',
-            marginTop: moderateScale(16),
-          }}
-          maxFontSizeMultiplier={1.4}
-        >
-          {rhythm.english} — {rhythm.transliteration}
-        </Text>
 
         <HearTheBeatPill onPress={hearTheBeat} />
       </ChunkyPressable>
