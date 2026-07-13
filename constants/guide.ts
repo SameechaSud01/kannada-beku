@@ -54,7 +54,7 @@ export type VowelSound = { kannada: string; transliteration: string };
 /** A word used in a minimal-pair / example demo. */
 export type GuideWord = { kannada: string; transliteration: string; english: string };
 
-/** Step 3 — the short→long minimal pair (kali vs kaali). */
+/** Step 3 — the short→long minimal pair (bala vs baala). */
 export type ShortLongPair = { short: GuideWord; long: GuideWord };
 
 /** Step 4 — one retroflex (curled) vs dental (teeth) comparison row. */
@@ -94,8 +94,8 @@ export const VOWEL_SOUNDS: VowelSound[] = [
 
 /** Step 3 — short vs long: holding the vowel changes the word. */
 export const SHORT_LONG_PAIR: ShortLongPair = {
-  short: { kannada: 'ಕಲಿ', transliteration: 'kali', english: 'learn' },
-  long: { kannada: 'ಕಾಲಿ', transliteration: 'kaali', english: 'empty' },
+  short: { kannada: 'ಬಲ', transliteration: 'bala', english: 'strength' },
+  long: { kannada: 'ಬಾಲ', transliteration: 'baala', english: 'tail' },
 };
 
 /** Step 4 — retroflex (Capital, curled) vs dental (lowercase, teeth). */
@@ -128,7 +128,7 @@ export const RHYTHM_SENTENCE: RhythmSentence = {
 /** Step 7 — four takeaways to keep in your pocket. */
 export const RECAP_POINTS: string[] = [
   'Kannada is phonetic — say what you see.',
-  'Long vowels change the word (kali vs kaali).',
+  'Long vowels change the word (bala vs baala).',
   'Capital letters (Ta, Da, Na, La) mean curl your tongue.',
   'Double letters are held slightly longer.',
 ];

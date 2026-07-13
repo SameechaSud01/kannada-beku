@@ -113,25 +113,25 @@ export function StepVowelSounds({ vowels }: { vowels: VowelSound[] }) {
               >
                 <Text
                   style={{
-                    fontFamily: Fonts.notoSansKannada.bold,
-                    fontSize: moderateScale(30),
-                    color: Colors.onSurface,
-                    lineHeight: moderateScale(40),
-                  }}
-                  maxFontSizeMultiplier={1.2}
-                >
-                  {vowel.kannada}
-                </Text>
-                <Text
-                  style={{
                     fontFamily: Fonts.dmSans.bold,
-                    fontSize: moderateScale(13),
+                    fontSize: moderateScale(30),
                     color: isHeard ? Colors.onSecondaryContainer : Colors.onSurface,
-                    marginTop: moderateScale(1),
                   }}
                   maxFontSizeMultiplier={1.2}
                 >
                   {vowel.transliteration}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Fonts.notoSansKannada.bold,
+                    fontSize: moderateScale(13),
+                    color: Colors.onSurface,
+                    lineHeight: moderateScale(18),
+                    marginTop: moderateScale(1),
+                  }}
+                  maxFontSizeMultiplier={1.2}
+                >
+                  {vowel.kannada}
                 </Text>
                 <View
                   style={{ position: 'absolute', top: moderateScale(6), right: moderateScale(7) }}

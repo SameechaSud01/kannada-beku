@@ -75,11 +75,24 @@ force**.
 |---|---|---|---|---|
 | 1 | Welcome to Kannada | 3 numbered reassurance points (spoken-as-written · every vowel pronounced · even stress) + a listen-first callout. | — | "Let's listen" |
 | 2 | The vowel sounds | 8 common vowels (ಅ a, ಆ aa, ಇ i, ಈ ee, ಉ u, ಊ oo, ಎ e, ಒ o) in a 4-column grid; tap a tile to hear it. | per-tile TTS | "Next" |
-| 3 | Short vs. long | ಕಲಿ *kali* (learn) vs ಕಾಲಿ *kaali* (empty) compare tiles + a "Which did you hear?" listening mini-quiz (play → pick → feedback). | compare + quiz TTS | "Next" |
+| 3 | Short vs. long | ಬಲ *bala* (strength) vs ಬಾಲ *baala* (tail) compare tiles + a "Which did you hear?" listening mini-quiz (play → pick → feedback). | compare + quiz TTS | "Next" |
 | 4 | Curl your tongue back | Retroflex explainer (a Capital letter = curl the tongue up & back) + Ta/ta · Da/da audio comparison rows. | per-row TTS | "Next" |
 | 5 | Doubled letters linger | appa · amma · haLLi list; tap to hear the held double consonant. | per-row TTS | "Next" |
 | 6 | The rhythm | The sentence ನನಗೆ ಕನ್ನಡ ಬೇಕು ("I want Kannada") with per-syllable beat chips; tap to hear it. | sentence TTS | "Next" |
 | 7 | You're ready! | Success check + 4 recap takeaways. | — | "Start Lesson 1 · Greetings" |
+
+> **Amendment 2026-07-13 (owner-directed):** the original step-3 pair used ಕಾಲಿ *kaali*
+> glossed "empty", which is not a Kannada word (empty is ಖಾಲಿ *khaali*, a different
+> consonant — not a vowel-length pair with ಕಲಿ). Replaced with the true minimal pair
+> ಬಲ *bala* (strength) vs ಬಾಲ *baala* (tail).
+
+> **Amendment 2026-07-13 (owner-directed), English-first ordering + size hierarchy:**
+> everywhere a step shows a Kannada glyph with its romanization, the English/roman text
+> comes FIRST and the Kannada glyph sits below/after it (vowel tiles, short-vs-long
+> compare tiles, retroflex tiles, doubles rows, rhythm sentence card). The roman text is
+> also the LARGE hero size and the Kannada glyph the smaller secondary size (the two
+> sizes swapped from the original design). Matches the app-wide English-first direction
+> approved in the playful redesign.
 
 The step-3 quiz is **not** scored toward progress — it's an in-step self-check (correct =
 green, wrong = red, per the owner-approved green/red answer-feedback exception). It does not
@@ -101,8 +114,8 @@ interface GuideContent {
   welcomePoints: { n: number; text: string }[];      // step 1
   vowels: { kannada: string; transliteration: string }[]; // step 2 (8 items)
   shortLong: {                                         // step 3
-    short: { kannada: string; transliteration: string; english: string }; // kali / learn
-    long:  { kannada: string; transliteration: string; english: string }; // kaali / empty
+    short: { kannada: string; transliteration: string; english: string }; // bala / strength
+    long:  { kannada: string; transliteration: string; english: string }; // baala / tail
   };
   retroflexRows: {                                     // step 4
     curled: { kannada: string; transliteration: string };

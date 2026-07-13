@@ -74,18 +74,8 @@ export function GuidePhonemeButton({
     >
       <Text
         style={{
-          fontFamily: Fonts.notoSansKannada.bold,
-          fontSize: moderateScale(30),
-          color: Colors.onSurface,
-        }}
-        maxFontSizeMultiplier={1.2}
-      >
-        {kannada}
-      </Text>
-      <Text
-        style={{
           fontFamily: Fonts.dmSans.bold,
-          fontSize: moderateScale(15),
+          fontSize: moderateScale(30),
           color: isRed ? Colors.primaryContainer : Colors.secondary,
         }}
         maxFontSizeMultiplier={1.3}
@@ -106,6 +96,16 @@ export function GuidePhonemeButton({
           {note}
         </Text>
       ) : null}
+      <Text
+        style={{
+          fontFamily: Fonts.notoSansKannada.bold,
+          fontSize: moderateScale(15),
+          color: Colors.onSurface,
+        }}
+        maxFontSizeMultiplier={1.2}
+      >
+        {kannada}
+      </Text>
       <AudioOrb
         size={40}
         color={isRed ? Colors.primaryContainer : '#ffffff'}
