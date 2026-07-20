@@ -69,7 +69,7 @@
     .kb-about { display: grid; grid-template-columns: 1.08fr 0.92fr; gap: 56px; align-items: center; }
     .kb-story { display: grid; grid-template-columns: 1.06fr 0.94fr; gap: 56px; align-items: center; }
     .kb-bridges { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 40px; }
-    .kb-contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+    .kb-contact { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
     .kb-foot { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
     /* section gutters — overridden tighter on small screens (see media queries) */
     .kb-wrap { /* padding set inline per-section; only L/R is narrowed on mobile */ }
@@ -86,9 +86,9 @@
       .kb-stats > div:nth-child(odd)::before { display: none; }
       .kb-cards { grid-template-columns: 1fr; }
       .kb-bridges { grid-template-columns: 1fr; }
+      .kb-contact { grid-template-columns: minmax(0, 1fr); }
     }
     @media (max-width: 620px) {
-      .kb-contact { grid-template-columns: minmax(0, 1fr); }
       /* !important beats the inline shorthand padding; vertical values are kept */
       .kb-wrap { padding-left: 20px !important; padding-right: 20px !important; }
     }

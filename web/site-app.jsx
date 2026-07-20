@@ -16,6 +16,7 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 const DOMAIN = 'kannadabeku.com';
 const EMAIL = 'kannadabeku@gmail.com';
 const INSTA = 'kannada.beku';
+const LINKEDIN = 'kannada-beku';
 
 // ── Nav ──────────────────────────────────────────────────────────────────────
 function Nav({ tw, onJoin }) {
@@ -246,6 +247,7 @@ function Contact({ tw }) {
   const cards = [
     { icon: 'mail', label: 'Email us', value: EMAIL, href: `mailto:${EMAIL}`, tint: T.errLow, ic: T.red },
     { icon: 'insta', label: 'On Instagram', value: `@${INSTA}`, href: `https://instagram.com/${INSTA}`, tint: T.goldSoft, ic: T.goldDark },
+    { icon: 'linkedin', label: 'On LinkedIn', value: 'Kannada Beku', href: `https://www.linkedin.com/company/${LINKEDIN}`, tint: T.warnLow, ic: T.warn },
   ];
   return (
     <div id="contact" style={{ background: T.low, scrollMarginTop: 68 }}>
@@ -260,9 +262,9 @@ function Contact({ tw }) {
             Questions, ideas, want to help us launch? We’d genuinely love to hear from you.
           </p>
         </div>
-        <div className="kb-contact" style={{ maxWidth: 720, margin: '0 auto' }}>
+        <div className="kb-contact" style={{ maxWidth: 980, margin: '0 auto' }}>
           {cards.map((c) => (
-            <a key={c.label} href={c.href} target={c.icon === 'insta' ? '_blank' : undefined} rel="noreferrer"
+            <a key={c.label} href={c.href} target={c.icon === 'mail' ? undefined : '_blank'} rel="noreferrer"
               style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 16, minWidth: 0, background: T.card,
                 borderRadius: 16, padding: '20px 22px', border: `1px solid ${T.hairline}`, boxShadow: '0 4px 0 rgba(27,29,14,0.10)', transition: 'transform .12s, box-shadow .12s' }}
               onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 0 rgba(27,29,14,0.10)'; }}
@@ -311,8 +313,12 @@ function Footer({ tw, onJoin }) {
             <div>
               <div style={{ fontFamily: F.ui, fontSize: 11, fontWeight: 700, letterSpacing: 1.6, textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 14 }}>Reach us</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
-                <a href={`mailto:${EMAIL}`} style={{ fontFamily: F.ui, fontSize: 14.5, color: 'rgba(255,255,255,0.78)', textDecoration: 'none' }}>{EMAIL}</a>
-                <a href={`https://instagram.com/${INSTA}`} target="_blank" rel="noreferrer" style={{ fontFamily: F.ui, fontSize: 14.5, color: 'rgba(255,255,255,0.78)', textDecoration: 'none' }}>@{INSTA}</a>
+                <a href={`mailto:${EMAIL}`} style={{ fontFamily: F.ui, fontSize: 14.5, color: 'rgba(255,255,255,0.78)', textDecoration: 'none' }}>
+                  <span style={{ color: 'rgba(255,255,255,0.45)' }}>Email · </span>{EMAIL}</a>
+                <a href={`https://instagram.com/${INSTA}`} target="_blank" rel="noreferrer" style={{ fontFamily: F.ui, fontSize: 14.5, color: 'rgba(255,255,255,0.78)', textDecoration: 'none' }}>
+                  <span style={{ color: 'rgba(255,255,255,0.45)' }}>Instagram · </span>@{INSTA}</a>
+                <a href={`https://www.linkedin.com/company/${LINKEDIN}`} target="_blank" rel="noreferrer" style={{ fontFamily: F.ui, fontSize: 14.5, color: 'rgba(255,255,255,0.78)', textDecoration: 'none' }}>
+                  <span style={{ color: 'rgba(255,255,255,0.45)' }}>LinkedIn · </span>Kannada Beku</a>
               </div>
             </div>
           </div>

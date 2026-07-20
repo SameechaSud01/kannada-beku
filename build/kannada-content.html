@@ -1,0 +1,529 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Kannada Beku — Content Reference</title><style>
+  @page { size: A4; margin: 16mm 14mm; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; color: #1c2b22; font-size: 11px; line-height: 1.45; margin: 0; }
+  .kn, .g .kn { font-family: "Kannada Sangam MN", "Noto Sans Kannada", "Tunga", sans-serif; }
+  h1, h2, h3 { color: #1b5e3a; }
+  .cover { height: 250mm; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; page-break-after: always; }
+  .cover .kn-mark { font-family: "Kannada Sangam MN","Noto Sans Kannada",sans-serif; font-size: 96px; color: #1b5e3a; }
+  .cover h1 { font-size: 40px; margin: 8px 0 0; }
+  .cover h2 { font-size: 20px; color: #b8860b; font-weight: 600; margin: 4px 0 0; }
+  .cover-sub { color: #547; max-width: 380px; margin-top: 10px; color:#556; }
+  .cover-stats { display: flex; gap: 26px; margin-top: 36px; }
+  .cover-stats div { display:flex; flex-direction:column; }
+  .cover-stats b { font-size: 26px; color:#1b5e3a; }
+  .cover-stats span { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color:#789; }
+  .cover-date { margin-top: 40px; color:#9aa; font-size:10px; }
+  .toc { page-break-after: always; padding-top: 10mm; }
+  .toc ol { font-size: 14px; line-height: 2; }
+  .source-note { margin-top: 24px; font-size: 10px; color:#667; background:#f3f7f3; padding:10px 14px; border-radius:8px; }
+  .source-note code { background:#e6efe6; padding:1px 4px; border-radius:3px; }
+  .divider { page-break-before: always; border-bottom: 3px solid #1b5e3a; padding-bottom: 6px; margin-bottom: 14px; }
+  .divider h1 { font-size: 24px; margin: 0; }
+  .divider .sub { margin: 4px 0 0; color:#789; font-size: 12px; }
+  h2 { font-size: 15px; margin: 18px 0 6px; border-bottom: 1px solid #d8e6dc; padding-bottom: 3px; }
+  h3 { font-size: 12px; margin: 12px 0 4px; color:#557; }
+  table { width: 100%; border-collapse: collapse; margin: 4px 0 10px; }
+  th { text-align: left; background: #eaf3ec; color:#1b5e3a; font-size: 9px; text-transform: uppercase; letter-spacing: .05em; padding: 5px 7px; border-bottom: 1px solid #cfe0d4; }
+  td { padding: 5px 7px; border-bottom: 1px solid #eef2ee; vertical-align: top; }
+  tr { page-break-inside: avoid; }
+  .g .kn, td.g .kn { font-size: 15px; }
+  .kn.big { font-size: 26px; }
+  .tr { color: #8a6d1b; font-style: italic; }
+  .note { color:#778; font-size: 9px; margin-top: 2px; }
+  .opts { color:#667; font-size:9px; }
+  .cards { display:flex; gap:10px; }
+  .card { flex:1; background:#f3f7f3; border:1px solid #dde9df; border-radius:8px; padding:10px; }
+  .card strong { color:#1b5e3a; display:block; margin-bottom:4px; }
+  .card p { margin:0; font-size:10px; }
+  .glyphrow { display:flex; flex-wrap:wrap; gap:8px; margin:4px 0 10px; }
+  .glyph { width:54px; text-align:center; border:1px solid #dde9df; border-radius:8px; padding:6px 0; background:#fafdfb; }
+  .glyph .tr { display:block; font-size:9px; }
+  .hint { color:#9aa; font-weight:400; font-size:10px; font-style:italic; }
+  .lesson { page-break-inside: auto; }
+  .lh { font-size: 18px; margin: 16px 0 4px; }
+  .sh { color:#b8860b; border-color:#f0e3c0; }
+  .situation, .register { font-size:10px; color:#566; margin:2px 0; }
+  .register { background:#fbf6e8; padding:6px 9px; border-radius:6px; border-left:3px solid #d9b34a; }
+  .tryit { font-size:16px; }
+  .turn { margin: 8px 0; padding-left:8px; border-left:3px solid #e3eee6; page-break-inside: avoid; }
+  .prompt { font-size:13px; margin:0 0 4px; }
+  .options { list-style:none; padding-left:14px; margin:0; }
+  .options li { font-size:11px; margin:2px 0; }
+  .options li.correct { color:#1b5e3a; font-weight:600; }
+</style></head><body>
+<section class="cover">
+  <div class="kn-mark">ಕನ್ನಡ</div>
+  <h1>Kannada Beku</h1>
+  <h2>Complete Content Reference</h2>
+  <p class="cover-sub">Every Kannada word, phrase, letter & game item in the app and database</p>
+  <div class="cover-stats">
+    <div><b>0–8</b><span>Lessons</span></div>
+    <div><b>132</b><span>Lesson words</span></div>
+    <div><b>70</b><span>Lesson phrases</span></div>
+    <div><b>122</b><span>Game items</span></div>
+  </div>
+  <p class="cover-date">Generated June 23, 2026</p>
+</section>
+
+<section class="toc">
+  <h1>Contents</h1>
+  <ol>
+    <li>Lesson 0 · Kannada Basics (Beginners Guide)</li>
+    <li>Lessons 1 – 8 · Words &amp; Phrases</li>
+    <li>Game · Quick Quiz</li>
+    <li>Game · Dictation</li>
+    <li>Game · Opposites</li>
+    <li>Game · Conversations</li>
+    <li>Emergency Phrases</li>
+  </ol>
+  <p class="source-note">Lessons 1–8 are the TypeScript-canonical content shipped in the app
+  (<code>constants/lessons/lessonContent.ts</code>). Lesson 0, all games and emergency
+  phrases are pulled live from the Supabase database.</p>
+</section>
+<section class="divider" id="guide"><h1>Lesson 0 · Kannada Basics</h1><p class="sub">The Beginners Guide — script, sounds &amp; how reading works</p></section>
+<h2>How Kannada works</h2>
+<div class="cards">
+<div class="card"><strong>Say what you see</strong><p>Kannada is written the way it sounds. Read the letters left to right and you have said the word.</p></div>
+<div class="card"><strong>Capitals curl your tongue</strong><p>A capital letter in our spellings (Ta, Da, La) means curl your tongue up and back — a fuller, hollow sound.</p></div>
+<div class="card"><strong>Doubled letters linger</strong><p>A doubled consonant (appa, haLLi) is just held a beat longer than a single one.</p></div>
+</div>
+<h2>Vowels — short &amp; long pairs</h2>
+<table><thead><tr><th>Short</th><th>Sound</th><th>as in</th><th>Long</th><th>Sound</th><th>as in</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಅ</span></td><td>a</td><td>up</td><td class="g"><span class="kn">ಆ</span></td><td>ā</td><td>art</td></tr>
+<tr><td class="g"><span class="kn">ಇ</span></td><td>i</td><td>igloo</td><td class="g"><span class="kn">ಈ</span></td><td>ī</td><td>seed</td></tr>
+<tr><td class="g"><span class="kn">ಉ</span></td><td>u</td><td>push</td><td class="g"><span class="kn">ಊ</span></td><td>ū</td><td>moon</td></tr>
+<tr><td class="g"><span class="kn">ಎ</span></td><td>e</td><td>cake</td><td class="g"><span class="kn">ಏ</span></td><td>ē</td><td>crane</td></tr>
+<tr><td class="g"><span class="kn">ಒ</span></td><td>o</td><td>opener</td><td class="g"><span class="kn">ಓ</span></td><td>ō</td><td>go</td></tr>
+</tbody></table>
+<h2>Vowels that stand on their own</h2>
+<table><thead><tr><th>Letter</th><th>Sound</th><th>as in</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಋ</span></td><td>ṛ</td><td>rupees</td></tr>
+<tr><td class="g"><span class="kn">ಐ</span></td><td>ai</td><td>ice</td></tr>
+<tr><td class="g"><span class="kn">ಔ</span></td><td>au</td><td>owl</td></tr>
+</tbody></table>
+<h2>Consonants by place of sound</h2>
+<h3>Throat <span class="hint">— Sound starts at the back of the mouth.</span></h3>
+<div class="glyphrow">
+<div class="glyph"><span class="kn big">ಕ</span><span class="tr">ka</span></div>
+<div class="glyph"><span class="kn big">ಖ</span><span class="tr">kha</span></div>
+<div class="glyph"><span class="kn big">ಗ</span><span class="tr">ga</span></div>
+<div class="glyph"><span class="kn big">ಘ</span><span class="tr">gha</span></div>
+</div>
+<h3>Palate <span class="hint">— Tongue presses the roof of the mouth.</span></h3>
+<div class="glyphrow">
+<div class="glyph"><span class="kn big">ಚ</span><span class="tr">cha</span></div>
+<div class="glyph"><span class="kn big">ಜ</span><span class="tr">ja</span></div>
+</div>
+<h3>Curled tongue <span class="hint">— Tongue curls up and back (the capital sounds).</span></h3>
+<div class="glyphrow">
+<div class="glyph"><span class="kn big">ಟ</span><span class="tr">Ta</span></div>
+<div class="glyph"><span class="kn big">ಡ</span><span class="tr">Da</span></div>
+<div class="glyph"><span class="kn big">ಣ</span><span class="tr">Nna</span></div>
+</div>
+<h3>Teeth <span class="hint">— Tongue tip touches the upper teeth (the lowercase sounds).</span></h3>
+<div class="glyphrow">
+<div class="glyph"><span class="kn big">ತ</span><span class="tr">ta</span></div>
+<div class="glyph"><span class="kn big">ದ</span><span class="tr">da</span></div>
+<div class="glyph"><span class="kn big">ನ</span><span class="tr">na</span></div>
+</div>
+<h3>Lips <span class="hint">— Both lips come together.</span></h3>
+<div class="glyphrow">
+<div class="glyph"><span class="kn big">ಪ</span><span class="tr">pa</span></div>
+<div class="glyph"><span class="kn big">ಬ</span><span class="tr">ba</span></div>
+<div class="glyph"><span class="kn big">ಮ</span><span class="tr">ma</span></div>
+</div>
+<h2>Full consonant chart</h2>
+<table><thead><tr><th>Letter</th><th>Sound</th><th>Example</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಕ</span></td><td>ka</td><td>as in cup</td></tr>
+<tr><td class="g"><span class="kn">ಖ</span></td><td>kha</td><td>as in khadi</td></tr>
+<tr><td class="g"><span class="kn">ಗ</span></td><td>ga</td><td>as in gun</td></tr>
+<tr><td class="g"><span class="kn">ಘ</span></td><td>gha</td><td>as in ghat</td></tr>
+<tr><td class="g"><span class="kn">ಙ</span></td><td>gna</td><td>as in gnome</td></tr>
+<tr><td class="g"><span class="kn">ಚ</span></td><td>cha</td><td>as in chair</td></tr>
+<tr><td class="g"><span class="kn">ಛ</span></td><td>chha</td><td>as in church</td></tr>
+<tr><td class="g"><span class="kn">ಜ</span></td><td>ja</td><td>as in jug</td></tr>
+<tr><td class="g"><span class="kn">ಝ</span></td><td>jha</td><td>as in badge</td></tr>
+<tr><td class="g"><span class="kn">ಞ</span></td><td>nja</td><td>rare in English</td></tr>
+<tr><td class="g"><span class="kn">ಟ</span></td><td>Ta</td><td>as in Top</td></tr>
+<tr><td class="g"><span class="kn">ಠ</span></td><td>Tta</td><td>hard 'Tt' — as in cut</td></tr>
+<tr><td class="g"><span class="kn">ಡ</span></td><td>Da</td><td>as in Dark</td></tr>
+<tr><td class="g"><span class="kn">ಢ</span></td><td>Dda</td><td>hard 'Dd' — as in board</td></tr>
+<tr><td class="g"><span class="kn">ಣ</span></td><td>Nna</td><td>heavy 'Nn' — rare in English</td></tr>
+<tr><td class="g"><span class="kn">ತ</span></td><td>ta</td><td>as in Bharath</td></tr>
+<tr><td class="g"><span class="kn">ಥ</span></td><td>tha</td><td>soft 'th' — as in Thailand</td></tr>
+<tr><td class="g"><span class="kn">ದ</span></td><td>da</td><td>as in the</td></tr>
+<tr><td class="g"><span class="kn">ಧ</span></td><td>dha</td><td>as in dhal</td></tr>
+<tr><td class="g"><span class="kn">ನ</span></td><td>na</td><td>as in can</td></tr>
+<tr><td class="g"><span class="kn">ಪ</span></td><td>pa</td><td>as in papaya</td></tr>
+<tr><td class="g"><span class="kn">ಫ</span></td><td>pha</td><td>as in orphan</td></tr>
+<tr><td class="g"><span class="kn">ಬ</span></td><td>ba</td><td>as in balloon</td></tr>
+<tr><td class="g"><span class="kn">ಭ</span></td><td>bha</td><td>as in Bharath</td></tr>
+<tr><td class="g"><span class="kn">ಮ</span></td><td>ma</td><td>as in man</td></tr>
+<tr><td class="g"><span class="kn">ಯ</span></td><td>ya</td><td>as in yak</td></tr>
+<tr><td class="g"><span class="kn">ರ</span></td><td>ra</td><td>as in rat</td></tr>
+<tr><td class="g"><span class="kn">ಲ</span></td><td>la</td><td>as in lamp</td></tr>
+<tr><td class="g"><span class="kn">ವ</span></td><td>va</td><td>as in van</td></tr>
+<tr><td class="g"><span class="kn">ಶ</span></td><td>sha</td><td>as in ash</td></tr>
+<tr><td class="g"><span class="kn">ಷ</span></td><td>sshha</td><td>as in shut</td></tr>
+<tr><td class="g"><span class="kn">ಸ</span></td><td>sa</td><td>as in sun</td></tr>
+<tr><td class="g"><span class="kn">ಹ</span></td><td>ha</td><td>as in hump</td></tr>
+<tr><td class="g"><span class="kn">ಳ</span></td><td>lla</td><td>rare 'L' — palate sound</td></tr>
+</tbody></table>
+<h2>Try it</h2>
+<p class="tryit"><span class="kn">ಹಳ್ಳಿ</span> <span class="tr">haLLi</span> — village</p>
+<section class="divider" id="lessons"><h1>Lessons 1 – 8</h1><p class="sub">Words &amp; phrases for every lesson and sub-part</p></section>
+<section class="lesson"><h1 class="lh">Lesson 1 · Greetings</h1>
+<p class="situation"><strong>Situation:</strong> You have just met someone — a neighbour, a shopkeeper, someone at work. This is how you open.</p>
+<p class="situation"><strong>Real-world goal:</strong> Next time you see your auto driver, building guard, or a shopkeeper — open with "namaskāra, heegiddira?" before anything else.</p>
+<p class="register">Neutral = use with someone your age or younger. Respectful = use with elders or strangers.</p>
+<h2 class="sh">1a · Saying hello</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನಮಸ್ಕಾರ</span></td><td class="tr">namaskāra</td><td>Hello / greetings</td></tr><tr><td class="g"><span class="kn">ನೀವು</span></td><td class="tr">nīvu</td><td>You (respectful/plural)</td></tr><tr><td class="g"><span class="kn">ನೀನು</span></td><td class="tr">nīnu</td><td>You (neutral/singular)</td></tr></tbody></table>
+<h2 class="sh">1b · How are you / I'm fine</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಹೇಗಿದ್ದೀರ?</span></td><td class="tr">hēgiddīra?</td><td>How are you? (respectful)</td></tr><tr><td class="g"><span class="kn">ಹೇಗಿದ್ದೀಯ?</span></td><td class="tr">hēgiddīya?</td><td>How are you? (neutral)</td></tr><tr><td class="g"><span class="kn">ಚೆನ್ನಾಗಿದ್ದೇನೆ</span></td><td class="tr">chennāgiddēne</td><td>I am fine</td></tr><tr><td class="g"><span class="kn">ಚೆನ್ನಾಗಿದ್ದೇವೆ</span></td><td class="tr">chennāgiddēve</td><td>We are fine</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನೀವು ಚೆನ್ನಾಗಿದ್ದೀರಾ?</span></td><td class="tr">nīvu chennāgiddīrā?</td><td>Are you fine? (respectful)</td></tr><tr><td class="g"><span class="kn">ನೀನು ಚೆನ್ನಾಗಿದ್ದೀಯಾ?</span></td><td class="tr">nīnu chennāgiddīyā?</td><td>Are you fine? (neutral)</td></tr><tr><td class="g"><span class="kn">ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ</span></td><td class="tr">nānu chennāgiddēne</td><td>I am fine</td></tr></tbody></table>
+<h2 class="sh">1c · Greeting someone</h2>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನಮಸ್ಕಾರ, ಹೇಗಿದ್ದೀರ?</span></td><td class="tr">namaskāra, hēgiddīra?</td><td>Hello, how are you? (respectful)</td></tr><tr><td class="g"><span class="kn">ನಮಸ್ಕಾರ, ಹೇಗಿದ್ದೀಯ?</span></td><td class="tr">namaskāra, hēgiddīya?</td><td>Hello, how are you? (neutral)</td></tr><tr><td class="g"><span class="kn">ನಾವು ಚೆನ್ನಾಗಿದ್ದೇವೆ</span></td><td class="tr">nāvu chennāgiddēve</td><td>We are fine</td></tr></tbody></table>
+</section>
+<section class="lesson"><h1 class="lh">Lesson 2 · Names</h1>
+<p class="situation"><strong>Situation:</strong> You are meeting someone for the first time — at work, in your building, or at a social event.</p>
+<p class="situation"><strong>Real-world goal:</strong> Next time you meet someone new, ask "nimma hesaru enu?" — even if they speak English back, you opened in Kannada.</p>
+<p class="register">Neutral = use with someone your age or younger. Respectful = use with elders or strangers.</p>
+<h2 class="sh">2a · I / you / your</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನಾನು</span></td><td class="tr">nānu</td><td>I</td></tr><tr><td class="g"><span class="kn">ನೀನು</span></td><td class="tr">nīnu</td><td>You (neutral)</td></tr><tr><td class="g"><span class="kn">ನೀವು</span></td><td class="tr">nīvu</td><td>You (respectful)</td></tr><tr><td class="g"><span class="kn">ನಿನ್ನ</span></td><td class="tr">ninna</td><td>Your (neutral)</td></tr><tr><td class="g"><span class="kn">ನಿಮ್ಮ</span></td><td class="tr">nimma</td><td>Your (respectful)</td></tr></tbody></table>
+<h2 class="sh">2b · He / she / they</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಇವರು</span></td><td class="tr">ivaru</td><td>This person / these people</td></tr><tr><td class="g"><span class="kn">ಇವನು</span></td><td class="tr">ivanu</td><td>This person (he)</td></tr><tr><td class="g"><span class="kn">ಇವಳು</span></td><td class="tr">ivaḷu</td><td>This person (she)</td></tr><tr><td class="g"><span class="kn">ಅವರು</span></td><td class="tr">avaru</td><td>That person / those people</td></tr><tr><td class="g"><span class="kn">ಅವನು</span></td><td class="tr">avanu</td><td>That person (he)</td></tr><tr><td class="g"><span class="kn">ಅವಳು</span></td><td class="tr">avaḷu</td><td>That person (she)</td></tr></tbody></table>
+<h2 class="sh">2c · Name &amp; home</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಹೆಸರು</span></td><td class="tr">hesaru</td><td>Name</td></tr><tr><td class="g"><span class="kn">ಮನೆ</span></td><td class="tr">mane</td><td>House / home</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನಿಮ್ಮ ಹೆಸರು ಏನು?</span></td><td class="tr">nimma hesaru ēnu?</td><td>What is your name? (respectful)</td></tr><tr><td class="g"><span class="kn">ನಿನ್ನ ಹೆಸರು ಏನು?</span></td><td class="tr">ninna hesaru ēnu?</td><td>What is your name? (neutral)</td></tr><tr><td class="g"><span class="kn">ನಾನು ಪ್ರಿಯಾ</span></td><td class="tr">nānu priyā</td><td>I am Priya</td></tr><tr><td class="g"><span class="kn">ನಿಮ್ಮ ಮನೆ ಎಲ್ಲಿ?</span></td><td class="tr">nimma mane elli?</td><td>Where is your house?</td></tr></tbody></table>
+</section>
+<section class="lesson"><h1 class="lh">Lesson 3 · Wanting</h1>
+<p class="situation"><strong>Situation:</strong> You are at a street market, vegetable vendor, or small shop. You want something, you want to know the price, and you want to negotiate.</p>
+<p class="situation"><strong>Real-world goal:</strong> Next time you buy vegetables or anything from a street vendor, ask "idu estu?" instead of pointing at the price.</p>
+<p class="register">Neutral = use with someone your age or younger. Respectful = use with elders or strangers.</p>
+<h2 class="sh">3a · Want / don't want</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನನಗೆ</span></td><td class="tr">nanage</td><td>For me / to me</td></tr><tr><td class="g"><span class="kn">ನಮಗೆ</span></td><td class="tr">namage</td><td>For us / to us</td></tr><tr><td class="g"><span class="kn">ನಿನಗೆ</span></td><td class="tr">ninage</td><td>For you (neutral)</td></tr><tr><td class="g"><span class="kn">ನಿಮಗೆ</span></td><td class="tr">nimage</td><td>For you (respectful)</td></tr><tr><td class="g"><span class="kn">ಬೇಕು</span></td><td class="tr">bēku</td><td>Want / need</td></tr><tr><td class="g"><span class="kn">ಬೇಡ</span></td><td class="tr">bēḍa</td><td>Don't want</td></tr><tr><td class="g"><span class="kn">ಹೌದು</span></td><td class="tr">haudu</td><td>Yes</td></tr><tr><td class="g"><span class="kn">ಇಲ್ಲ</span></td><td class="tr">illa</td><td>No</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನನಗೆ ಇದು ಬೇಕು</span></td><td class="tr">nanage idhu bēku</td><td>I want this</td></tr><tr><td class="g"><span class="kn">ನಮಗೆ ಅದು ಬೇಕು</span></td><td class="tr">namage adu bēku</td><td>We want that</td></tr><tr><td class="g"><span class="kn">ನಿನಗೆ ಬೇಕಾ?</span></td><td class="tr">ninage bēkā?</td><td>Do you want? (neutral)</td></tr><tr><td class="g"><span class="kn">ನಿಮಗೆ ಬೇಕಾ?</span></td><td class="tr">nimage bēkā?</td><td>Do you want? (respectful)</td></tr><tr><td class="g"><span class="kn">ಹೌದು, ಬೇಕು</span></td><td class="tr">haudu, bēku</td><td>Yes, I want</td></tr><tr><td class="g"><span class="kn">ಇಲ್ಲ, ನನಗೆ ಬೇಡ</span></td><td class="tr">illa, nanage bēḍa</td><td>No, I don't want</td></tr></tbody></table>
+<h2 class="sh">3b · Price &amp; quantity</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಇಲ್ಲಿ</span></td><td class="tr">illi</td><td>Here</td></tr><tr><td class="g"><span class="kn">ಎಷ್ಟು</span></td><td class="tr">eṣṭu</td><td>How much</td></tr><tr><td class="g"><span class="kn">ಯಾಕೆ</span></td><td class="tr">yāke</td><td>Why</td></tr><tr><td class="g"><span class="kn">ಕಡಿಮೆ</span></td><td class="tr">kaḍime</td><td>Less</td></tr><tr><td class="g"><span class="kn">ಸ್ವಲ್ಪ</span></td><td class="tr">svalpa</td><td>A little</td></tr><tr><td class="g"><span class="kn">ಜಾಸ್ತಿ</span></td><td class="tr">jāsti</td><td>A lot / too much</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಇದು ಎಷ್ಟು?</span></td><td class="tr">idhu eṣṭu?</td><td>How much is this?</td></tr><tr><td class="g"><span class="kn">ಯಾಕೆ?</span></td><td class="tr">yāke?</td><td>Why?</td></tr><tr><td class="g"><span class="kn">ಇದು ಜಾಸ್ತಿ</span></td><td class="tr">idhu jāsti</td><td>This is too much</td></tr><tr><td class="g"><span class="kn">ಸ್ವಲ್ಪ</span></td><td class="tr">svalpa</td><td>A little</td></tr></tbody></table>
+<h2 class="sh">3c · Polite requests</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಮಾಡಿ</span></td><td class="tr">māḍi</td><td>Please do</td></tr><tr><td class="g"><span class="kn">ಮಾಡಬೇಡಿ</span></td><td class="tr">māḍabēḍi</td><td>Please don't do</td></tr><tr><td class="g"><span class="kn">ದಯವಿಟ್ಟು</span></td><td class="tr">dayaviṭṭu</td><td>Please</td></tr><tr><td class="g"><span class="kn">ಧನ್ಯವಾದಗಳು</span></td><td class="tr">dhanyavādagaḷu</td><td>Thank you</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಇದು ಕಮ್ಮಿ ಮಾಡಿ</span></td><td class="tr">idhu kammi māḍi</td><td>Please reduce the price</td></tr><tr><td class="g"><span class="kn">ದಯವಿಟ್ಟು ಮಾಡಿ</span></td><td class="tr">dayaviṭṭu māḍi</td><td>Please do</td></tr><tr><td class="g"><span class="kn">ದಯವಿಟ್ಟು ಮಾಡಬೇಡಿ</span></td><td class="tr">dayaviṭṭu māḍabēḍi</td><td>Please don't</td></tr></tbody></table>
+</section>
+<section class="lesson"><h1 class="lh">Lesson 4 · Pointing</h1>
+<p class="situation"><strong>Situation:</strong> You need to point something out, ask where something is, or describe a location.</p>
+<p class="situation"><strong>Real-world goal:</strong> Next time you need to point something out, use "illi" and "alli" instead of just pointing silently.</p>
+<h2 class="sh">4 · This, that, here, there</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಇಲ್ಲಿ</span></td><td class="tr">illi</td><td>Here</td></tr><tr><td class="g"><span class="kn">ಇದು</span></td><td class="tr">idhu</td><td>This</td></tr><tr><td class="g"><span class="kn">ಅಲ್ಲಿ</span></td><td class="tr">alli</td><td>There</td></tr><tr><td class="g"><span class="kn">ಅದು</span></td><td class="tr">adu</td><td>That</td></tr><tr><td class="g"><span class="kn">ಎಲ್ಲಿ</span></td><td class="tr">elli</td><td>Where</td></tr><tr><td class="g"><span class="kn">ಹೇಗೆ</span></td><td class="tr">hēge</td><td>How</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಅದು ಎಲ್ಲಿ?</span></td><td class="tr">adu elli?</td><td>Where is that?</td></tr><tr><td class="g"><span class="kn">ಇದು ಎಲ್ಲಿ?</span></td><td class="tr">idhu elli?</td><td>Where is this?</td></tr><tr><td class="g"><span class="kn">ನಿಮ್ಮ ಮನೆ ಎಲ್ಲಿ?</span></td><td class="tr">nimma mane elli?</td><td>Where is your house?</td></tr></tbody></table>
+</section>
+<section class="lesson"><h1 class="lh">Lesson 5 · Easy verbs</h1>
+<p class="situation"><strong>Situation:</strong> You want to ask someone to do something, or describe what you or someone else is doing.</p>
+<p class="situation"><strong>Real-world goal:</strong> Next time you want someone to do something, use the respectful form — "maadi", "hoogi", "noodi" — instead of English.</p>
+<p class="register">Neutral = use with someone your age or younger. Respectful = use with elders or strangers.</p>
+<h2 class="sh">5a · Everyday actions</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಮಾಡು</span></td><td class="tr">maadu</td><td>Do / make (neutral)</td></tr><tr><td class="g"><span class="kn">ಮಾಡಿ</span></td><td class="tr">maadi</td><td>Do / make (respectful)</td></tr><tr><td class="g"><span class="kn">ಹೋಗು</span></td><td class="tr">hogu</td><td>Go (neutral)</td></tr><tr><td class="g"><span class="kn">ಹೋಗಿ</span></td><td class="tr">hogi</td><td>Go (respectful)</td></tr><tr><td class="g"><span class="kn">ಬಾ</span></td><td class="tr">baa</td><td>Come (neutral)</td></tr><tr><td class="g"><span class="kn">ಬನ್ನಿ</span></td><td class="tr">banni</td><td>Come (respectful)</td></tr><tr><td class="g"><span class="kn">ತಿನ್ನು</span></td><td class="tr">tinnu</td><td>Eat (neutral)</td></tr><tr><td class="g"><span class="kn">ತಿನ್ನಿ</span></td><td class="tr">tinni</td><td>Eat (respectful)</td></tr><tr><td class="g"><span class="kn">ಕುಡಿ</span></td><td class="tr">kudi</td><td>Drink (neutral)</td></tr><tr><td class="g"><span class="kn">ಕುಡಿಯಿರಿ</span></td><td class="tr">kudiyiri</td><td>Drink (respectful)</td></tr><tr><td class="g"><span class="kn">ನೋಡು</span></td><td class="tr">nōdu</td><td>See / watch (neutral)</td></tr><tr><td class="g"><span class="kn">ನೋಡಿ</span></td><td class="tr">nōdi</td><td>See / watch (respectful)</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಇದು ನೋಡಿ</span></td><td class="tr">idhu nōdi</td><td>Look at this</td></tr><tr><td class="g"><span class="kn">ಬನ್ನಿ</span></td><td class="tr">banni</td><td>Please come</td></tr></tbody></table>
+<h2 class="sh">5b · Communicating &amp; giving</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಕೇಳು</span></td><td class="tr">kelu</td><td>Ask / listen (neutral)</td></tr><tr><td class="g"><span class="kn">ಕೇಳಿ</span></td><td class="tr">keli</td><td>Ask / listen (respectful)</td></tr><tr><td class="g"><span class="kn">ಹೇಳು</span></td><td class="tr">helu</td><td>Say / tell (neutral)</td></tr><tr><td class="g"><span class="kn">ಹೇಳಿ</span></td><td class="tr">heli</td><td>Say / tell (respectful)</td></tr><tr><td class="g"><span class="kn">ಕೊಡು</span></td><td class="tr">kodu</td><td>Give (neutral)</td></tr><tr><td class="g"><span class="kn">ಕೊಡಿ</span></td><td class="tr">kodi</td><td>Give (respectful)</td></tr><tr><td class="g"><span class="kn">ತೆಗೊ</span></td><td class="tr">tego</td><td>Take (neutral)</td></tr><tr><td class="g"><span class="kn">ತೆಗೊಳಿ</span></td><td class="tr">tegolli</td><td>Take (respectful)</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನನಗೆ ಕೊಡಿ</span></td><td class="tr">nanage kodi</td><td>Give it to me</td></tr><tr><td class="g"><span class="kn">ದಯವಿಟ್ಟು ಹೇಳಿ</span></td><td class="tr">dayavittu heli</td><td>Please tell me</td></tr></tbody></table>
+<h2 class="sh">5c · Body &amp; movement</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಕುಳಿತುಕೋ</span></td><td class="tr">kulituko</td><td>Sit (neutral)</td></tr><tr><td class="g"><span class="kn">ಕುಳಿತುಕೊಳ್ಳಿ</span></td><td class="tr">kulitukolli</td><td>Sit (respectful)</td></tr><tr><td class="g"><span class="kn">ನಿಲ್ಲು</span></td><td class="tr">nillu</td><td>Stand / stop (neutral)</td></tr><tr><td class="g"><span class="kn">ನಿಲ್ಲಿ</span></td><td class="tr">nilli</td><td>Stand / stop (respectful)</td></tr><tr><td class="g"><span class="kn">ಮಲಗು</span></td><td class="tr">malagu</td><td>Sleep (neutral)</td></tr><tr><td class="g"><span class="kn">ಮಲಗಿ</span></td><td class="tr">malagi</td><td>Sleep (respectful)</td></tr><tr><td class="g"><span class="kn">ಏಳು</span></td><td class="tr">elu</td><td>Get up (neutral)</td></tr><tr><td class="g"><span class="kn">ಏಳಿ</span></td><td class="tr">eli</td><td>Get up (respectful)</td></tr><tr><td class="g"><span class="kn">ಓಡು</span></td><td class="tr">odu</td><td>Run (neutral)</td></tr><tr><td class="g"><span class="kn">ಓಡಿ</span></td><td class="tr">odi</td><td>Run (respectful)</td></tr><tr><td class="g"><span class="kn">ನಡೆ</span></td><td class="tr">nade</td><td>Walk (neutral)</td></tr><tr><td class="g"><span class="kn">ನಡೆಯಿರಿ</span></td><td class="tr">nadeyiri</td><td>Walk (respectful)</td></tr><tr><td class="g"><span class="kn">ಮುಚ್ಚು</span></td><td class="tr">mucchu</td><td>Close (neutral)</td></tr><tr><td class="g"><span class="kn">ಮುಚ್ಚಿ</span></td><td class="tr">mucchi</td><td>Close (respectful)</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಕುಳಿತುಕೊಳ್ಳಿ</span></td><td class="tr">kulitukolli</td><td>Please sit</td></tr></tbody></table>
+</section>
+<section class="lesson"><h1 class="lh">Lesson 6 · Questions</h1>
+<p class="situation"><strong>Situation:</strong> You need to ask a question — about a person, a place, a thing, or a situation.</p>
+<p class="situation"><strong>Real-world goal:</strong> Next time you want to ask someone something, open with the Kannada question word — "yaaru", "enu", "elli" — even if the rest comes out in English.</p>
+<h2 class="sh">6a · Question words</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಯಾರು</span></td><td class="tr">yaaru</td><td>Who</td></tr><tr><td class="g"><span class="kn">ಏನು</span></td><td class="tr">enu</td><td>What</td></tr><tr><td class="g"><span class="kn">ಎಲ್ಲಿ</span></td><td class="tr">elli</td><td>Where</td></tr><tr><td class="g"><span class="kn">ಯಾವಾಗ</span></td><td class="tr">yaavaaga</td><td>When</td></tr><tr><td class="g"><span class="kn">ಏಕೆ</span></td><td class="tr">eke</td><td>Why</td></tr><tr><td class="g"><span class="kn">ಹೇಗೆ</span></td><td class="tr">hege</td><td>How</td></tr><tr><td class="g"><span class="kn">ಯಾವುದು</span></td><td class="tr">yaavudu</td><td>Which</td></tr><tr><td class="g"><span class="kn">ಎಷ್ಟು</span></td><td class="tr">estu</td><td>How much / many</td></tr><tr><td class="g"><span class="kn">ಯಾರದು</span></td><td class="tr">yaaradu</td><td>Whose</td></tr><tr><td class="g"><span class="kn">ಯಾರಿಗೆ</span></td><td class="tr">yaarige</td><td>To whom</td></tr></tbody></table>
+<h2 class="sh">6b · Place, time &amp; yes/no</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಇಲ್ಲಿ</span></td><td class="tr">illi</td><td>Here</td></tr><tr><td class="g"><span class="kn">ಅಲ್ಲಿ</span></td><td class="tr">alli</td><td>There</td></tr><tr><td class="g"><span class="kn">ಎಲ್ಲಿಗೆ</span></td><td class="tr">ellige</td><td>To where</td></tr><tr><td class="g"><span class="kn">ಈಗ</span></td><td class="tr">eega</td><td>Now</td></tr><tr><td class="g"><span class="kn">ಹೌದು</span></td><td class="tr">haudu</td><td>Yes</td></tr><tr><td class="g"><span class="kn">ಇಲ್ಲ</span></td><td class="tr">illa</td><td>No / not</td></tr><tr><td class="g"><span class="kn">ಸರಿ</span></td><td class="tr">sari</td><td>Okay</td></tr></tbody></table>
+<h2 class="sh">6c · Wanting &amp; knowing</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಬೇಕು</span></td><td class="tr">beku</td><td>Want / need</td></tr><tr><td class="g"><span class="kn">ಬೇಡ</span></td><td class="tr">beda</td><td>Do not want / no need</td></tr><tr><td class="g"><span class="kn">ಗೊತ್ತಾ?</span></td><td class="tr">gottaa</td><td>Do you know?</td></tr><tr><td class="g"><span class="kn">ಗೊತ್ತಿಲ್ಲ</span></td><td class="tr">gottilla</td><td>Do not know</td></tr><tr><td class="g"><span class="kn">ಯಾಕೆ ಇಲ್ಲ?</span></td><td class="tr">yaake illa</td><td>Why not?</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಹೇಗಿದ್ದೀರಾ?</span></td><td class="tr">hēgiddīrā?</td><td>How are you? (respectful)</td></tr><tr><td class="g"><span class="kn">ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ</span></td><td class="tr">nānu chennāgiddēne</td><td>I am fine</td></tr><tr><td class="g"><span class="kn">ನಿಮ್ಮ ಹೆಸರು ಏನು?</span></td><td class="tr">nimma hesaru ēnu?</td><td>What is your name?</td></tr><tr><td class="g"><span class="kn">ನನ್ನ ಹೆಸರು…</span></td><td class="tr">nanna hesaru…</td><td>My name is…</td></tr><tr><td class="g"><span class="kn">ಊಟ ಆಯಿತಾ?</span></td><td class="tr">ūṭa āyitā?</td><td>Have you eaten?</td></tr><tr><td class="g"><span class="kn">ನನಗೆ ಗೊತ್ತಿಲ್ಲ</span></td><td class="tr">nanage gottilla</td><td>I don't know</td></tr></tbody></table>
+</section>
+<section class="lesson"><h1 class="lh">Lesson 7 · Hard verbs</h1>
+<p class="situation"><strong>Situation:</strong> More actions — reading, writing, working, sending. These come up every day.</p>
+<p class="situation"><strong>Real-world goal:</strong> Next time someone asks what you are doing, answer in Kannada — "naanu kelasa maaduttiddene" or "naanu oduttiddene".</p>
+<p class="register">Neutral = use with someone your age or younger. Respectful = use with elders or strangers.</p>
+<h2 class="sh">7a · Work &amp; study</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನೋಡು</span></td><td class="tr">nōdu</td><td>See / look (neutral)</td></tr><tr><td class="g"><span class="kn">ನೋಡಿ</span></td><td class="tr">nōdi</td><td>See / look (respectful)</td></tr><tr><td class="g"><span class="kn">ಮಾಡು</span></td><td class="tr">maadu</td><td>Do / make (neutral)</td></tr><tr><td class="g"><span class="kn">ಮಾಡಿ</span></td><td class="tr">maadi</td><td>Do / make (respectful)</td></tr><tr><td class="g"><span class="kn">ಆಡು</span></td><td class="tr">aadu</td><td>Play (neutral)</td></tr><tr><td class="g"><span class="kn">ಆಡಿ</span></td><td class="tr">aadi</td><td>Play (respectful)</td></tr><tr><td class="g"><span class="kn">ಕೆಲಸ ಮಾಡು</span></td><td class="tr">kelasa maadu</td><td>Work (neutral)</td></tr><tr><td class="g"><span class="kn">ಕೆಲಸ ಮಾಡಿ</span></td><td class="tr">kelasa maadi</td><td>Work (respectful)</td></tr><tr><td class="g"><span class="kn">ಓದು</span></td><td class="tr">odu</td><td>Read / study (neutral)</td></tr><tr><td class="g"><span class="kn">ಓದಿ</span></td><td class="tr">odi</td><td>Read / study (respectful)</td></tr><tr><td class="g"><span class="kn">ಬರೆ</span></td><td class="tr">bareyu</td><td>Write (neutral)</td></tr><tr><td class="g"><span class="kn">ಬರೆಯಿರಿ</span></td><td class="tr">bareyiri</td><td>Write (respectful)</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನೀವು ಏನು ಮಾಡುತ್ತಿದ್ದೀರಾ?</span></td><td class="tr">neevu enu maaduttiddiraa?</td><td>What are you doing?</td></tr><tr><td class="g"><span class="kn">ನಾನು ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದೇನೆ</span></td><td class="tr">naanu kelasa maaduttiddene</td><td>I am working</td></tr><tr><td class="g"><span class="kn">ನಾನು ಓದುತ್ತಿದ್ದೇನೆ</span></td><td class="tr">naanu oduttiddene</td><td>I am reading / studying</td></tr><tr><td class="g"><span class="kn">ಇದು ನೋಡಿ</span></td><td class="tr">idhu nōdi</td><td>Look at this</td></tr><tr><td class="g"><span class="kn">ನನಗೆ ಅರ್ಥ ಆಗಲಿಲ್ಲ</span></td><td class="tr">nanage artha aagalilla</td><td>I did not understand</td></tr></tbody></table>
+<h2 class="sh">7b · Handling things</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ತೆಗೊ</span></td><td class="tr">tego</td><td>Take (neutral)</td></tr><tr><td class="g"><span class="kn">ತೆಗೊಳ್ಳಿ</span></td><td class="tr">tegolli</td><td>Take (respectful)</td></tr><tr><td class="g"><span class="kn">ಹಾಕು</span></td><td class="tr">haaku</td><td>Put (neutral)</td></tr><tr><td class="g"><span class="kn">ಹಾಕಿ</span></td><td class="tr">haaki</td><td>Put (respectful)</td></tr><tr><td class="g"><span class="kn">ಇಡು</span></td><td class="tr">idu</td><td>Keep (neutral)</td></tr><tr><td class="g"><span class="kn">ಇಡಿ</span></td><td class="tr">idi</td><td>Keep (respectful)</td></tr><tr><td class="g"><span class="kn">ಹಿಡಿ</span></td><td class="tr">hidi</td><td>Hold / catch (neutral)</td></tr><tr><td class="g"><span class="kn">ಹಿಡಿಯಿರಿ</span></td><td class="tr">hidiyiri</td><td>Hold / catch (respectful)</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನನಗೆ ಕೊಡಿ</span></td><td class="tr">nanage kodi</td><td>Give it to me</td></tr></tbody></table>
+<h2 class="sh">7c · Sending &amp; sequencing</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಕಳಿಸು</span></td><td class="tr">kalisu</td><td>Send (neutral)</td></tr><tr><td class="g"><span class="kn">ಕಳಿಸಿ</span></td><td class="tr">kalisi</td><td>Send (respectful)</td></tr><tr><td class="g"><span class="kn">ತಂದುಕೊಡು</span></td><td class="tr">thandukodu</td><td>Bring (neutral)</td></tr><tr><td class="g"><span class="kn">ತಂದುಕೊಡಿ</span></td><td class="tr">thandukodi</td><td>Bring (respectful)</td></tr><tr><td class="g"><span class="kn">ಶುರು ಮಾಡು</span></td><td class="tr">shuru maadu</td><td>Start (neutral)</td></tr><tr><td class="g"><span class="kn">ಶುರು ಮಾಡಿ</span></td><td class="tr">shuru maadi</td><td>Start (respectful)</td></tr><tr><td class="g"><span class="kn">ಮುಗಿಸು</span></td><td class="tr">mugisu</td><td>Finish (neutral)</td></tr><tr><td class="g"><span class="kn">ಮುಗಿಸಿ</span></td><td class="tr">mugisi</td><td>Finish (respectful)</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ದಯವಿಟ್ಟು ಕಳುಹಿಸಿ</span></td><td class="tr">dayavittu kalisi</td><td>Please send</td></tr><tr><td class="g"><span class="kn">ಶುರು ಮಾಡಿ</span></td><td class="tr">shuru maadi</td><td>Please start</td></tr><tr><td class="g"><span class="kn">ಮುಗಿಸಿ</span></td><td class="tr">mugisi</td><td>Please finish</td></tr></tbody></table>
+</section>
+<section class="lesson"><h1 class="lh">Lesson 8 · Putting it together</h1>
+<p class="situation"><strong>Situation:</strong> Putting everything together — greeting, names, shopping, questions. A real conversation from start to finish.</p>
+<p class="situation"><strong>Real-world goal:</strong> Have a full Kannada conversation today — greeting, name, one question. Even 3 exchanges counts.</p>
+<h2 class="sh">8a · Meeting &amp; introductions</h2>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನಮಸ್ಕಾರ, ಹೇಗಿದ್ದೀರಾ?</span></td><td class="tr">namaskāra, heegiddiraa?</td><td>Hello, how are you?</td></tr><tr><td class="g"><span class="kn">ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ</span></td><td class="tr">naanu chennagiddene</td><td>I am fine</td></tr><tr><td class="g"><span class="kn">ನಿಮ್ಮ ಹೆಸರು ಏನು?</span></td><td class="tr">nimma hesaru enu?</td><td>What is your name?</td></tr><tr><td class="g"><span class="kn">ನನ್ನ ಹೆಸರು ರಾಹುಲ್</span></td><td class="tr">nanna hesaru rahul</td><td>My name is Rahul</td></tr><tr><td class="g"><span class="kn">ನಿಮ್ಮ ಊರು ಯಾವುದು?</span></td><td class="tr">nimma ooru yaavudu?</td><td>Which town are you from?</td></tr><tr><td class="g"><span class="kn">ನನ್ನ ಊರು ಬೆಂಗಳೂರು</span></td><td class="tr">nanna ooru bengaluru</td><td>I am from Bangalore</td></tr></tbody></table>
+<h2 class="sh">8b · Shopping &amp; negotiating</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಸರಿ</span></td><td class="tr">sari</td><td>Okay</td></tr><tr><td class="g"><span class="kn">ಧನ್ಯವಾದಗಳು</span></td><td class="tr">dhanyavadagalu</td><td>Thank you</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನಿಮಗೆ ಇದು ಬೇಕಾ?</span></td><td class="tr">nimage idhu bekaa?</td><td>Do you want this?</td></tr><tr><td class="g"><span class="kn">ಹೌದು, ನನಗೆ ಬೇಕು</span></td><td class="tr">haudu, nanage beku</td><td>Yes, I want it</td></tr><tr><td class="g"><span class="kn">ಇದು ಎಷ್ಟು?</span></td><td class="tr">idhu estu?</td><td>How much is this?</td></tr><tr><td class="g"><span class="kn">ಸ್ವಲ್ಪ ಕಮ್ಮಿ ಮಾಡಿ</span></td><td class="tr">svalpa kammi maadi</td><td>Please reduce it a little</td></tr><tr><td class="g"><span class="kn">ಸರಿ</span></td><td class="tr">sari</td><td>Okay</td></tr><tr><td class="g"><span class="kn">ಧನ್ಯವಾದಗಳು</span></td><td class="tr">dhanyavadagalu</td><td>Thank you</td></tr></tbody></table>
+<h2 class="sh">8c · Getting around &amp; wrapping up</h2>
+<h3>Words</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ನಿಧಾನವಾಗಿ</span></td><td class="tr">nidhanavagi</td><td>Slowly</td></tr><tr><td class="g"><span class="kn">ಮತ್ತೆ</span></td><td class="tr">matte</td><td>Again / later</td></tr></tbody></table>
+<h3>Phrases</h3><table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody><tr><td class="g"><span class="kn">ಅವನು ಇಲ್ಲಿ ಇದ್ದಾನೆ</span></td><td class="tr">avanu illi iddaane</td><td>He is here</td></tr><tr><td class="g"><span class="kn">ಅವಳು ಅಲ್ಲಿ ಇದ್ದಾಳೆ</span></td><td class="tr">avalu alli iddaale</td><td>She is there</td></tr><tr><td class="g"><span class="kn">ನೀವು ಎಲ್ಲಿ ಹೋಗುತ್ತಿದ್ದೀರಾ?</span></td><td class="tr">neevu elli hooguttiddiraa?</td><td>Where are you going?</td></tr><tr><td class="g"><span class="kn">ನಾನು ಮನೆಗೆ ಹೋಗುತ್ತಿದ್ದೇನೆ</span></td><td class="tr">naanu manege hooguttiddene</td><td>I am going home</td></tr><tr><td class="g"><span class="kn">ನಿಮಗೆ ಕನ್ನಡ ಗೊತ್ತಾ?</span></td><td class="tr">nimage kannada gottaa?</td><td>Do you know Kannada?</td></tr><tr><td class="g"><span class="kn">ಸ್ವಲ್ಪ ಗೊತ್ತು</span></td><td class="tr">svalpa gottu</td><td>I know a little</td></tr><tr><td class="g"><span class="kn">ನನಗೆ ಗೊತ್ತಿಲ್ಲ</span></td><td class="tr">nanage gottilla</td><td>I don't know</td></tr><tr><td class="g"><span class="kn">ದಯವಿಟ್ಟು ನಿಧಾನವಾಗಿ ಹೇಳಿ</span></td><td class="tr">dayavittu nidhanavagi heli</td><td>Please speak slowly</td></tr><tr><td class="g"><span class="kn">ನೀವು ಊಟ ಮಾಡಿದ್ದೀರಾ?</span></td><td class="tr">neevu oota maadiddiraa?</td><td>Have you eaten?</td></tr><tr><td class="g"><span class="kn">ಹೌದು, ಮಾಡಿದ್ದೇನೆ</span></td><td class="tr">haudu, maadiddene</td><td>Yes, I have</td></tr><tr><td class="g"><span class="kn">ಇಲ್ಲ, ಇನ್ನೂ ಬೇಡ</span></td><td class="tr">illa, innu beda</td><td>No, not yet</td></tr><tr><td class="g"><span class="kn">ಮತ್ತೆ ಭೇಟಿ ಆಗೋಣ</span></td><td class="tr">matte bheti aagona</td><td>Let's meet again</td></tr></tbody></table>
+</section>
+<section class="divider" id="quiz"><h1>Game · Quick Quiz</h1><p class="sub">46 items</p></section>
+<h2>Lesson 1</h2>
+<table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>Meaning</th><th>Part</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ನಮಸ್ಕಾರ</span></td><td class="tr">namaskāra</td><td>Hello / greetings</td><td>1a</td></tr>
+<tr><td class="g"><span class="kn">ನಮಸ್ತೆ</span></td><td class="tr">namaste</td><td>Hello</td><td>1a</td></tr>
+<tr><td class="g"><span class="kn">ಹೇಗಿದ್ದೀರ?</span></td><td class="tr">hēgiddīra?</td><td>How are you? (respectful)</td><td>1b</td></tr>
+<tr><td class="g"><span class="kn">ಹೇಗಿದ್ದೀಯ?</span></td><td class="tr">hēgiddīya?</td><td>How are you? (neutral)</td><td>1b</td></tr>
+<tr><td class="g"><span class="kn">ಚೆನ್ನಾಗಿದ್ದೇನೆ</span></td><td class="tr">chennāgiddēne</td><td>I am fine</td><td>1b</td></tr>
+<tr><td class="g"><span class="kn">ಚೆನ್ನಾಗಿದ್ದೇವೆ</span></td><td class="tr">chennāgiddēve</td><td>We are fine</td><td>1b</td></tr>
+<tr><td class="g"><span class="kn">ನೀವು</span></td><td class="tr">nīvu</td><td>You (respectful)</td><td>1a</td></tr>
+<tr><td class="g"><span class="kn">ನೀನು</span></td><td class="tr">nīnu</td><td>You (neutral)</td><td>1a</td></tr>
+</tbody></table>
+<h2>Lesson 2</h2>
+<table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>Meaning</th><th>Part</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ನಾನು</span></td><td class="tr">nānu</td><td>I</td><td>2a</td></tr>
+<tr><td class="g"><span class="kn">ನೀನು</span></td><td class="tr">nīnu</td><td>You (neutral)</td><td>2a</td></tr>
+<tr><td class="g"><span class="kn">ನೀವು</span></td><td class="tr">nīvu</td><td>You (respectful)</td><td>2a</td></tr>
+<tr><td class="g"><span class="kn">ನಿನ್ನ</span></td><td class="tr">ninna</td><td>Your (neutral)</td><td>2a</td></tr>
+<tr><td class="g"><span class="kn">ನಿಮ್ಮ</span></td><td class="tr">nimma</td><td>Your (respectful)</td><td>2a</td></tr>
+<tr><td class="g"><span class="kn">ಇವರು</span></td><td class="tr">ivaru</td><td>This person / these people</td><td>2b</td></tr>
+<tr><td class="g"><span class="kn">ಹೆಸರು</span></td><td class="tr">hesaru</td><td>Name</td><td>2c</td></tr>
+<tr><td class="g"><span class="kn">ಮನೆ</span></td><td class="tr">mane</td><td>House / home</td><td>2c</td></tr>
+</tbody></table>
+<h2>Lesson 3</h2>
+<table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>Meaning</th><th>Part</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ನನಗೆ</span></td><td class="tr">nanage</td><td>For me / to me</td><td>3a</td></tr>
+<tr><td class="g"><span class="kn">ಬೇಕು</span></td><td class="tr">bēku</td><td>Want / need</td><td>3a</td></tr>
+<tr><td class="g"><span class="kn">ಬೇಡ</span></td><td class="tr">bēḍa</td><td>Don't want</td><td>3a</td></tr>
+<tr><td class="g"><span class="kn">ಹೌದು</span></td><td class="tr">haudu</td><td>Yes</td><td>3a</td></tr>
+<tr><td class="g"><span class="kn">ಇಲ್ಲ</span></td><td class="tr">illa</td><td>No</td><td>3a</td></tr>
+<tr><td class="g"><span class="kn">ಎಷ್ಟು</span></td><td class="tr">eṣṭu</td><td>How much</td><td>3b</td></tr>
+<tr><td class="g"><span class="kn">ಕಡಿಮೆ</span></td><td class="tr">kaḍime</td><td>Less</td><td>3b</td></tr>
+<tr><td class="g"><span class="kn">ಧನ್ಯವಾದಗಳು</span></td><td class="tr">dhanyavādagaḷu</td><td>Thank you</td><td>3c</td></tr>
+</tbody></table>
+<h2>Lesson 4</h2>
+<table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>Meaning</th><th>Part</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಇಲ್ಲಿ</span></td><td class="tr">illi</td><td>Here</td><td>4</td></tr>
+<tr><td class="g"><span class="kn">ಇದು</span></td><td class="tr">idu</td><td>This</td><td>4</td></tr>
+<tr><td class="g"><span class="kn">ಅಲ್ಲಿ</span></td><td class="tr">alli</td><td>There</td><td>4</td></tr>
+<tr><td class="g"><span class="kn">ಅದು</span></td><td class="tr">adu</td><td>That</td><td>4</td></tr>
+<tr><td class="g"><span class="kn">ಎಲ್ಲಿ</span></td><td class="tr">elli</td><td>Where</td><td>4</td></tr>
+<tr><td class="g"><span class="kn">ಹೇಗೆ</span></td><td class="tr">hēge</td><td>How</td><td>4</td></tr>
+</tbody></table>
+<h2>Lesson 5</h2>
+<table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>Meaning</th><th>Part</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಮಾಡು</span></td><td class="tr">māḍu</td><td>Do / make</td><td>5a</td></tr>
+<tr><td class="g"><span class="kn">ಹೋಗು</span></td><td class="tr">hōgu</td><td>Go</td><td>5a</td></tr>
+<tr><td class="g"><span class="kn">ಬಾ</span></td><td class="tr">bā</td><td>Come</td><td>5a</td></tr>
+<tr><td class="g"><span class="kn">ತಿನ್ನು</span></td><td class="tr">thinnu</td><td>Eat</td><td>5a</td></tr>
+<tr><td class="g"><span class="kn">ಕುಡಿ</span></td><td class="tr">kuḍi</td><td>Drink</td><td>5a</td></tr>
+<tr><td class="g"><span class="kn">ನೋಡು</span></td><td class="tr">nōḍu</td><td>See / watch</td><td>5a</td></tr>
+<tr><td class="g"><span class="kn">ಕೇಳು</span></td><td class="tr">kēḷu</td><td>Ask / listen</td><td>5b</td></tr>
+<tr><td class="g"><span class="kn">ಹೇಳು</span></td><td class="tr">hēḷu</td><td>Say / tell</td><td>5b</td></tr>
+</tbody></table>
+<h2>Lesson 6</h2>
+<table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>Meaning</th><th>Part</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಯಾರು</span></td><td class="tr">yāru</td><td>Who</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಏನು</span></td><td class="tr">ēnu</td><td>What</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಎಲ್ಲಿ</span></td><td class="tr">elli</td><td>Where</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಯಾವಾಗ</span></td><td class="tr">yāvāga</td><td>When</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಏಕೆ</span></td><td class="tr">ēke</td><td>Why</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಹೇಗೆ</span></td><td class="tr">hēge</td><td>How</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಯಾವದು</span></td><td class="tr">yāvadu</td><td>Which</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಈಗ</span></td><td class="tr">īga</td><td>Now</td><td>6b</td></tr>
+</tbody></table>
+<section class="divider" id="dictation"><h1>Game · Dictation</h1><p class="sub">46 items — listen &amp; type</p></section>
+<h2>Lesson 1</h2>
+<table class="words"><thead><tr><th>Answer (Kannada)</th><th>Phonetic</th><th>Accepted spellings</th><th>Part</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ನಮಸ್ಕಾರ</span></td><td class="tr">na-mas-kā-ra</td><td>namaskara, namaskaara, namaskāra</td><td>1a</td></tr>
+<tr><td class="g"><span class="kn">ನಮಸ್ತೆ</span></td><td class="tr">na-mas-te</td><td>namaste, namasthe, namasthay</td><td>1a</td></tr>
+<tr><td class="g"><span class="kn">ಹೇಗಿದ್ದೀರ</span></td><td class="tr">hē-gid-dī-ra</td><td>hegiddira, haegiddira, hegiddera</td><td>1b</td></tr>
+<tr><td class="g"><span class="kn">ಚೆನ್ನಾಗಿದ್ದೇನೆ</span></td><td class="tr">chen-nā-gid-dē-ne</td><td>chennagiddene, chennagidene, channagidene</td><td>1b</td></tr>
+<tr><td class="g"><span class="kn">ನೀವು</span></td><td class="tr">nī-vu</td><td>nivu, neevu, neevoo</td><td>1a</td></tr>
+<tr><td class="g"><span class="kn">ನೀನು</span></td><td class="tr">nī-nu</td><td>ninu, neenu, neenoo</td><td>1a</td></tr>
+<tr><td class="g"><span class="kn">ಹೇಗಿದ್ದೀಯ?</span></td><td class="tr">hē-gid-dī-ya?</td><td>hēgiddīya?, hegiddiya, hegiddiyaa</td><td>1b</td></tr>
+<tr><td class="g"><span class="kn">ಚೆನ್ನಾಗಿದ್ದೇವೆ</span></td><td class="tr">chen-nā-gid-dē-ve</td><td>chennāgiddēve, chinnagiddeve, channagiddeve</td><td>1b</td></tr>
+</tbody></table>
+<h2>Lesson 2</h2>
+<table class="words"><thead><tr><th>Answer (Kannada)</th><th>Phonetic</th><th>Accepted spellings</th><th>Part</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ನಾನು</span></td><td class="tr">nā-nu</td><td>nanu, naanu, naanoo</td><td>2a</td></tr>
+<tr><td class="g"><span class="kn">ನೀನು</span></td><td class="tr">nī-nu</td><td>ninu, neenu</td><td>2a</td></tr>
+<tr><td class="g"><span class="kn">ಹೆಸರು</span></td><td class="tr">he-sa-ru</td><td>hesaru, hesru, hesaroo</td><td>2c</td></tr>
+<tr><td class="g"><span class="kn">ಮನೆ</span></td><td class="tr">ma-ne</td><td>mane, manay, manae</td><td>2c</td></tr>
+<tr><td class="g"><span class="kn">ಇವರು</span></td><td class="tr">i-va-ru</td><td>ivaru, evaru, ivru</td><td>2b</td></tr>
+<tr><td class="g"><span class="kn">ಅವರು</span></td><td class="tr">a-va-ru</td><td>avaru, avru</td><td>2b</td></tr>
+<tr><td class="g"><span class="kn">ನಿಮ್ಮ</span></td><td class="tr">nim-ma</td><td>nimma, nima</td><td>2a</td></tr>
+<tr><td class="g"><span class="kn">ನಿನ್ನ</span></td><td class="tr">nin-na</td><td>ninna, nina</td><td>2a</td></tr>
+</tbody></table>
+<h2>Lesson 3</h2>
+<table class="words"><thead><tr><th>Answer (Kannada)</th><th>Phonetic</th><th>Accepted spellings</th><th>Part</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಬೇಕು</span></td><td class="tr">bē-ku</td><td>beku, baeku, beku, bēku</td><td>3a</td></tr>
+<tr><td class="g"><span class="kn">ಬೇಡ</span></td><td class="tr">bē-ḍa</td><td>beda, baeda, bēḍa</td><td>3a</td></tr>
+<tr><td class="g"><span class="kn">ಹೌದು</span></td><td class="tr">hau-du</td><td>haudu, haudhu, houdu</td><td>3a</td></tr>
+<tr><td class="g"><span class="kn">ಇಲ್ಲ</span></td><td class="tr">il-la</td><td>illa, ila, illaa</td><td>3a</td></tr>
+<tr><td class="g"><span class="kn">ಎಷ್ಟು</span></td><td class="tr">eṣ-ṭu</td><td>eshtu, estu, ēṣṭu, eshtoo</td><td>3b</td></tr>
+<tr><td class="g"><span class="kn">ಯಾಕೆ</span></td><td class="tr">yā-ke</td><td>yake, yaake, yaakey</td><td>3b</td></tr>
+<tr><td class="g"><span class="kn">ದಯವಿಟ್ಟು</span></td><td class="tr">da-ya-viṭ-ṭu</td><td>dayavittu, dayavittoo, dayaviṭṭu</td><td>3c</td></tr>
+<tr><td class="g"><span class="kn">ಧನ್ಯವಾದಗಳು</span></td><td class="tr">dha-nya-vā-da-ga-ḷu</td><td>dhanyavadagalu, dhanyavaadagalu, dhanyavādagaḷu</td><td>3c</td></tr>
+</tbody></table>
+<h2>Lesson 4</h2>
+<table class="words"><thead><tr><th>Answer (Kannada)</th><th>Phonetic</th><th>Accepted spellings</th><th>Part</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಇಲ್ಲಿ</span></td><td class="tr">il-li</td><td>illi, ili, ilee</td><td>4</td></tr>
+<tr><td class="g"><span class="kn">ಅಲ್ಲಿ</span></td><td class="tr">al-li</td><td>alli, ali, alee</td><td>4</td></tr>
+<tr><td class="g"><span class="kn">ಇದು</span></td><td class="tr">i-du</td><td>idu, edu, idoo</td><td>4</td></tr>
+<tr><td class="g"><span class="kn">ಅದು</span></td><td class="tr">a-du</td><td>adu, adoo</td><td>4</td></tr>
+<tr><td class="g"><span class="kn">ಎಲ್ಲಿ</span></td><td class="tr">el-li</td><td>elli, eli, elee</td><td>4</td></tr>
+<tr><td class="g"><span class="kn">ಹೇಗೆ</span></td><td class="tr">hē-ge</td><td>hege, haege, heghe</td><td>4</td></tr>
+</tbody></table>
+<h2>Lesson 5</h2>
+<table class="words"><thead><tr><th>Answer (Kannada)</th><th>Phonetic</th><th>Accepted spellings</th><th>Part</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಮಾಡು</span></td><td class="tr">mā-ḍu</td><td>madu, maadu, māḍu</td><td>5a</td></tr>
+<tr><td class="g"><span class="kn">ಹೋಗು</span></td><td class="tr">hō-gu</td><td>hogu, hoogu, hōgu</td><td>5a</td></tr>
+<tr><td class="g"><span class="kn">ಬಾ</span></td><td class="tr">bā</td><td>ba, baa</td><td>5a</td></tr>
+<tr><td class="g"><span class="kn">ತಿನ್ನು</span></td><td class="tr">thin-nu</td><td>thinnu, tinnu, thinu</td><td>5a</td></tr>
+<tr><td class="g"><span class="kn">ಕುಡಿ</span></td><td class="tr">ku-ḍi</td><td>kudi, kuddi, kuḍi</td><td>5a</td></tr>
+<tr><td class="g"><span class="kn">ನೋಡು</span></td><td class="tr">nō-ḍu</td><td>nodu, noodu, nōḍu</td><td>5a</td></tr>
+<tr><td class="g"><span class="kn">ಕೇಳು</span></td><td class="tr">kē-ḷu</td><td>kelu, kaelu, kēḷu</td><td>5b</td></tr>
+<tr><td class="g"><span class="kn">ಹೇಳು</span></td><td class="tr">hē-ḷu</td><td>helu, haelu, hēḷu</td><td>5b</td></tr>
+</tbody></table>
+<h2>Lesson 6</h2>
+<table class="words"><thead><tr><th>Answer (Kannada)</th><th>Phonetic</th><th>Accepted spellings</th><th>Part</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಯಾರು</span></td><td class="tr">yā-ru</td><td>yaru, yaaru, yāru</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಏನು</span></td><td class="tr">ē-nu</td><td>enu, aenu, ēnu</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಎಲ್ಲಿ</span></td><td class="tr">el-li</td><td>elli, eli, elee</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಯಾವಾಗ</span></td><td class="tr">yā-vā-ga</td><td>yavaga, yaavaaga, yāvāga</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಏಕೆ</span></td><td class="tr">ē-ke</td><td>eke, aeke, ēke</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಹೇಗೆ</span></td><td class="tr">hē-ge</td><td>hege, haege, hēge</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಯಾವದು</span></td><td class="tr">yā-va-du</td><td>yavadu, yaavadu, yāvadu</td><td>6a</td></tr>
+<tr><td class="g"><span class="kn">ಗೊತ್ತಿಲ್ಲ</span></td><td class="tr">got-til-la</td><td>gottilla, gotilla, gōttilla</td><td>6c</td></tr>
+</tbody></table>
+<section class="divider" id="opposites"><h1>Game · Opposites</h1><p class="sub">30 items — pick the opposite</p></section>
+<h2>Lesson 1</h2>
+<table class="words"><thead><tr><th>Word</th><th>Meaning</th><th>Opposite</th><th>Other options</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ನೀವು</span> <span class="tr">nīvu</span></td><td>you (respectful)</td><td class="g"><span class="kn">ನೀನು</span></td><td class="opts">ನೀನು (you (neutral)); ನಾನು (I); ಇವರು (this person); ಅವರು (that person)</td></tr>
+<tr><td class="g"><span class="kn">ಚೆನ್ನಾಗಿ</span> <span class="tr">chennāgi</span></td><td>well</td><td class="g"><span class="kn">ಕೆಟ್ಟದಾಗಿ</span></td><td class="opts">ಕೆಟ್ಟದಾಗಿ (badly); ಬೇಗ (fast); ನಿಧಾನ (slow); ಸ್ವಲ್ಪ (a little)</td></tr>
+<tr><td class="g"><span class="kn">ಹೌದು</span> <span class="tr">haudu</span></td><td>yes</td><td class="g"><span class="kn">ಇಲ್ಲ</span></td><td class="opts">ಇಲ್ಲ (no); ಸರಿ (okay); ಬೇಕು (want); ಹೇಗೆ (how)</td></tr>
+</tbody></table>
+<h2>Lesson 2</h2>
+<table class="words"><thead><tr><th>Word</th><th>Meaning</th><th>Opposite</th><th>Other options</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಇವರು</span> <span class="tr">ivaru</span></td><td>this person</td><td class="g"><span class="kn">ಅವರು</span></td><td class="opts">ಅವರು (that person); ನಾನು (I); ನೀವು (you (respectful)); ನಿಮ್ಮ (your (respectful))</td></tr>
+<tr><td class="g"><span class="kn">ಇವನು</span> <span class="tr">ivanu</span></td><td>this person (he)</td><td class="g"><span class="kn">ಅವನು</span></td><td class="opts">ಅವನು (that person (he)); ನಾನು (I); ನೀನು (you (neutral)); ಹೆಸರು (name)</td></tr>
+<tr><td class="g"><span class="kn">ಇವಳು</span> <span class="tr">ivaḷu</span></td><td>this person (she)</td><td class="g"><span class="kn">ಅವಳು</span></td><td class="opts">ಅವಳು (that person (she)); ನಿಮ್ಮ (your (respectful)); ನಿನ್ನ (your (neutral)); ಮನೆ (house)</td></tr>
+<tr><td class="g"><span class="kn">ನಾನು</span> <span class="tr">nānu</span></td><td>I</td><td class="g"><span class="kn">ನೀವು</span></td><td class="opts">ನೀವು (you (respectful)); ನಿಮ್ಮ (your (respectful)); ಇವರು (this person); ಹೆಸರು (name)</td></tr>
+<tr><td class="g"><span class="kn">ನಿನ್ನ</span> <span class="tr">ninna</span></td><td>your (neutral)</td><td class="g"><span class="kn">ನಿಮ್ಮ</span></td><td class="opts">ನಿಮ್ಮ (your (respectful)); ನಾನು (I); ಇವನು (this person (he)); ಅವಳು (that person (she))</td></tr>
+</tbody></table>
+<h2>Lesson 3</h2>
+<table class="words"><thead><tr><th>Word</th><th>Meaning</th><th>Opposite</th><th>Other options</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಬೇಕು</span> <span class="tr">bēku</span></td><td>want / need</td><td class="g"><span class="kn">ಬೇಡ</span></td><td class="opts">ಬೇಡ (don't want); ಹೌದು (yes); ಇಲ್ಲ (no); ಸರಿ (okay)</td></tr>
+<tr><td class="g"><span class="kn">ಕಡಿಮೆ</span> <span class="tr">kaḍime</span></td><td>less</td><td class="g"><span class="kn">ಜಾಸ್ತಿ</span></td><td class="opts">ಜಾಸ್ತಿ (a lot / too much); ಸ್ವಲ್ಪ (a little); ಇಲ್ಲಿ (here); ಇದು (this)</td></tr>
+<tr><td class="g"><span class="kn">ಮಾಡಿ</span> <span class="tr">māḍi</span></td><td>please do</td><td class="g"><span class="kn">ಮಾಡಬೇಡಿ</span></td><td class="opts">ಮಾಡಬೇಡಿ (please don't do); ಬೇಕು (want); ಹೌದು (yes); ದಯವಿಟ್ಟು (please)</td></tr>
+<tr><td class="g"><span class="kn">ಹೊಸ</span> <span class="tr">hosa</span></td><td>new</td><td class="g"><span class="kn">ಹಳೆಯ</span></td><td class="opts">ಹಳೆಯ (old); ಚೆಂದ (beautiful); ಶ್ರೇಷ್ಠ (great); ಕಷ್ಟ (difficult)</td></tr>
+</tbody></table>
+<h2>Lesson 4</h2>
+<table class="words"><thead><tr><th>Word</th><th>Meaning</th><th>Opposite</th><th>Other options</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಇಲ್ಲಿ</span> <span class="tr">illi</span></td><td>here</td><td class="g"><span class="kn">ಅಲ್ಲಿ</span></td><td class="opts">ಅಲ್ಲಿ (there); ಇದು (this); ಅದು (that); ಎಲ್ಲಿ (where)</td></tr>
+<tr><td class="g"><span class="kn">ಇದು</span> <span class="tr">idu</span></td><td>this</td><td class="g"><span class="kn">ಅದು</span></td><td class="opts">ಅದು (that); ಇಲ್ಲಿ (here); ಅಲ್ಲಿ (there); ಎಲ್ಲಿ (where)</td></tr>
+<tr><td class="g"><span class="kn">ಮೇಲೆ</span> <span class="tr">mēle</span></td><td>above</td><td class="g"><span class="kn">ಕೆಳಗೆ</span></td><td class="opts">ಕೆಳಗೆ (below); ಹತ್ತಿರ (near); ದೂರ (far); ಒಳಗೆ (inside)</td></tr>
+<tr><td class="g"><span class="kn">ಮುಂದೆ</span> <span class="tr">munde</span></td><td>in front</td><td class="g"><span class="kn">ಹಿಂದೆ</span></td><td class="opts">ಹಿಂದೆ (behind); ಪಕ್ಕ (beside); ಮಧ್ಯ (middle); ತುದಿ (end)</td></tr>
+<tr><td class="g"><span class="kn">ಹಗಲು</span> <span class="tr">hagalu</span></td><td>daytime</td><td class="g"><span class="kn">ರಾತ್ರಿ</span></td><td class="opts">ರಾತ್ರಿ (night); ಮಧ್ಯಾಹ್ನ (noon); ಸಂಜೆ (evening); ಬೆಳಿಗ್ಗೆ (morning)</td></tr>
+</tbody></table>
+<h2>Lesson 5</h2>
+<table class="words"><thead><tr><th>Word</th><th>Meaning</th><th>Opposite</th><th>Other options</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಬಾ</span> <span class="tr">bā</span></td><td>come</td><td class="g"><span class="kn">ಹೋಗು</span></td><td class="opts">ಹೋಗು (go); ತಿನ್ನು (eat); ಕುಡಿ (drink); ನೋಡು (see)</td></tr>
+<tr><td class="g"><span class="kn">ಕೊಡು</span> <span class="tr">koḍu</span></td><td>give</td><td class="g"><span class="kn">ತೆಗೊ</span></td><td class="opts">ತೆಗೊ (take); ನಿಲ್ಲು (stand); ನಡೆ (walk); ಕೇಳು (listen)</td></tr>
+<tr><td class="g"><span class="kn">ಮಲಗು</span> <span class="tr">malagu</span></td><td>sleep</td><td class="g"><span class="kn">ಎದ್ದು</span></td><td class="opts">ಎದ್ದು (get up); ನಿಲ್ಲು (stand); ನಡೆ (walk); ಕುಳಿತುಕೋ (sit)</td></tr>
+<tr><td class="g"><span class="kn">ಕುಳಿತುಕೋ</span> <span class="tr">kuḷituko</span></td><td>sit</td><td class="g"><span class="kn">ನಿಲ್ಲು</span></td><td class="opts">ನಿಲ್ಲು (stand); ಓಡು (run); ನಡೆ (walk); ಎದ್ದು (get up)</td></tr>
+<tr><td class="g"><span class="kn">ಬೇಗ</span> <span class="tr">bēga</span></td><td>fast</td><td class="g"><span class="kn">ನಿಧಾನ</span></td><td class="opts">ನಿಧಾನ (slow); ಮೆಲ್ಲ (gently); ತಕ್ಷಣ (instant); ಸ್ವಲ್ಪ (a little)</td></tr>
+<tr><td class="g"><span class="kn">ಏಳು</span> <span class="tr">elu</span></td><td>Get up (casual)</td><td class="g"><span class="kn">ಮಲಗು</span></td><td class="opts">ಮಲಗು (Sleep (casual)); ನಿಲ್ಲು (Stand / stop (casual)); ಕುಳಿತುಕೋ (Sit (casual)); ನೋಡು (See / watch (casual))</td></tr>
+</tbody></table>
+<h2>Lesson 6</h2>
+<table class="words"><thead><tr><th>Word</th><th>Meaning</th><th>Opposite</th><th>Other options</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಗೊತ್ತು</span> <span class="tr">gottu</span></td><td>know</td><td class="g"><span class="kn">ಗೊತ್ತಿಲ್ಲ</span></td><td class="opts">ಗೊತ್ತಿಲ್ಲ (don't know); ಏನು (what); ಯಾರು (who); ಹೌದು (yes)</td></tr>
+<tr><td class="g"><span class="kn">ಸಂತೋಷ</span> <span class="tr">santoṣa</span></td><td>happiness</td><td class="g"><span class="kn">ದುಃಖ</span></td><td class="opts">ದುಃಖ (sadness); ನಗು (laughter); ಪ್ರೀತಿ (love); ಭಯ (fear)</td></tr>
+<tr><td class="g"><span class="kn">ಒಳ್ಳೆಯ</span> <span class="tr">oḷḷeya</span></td><td>good</td><td class="g"><span class="kn">ಕೆಟ್ಟ</span></td><td class="opts">ಕೆಟ್ಟ (bad); ಸುಂದರ (pretty); ಸರಿ (correct); ತಪ್ಪು (wrong)</td></tr>
+<tr><td class="g"><span class="kn">ತಂಪು</span> <span class="tr">tampu</span></td><td>cold</td><td class="g"><span class="kn">ಬಿಸಿ</span></td><td class="opts">ಬಿಸಿ (hot); ಮಳೆ (rain); ಗಾಳಿ (wind); ಬೆಚ್ಚ (warm)</td></tr>
+<tr><td class="g"><span class="kn">ಇಲ್ಲ</span> <span class="tr">illa</span></td><td>No / not</td><td class="g"><span class="kn">ಹೌದು</span></td><td class="opts">ಹೌದು (Yes); ಸರಿ (Okay); ಗೊತ್ತಿಲ್ಲ (Do not know); ಈಗ (Now)</td></tr>
+</tbody></table>
+<h2>Lesson 7</h2>
+<table class="words"><thead><tr><th>Word</th><th>Meaning</th><th>Opposite</th><th>Other options</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಶುರು ಮಾಡು</span> <span class="tr">shuru maadu</span></td><td>Start (casual)</td><td class="g"><span class="kn">ಮುಗಿಸು</span></td><td class="opts">ಮುಗಿಸು (Finish (casual)); ಓದು (Read / study (casual)); ಬರೆ (Write (casual)); ಹಾಕು (Put (casual))</td></tr>
+<tr><td class="g"><span class="kn">ತೆಗೊ</span> <span class="tr">tego</span></td><td>Take (casual)</td><td class="g"><span class="kn">ಹಾಕು</span></td><td class="opts">ಹಾಕು (Put (casual)); ಇಡು (Keep (casual)); ಮುಗಿಸು (Finish (casual)); ಮಾಡು (Do / make (casual))</td></tr>
+</tbody></table>
+<section class="divider" id="conversations"><h1>Game · Conversations</h1><p class="sub">4 scenarios</p></section>
+<section class="lesson"><h2>Greeting a neighbour <span class="hint">(part 1c)</span></h2>
+<div class="turn">
+<p class="prompt"><span class="kn">ನಮಸ್ಕಾರ!</span> — <em>Hello!</em></p>
+<ul class="options"><li class="correct"><span class="kn">ನಮಸ್ಕಾರ</span> <span class="tr">namaskāra</span> — Hello / greetings ✓</li><li class=""><span class="kn">ಮನೆ</span> <span class="tr">mane</span> — house</li><li class=""><span class="kn">ಹೆಸರು</span> <span class="tr">hesaru</span> — name</li></ul>
+</div>
+<div class="turn">
+<p class="prompt"><span class="kn">ಹೇಗಿದ್ದೀರ?</span> — <em>How are you? (respectful)</em></p>
+<ul class="options"><li class="correct"><span class="kn">ಚೆನ್ನಾಗಿದ್ದೇನೆ</span> <span class="tr">chennāgiddēne</span> — I am fine ✓</li><li class=""><span class="kn">ನೀವು</span> <span class="tr">nīvu</span> — you (respectful)</li><li class=""><span class="kn">ನೀನು</span> <span class="tr">nīnu</span> — you (neutral)</li></ul>
+</div>
+<div class="turn">
+<p class="prompt"><span class="kn">ನೀವು ಚೆನ್ನಾಗಿದ್ದೀರಾ?</span> — <em>Are you fine? (respectful)</em></p>
+<ul class="options"><li class="correct"><span class="kn">ಹೌದು, ಚೆನ್ನಾಗಿದ್ದೇನೆ</span> <span class="tr">haudu, chennāgiddēne</span> — Yes, I am fine ✓</li><li class=""><span class="kn">ಹೆಸರು</span> <span class="tr">hesaru</span> — name</li><li class=""><span class="kn">ಮನೆ</span> <span class="tr">mane</span> — house</li></ul>
+</div>
+</section>
+<section class="lesson"><h2>Introducing yourself <span class="hint">(part 2c)</span></h2>
+<div class="turn">
+<p class="prompt"><span class="kn">ನಿಮ್ಮ ಹೆಸರು ಏನು?</span> — <em>What is your name? (respectful)</em></p>
+<ul class="options"><li class="correct"><span class="kn">ನಾನು ಪ್ರಿಯಾ</span> <span class="tr">nānu priyā</span> — I am Priya ✓</li><li class=""><span class="kn">ಮನೆ</span> <span class="tr">mane</span> — house</li><li class=""><span class="kn">ಅವರು</span> <span class="tr">avaru</span> — that person</li></ul>
+</div>
+<div class="turn">
+<p class="prompt"><span class="kn">ನಿಮ್ಮ ಮನೆ ಎಲ್ಲಿ?</span> — <em>Where is your house?</em></p>
+<ul class="options"><li class="correct"><span class="kn">ಇಲ್ಲಿ</span> <span class="tr">illi</span> — Here ✓</li><li class=""><span class="kn">ಹೆಸರು</span> <span class="tr">hesaru</span> — name</li><li class=""><span class="kn">ನೀವು</span> <span class="tr">nīvu</span> — you (respectful)</li></ul>
+</div>
+<div class="turn">
+<p class="prompt"><span class="kn">ಸರಿ, ನಮಸ್ಕಾರ.</span> — <em>Okay, goodbye.</em></p>
+<ul class="options"><li class="correct"><span class="kn">ನಮಸ್ಕಾರ</span> <span class="tr">namaskāra</span> — Goodbye ✓</li><li class=""><span class="kn">ನಾನು</span> <span class="tr">nānu</span> — I</li><li class=""><span class="kn">ಮನೆ</span> <span class="tr">mane</span> — house</li></ul>
+</div>
+</section>
+<section class="lesson"><h2>Meeting a friend <span class="hint">(part 1c)</span></h2>
+<div class="turn">
+<p class="prompt"><span class="kn">ನಮಸ್ತೆ!</span> — <em>Hi!</em></p>
+<ul class="options"><li class="correct"><span class="kn">ನಮಸ್ತೆ</span> <span class="tr">namaste</span> — Hi / hello ✓</li><li class=""><span class="kn">ಬೇಡ</span> <span class="tr">bēḍa</span> — do not want</li><li class=""><span class="kn">ಅವರು</span> <span class="tr">avaru</span> — that person</li></ul>
+</div>
+<div class="turn">
+<p class="prompt"><span class="kn">ಹೇಗಿದ್ದೀಯ?</span> — <em>How are you? (neutral)</em></p>
+<ul class="options"><li class="correct"><span class="kn">ಚೆನ್ನಾಗಿದ್ದೇನೆ</span> <span class="tr">chennāgiddēne</span> — I am fine ✓</li><li class=""><span class="kn">ನಿಮ್ಮ</span> <span class="tr">nimma</span> — your (respectful)</li><li class=""><span class="kn">ಎಲ್ಲಿ</span> <span class="tr">elli</span> — where</li></ul>
+</div>
+<div class="turn">
+<p class="prompt"><span class="kn">ಸರಿ, ನಮಸ್ಕಾರ.</span> — <em>Okay, goodbye.</em></p>
+<ul class="options"><li class="correct"><span class="kn">ನಮಸ್ಕಾರ</span> <span class="tr">namaskāra</span> — Goodbye ✓</li><li class=""><span class="kn">ಹೆಸರು</span> <span class="tr">hesaru</span> — name</li><li class=""><span class="kn">ಮನೆ</span> <span class="tr">mane</span> — house</li></ul>
+</div>
+</section>
+<section class="lesson"><h2>Asking about people <span class="hint">(part 2c)</span></h2>
+<div class="turn">
+<p class="prompt"><span class="kn">ನಿನ್ನ ಹೆಸರು ಏನು?</span> — <em>What is your name? (neutral)</em></p>
+<ul class="options"><li class="correct"><span class="kn">ನಾನು ರವಿ</span> <span class="tr">nānu ravi</span> — I am Ravi ✓</li><li class=""><span class="kn">ನಿಮ್ಮ</span> <span class="tr">nimma</span> — your (respectful)</li><li class=""><span class="kn">ಮನೆ</span> <span class="tr">mane</span> — house</li></ul>
+</div>
+<div class="turn">
+<p class="prompt"><span class="kn">ಇವಳು ಯಾರು?</span> — <em>Who is she?</em></p>
+<ul class="options"><li class="correct"><span class="kn">ಇವಳು ಪ್ರಿಯಾ</span> <span class="tr">ivaḷu priyā</span> — She is Priya ✓</li><li class=""><span class="kn">ಅವನು</span> <span class="tr">avanu</span> — that person (he)</li><li class=""><span class="kn">ಮನೆ</span> <span class="tr">mane</span> — house</li></ul>
+</div>
+<div class="turn">
+<p class="prompt"><span class="kn">ಸರಿ!</span> — <em>Okay!</em></p>
+<ul class="options"><li class="correct"><span class="kn">ನಮಸ್ಕಾರ</span> <span class="tr">namaskāra</span> — Goodbye ✓</li><li class=""><span class="kn">ಹೆಸರು</span> <span class="tr">hesaru</span> — name</li><li class=""><span class="kn">ನೀನು</span> <span class="tr">nīnu</span> — you (neutral)</li></ul>
+</div>
+</section>
+<section class="divider" id="emergency"><h1>Emergency Phrases</h1><p class="sub">9 phrases</p></section>
+<h2>auto</h2>
+<table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಇಲ್ಲಿ ನಿಲ್ಲಿಸಿ</span></td><td class="tr">Illi nillisi</td><td>Stop here</td></tr>
+<tr><td class="g"><span class="kn">ಮೀಟರ್ ಹಾಕಿ</span></td><td class="tr">Meter haaki</td><td>Please put the meter on</td></tr>
+<tr><td class="g"><span class="kn">ಎಷ್ಟು?</span></td><td class="tr">Eshtu?</td><td>How much is it?</td></tr>
+</tbody></table>
+<h2>basics</h2>
+<table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ಎಲ್ಲಿ?</span></td><td class="tr">Elli?</td><td>Where?</td></tr>
+<tr><td class="g"><span class="kn">ಬೇಡ</span></td><td class="tr">Beda</td><td>No, don't want</td></tr>
+<tr><td class="g"><span class="kn">ಪರವಾಗಿಲ್ಲ</span></td><td class="tr">Paravagilla</td><td>It's okay</td></tr>
+</tbody></table>
+<h2>trouble</h2>
+<table class="words"><thead><tr><th>Kannada</th><th>Transliteration</th><th>English</th></tr></thead><tbody>
+<tr><td class="g"><span class="kn">ದಯವಿಟ್ಟು ಸಹಾಯ ಮಾಡಿ</span></td><td class="tr">Dayavittu sahaaya maadi</td><td>Please help</td></tr>
+<tr><td class="g"><span class="kn">ನನಗೆ ಕನ್ನಡ ಬರಲ್ಲ</span></td><td class="tr">Nanage Kannada baralla</td><td>I don't know Kannada</td></tr>
+<tr><td class="g"><span class="kn">ಸ್ವಲ್ಪ ನಿಧಾನವಾಗಿ</span></td><td class="tr">Swalpa nidhanavagi</td><td>Slowly, please</td></tr>
+</tbody></table></body></html>

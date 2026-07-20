@@ -107,9 +107,10 @@
     .contact-card { margin-top: 40px; background: linear-gradient(135deg, var(--red) 0%, var(--red-hi) 100%); color: #fff; border-radius: 18px; padding: 28px 28px 26px; box-shadow: 0 6px 0 var(--red-lip); }
     .contact-card h2 { font-family: var(--display); font-weight: 800; font-size: 22px; margin: 0; letter-spacing: -0.3; }
     .contact-card p { color: rgba(255,255,255,0.88); font-size: 16px; line-height: 1.55; margin: 10px 0 0; max-width: 56ch; }
-    .contact-card .links { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 16px; }
+    .contact-card .links { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 18px; }
     .contact-card a { color: var(--gold); font-weight: 700; }
     .contact-card a:hover { color: #fff; }
+    .contact-card .link-label { color: rgba(255,255,255,0.75); font-weight: 500; }
 
     .foot { margin-top: 48px; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
     .foot .copy { font-size: 13px; color: var(--faint); }
@@ -134,7 +135,6 @@
     @media (max-width: 400px) {
       .wrap { padding: 34px 16px 64px; }
       .brand { flex-wrap: wrap; gap: 6px 10px; }
-      .contact-card .links { flex-direction: column; gap: 10px; }
     }
 
     @media print {
@@ -144,6 +144,7 @@
       .tldr, .contact-card, section { break-inside: avoid; }
       .contact-card { background: none; color: var(--ink); box-shadow: none; border: 1px solid var(--hairline); }
       .contact-card p { color: var(--sub); }
+      .contact-card .link-label { color: var(--sub); }
       .contact-card a { color: var(--red); }
       a { color: var(--ink); }
       .ph { background: none; }
@@ -218,8 +219,9 @@
         If you have a question, a request, or just want to talk privacy, we genuinely want to hear from you.
       </p>
       <div class="links">
-        <a href="mailto:kannadabeku@gmail.com">kannadabeku@gmail.com</a>
-        <a href="https://instagram.com/kannada.beku" target="_blank" rel="noreferrer">@kannada.beku</a>
+        <a href="mailto:kannadabeku@gmail.com"><span class="link-label">Email · </span>kannadabeku@gmail.com</a>
+        <a href="https://instagram.com/kannada.beku" target="_blank" rel="noreferrer"><span class="link-label">Instagram · </span>@kannada.beku</a>
+        <a href="https://www.linkedin.com/company/kannada-beku" target="_blank" rel="noreferrer"><span class="link-label">LinkedIn · </span>Kannada Beku</a>
       </div>
     </div>
 

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intern Brief — Show a proper "email already in use" message</title>
+<style>
+  body { margin: 0; background: #faf8f4; color: #2b2b2b;
+         font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         line-height: 1.7; }
+  main { max-width: 42rem; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  h1 { font-size: 1.6rem; line-height: 1.25; margin: 0 0 .25rem; color: #1e3a2f; }
+  .meta { color: #777; font-size: .9rem; margin-bottom: 2rem; }
+  h2 { font-size: 1.25rem; margin: 2.6rem 0 .6rem; color: #1e3a2f;
+       border-bottom: 2px solid #e3ddd0; padding-bottom: .3rem; }
+  code { background: #efece4; padding: .1em .35em; border-radius: 4px;
+         font-size: .88em; font-family: "SF Mono", Menlo, Consolas, monospace; }
+  pre { background: #f0ede5; border: 1px solid #e0dacb; border-radius: 8px;
+        padding: .9rem 1rem; overflow-x: auto; font-size: .84rem; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .4rem 0; }
+  .term { border-left: 4px solid #3a7d54; background: #edf6ef;
+          padding: .6rem 1rem; border-radius: 0 8px 8px 0; margin: .9rem 0; font-size: .92rem; }
+  .term b { color: #22703c; }
+  .warn { border-left: 4px solid #b5493a; background: #fbeeec;
+          padding: .6rem 1rem; border-radius: 0 8px 8px 0; margin: .9rem 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .92rem; }
+  th, td { border: 1px solid #ddd6c6; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+  th { background: #efece4; }
+  .small { font-size: .85rem; color: #666; }
+</style>
+</head>
+<body>
+<main>
+<h1>Show a proper "email already in use" message</h1>
+<p class="meta">Kannada Beku · your branch: <code>fix/auth-error-surfacing</code> · this doc explains the bug and the path — writing the fix is your job</p>
+
+<h2>The bug, in one paragraph</h2>
+<p>Open the app, go to <strong>Sign up</strong>, and enter an email that already has an account.
+Press the button. You'll see a little message slide in saying
+<em>"Couldn't sign you in — check your email and password and try again."</em>
+That message is wrong: the email and password are fine. The real problem is that the account
+already exists — but the app never says so. Your job: make the app show an honest message like
+<em>"That email already has an account — try logging in instead."</em></p>
+
+<div class="term"><b>Toast</b> — that little message that slides in and disappears by itself.
+This app has one shared "catalog" file that defines every toast it can show, so all messages look
+and behave the same.</div>
+
+<h2>The two files you'll touch (and no others)</h2>
+<ul>
+  <li><code>app/(auth)/login.tsx</code> — the login/sign-up screen. One screen handles both modes.</li>
+  <li><code>components/modals/instances/toastCatalog.ts</code> — the toast catalog. You'll add one
+      new toast here.</li>
+</ul>
+
+<h2>Why the bug happens</h2>
+<p>The app uses <strong>Supabase</strong> for accounts.</p>
+<div class="term"><b>Supabase</b> — the online service that stores our users. When the app calls
+<code>supabase.auth.signUp(...)</code>, Supabase creates the account and replies. If something is
+wrong (like the email being taken), it replies with an <b>error object</b> instead — a bundle of
+info describing what went wrong.</div>
+
+<p>In <code>login.tsx</code>, inside the function <code>handleAuth</code> (around lines 117–163),
+the sign-up code says: if Supabase returned an error, <code>throw</code> it. Throwing jumps
+straight to the <code>catch</code> block at the bottom:</p>
+<pre><code>} catch (error) {
+  logger.warn('auth', 'email sign-in/sign-up failed', { err: error });
+  Toasts.signInFailed();
+}</code></pre>
+<p>Read those two lines carefully — they <em>are</em> the bug:</p>
+<ul>
+  <li><code>logger.warn(...)</code> prints the real error to the <strong>terminal</strong> (the
+      window on your computer where you ran the app). The developer sees it; the user never does.</li>
+  <li><code>Toasts.signInFailed()</code> shows the same generic toast for <em>every possible
+      error</em> — wrong password, no internet, email taken — all get the identical wrong message.</li>
+</ul>
+<p>So Supabase <em>does</em> tell us "this email is taken." The catch block just throws that
+information away. The fix is to look at the error, recognize the "email taken" case, and show a
+better toast for it. Everything else should keep behaving exactly as it does now.</p>
+
+<h2>Step 1 — See the real error yourself</h2>
+<ol>
+  <li>Run the app. Sign up with a made-up email (e.g. <code>test123@gmail.com</code>) so an
+      account exists.</li>
+  <li>Sign out, then sign up with that same email <em>again</em>.</li>
+  <li>Look at the terminal. You'll see the warning line with the error in it. If it's hard to
+      read, temporarily add <code>console.log(error)</code> inside the catch — just delete it
+      before committing.</li>
+</ol>
+<p>Now look at what the error contains. It's not just text — it has named fields. The two that
+matter:</p>
+<ul>
+  <li><code>error.message</code> — a human sentence like "User already registered".</li>
+  <li><code>error.code</code> — a short machine label like <code>user_already_exists</code>.</li>
+</ul>
+<div class="warn"><strong>Always check <code>error.code</code>, never <code>error.message</code>.</strong>
+The message is just wording — Supabase could rephrase it in any update and your check would
+silently stop working. The code is a stable label that won't change. Write down the exact code you
+see in the terminal; that's what you'll check for in Step 3.</div>
+
+<h2>Step 2 — Add your toast to the catalog</h2>
+<p>Open <code>toastCatalog.ts</code>. It's one big object where each entry is a small function.
+Read a few (e.g. <code>signInFailed</code>, <code>resetLinkInvalid</code>) — they all follow the
+same shape:</p>
+<ul>
+  <li><code>kind</code> — <code>'error'</code> or <code>'success'</code> (controls the color).</li>
+  <li><code>id</code> — a unique name for this toast. Must not clash with an existing one.</li>
+  <li><code>title</code> and optional <code>subtitle</code> — the words the user reads.</li>
+  <li>optional <code>onPress</code> — a function to run if the user taps the toast. Look at
+      <code>audioFailed</code> to see how one is passed in.</li>
+</ul>
+<p>Add one new entry for "email already registered," copying the style of its neighbors. Keep the
+wording friendly and clear about what to do next (log in). <span class="small">Hint: the screen has
+a helper called <code>switchMode</code> (around line 103) that flips between login and sign-up.
+A toast the user can tap to jump to login mode would be a nice touch — your call.</span></p>
+
+<h2>Step 3 — Use it in the catch block</h2>
+<p>Back in <code>login.tsx</code>: in the catch, if the error's code is the one you wrote down in
+Step 1, show your new toast; otherwise leave everything exactly as it was. Keep the
+<code>logger.warn</code> line either way — we still want the error recorded.</p>
+<div class="warn"><strong>Watch out:</strong> the same catch block also handles <em>login</em>
+failures, not just sign-up. Make sure a failed login can never show your "email already
+registered" toast. (Notice the <code>isSignUp</code> variable the function already uses.)</div>
+
+<h2>What NOT to do</h2>
+<ul>
+  <li><strong>Don't check whether an email exists before signing up</strong> (e.g. by querying the
+      user list). Features that let anyone test "does this email have an account?" are a privacy
+      problem — attackers use them to build target lists. Reacting to the error from a genuine
+      sign-up attempt is fine; adding a lookup is not.</li>
+  <li><strong>Don't touch anything else</strong> — not the Google/Apple buttons, not the password
+      rules, not other files. Two files, small change.</li>
+  <li><strong>Don't reformat or "improve" nearby code.</strong> The diff should only contain your
+      fix.</li>
+  <li><strong>Don't use <code>any</code>, <code>@ts-ignore</code>, or <code>!</code></strong> to
+      silence TypeScript. If the error's type is unclear, look at how the rest of the file imports
+      types from <code>@supabase/supabase-js</code>.</li>
+</ul>
+
+<h2>How you'll know you're done</h2>
+<p>Test every row yourself in the simulator before opening a PR:</p>
+<table>
+  <tr><th>Do this</th><th>Should happen</th></tr>
+  <tr><td>Sign up with an email that already has an account</td>
+      <td>Your new toast. Not the old generic one.</td></tr>
+  <tr><td>Sign up with a brand-new email</td>
+      <td>Works exactly like before — no new toast.</td></tr>
+  <tr><td>Log in with a wrong password</td>
+      <td>Old generic toast, same as today. Your new toast must never appear here.</td></tr>
+  <tr><td>Check the terminal during the duplicate sign-up</td>
+      <td>The <code>logger.warn</code> line still prints.</td></tr>
+</table>
+<p>House rule: never say "it works" unless you've actually run it and watched it work. A short
+screen recording of the first test makes a great PR description.</p>
+
+<h2>Stuck?</h2>
+<ul>
+  <li>Toast never appears → check your toast's <code>id</code> is unique in the catalog.</li>
+  <li>Can't tell which error is which → log the whole error object and look at
+      <code>code</code>.</li>
+  <li>Anything feels ambiguous → ask before coding around it.</li>
+</ul>
+
+<p class="small">Context: this is one of four known issues (the full plan is in
+<code>plan_audio_auth_fixes.html</code>). While testing you may notice audio sometimes not playing,
+or the password-reset email being broken — both are known, being handled separately, and not part
+of your task.</p>
+
+</main>
+</body>
+</html>

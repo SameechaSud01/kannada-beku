@@ -1,0 +1,4448 @@
+{
+  "generated": "June 23, 2026",
+  "totals": {
+    "words": 132,
+    "phrases": 70,
+    "quiz": 46,
+    "dictation": 46,
+    "opposites": 30,
+    "scenarios": 4,
+    "emergency": 9
+  },
+  "guide": {
+    "chart": [
+      {
+        "example": "as in cup",
+        "kannada": "ಕ",
+        "transliteration": "ka"
+      },
+      {
+        "example": "as in khadi",
+        "kannada": "ಖ",
+        "transliteration": "kha"
+      },
+      {
+        "example": "as in gun",
+        "kannada": "ಗ",
+        "transliteration": "ga"
+      },
+      {
+        "example": "as in ghat",
+        "kannada": "ಘ",
+        "transliteration": "gha"
+      },
+      {
+        "example": "as in gnome",
+        "kannada": "ಙ",
+        "transliteration": "gna"
+      },
+      {
+        "example": "as in chair",
+        "kannada": "ಚ",
+        "transliteration": "cha"
+      },
+      {
+        "example": "as in church",
+        "kannada": "ಛ",
+        "transliteration": "chha"
+      },
+      {
+        "example": "as in jug",
+        "kannada": "ಜ",
+        "transliteration": "ja"
+      },
+      {
+        "example": "as in badge",
+        "kannada": "ಝ",
+        "transliteration": "jha"
+      },
+      {
+        "example": "rare in English",
+        "kannada": "ಞ",
+        "transliteration": "nja"
+      },
+      {
+        "example": "as in Top",
+        "kannada": "ಟ",
+        "transliteration": "Ta"
+      },
+      {
+        "example": "hard 'Tt' — as in cut",
+        "kannada": "ಠ",
+        "transliteration": "Tta"
+      },
+      {
+        "example": "as in Dark",
+        "kannada": "ಡ",
+        "transliteration": "Da"
+      },
+      {
+        "example": "hard 'Dd' — as in board",
+        "kannada": "ಢ",
+        "transliteration": "Dda"
+      },
+      {
+        "example": "heavy 'Nn' — rare in English",
+        "kannada": "ಣ",
+        "transliteration": "Nna"
+      },
+      {
+        "example": "as in Bharath",
+        "kannada": "ತ",
+        "transliteration": "ta"
+      },
+      {
+        "example": "soft 'th' — as in Thailand",
+        "kannada": "ಥ",
+        "transliteration": "tha"
+      },
+      {
+        "example": "as in the",
+        "kannada": "ದ",
+        "transliteration": "da"
+      },
+      {
+        "example": "as in dhal",
+        "kannada": "ಧ",
+        "transliteration": "dha"
+      },
+      {
+        "example": "as in can",
+        "kannada": "ನ",
+        "transliteration": "na"
+      },
+      {
+        "example": "as in papaya",
+        "kannada": "ಪ",
+        "transliteration": "pa"
+      },
+      {
+        "example": "as in orphan",
+        "kannada": "ಫ",
+        "transliteration": "pha"
+      },
+      {
+        "example": "as in balloon",
+        "kannada": "ಬ",
+        "transliteration": "ba"
+      },
+      {
+        "example": "as in Bharath",
+        "kannada": "ಭ",
+        "transliteration": "bha"
+      },
+      {
+        "example": "as in man",
+        "kannada": "ಮ",
+        "transliteration": "ma"
+      },
+      {
+        "example": "as in yak",
+        "kannada": "ಯ",
+        "transliteration": "ya"
+      },
+      {
+        "example": "as in rat",
+        "kannada": "ರ",
+        "transliteration": "ra"
+      },
+      {
+        "example": "as in lamp",
+        "kannada": "ಲ",
+        "transliteration": "la"
+      },
+      {
+        "example": "as in van",
+        "kannada": "ವ",
+        "transliteration": "va"
+      },
+      {
+        "example": "as in ash",
+        "kannada": "ಶ",
+        "transliteration": "sha"
+      },
+      {
+        "example": "as in shut",
+        "kannada": "ಷ",
+        "transliteration": "sshha"
+      },
+      {
+        "example": "as in sun",
+        "kannada": "ಸ",
+        "transliteration": "sa"
+      },
+      {
+        "example": "as in hump",
+        "kannada": "ಹ",
+        "transliteration": "ha"
+      },
+      {
+        "example": "rare 'L' — palate sound",
+        "kannada": "ಳ",
+        "transliteration": "lla"
+      }
+    ],
+    "tryIt": {
+      "english": "village",
+      "kannada": "ಹಳ್ಳಿ",
+      "transliteration": "haLLi"
+    },
+    "principles": [
+      {
+        "body": "Kannada is written the way it sounds. Read the letters left to right and you have said the word.",
+        "title": "Say what you see"
+      },
+      {
+        "body": "A capital letter in our spellings (Ta, Da, La) means curl your tongue up and back — a fuller, hollow sound.",
+        "title": "Capitals curl your tongue"
+      },
+      {
+        "body": "A doubled consonant (appa, haLLi) is just held a beat longer than a single one.",
+        "title": "Doubled letters linger"
+      }
+    ],
+    "vowelPairs": [
+      {
+        "long": {
+          "example": "art",
+          "kannada": "ಆ",
+          "transliteration": "ā"
+        },
+        "short": {
+          "example": "up",
+          "kannada": "ಅ",
+          "transliteration": "a"
+        }
+      },
+      {
+        "long": {
+          "example": "seed",
+          "kannada": "ಈ",
+          "transliteration": "ī"
+        },
+        "short": {
+          "example": "igloo",
+          "kannada": "ಇ",
+          "transliteration": "i"
+        }
+      },
+      {
+        "long": {
+          "example": "moon",
+          "kannada": "ಊ",
+          "transliteration": "ū"
+        },
+        "short": {
+          "example": "push",
+          "kannada": "ಉ",
+          "transliteration": "u"
+        }
+      },
+      {
+        "long": {
+          "example": "crane",
+          "kannada": "ಏ",
+          "transliteration": "ē"
+        },
+        "short": {
+          "example": "cake",
+          "kannada": "ಎ",
+          "transliteration": "e"
+        }
+      },
+      {
+        "long": {
+          "example": "go",
+          "kannada": "ಓ",
+          "transliteration": "ō"
+        },
+        "short": {
+          "example": "opener",
+          "kannada": "ಒ",
+          "transliteration": "o"
+        }
+      }
+    ],
+    "readingRows": [
+      {
+        "symbol": "Ta",
+        "example": "as in Top",
+        "isCapital": true
+      },
+      {
+        "symbol": "ta",
+        "example": "as in Bharath",
+        "isCapital": false
+      },
+      {
+        "symbol": "Da",
+        "example": "as in Dark",
+        "isCapital": true
+      },
+      {
+        "symbol": "da",
+        "example": "as in the",
+        "isCapital": false
+      }
+    ],
+    "vowelLoners": [
+      {
+        "example": "rupees",
+        "kannada": "ಋ",
+        "transliteration": "ṛ"
+      },
+      {
+        "example": "ice",
+        "kannada": "ಐ",
+        "transliteration": "ai"
+      },
+      {
+        "example": "owl",
+        "kannada": "ಔ",
+        "transliteration": "au"
+      }
+    ],
+    "consonantFamilies": [
+      {
+        "id": "throat",
+        "hint": "Sound starts at the back of the mouth.",
+        "place": "Throat",
+        "glyphs": [
+          {
+            "kannada": "ಕ",
+            "transliteration": "ka"
+          },
+          {
+            "kannada": "ಖ",
+            "transliteration": "kha"
+          },
+          {
+            "kannada": "ಗ",
+            "transliteration": "ga"
+          },
+          {
+            "kannada": "ಘ",
+            "transliteration": "gha"
+          }
+        ]
+      },
+      {
+        "id": "palate",
+        "hint": "Tongue presses the roof of the mouth.",
+        "place": "Palate",
+        "glyphs": [
+          {
+            "kannada": "ಚ",
+            "transliteration": "cha"
+          },
+          {
+            "kannada": "ಜ",
+            "transliteration": "ja"
+          }
+        ]
+      },
+      {
+        "id": "curled",
+        "hint": "Tongue curls up and back (the capital sounds).",
+        "place": "Curled tongue",
+        "glyphs": [
+          {
+            "kannada": "ಟ",
+            "transliteration": "Ta"
+          },
+          {
+            "kannada": "ಡ",
+            "transliteration": "Da"
+          },
+          {
+            "kannada": "ಣ",
+            "transliteration": "Nna"
+          }
+        ]
+      },
+      {
+        "id": "teeth",
+        "hint": "Tongue tip touches the upper teeth (the lowercase sounds).",
+        "place": "Teeth",
+        "glyphs": [
+          {
+            "kannada": "ತ",
+            "transliteration": "ta"
+          },
+          {
+            "kannada": "ದ",
+            "transliteration": "da"
+          },
+          {
+            "kannada": "ನ",
+            "transliteration": "na"
+          }
+        ]
+      },
+      {
+        "id": "lips",
+        "hint": "Both lips come together.",
+        "place": "Lips",
+        "glyphs": [
+          {
+            "kannada": "ಪ",
+            "transliteration": "pa"
+          },
+          {
+            "kannada": "ಬ",
+            "transliteration": "ba"
+          },
+          {
+            "kannada": "ಮ",
+            "transliteration": "ma"
+          }
+        ]
+      }
+    ]
+  },
+  "lessons": [
+    {
+      "lessonNo": 1,
+      "title": "Greetings",
+      "situation": "You have just met someone — a neighbour, a shopkeeper, someone at work. This is how you open.",
+      "realWorldPrompt": "Next time you see your auto driver, building guard, or a shopkeeper — open with \"namaskāra, heegiddira?\" before anything else.",
+      "registerNote": "Neutral = use with someone your age or younger. Respectful = use with elders or strangers.",
+      "sections": [
+        {
+          "key": "1a",
+          "label": "Saying hello",
+          "words": [
+            {
+              "kannada": "ನಮಸ್ಕಾರ",
+              "transliteration": "namaskāra",
+              "english": "Hello / greetings"
+            },
+            {
+              "kannada": "ನೀವು",
+              "transliteration": "nīvu",
+              "english": "You (respectful/plural)"
+            },
+            {
+              "kannada": "ನೀನು",
+              "transliteration": "nīnu",
+              "english": "You (neutral/singular)"
+            }
+          ],
+          "phrases": []
+        },
+        {
+          "key": "1b",
+          "label": "How are you / I'm fine",
+          "words": [
+            {
+              "kannada": "ಹೇಗಿದ್ದೀರ?",
+              "transliteration": "hēgiddīra?",
+              "english": "How are you? (respectful)"
+            },
+            {
+              "kannada": "ಹೇಗಿದ್ದೀಯ?",
+              "transliteration": "hēgiddīya?",
+              "english": "How are you? (neutral)"
+            },
+            {
+              "kannada": "ಚೆನ್ನಾಗಿದ್ದೇನೆ",
+              "transliteration": "chennāgiddēne",
+              "english": "I am fine"
+            },
+            {
+              "kannada": "ಚೆನ್ನಾಗಿದ್ದೇವೆ",
+              "transliteration": "chennāgiddēve",
+              "english": "We are fine"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ನೀವು ಚೆನ್ನಾಗಿದ್ದೀರಾ?",
+              "transliteration": "nīvu chennāgiddīrā?",
+              "english": "Are you fine? (respectful)"
+            },
+            {
+              "kannada": "ನೀನು ಚೆನ್ನಾಗಿದ್ದೀಯಾ?",
+              "transliteration": "nīnu chennāgiddīyā?",
+              "english": "Are you fine? (neutral)"
+            },
+            {
+              "kannada": "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ",
+              "transliteration": "nānu chennāgiddēne",
+              "english": "I am fine"
+            }
+          ]
+        },
+        {
+          "key": "1c",
+          "label": "Greeting someone",
+          "words": [],
+          "phrases": [
+            {
+              "kannada": "ನಮಸ್ಕಾರ, ಹೇಗಿದ್ದೀರ?",
+              "transliteration": "namaskāra, hēgiddīra?",
+              "english": "Hello, how are you? (respectful)"
+            },
+            {
+              "kannada": "ನಮಸ್ಕಾರ, ಹೇಗಿದ್ದೀಯ?",
+              "transliteration": "namaskāra, hēgiddīya?",
+              "english": "Hello, how are you? (neutral)"
+            },
+            {
+              "kannada": "ನಾವು ಚೆನ್ನಾಗಿದ್ದೇವೆ",
+              "transliteration": "nāvu chennāgiddēve",
+              "english": "We are fine"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNo": 2,
+      "title": "Names",
+      "situation": "You are meeting someone for the first time — at work, in your building, or at a social event.",
+      "realWorldPrompt": "Next time you meet someone new, ask \"nimma hesaru enu?\" — even if they speak English back, you opened in Kannada.",
+      "registerNote": "Neutral = use with someone your age or younger. Respectful = use with elders or strangers.",
+      "sections": [
+        {
+          "key": "2a",
+          "label": "I / you / your",
+          "words": [
+            {
+              "kannada": "ನಾನು",
+              "transliteration": "nānu",
+              "english": "I"
+            },
+            {
+              "kannada": "ನೀನು",
+              "transliteration": "nīnu",
+              "english": "You (neutral)"
+            },
+            {
+              "kannada": "ನೀವು",
+              "transliteration": "nīvu",
+              "english": "You (respectful)"
+            },
+            {
+              "kannada": "ನಿನ್ನ",
+              "transliteration": "ninna",
+              "english": "Your (neutral)"
+            },
+            {
+              "kannada": "ನಿಮ್ಮ",
+              "transliteration": "nimma",
+              "english": "Your (respectful)"
+            }
+          ],
+          "phrases": []
+        },
+        {
+          "key": "2b",
+          "label": "He / she / they",
+          "words": [
+            {
+              "kannada": "ಇವರು",
+              "transliteration": "ivaru",
+              "english": "This person / these people"
+            },
+            {
+              "kannada": "ಇವನು",
+              "transliteration": "ivanu",
+              "english": "This person (he)"
+            },
+            {
+              "kannada": "ಇವಳು",
+              "transliteration": "ivaḷu",
+              "english": "This person (she)"
+            },
+            {
+              "kannada": "ಅವರು",
+              "transliteration": "avaru",
+              "english": "That person / those people"
+            },
+            {
+              "kannada": "ಅವನು",
+              "transliteration": "avanu",
+              "english": "That person (he)"
+            },
+            {
+              "kannada": "ಅವಳು",
+              "transliteration": "avaḷu",
+              "english": "That person (she)"
+            }
+          ],
+          "phrases": []
+        },
+        {
+          "key": "2c",
+          "label": "Name & home",
+          "words": [
+            {
+              "kannada": "ಹೆಸರು",
+              "transliteration": "hesaru",
+              "english": "Name"
+            },
+            {
+              "kannada": "ಮನೆ",
+              "transliteration": "mane",
+              "english": "House / home"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ನಿಮ್ಮ ಹೆಸರು ಏನು?",
+              "transliteration": "nimma hesaru ēnu?",
+              "english": "What is your name? (respectful)"
+            },
+            {
+              "kannada": "ನಿನ್ನ ಹೆಸರು ಏನು?",
+              "transliteration": "ninna hesaru ēnu?",
+              "english": "What is your name? (neutral)"
+            },
+            {
+              "kannada": "ನಾನು ಪ್ರಿಯಾ",
+              "transliteration": "nānu priyā",
+              "english": "I am Priya"
+            },
+            {
+              "kannada": "ನಿಮ್ಮ ಮನೆ ಎಲ್ಲಿ?",
+              "transliteration": "nimma mane elli?",
+              "english": "Where is your house?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNo": 3,
+      "title": "Wanting",
+      "situation": "You are at a street market, vegetable vendor, or small shop. You want something, you want to know the price, and you want to negotiate.",
+      "realWorldPrompt": "Next time you buy vegetables or anything from a street vendor, ask \"idu estu?\" instead of pointing at the price.",
+      "registerNote": "Neutral = use with someone your age or younger. Respectful = use with elders or strangers.",
+      "sections": [
+        {
+          "key": "3a",
+          "label": "Want / don't want",
+          "words": [
+            {
+              "kannada": "ನನಗೆ",
+              "transliteration": "nanage",
+              "english": "For me / to me"
+            },
+            {
+              "kannada": "ನಮಗೆ",
+              "transliteration": "namage",
+              "english": "For us / to us"
+            },
+            {
+              "kannada": "ನಿನಗೆ",
+              "transliteration": "ninage",
+              "english": "For you (neutral)"
+            },
+            {
+              "kannada": "ನಿಮಗೆ",
+              "transliteration": "nimage",
+              "english": "For you (respectful)"
+            },
+            {
+              "kannada": "ಬೇಕು",
+              "transliteration": "bēku",
+              "english": "Want / need"
+            },
+            {
+              "kannada": "ಬೇಡ",
+              "transliteration": "bēḍa",
+              "english": "Don't want"
+            },
+            {
+              "kannada": "ಹೌದು",
+              "transliteration": "haudu",
+              "english": "Yes"
+            },
+            {
+              "kannada": "ಇಲ್ಲ",
+              "transliteration": "illa",
+              "english": "No"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ನನಗೆ ಇದು ಬೇಕು",
+              "transliteration": "nanage idhu bēku",
+              "english": "I want this"
+            },
+            {
+              "kannada": "ನಮಗೆ ಅದು ಬೇಕು",
+              "transliteration": "namage adu bēku",
+              "english": "We want that"
+            },
+            {
+              "kannada": "ನಿನಗೆ ಬೇಕಾ?",
+              "transliteration": "ninage bēkā?",
+              "english": "Do you want? (neutral)"
+            },
+            {
+              "kannada": "ನಿಮಗೆ ಬೇಕಾ?",
+              "transliteration": "nimage bēkā?",
+              "english": "Do you want? (respectful)"
+            },
+            {
+              "kannada": "ಹೌದು, ಬೇಕು",
+              "transliteration": "haudu, bēku",
+              "english": "Yes, I want"
+            },
+            {
+              "kannada": "ಇಲ್ಲ, ನನಗೆ ಬೇಡ",
+              "transliteration": "illa, nanage bēḍa",
+              "english": "No, I don't want"
+            }
+          ]
+        },
+        {
+          "key": "3b",
+          "label": "Price & quantity",
+          "words": [
+            {
+              "kannada": "ಇಲ್ಲಿ",
+              "transliteration": "illi",
+              "english": "Here"
+            },
+            {
+              "kannada": "ಎಷ್ಟು",
+              "transliteration": "eṣṭu",
+              "english": "How much"
+            },
+            {
+              "kannada": "ಯಾಕೆ",
+              "transliteration": "yāke",
+              "english": "Why"
+            },
+            {
+              "kannada": "ಕಡಿಮೆ",
+              "transliteration": "kaḍime",
+              "english": "Less"
+            },
+            {
+              "kannada": "ಸ್ವಲ್ಪ",
+              "transliteration": "svalpa",
+              "english": "A little"
+            },
+            {
+              "kannada": "ಜಾಸ್ತಿ",
+              "transliteration": "jāsti",
+              "english": "A lot / too much"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ಇದು ಎಷ್ಟು?",
+              "transliteration": "idhu eṣṭu?",
+              "english": "How much is this?"
+            },
+            {
+              "kannada": "ಯಾಕೆ?",
+              "transliteration": "yāke?",
+              "english": "Why?"
+            },
+            {
+              "kannada": "ಇದು ಜಾಸ್ತಿ",
+              "transliteration": "idhu jāsti",
+              "english": "This is too much"
+            },
+            {
+              "kannada": "ಸ್ವಲ್ಪ",
+              "transliteration": "svalpa",
+              "english": "A little"
+            }
+          ]
+        },
+        {
+          "key": "3c",
+          "label": "Polite requests",
+          "words": [
+            {
+              "kannada": "ಮಾಡಿ",
+              "transliteration": "māḍi",
+              "english": "Please do"
+            },
+            {
+              "kannada": "ಮಾಡಬೇಡಿ",
+              "transliteration": "māḍabēḍi",
+              "english": "Please don't do"
+            },
+            {
+              "kannada": "ದಯವಿಟ್ಟು",
+              "transliteration": "dayaviṭṭu",
+              "english": "Please"
+            },
+            {
+              "kannada": "ಧನ್ಯವಾದಗಳು",
+              "transliteration": "dhanyavādagaḷu",
+              "english": "Thank you"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ಇದು ಕಮ್ಮಿ ಮಾಡಿ",
+              "transliteration": "idhu kammi māḍi",
+              "english": "Please reduce the price"
+            },
+            {
+              "kannada": "ದಯವಿಟ್ಟು ಮಾಡಿ",
+              "transliteration": "dayaviṭṭu māḍi",
+              "english": "Please do"
+            },
+            {
+              "kannada": "ದಯವಿಟ್ಟು ಮಾಡಬೇಡಿ",
+              "transliteration": "dayaviṭṭu māḍabēḍi",
+              "english": "Please don't"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNo": 4,
+      "title": "Pointing",
+      "situation": "You need to point something out, ask where something is, or describe a location.",
+      "realWorldPrompt": "Next time you need to point something out, use \"illi\" and \"alli\" instead of just pointing silently.",
+      "registerNote": null,
+      "sections": [
+        {
+          "key": "4",
+          "label": "This, that, here, there",
+          "words": [
+            {
+              "kannada": "ಇಲ್ಲಿ",
+              "transliteration": "illi",
+              "english": "Here"
+            },
+            {
+              "kannada": "ಇದು",
+              "transliteration": "idhu",
+              "english": "This"
+            },
+            {
+              "kannada": "ಅಲ್ಲಿ",
+              "transliteration": "alli",
+              "english": "There"
+            },
+            {
+              "kannada": "ಅದು",
+              "transliteration": "adu",
+              "english": "That"
+            },
+            {
+              "kannada": "ಎಲ್ಲಿ",
+              "transliteration": "elli",
+              "english": "Where"
+            },
+            {
+              "kannada": "ಹೇಗೆ",
+              "transliteration": "hēge",
+              "english": "How"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ಅದು ಎಲ್ಲಿ?",
+              "transliteration": "adu elli?",
+              "english": "Where is that?"
+            },
+            {
+              "kannada": "ಇದು ಎಲ್ಲಿ?",
+              "transliteration": "idhu elli?",
+              "english": "Where is this?"
+            },
+            {
+              "kannada": "ನಿಮ್ಮ ಮನೆ ಎಲ್ಲಿ?",
+              "transliteration": "nimma mane elli?",
+              "english": "Where is your house?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNo": 5,
+      "title": "Easy verbs",
+      "situation": "You want to ask someone to do something, or describe what you or someone else is doing.",
+      "realWorldPrompt": "Next time you want someone to do something, use the respectful form — \"maadi\", \"hoogi\", \"noodi\" — instead of English.",
+      "registerNote": "Neutral = use with someone your age or younger. Respectful = use with elders or strangers.",
+      "sections": [
+        {
+          "key": "5a",
+          "label": "Everyday actions",
+          "words": [
+            {
+              "kannada": "ಮಾಡು",
+              "transliteration": "maadu",
+              "english": "Do / make (neutral)"
+            },
+            {
+              "kannada": "ಮಾಡಿ",
+              "transliteration": "maadi",
+              "english": "Do / make (respectful)"
+            },
+            {
+              "kannada": "ಹೋಗು",
+              "transliteration": "hogu",
+              "english": "Go (neutral)"
+            },
+            {
+              "kannada": "ಹೋಗಿ",
+              "transliteration": "hogi",
+              "english": "Go (respectful)"
+            },
+            {
+              "kannada": "ಬಾ",
+              "transliteration": "baa",
+              "english": "Come (neutral)"
+            },
+            {
+              "kannada": "ಬನ್ನಿ",
+              "transliteration": "banni",
+              "english": "Come (respectful)"
+            },
+            {
+              "kannada": "ತಿನ್ನು",
+              "transliteration": "tinnu",
+              "english": "Eat (neutral)"
+            },
+            {
+              "kannada": "ತಿನ್ನಿ",
+              "transliteration": "tinni",
+              "english": "Eat (respectful)"
+            },
+            {
+              "kannada": "ಕುಡಿ",
+              "transliteration": "kudi",
+              "english": "Drink (neutral)"
+            },
+            {
+              "kannada": "ಕುಡಿಯಿರಿ",
+              "transliteration": "kudiyiri",
+              "english": "Drink (respectful)"
+            },
+            {
+              "kannada": "ನೋಡು",
+              "transliteration": "nōdu",
+              "english": "See / watch (neutral)"
+            },
+            {
+              "kannada": "ನೋಡಿ",
+              "transliteration": "nōdi",
+              "english": "See / watch (respectful)"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ಇದು ನೋಡಿ",
+              "transliteration": "idhu nōdi",
+              "english": "Look at this"
+            },
+            {
+              "kannada": "ಬನ್ನಿ",
+              "transliteration": "banni",
+              "english": "Please come"
+            }
+          ]
+        },
+        {
+          "key": "5b",
+          "label": "Communicating & giving",
+          "words": [
+            {
+              "kannada": "ಕೇಳು",
+              "transliteration": "kelu",
+              "english": "Ask / listen (neutral)"
+            },
+            {
+              "kannada": "ಕೇಳಿ",
+              "transliteration": "keli",
+              "english": "Ask / listen (respectful)"
+            },
+            {
+              "kannada": "ಹೇಳು",
+              "transliteration": "helu",
+              "english": "Say / tell (neutral)"
+            },
+            {
+              "kannada": "ಹೇಳಿ",
+              "transliteration": "heli",
+              "english": "Say / tell (respectful)"
+            },
+            {
+              "kannada": "ಕೊಡು",
+              "transliteration": "kodu",
+              "english": "Give (neutral)"
+            },
+            {
+              "kannada": "ಕೊಡಿ",
+              "transliteration": "kodi",
+              "english": "Give (respectful)"
+            },
+            {
+              "kannada": "ತೆಗೊ",
+              "transliteration": "tego",
+              "english": "Take (neutral)"
+            },
+            {
+              "kannada": "ತೆಗೊಳಿ",
+              "transliteration": "tegolli",
+              "english": "Take (respectful)"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ನನಗೆ ಕೊಡಿ",
+              "transliteration": "nanage kodi",
+              "english": "Give it to me"
+            },
+            {
+              "kannada": "ದಯವಿಟ್ಟು ಹೇಳಿ",
+              "transliteration": "dayavittu heli",
+              "english": "Please tell me"
+            }
+          ]
+        },
+        {
+          "key": "5c",
+          "label": "Body & movement",
+          "words": [
+            {
+              "kannada": "ಕುಳಿತುಕೋ",
+              "transliteration": "kulituko",
+              "english": "Sit (neutral)"
+            },
+            {
+              "kannada": "ಕುಳಿತುಕೊಳ್ಳಿ",
+              "transliteration": "kulitukolli",
+              "english": "Sit (respectful)"
+            },
+            {
+              "kannada": "ನಿಲ್ಲು",
+              "transliteration": "nillu",
+              "english": "Stand / stop (neutral)"
+            },
+            {
+              "kannada": "ನಿಲ್ಲಿ",
+              "transliteration": "nilli",
+              "english": "Stand / stop (respectful)"
+            },
+            {
+              "kannada": "ಮಲಗು",
+              "transliteration": "malagu",
+              "english": "Sleep (neutral)"
+            },
+            {
+              "kannada": "ಮಲಗಿ",
+              "transliteration": "malagi",
+              "english": "Sleep (respectful)"
+            },
+            {
+              "kannada": "ಏಳು",
+              "transliteration": "elu",
+              "english": "Get up (neutral)"
+            },
+            {
+              "kannada": "ಏಳಿ",
+              "transliteration": "eli",
+              "english": "Get up (respectful)"
+            },
+            {
+              "kannada": "ಓಡು",
+              "transliteration": "odu",
+              "english": "Run (neutral)"
+            },
+            {
+              "kannada": "ಓಡಿ",
+              "transliteration": "odi",
+              "english": "Run (respectful)"
+            },
+            {
+              "kannada": "ನಡೆ",
+              "transliteration": "nade",
+              "english": "Walk (neutral)"
+            },
+            {
+              "kannada": "ನಡೆಯಿರಿ",
+              "transliteration": "nadeyiri",
+              "english": "Walk (respectful)"
+            },
+            {
+              "kannada": "ಮುಚ್ಚು",
+              "transliteration": "mucchu",
+              "english": "Close (neutral)"
+            },
+            {
+              "kannada": "ಮುಚ್ಚಿ",
+              "transliteration": "mucchi",
+              "english": "Close (respectful)"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ಕುಳಿತುಕೊಳ್ಳಿ",
+              "transliteration": "kulitukolli",
+              "english": "Please sit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNo": 6,
+      "title": "Questions",
+      "situation": "You need to ask a question — about a person, a place, a thing, or a situation.",
+      "realWorldPrompt": "Next time you want to ask someone something, open with the Kannada question word — \"yaaru\", \"enu\", \"elli\" — even if the rest comes out in English.",
+      "registerNote": null,
+      "sections": [
+        {
+          "key": "6a",
+          "label": "Question words",
+          "words": [
+            {
+              "kannada": "ಯಾರು",
+              "transliteration": "yaaru",
+              "english": "Who"
+            },
+            {
+              "kannada": "ಏನು",
+              "transliteration": "enu",
+              "english": "What"
+            },
+            {
+              "kannada": "ಎಲ್ಲಿ",
+              "transliteration": "elli",
+              "english": "Where"
+            },
+            {
+              "kannada": "ಯಾವಾಗ",
+              "transliteration": "yaavaaga",
+              "english": "When"
+            },
+            {
+              "kannada": "ಏಕೆ",
+              "transliteration": "eke",
+              "english": "Why"
+            },
+            {
+              "kannada": "ಹೇಗೆ",
+              "transliteration": "hege",
+              "english": "How"
+            },
+            {
+              "kannada": "ಯಾವುದು",
+              "transliteration": "yaavudu",
+              "english": "Which"
+            },
+            {
+              "kannada": "ಎಷ್ಟು",
+              "transliteration": "estu",
+              "english": "How much / many"
+            },
+            {
+              "kannada": "ಯಾರದು",
+              "transliteration": "yaaradu",
+              "english": "Whose"
+            },
+            {
+              "kannada": "ಯಾರಿಗೆ",
+              "transliteration": "yaarige",
+              "english": "To whom"
+            }
+          ],
+          "phrases": []
+        },
+        {
+          "key": "6b",
+          "label": "Place, time & yes/no",
+          "words": [
+            {
+              "kannada": "ಇಲ್ಲಿ",
+              "transliteration": "illi",
+              "english": "Here"
+            },
+            {
+              "kannada": "ಅಲ್ಲಿ",
+              "transliteration": "alli",
+              "english": "There"
+            },
+            {
+              "kannada": "ಎಲ್ಲಿಗೆ",
+              "transliteration": "ellige",
+              "english": "To where"
+            },
+            {
+              "kannada": "ಈಗ",
+              "transliteration": "eega",
+              "english": "Now"
+            },
+            {
+              "kannada": "ಹೌದು",
+              "transliteration": "haudu",
+              "english": "Yes"
+            },
+            {
+              "kannada": "ಇಲ್ಲ",
+              "transliteration": "illa",
+              "english": "No / not"
+            },
+            {
+              "kannada": "ಸರಿ",
+              "transliteration": "sari",
+              "english": "Okay"
+            }
+          ],
+          "phrases": []
+        },
+        {
+          "key": "6c",
+          "label": "Wanting & knowing",
+          "words": [
+            {
+              "kannada": "ಬೇಕು",
+              "transliteration": "beku",
+              "english": "Want / need"
+            },
+            {
+              "kannada": "ಬೇಡ",
+              "transliteration": "beda",
+              "english": "Do not want / no need"
+            },
+            {
+              "kannada": "ಗೊತ್ತಾ?",
+              "transliteration": "gottaa",
+              "english": "Do you know?"
+            },
+            {
+              "kannada": "ಗೊತ್ತಿಲ್ಲ",
+              "transliteration": "gottilla",
+              "english": "Do not know"
+            },
+            {
+              "kannada": "ಯಾಕೆ ಇಲ್ಲ?",
+              "transliteration": "yaake illa",
+              "english": "Why not?"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ಹೇಗಿದ್ದೀರಾ?",
+              "transliteration": "hēgiddīrā?",
+              "english": "How are you? (respectful)"
+            },
+            {
+              "kannada": "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ",
+              "transliteration": "nānu chennāgiddēne",
+              "english": "I am fine"
+            },
+            {
+              "kannada": "ನಿಮ್ಮ ಹೆಸರು ಏನು?",
+              "transliteration": "nimma hesaru ēnu?",
+              "english": "What is your name?"
+            },
+            {
+              "kannada": "ನನ್ನ ಹೆಸರು…",
+              "transliteration": "nanna hesaru…",
+              "english": "My name is…"
+            },
+            {
+              "kannada": "ಊಟ ಆಯಿತಾ?",
+              "transliteration": "ūṭa āyitā?",
+              "english": "Have you eaten?"
+            },
+            {
+              "kannada": "ನನಗೆ ಗೊತ್ತಿಲ್ಲ",
+              "transliteration": "nanage gottilla",
+              "english": "I don't know"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNo": 7,
+      "title": "Hard verbs",
+      "situation": "More actions — reading, writing, working, sending. These come up every day.",
+      "realWorldPrompt": "Next time someone asks what you are doing, answer in Kannada — \"naanu kelasa maaduttiddene\" or \"naanu oduttiddene\".",
+      "registerNote": "Neutral = use with someone your age or younger. Respectful = use with elders or strangers.",
+      "sections": [
+        {
+          "key": "7a",
+          "label": "Work & study",
+          "words": [
+            {
+              "kannada": "ನೋಡು",
+              "transliteration": "nōdu",
+              "english": "See / look (neutral)"
+            },
+            {
+              "kannada": "ನೋಡಿ",
+              "transliteration": "nōdi",
+              "english": "See / look (respectful)"
+            },
+            {
+              "kannada": "ಮಾಡು",
+              "transliteration": "maadu",
+              "english": "Do / make (neutral)"
+            },
+            {
+              "kannada": "ಮಾಡಿ",
+              "transliteration": "maadi",
+              "english": "Do / make (respectful)"
+            },
+            {
+              "kannada": "ಆಡು",
+              "transliteration": "aadu",
+              "english": "Play (neutral)"
+            },
+            {
+              "kannada": "ಆಡಿ",
+              "transliteration": "aadi",
+              "english": "Play (respectful)"
+            },
+            {
+              "kannada": "ಕೆಲಸ ಮಾಡು",
+              "transliteration": "kelasa maadu",
+              "english": "Work (neutral)"
+            },
+            {
+              "kannada": "ಕೆಲಸ ಮಾಡಿ",
+              "transliteration": "kelasa maadi",
+              "english": "Work (respectful)"
+            },
+            {
+              "kannada": "ಓದು",
+              "transliteration": "odu",
+              "english": "Read / study (neutral)"
+            },
+            {
+              "kannada": "ಓದಿ",
+              "transliteration": "odi",
+              "english": "Read / study (respectful)"
+            },
+            {
+              "kannada": "ಬರೆ",
+              "transliteration": "bareyu",
+              "english": "Write (neutral)"
+            },
+            {
+              "kannada": "ಬರೆಯಿರಿ",
+              "transliteration": "bareyiri",
+              "english": "Write (respectful)"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ನೀವು ಏನು ಮಾಡುತ್ತಿದ್ದೀರಾ?",
+              "transliteration": "neevu enu maaduttiddiraa?",
+              "english": "What are you doing?"
+            },
+            {
+              "kannada": "ನಾನು ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದೇನೆ",
+              "transliteration": "naanu kelasa maaduttiddene",
+              "english": "I am working"
+            },
+            {
+              "kannada": "ನಾನು ಓದುತ್ತಿದ್ದೇನೆ",
+              "transliteration": "naanu oduttiddene",
+              "english": "I am reading / studying"
+            },
+            {
+              "kannada": "ಇದು ನೋಡಿ",
+              "transliteration": "idhu nōdi",
+              "english": "Look at this"
+            },
+            {
+              "kannada": "ನನಗೆ ಅರ್ಥ ಆಗಲಿಲ್ಲ",
+              "transliteration": "nanage artha aagalilla",
+              "english": "I did not understand"
+            }
+          ]
+        },
+        {
+          "key": "7b",
+          "label": "Handling things",
+          "words": [
+            {
+              "kannada": "ತೆಗೊ",
+              "transliteration": "tego",
+              "english": "Take (neutral)"
+            },
+            {
+              "kannada": "ತೆಗೊಳ್ಳಿ",
+              "transliteration": "tegolli",
+              "english": "Take (respectful)"
+            },
+            {
+              "kannada": "ಹಾಕು",
+              "transliteration": "haaku",
+              "english": "Put (neutral)"
+            },
+            {
+              "kannada": "ಹಾಕಿ",
+              "transliteration": "haaki",
+              "english": "Put (respectful)"
+            },
+            {
+              "kannada": "ಇಡು",
+              "transliteration": "idu",
+              "english": "Keep (neutral)"
+            },
+            {
+              "kannada": "ಇಡಿ",
+              "transliteration": "idi",
+              "english": "Keep (respectful)"
+            },
+            {
+              "kannada": "ಹಿಡಿ",
+              "transliteration": "hidi",
+              "english": "Hold / catch (neutral)"
+            },
+            {
+              "kannada": "ಹಿಡಿಯಿರಿ",
+              "transliteration": "hidiyiri",
+              "english": "Hold / catch (respectful)"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ನನಗೆ ಕೊಡಿ",
+              "transliteration": "nanage kodi",
+              "english": "Give it to me"
+            }
+          ]
+        },
+        {
+          "key": "7c",
+          "label": "Sending & sequencing",
+          "words": [
+            {
+              "kannada": "ಕಳಿಸು",
+              "transliteration": "kalisu",
+              "english": "Send (neutral)"
+            },
+            {
+              "kannada": "ಕಳಿಸಿ",
+              "transliteration": "kalisi",
+              "english": "Send (respectful)"
+            },
+            {
+              "kannada": "ತಂದುಕೊಡು",
+              "transliteration": "thandukodu",
+              "english": "Bring (neutral)"
+            },
+            {
+              "kannada": "ತಂದುಕೊಡಿ",
+              "transliteration": "thandukodi",
+              "english": "Bring (respectful)"
+            },
+            {
+              "kannada": "ಶುರು ಮಾಡು",
+              "transliteration": "shuru maadu",
+              "english": "Start (neutral)"
+            },
+            {
+              "kannada": "ಶುರು ಮಾಡಿ",
+              "transliteration": "shuru maadi",
+              "english": "Start (respectful)"
+            },
+            {
+              "kannada": "ಮುಗಿಸು",
+              "transliteration": "mugisu",
+              "english": "Finish (neutral)"
+            },
+            {
+              "kannada": "ಮುಗಿಸಿ",
+              "transliteration": "mugisi",
+              "english": "Finish (respectful)"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ದಯವಿಟ್ಟು ಕಳುಹಿಸಿ",
+              "transliteration": "dayavittu kalisi",
+              "english": "Please send"
+            },
+            {
+              "kannada": "ಶುರು ಮಾಡಿ",
+              "transliteration": "shuru maadi",
+              "english": "Please start"
+            },
+            {
+              "kannada": "ಮುಗಿಸಿ",
+              "transliteration": "mugisi",
+              "english": "Please finish"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNo": 8,
+      "title": "Putting it together",
+      "situation": "Putting everything together — greeting, names, shopping, questions. A real conversation from start to finish.",
+      "realWorldPrompt": "Have a full Kannada conversation today — greeting, name, one question. Even 3 exchanges counts.",
+      "registerNote": null,
+      "sections": [
+        {
+          "key": "8a",
+          "label": "Meeting & introductions",
+          "words": [],
+          "phrases": [
+            {
+              "kannada": "ನಮಸ್ಕಾರ, ಹೇಗಿದ್ದೀರಾ?",
+              "transliteration": "namaskāra, heegiddiraa?",
+              "english": "Hello, how are you?"
+            },
+            {
+              "kannada": "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ",
+              "transliteration": "naanu chennagiddene",
+              "english": "I am fine"
+            },
+            {
+              "kannada": "ನಿಮ್ಮ ಹೆಸರು ಏನು?",
+              "transliteration": "nimma hesaru enu?",
+              "english": "What is your name?"
+            },
+            {
+              "kannada": "ನನ್ನ ಹೆಸರು ರಾಹುಲ್",
+              "transliteration": "nanna hesaru rahul",
+              "english": "My name is Rahul"
+            },
+            {
+              "kannada": "ನಿಮ್ಮ ಊರು ಯಾವುದು?",
+              "transliteration": "nimma ooru yaavudu?",
+              "english": "Which town are you from?"
+            },
+            {
+              "kannada": "ನನ್ನ ಊರು ಬೆಂಗಳೂರು",
+              "transliteration": "nanna ooru bengaluru",
+              "english": "I am from Bangalore"
+            }
+          ]
+        },
+        {
+          "key": "8b",
+          "label": "Shopping & negotiating",
+          "words": [
+            {
+              "kannada": "ಸರಿ",
+              "transliteration": "sari",
+              "english": "Okay"
+            },
+            {
+              "kannada": "ಧನ್ಯವಾದಗಳು",
+              "transliteration": "dhanyavadagalu",
+              "english": "Thank you"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ನಿಮಗೆ ಇದು ಬೇಕಾ?",
+              "transliteration": "nimage idhu bekaa?",
+              "english": "Do you want this?"
+            },
+            {
+              "kannada": "ಹೌದು, ನನಗೆ ಬೇಕು",
+              "transliteration": "haudu, nanage beku",
+              "english": "Yes, I want it"
+            },
+            {
+              "kannada": "ಇದು ಎಷ್ಟು?",
+              "transliteration": "idhu estu?",
+              "english": "How much is this?"
+            },
+            {
+              "kannada": "ಸ್ವಲ್ಪ ಕಮ್ಮಿ ಮಾಡಿ",
+              "transliteration": "svalpa kammi maadi",
+              "english": "Please reduce it a little"
+            },
+            {
+              "kannada": "ಸರಿ",
+              "transliteration": "sari",
+              "english": "Okay"
+            },
+            {
+              "kannada": "ಧನ್ಯವಾದಗಳು",
+              "transliteration": "dhanyavadagalu",
+              "english": "Thank you"
+            }
+          ]
+        },
+        {
+          "key": "8c",
+          "label": "Getting around & wrapping up",
+          "words": [
+            {
+              "kannada": "ನಿಧಾನವಾಗಿ",
+              "transliteration": "nidhanavagi",
+              "english": "Slowly"
+            },
+            {
+              "kannada": "ಮತ್ತೆ",
+              "transliteration": "matte",
+              "english": "Again / later"
+            }
+          ],
+          "phrases": [
+            {
+              "kannada": "ಅವನು ಇಲ್ಲಿ ಇದ್ದಾನೆ",
+              "transliteration": "avanu illi iddaane",
+              "english": "He is here"
+            },
+            {
+              "kannada": "ಅವಳು ಅಲ್ಲಿ ಇದ್ದಾಳೆ",
+              "transliteration": "avalu alli iddaale",
+              "english": "She is there"
+            },
+            {
+              "kannada": "ನೀವು ಎಲ್ಲಿ ಹೋಗುತ್ತಿದ್ದೀರಾ?",
+              "transliteration": "neevu elli hooguttiddiraa?",
+              "english": "Where are you going?"
+            },
+            {
+              "kannada": "ನಾನು ಮನೆಗೆ ಹೋಗುತ್ತಿದ್ದೇನೆ",
+              "transliteration": "naanu manege hooguttiddene",
+              "english": "I am going home"
+            },
+            {
+              "kannada": "ನಿಮಗೆ ಕನ್ನಡ ಗೊತ್ತಾ?",
+              "transliteration": "nimage kannada gottaa?",
+              "english": "Do you know Kannada?"
+            },
+            {
+              "kannada": "ಸ್ವಲ್ಪ ಗೊತ್ತು",
+              "transliteration": "svalpa gottu",
+              "english": "I know a little"
+            },
+            {
+              "kannada": "ನನಗೆ ಗೊತ್ತಿಲ್ಲ",
+              "transliteration": "nanage gottilla",
+              "english": "I don't know"
+            },
+            {
+              "kannada": "ದಯವಿಟ್ಟು ನಿಧಾನವಾಗಿ ಹೇಳಿ",
+              "transliteration": "dayavittu nidhanavagi heli",
+              "english": "Please speak slowly"
+            },
+            {
+              "kannada": "ನೀವು ಊಟ ಮಾಡಿದ್ದೀರಾ?",
+              "transliteration": "neevu oota maadiddiraa?",
+              "english": "Have you eaten?"
+            },
+            {
+              "kannada": "ಹೌದು, ಮಾಡಿದ್ದೇನೆ",
+              "transliteration": "haudu, maadiddene",
+              "english": "Yes, I have"
+            },
+            {
+              "kannada": "ಇಲ್ಲ, ಇನ್ನೂ ಬೇಡ",
+              "transliteration": "illa, innu beda",
+              "english": "No, not yet"
+            },
+            {
+              "kannada": "ಮತ್ತೆ ಭೇಟಿ ಆಗೋಣ",
+              "transliteration": "matte bheti aagona",
+              "english": "Let's meet again"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quiz": [
+    {
+      "lessonNo": 1,
+      "items": [
+        {
+          "id": "7a436c86-e1e0-49bb-8b29-3d15ac16e979",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 1,
+          "kannada": "ನಮಸ್ಕಾರ",
+          "transliteration": "namaskāra",
+          "meaning": "Hello / greetings",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "1a"
+        },
+        {
+          "id": "b6ef0da5-af95-46c4-8be4-13ecf074b4e7",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 2,
+          "kannada": "ನಮಸ್ತೆ",
+          "transliteration": "namaste",
+          "meaning": "Hello",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "1a"
+        },
+        {
+          "id": "f71601b4-f1b1-4b72-b2b6-137db4532ab3",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 3,
+          "kannada": "ಹೇಗಿದ್ದೀರ?",
+          "transliteration": "hēgiddīra?",
+          "meaning": "How are you? (respectful)",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "1b"
+        },
+        {
+          "id": "3017ce4a-7802-477f-a7f3-bda3f87722fd",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 4,
+          "kannada": "ಹೇಗಿದ್ದೀಯ?",
+          "transliteration": "hēgiddīya?",
+          "meaning": "How are you? (neutral)",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "1b"
+        },
+        {
+          "id": "d65053c8-67ec-4c17-b900-7fc7c527d3e9",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 5,
+          "kannada": "ಚೆನ್ನಾಗಿದ್ದೇನೆ",
+          "transliteration": "chennāgiddēne",
+          "meaning": "I am fine",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "1b"
+        },
+        {
+          "id": "edba1366-8054-4ff4-ac6e-89475110901c",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 6,
+          "kannada": "ಚೆನ್ನಾಗಿದ್ದೇವೆ",
+          "transliteration": "chennāgiddēve",
+          "meaning": "We are fine",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "1b"
+        },
+        {
+          "id": "14036606-039a-4d3b-8e63-ec2f31607522",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 7,
+          "kannada": "ನೀವು",
+          "transliteration": "nīvu",
+          "meaning": "You (respectful)",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "1a"
+        },
+        {
+          "id": "0b03c71b-e647-4cf7-b26b-197f102686a9",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 8,
+          "kannada": "ನೀನು",
+          "transliteration": "nīnu",
+          "meaning": "You (neutral)",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "1a"
+        }
+      ]
+    },
+    {
+      "lessonNo": 2,
+      "items": [
+        {
+          "id": "9775e501-7eea-4de4-ac0f-950f5ebbc266",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 1,
+          "kannada": "ನಾನು",
+          "transliteration": "nānu",
+          "meaning": "I",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "2a"
+        },
+        {
+          "id": "704548b0-848c-4af9-a548-f62db93cca9e",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 2,
+          "kannada": "ನೀನು",
+          "transliteration": "nīnu",
+          "meaning": "You (neutral)",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "2a"
+        },
+        {
+          "id": "fb0205f1-7e7c-4458-a6b1-c89bab7f1e85",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 3,
+          "kannada": "ನೀವು",
+          "transliteration": "nīvu",
+          "meaning": "You (respectful)",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "2a"
+        },
+        {
+          "id": "e931053d-476a-482d-9223-e3ee2a830b3b",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 4,
+          "kannada": "ನಿನ್ನ",
+          "transliteration": "ninna",
+          "meaning": "Your (neutral)",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "2a"
+        },
+        {
+          "id": "b4480f5c-040d-4132-b143-284838e7d282",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 5,
+          "kannada": "ನಿಮ್ಮ",
+          "transliteration": "nimma",
+          "meaning": "Your (respectful)",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "2a"
+        },
+        {
+          "id": "036ceae3-72d3-4eb9-96cc-6596f5d5f806",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 6,
+          "kannada": "ಇವರು",
+          "transliteration": "ivaru",
+          "meaning": "This person / these people",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "2b"
+        },
+        {
+          "id": "5081bae1-0e83-448b-8f03-4478a880da62",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 7,
+          "kannada": "ಹೆಸರು",
+          "transliteration": "hesaru",
+          "meaning": "Name",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "2c"
+        },
+        {
+          "id": "929abbfa-c4b2-462a-8e6f-29678b479546",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 8,
+          "kannada": "ಮನೆ",
+          "transliteration": "mane",
+          "meaning": "House / home",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "2c"
+        }
+      ]
+    },
+    {
+      "lessonNo": 3,
+      "items": [
+        {
+          "id": "92b71bfd-78c9-483d-89a7-72f8b231fa08",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 1,
+          "kannada": "ನನಗೆ",
+          "transliteration": "nanage",
+          "meaning": "For me / to me",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "3a"
+        },
+        {
+          "id": "ba481765-ecdb-4021-909e-3e30da554d70",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 2,
+          "kannada": "ಬೇಕು",
+          "transliteration": "bēku",
+          "meaning": "Want / need",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "3a"
+        },
+        {
+          "id": "c003cbb2-ec9a-46ef-95bb-5dd0dfe73b2b",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 3,
+          "kannada": "ಬೇಡ",
+          "transliteration": "bēḍa",
+          "meaning": "Don't want",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "3a"
+        },
+        {
+          "id": "3edf7197-471c-4cb2-aa22-542a8ad63db9",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 4,
+          "kannada": "ಹೌದು",
+          "transliteration": "haudu",
+          "meaning": "Yes",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "3a"
+        },
+        {
+          "id": "ddf0f524-6a04-4ce5-98b9-52a35457705b",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 5,
+          "kannada": "ಇಲ್ಲ",
+          "transliteration": "illa",
+          "meaning": "No",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "3a"
+        },
+        {
+          "id": "9b67bf31-2389-40a7-b075-a08860832ad5",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 6,
+          "kannada": "ಎಷ್ಟು",
+          "transliteration": "eṣṭu",
+          "meaning": "How much",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "3b"
+        },
+        {
+          "id": "a19fb00e-e133-4dbb-9c47-14c29dcd296f",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 7,
+          "kannada": "ಕಡಿಮೆ",
+          "transliteration": "kaḍime",
+          "meaning": "Less",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "3b"
+        },
+        {
+          "id": "a2c8265c-19f3-4e3d-8a96-5ceb60b24d6e",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 8,
+          "kannada": "ಧನ್ಯವಾದಗಳು",
+          "transliteration": "dhanyavādagaḷu",
+          "meaning": "Thank you",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "3c"
+        }
+      ]
+    },
+    {
+      "lessonNo": 4,
+      "items": [
+        {
+          "id": "1b5e148d-1829-486c-9436-03c271564042",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 1,
+          "kannada": "ಇಲ್ಲಿ",
+          "transliteration": "illi",
+          "meaning": "Here",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "4"
+        },
+        {
+          "id": "d6d8bce4-ce50-4944-bb2a-54df3f904295",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 2,
+          "kannada": "ಇದು",
+          "transliteration": "idu",
+          "meaning": "This",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "4"
+        },
+        {
+          "id": "55a363ba-3164-4bc2-bceb-41d85421b345",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 3,
+          "kannada": "ಅಲ್ಲಿ",
+          "transliteration": "alli",
+          "meaning": "There",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "4"
+        },
+        {
+          "id": "5e262f15-85ec-4c0f-b716-5d7364156f03",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 4,
+          "kannada": "ಅದು",
+          "transliteration": "adu",
+          "meaning": "That",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "4"
+        },
+        {
+          "id": "2a645721-c06c-4593-b5d1-6d02592679f7",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 5,
+          "kannada": "ಎಲ್ಲಿ",
+          "transliteration": "elli",
+          "meaning": "Where",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "4"
+        },
+        {
+          "id": "2c5c38b0-54c1-4937-945a-fe623d470caf",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 6,
+          "kannada": "ಹೇಗೆ",
+          "transliteration": "hēge",
+          "meaning": "How",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "4"
+        }
+      ]
+    },
+    {
+      "lessonNo": 5,
+      "items": [
+        {
+          "id": "263699b2-fbab-4fb3-ab3f-ecb333f9b11b",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 1,
+          "kannada": "ಮಾಡು",
+          "transliteration": "māḍu",
+          "meaning": "Do / make",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "5a"
+        },
+        {
+          "id": "7cdd1bfb-f49b-4387-b2cd-8eee7857273c",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 2,
+          "kannada": "ಹೋಗು",
+          "transliteration": "hōgu",
+          "meaning": "Go",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "5a"
+        },
+        {
+          "id": "62f77b0c-19b6-42e7-90ab-7f2c7604db17",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 3,
+          "kannada": "ಬಾ",
+          "transliteration": "bā",
+          "meaning": "Come",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "5a"
+        },
+        {
+          "id": "8cc200ee-9b94-455a-ad95-e9a69dd6b1fd",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 4,
+          "kannada": "ತಿನ್ನು",
+          "transliteration": "thinnu",
+          "meaning": "Eat",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "5a"
+        },
+        {
+          "id": "6245a42f-9776-492f-bf02-afa4c89e37d3",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 5,
+          "kannada": "ಕುಡಿ",
+          "transliteration": "kuḍi",
+          "meaning": "Drink",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "5a"
+        },
+        {
+          "id": "62bf6c38-a69e-46ee-be79-d738d4c0dc85",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 6,
+          "kannada": "ನೋಡು",
+          "transliteration": "nōḍu",
+          "meaning": "See / watch",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "5a"
+        },
+        {
+          "id": "f409efc0-607e-469f-b31d-1dda9232fbda",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 7,
+          "kannada": "ಕೇಳು",
+          "transliteration": "kēḷu",
+          "meaning": "Ask / listen",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "5b"
+        },
+        {
+          "id": "7a846cdb-77ae-48e4-a4aa-c2e57315c563",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 8,
+          "kannada": "ಹೇಳು",
+          "transliteration": "hēḷu",
+          "meaning": "Say / tell",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "5b"
+        }
+      ]
+    },
+    {
+      "lessonNo": 6,
+      "items": [
+        {
+          "id": "fee1da60-7745-40c8-8c31-aa72d34d17ee",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 1,
+          "kannada": "ಯಾರು",
+          "transliteration": "yāru",
+          "meaning": "Who",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "6a"
+        },
+        {
+          "id": "acbfde53-93f1-4d91-b3b7-05286e4be169",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 2,
+          "kannada": "ಏನು",
+          "transliteration": "ēnu",
+          "meaning": "What",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "6a"
+        },
+        {
+          "id": "1a816eb1-254d-4268-b230-cb78f9ec6910",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 3,
+          "kannada": "ಎಲ್ಲಿ",
+          "transliteration": "elli",
+          "meaning": "Where",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "6a"
+        },
+        {
+          "id": "33e5d3e6-7518-44fe-a575-67adb9673c16",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 4,
+          "kannada": "ಯಾವಾಗ",
+          "transliteration": "yāvāga",
+          "meaning": "When",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "6a"
+        },
+        {
+          "id": "cb43ceba-d6da-479e-bc4d-0738c0d0dd42",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 5,
+          "kannada": "ಏಕೆ",
+          "transliteration": "ēke",
+          "meaning": "Why",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "6a"
+        },
+        {
+          "id": "402bbf0f-c5e1-4756-860e-0caf6c695554",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 6,
+          "kannada": "ಹೇಗೆ",
+          "transliteration": "hēge",
+          "meaning": "How",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "6a"
+        },
+        {
+          "id": "75595328-0833-4351-876c-4eb79ceb9496",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 7,
+          "kannada": "ಯಾವದು",
+          "transliteration": "yāvadu",
+          "meaning": "Which",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "6a"
+        },
+        {
+          "id": "5843cb1c-d28a-451d-ace7-ec3fb528cfde",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "question": null,
+          "options_json": null,
+          "correct_index": null,
+          "sort_order": 8,
+          "kannada": "ಈಗ",
+          "transliteration": "īga",
+          "meaning": "Now",
+          "created_at": "2026-06-02T16:00:19.605389+00:00",
+          "section": "6b"
+        }
+      ]
+    }
+  ],
+  "dictation": [
+    {
+      "lessonNo": 1,
+      "items": [
+        {
+          "id": "17ffab61-baa4-4562-ae0a-791ae13807fa",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "audio_url": null,
+          "expected_answer": "ನಮಸ್ಕಾರ",
+          "accepted_json": [
+            "namaskara",
+            "namaskaara",
+            "namaskāra"
+          ],
+          "phonetic": "na-mas-kā-ra",
+          "sort_order": 1,
+          "section": "1a"
+        },
+        {
+          "id": "c27e85c8-42f0-4564-baa0-37672642c77f",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "audio_url": null,
+          "expected_answer": "ನಮಸ್ತೆ",
+          "accepted_json": [
+            "namaste",
+            "namasthe",
+            "namasthay"
+          ],
+          "phonetic": "na-mas-te",
+          "sort_order": 2,
+          "section": "1a"
+        },
+        {
+          "id": "b0c4dbb1-ceaa-440d-9f21-e233f22f2f58",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "audio_url": null,
+          "expected_answer": "ಹೇಗಿದ್ದೀರ",
+          "accepted_json": [
+            "hegiddira",
+            "haegiddira",
+            "hegiddera"
+          ],
+          "phonetic": "hē-gid-dī-ra",
+          "sort_order": 3,
+          "section": "1b"
+        },
+        {
+          "id": "9c79ce94-23f5-43c9-95d3-c6808cc68700",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "audio_url": null,
+          "expected_answer": "ಚೆನ್ನಾಗಿದ್ದೇನೆ",
+          "accepted_json": [
+            "chennagiddene",
+            "chennagidene",
+            "channagidene"
+          ],
+          "phonetic": "chen-nā-gid-dē-ne",
+          "sort_order": 4,
+          "section": "1b"
+        },
+        {
+          "id": "36a4b376-56e4-40e8-a305-1a12f538b16a",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "audio_url": null,
+          "expected_answer": "ನೀವು",
+          "accepted_json": [
+            "nivu",
+            "neevu",
+            "neevoo"
+          ],
+          "phonetic": "nī-vu",
+          "sort_order": 5,
+          "section": "1a"
+        },
+        {
+          "id": "221dfbf7-c94c-440d-ba08-9a3025ff60ef",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "audio_url": null,
+          "expected_answer": "ನೀನು",
+          "accepted_json": [
+            "ninu",
+            "neenu",
+            "neenoo"
+          ],
+          "phonetic": "nī-nu",
+          "sort_order": 6,
+          "section": "1a"
+        },
+        {
+          "id": "c174f8ac-befc-4e1a-910d-7a3660806937",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "audio_url": null,
+          "expected_answer": "ಹೇಗಿದ್ದೀಯ?",
+          "accepted_json": [
+            "hēgiddīya?",
+            "hegiddiya",
+            "hegiddiyaa"
+          ],
+          "phonetic": "hē-gid-dī-ya?",
+          "sort_order": 7,
+          "section": "1b"
+        },
+        {
+          "id": "22217913-232d-4e8f-bcdb-3bbddbd58dff",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "audio_url": null,
+          "expected_answer": "ಚೆನ್ನಾಗಿದ್ದೇವೆ",
+          "accepted_json": [
+            "chennāgiddēve",
+            "chinnagiddeve",
+            "channagiddeve"
+          ],
+          "phonetic": "chen-nā-gid-dē-ve",
+          "sort_order": 8,
+          "section": "1b"
+        }
+      ]
+    },
+    {
+      "lessonNo": 2,
+      "items": [
+        {
+          "id": "2fb5f94d-aec9-4165-a618-86d210b85888",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "audio_url": null,
+          "expected_answer": "ನಾನು",
+          "accepted_json": [
+            "nanu",
+            "naanu",
+            "naanoo"
+          ],
+          "phonetic": "nā-nu",
+          "sort_order": 1,
+          "section": "2a"
+        },
+        {
+          "id": "199cf1d7-e5bc-4424-91ce-7601954d6a83",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "audio_url": null,
+          "expected_answer": "ನೀನು",
+          "accepted_json": [
+            "ninu",
+            "neenu"
+          ],
+          "phonetic": "nī-nu",
+          "sort_order": 2,
+          "section": "2a"
+        },
+        {
+          "id": "7d3764d8-92c0-40dd-9a50-eab28854f8c8",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "audio_url": null,
+          "expected_answer": "ಹೆಸರು",
+          "accepted_json": [
+            "hesaru",
+            "hesru",
+            "hesaroo"
+          ],
+          "phonetic": "he-sa-ru",
+          "sort_order": 3,
+          "section": "2c"
+        },
+        {
+          "id": "1561116e-f339-4cf4-9971-19dbf68e1354",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "audio_url": null,
+          "expected_answer": "ಮನೆ",
+          "accepted_json": [
+            "mane",
+            "manay",
+            "manae"
+          ],
+          "phonetic": "ma-ne",
+          "sort_order": 4,
+          "section": "2c"
+        },
+        {
+          "id": "a55b54eb-bd59-4c63-9979-5e9c8e089d45",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "audio_url": null,
+          "expected_answer": "ಇವರು",
+          "accepted_json": [
+            "ivaru",
+            "evaru",
+            "ivru"
+          ],
+          "phonetic": "i-va-ru",
+          "sort_order": 5,
+          "section": "2b"
+        },
+        {
+          "id": "62ad1430-b7a7-4c85-b058-506f47820f4f",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "audio_url": null,
+          "expected_answer": "ಅವರು",
+          "accepted_json": [
+            "avaru",
+            "avru"
+          ],
+          "phonetic": "a-va-ru",
+          "sort_order": 6,
+          "section": "2b"
+        },
+        {
+          "id": "ae98258b-bbc2-4682-96f5-1f419170ca1f",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "audio_url": null,
+          "expected_answer": "ನಿಮ್ಮ",
+          "accepted_json": [
+            "nimma",
+            "nima"
+          ],
+          "phonetic": "nim-ma",
+          "sort_order": 7,
+          "section": "2a"
+        },
+        {
+          "id": "601a4d8d-349d-4edc-9937-884a2a13c6b9",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "audio_url": null,
+          "expected_answer": "ನಿನ್ನ",
+          "accepted_json": [
+            "ninna",
+            "nina"
+          ],
+          "phonetic": "nin-na",
+          "sort_order": 8,
+          "section": "2a"
+        }
+      ]
+    },
+    {
+      "lessonNo": 3,
+      "items": [
+        {
+          "id": "0de9cccb-7cb3-4d03-9ee4-667dd09f80f3",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "audio_url": null,
+          "expected_answer": "ಬೇಕು",
+          "accepted_json": [
+            "beku",
+            "baeku",
+            "beku",
+            "bēku"
+          ],
+          "phonetic": "bē-ku",
+          "sort_order": 1,
+          "section": "3a"
+        },
+        {
+          "id": "51b88f86-cbbe-48ea-87a9-7227747df75f",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "audio_url": null,
+          "expected_answer": "ಬೇಡ",
+          "accepted_json": [
+            "beda",
+            "baeda",
+            "bēḍa"
+          ],
+          "phonetic": "bē-ḍa",
+          "sort_order": 2,
+          "section": "3a"
+        },
+        {
+          "id": "a3546284-bfbe-481a-82a2-1497cdb3cb92",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "audio_url": null,
+          "expected_answer": "ಹೌದು",
+          "accepted_json": [
+            "haudu",
+            "haudhu",
+            "houdu"
+          ],
+          "phonetic": "hau-du",
+          "sort_order": 3,
+          "section": "3a"
+        },
+        {
+          "id": "4d1e7251-0157-4a6e-80ee-026cf32974af",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "audio_url": null,
+          "expected_answer": "ಇಲ್ಲ",
+          "accepted_json": [
+            "illa",
+            "ila",
+            "illaa"
+          ],
+          "phonetic": "il-la",
+          "sort_order": 4,
+          "section": "3a"
+        },
+        {
+          "id": "2191590c-3095-4ee9-9780-753a2abc1fc8",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "audio_url": null,
+          "expected_answer": "ಎಷ್ಟು",
+          "accepted_json": [
+            "eshtu",
+            "estu",
+            "ēṣṭu",
+            "eshtoo"
+          ],
+          "phonetic": "eṣ-ṭu",
+          "sort_order": 5,
+          "section": "3b"
+        },
+        {
+          "id": "158ad98f-6efb-40c4-b161-852fe60ee247",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "audio_url": null,
+          "expected_answer": "ಯಾಕೆ",
+          "accepted_json": [
+            "yake",
+            "yaake",
+            "yaakey"
+          ],
+          "phonetic": "yā-ke",
+          "sort_order": 6,
+          "section": "3b"
+        },
+        {
+          "id": "3368106b-400f-41cc-beed-b4c99073b74b",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "audio_url": null,
+          "expected_answer": "ದಯವಿಟ್ಟು",
+          "accepted_json": [
+            "dayavittu",
+            "dayavittoo",
+            "dayaviṭṭu"
+          ],
+          "phonetic": "da-ya-viṭ-ṭu",
+          "sort_order": 7,
+          "section": "3c"
+        },
+        {
+          "id": "b64daed0-46d0-482a-8864-3bfca60f5fff",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "audio_url": null,
+          "expected_answer": "ಧನ್ಯವಾದಗಳು",
+          "accepted_json": [
+            "dhanyavadagalu",
+            "dhanyavaadagalu",
+            "dhanyavādagaḷu"
+          ],
+          "phonetic": "dha-nya-vā-da-ga-ḷu",
+          "sort_order": 8,
+          "section": "3c"
+        }
+      ]
+    },
+    {
+      "lessonNo": 4,
+      "items": [
+        {
+          "id": "d8d94c17-9415-4912-bd87-cc0e466f5daa",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "audio_url": null,
+          "expected_answer": "ಇಲ್ಲಿ",
+          "accepted_json": [
+            "illi",
+            "ili",
+            "ilee"
+          ],
+          "phonetic": "il-li",
+          "sort_order": 1,
+          "section": "4"
+        },
+        {
+          "id": "d5e670f5-135a-4dbf-a2fb-aa669cb17ff3",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "audio_url": null,
+          "expected_answer": "ಅಲ್ಲಿ",
+          "accepted_json": [
+            "alli",
+            "ali",
+            "alee"
+          ],
+          "phonetic": "al-li",
+          "sort_order": 2,
+          "section": "4"
+        },
+        {
+          "id": "69f33a61-a293-4933-be16-9926d9204545",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "audio_url": null,
+          "expected_answer": "ಇದು",
+          "accepted_json": [
+            "idu",
+            "edu",
+            "idoo"
+          ],
+          "phonetic": "i-du",
+          "sort_order": 3,
+          "section": "4"
+        },
+        {
+          "id": "c46f28ab-1453-4573-bf77-60ea397ef6d2",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "audio_url": null,
+          "expected_answer": "ಅದು",
+          "accepted_json": [
+            "adu",
+            "adoo"
+          ],
+          "phonetic": "a-du",
+          "sort_order": 4,
+          "section": "4"
+        },
+        {
+          "id": "e87217a1-44ae-40e5-be00-b736598476a1",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "audio_url": null,
+          "expected_answer": "ಎಲ್ಲಿ",
+          "accepted_json": [
+            "elli",
+            "eli",
+            "elee"
+          ],
+          "phonetic": "el-li",
+          "sort_order": 5,
+          "section": "4"
+        },
+        {
+          "id": "eda46133-5b5b-472b-9e68-da51c2f083ee",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "audio_url": null,
+          "expected_answer": "ಹೇಗೆ",
+          "accepted_json": [
+            "hege",
+            "haege",
+            "heghe"
+          ],
+          "phonetic": "hē-ge",
+          "sort_order": 6,
+          "section": "4"
+        }
+      ]
+    },
+    {
+      "lessonNo": 5,
+      "items": [
+        {
+          "id": "137c960b-3b20-43b4-83f7-9bf6c8a576cc",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "audio_url": null,
+          "expected_answer": "ಮಾಡು",
+          "accepted_json": [
+            "madu",
+            "maadu",
+            "māḍu"
+          ],
+          "phonetic": "mā-ḍu",
+          "sort_order": 1,
+          "section": "5a"
+        },
+        {
+          "id": "3c1f227d-cf3f-4856-b059-698dc85f4674",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "audio_url": null,
+          "expected_answer": "ಹೋಗು",
+          "accepted_json": [
+            "hogu",
+            "hoogu",
+            "hōgu"
+          ],
+          "phonetic": "hō-gu",
+          "sort_order": 2,
+          "section": "5a"
+        },
+        {
+          "id": "7a23ad57-f08e-4c27-8712-c9023192169b",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "audio_url": null,
+          "expected_answer": "ಬಾ",
+          "accepted_json": [
+            "ba",
+            "baa"
+          ],
+          "phonetic": "bā",
+          "sort_order": 3,
+          "section": "5a"
+        },
+        {
+          "id": "e4538472-343e-49a2-894c-7e0465582d8d",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "audio_url": null,
+          "expected_answer": "ತಿನ್ನು",
+          "accepted_json": [
+            "thinnu",
+            "tinnu",
+            "thinu"
+          ],
+          "phonetic": "thin-nu",
+          "sort_order": 4,
+          "section": "5a"
+        },
+        {
+          "id": "97bd047c-9b2d-4be1-9ee9-9f3f0f5aea57",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "audio_url": null,
+          "expected_answer": "ಕುಡಿ",
+          "accepted_json": [
+            "kudi",
+            "kuddi",
+            "kuḍi"
+          ],
+          "phonetic": "ku-ḍi",
+          "sort_order": 5,
+          "section": "5a"
+        },
+        {
+          "id": "59431d02-155c-40f1-a4fb-12ceecea0d32",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "audio_url": null,
+          "expected_answer": "ನೋಡು",
+          "accepted_json": [
+            "nodu",
+            "noodu",
+            "nōḍu"
+          ],
+          "phonetic": "nō-ḍu",
+          "sort_order": 6,
+          "section": "5a"
+        },
+        {
+          "id": "83467710-11bd-41eb-8c65-e9454734aeae",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "audio_url": null,
+          "expected_answer": "ಕೇಳು",
+          "accepted_json": [
+            "kelu",
+            "kaelu",
+            "kēḷu"
+          ],
+          "phonetic": "kē-ḷu",
+          "sort_order": 7,
+          "section": "5b"
+        },
+        {
+          "id": "6d898ba0-12a1-46b2-b303-1f67df19ece7",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "audio_url": null,
+          "expected_answer": "ಹೇಳು",
+          "accepted_json": [
+            "helu",
+            "haelu",
+            "hēḷu"
+          ],
+          "phonetic": "hē-ḷu",
+          "sort_order": 8,
+          "section": "5b"
+        }
+      ]
+    },
+    {
+      "lessonNo": 6,
+      "items": [
+        {
+          "id": "e5c5152f-2e30-4bcc-84ce-fcb2b06ec06e",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "audio_url": null,
+          "expected_answer": "ಯಾರು",
+          "accepted_json": [
+            "yaru",
+            "yaaru",
+            "yāru"
+          ],
+          "phonetic": "yā-ru",
+          "sort_order": 1,
+          "section": "6a"
+        },
+        {
+          "id": "cf748d17-6d8e-458b-a5b5-b509c52e018c",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "audio_url": null,
+          "expected_answer": "ಏನು",
+          "accepted_json": [
+            "enu",
+            "aenu",
+            "ēnu"
+          ],
+          "phonetic": "ē-nu",
+          "sort_order": 2,
+          "section": "6a"
+        },
+        {
+          "id": "309ae040-c187-4f4f-aed0-c3f8564dbdd9",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "audio_url": null,
+          "expected_answer": "ಎಲ್ಲಿ",
+          "accepted_json": [
+            "elli",
+            "eli",
+            "elee"
+          ],
+          "phonetic": "el-li",
+          "sort_order": 3,
+          "section": "6a"
+        },
+        {
+          "id": "d8edf413-307a-4be2-95d9-9b71219dc5b1",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "audio_url": null,
+          "expected_answer": "ಯಾವಾಗ",
+          "accepted_json": [
+            "yavaga",
+            "yaavaaga",
+            "yāvāga"
+          ],
+          "phonetic": "yā-vā-ga",
+          "sort_order": 4,
+          "section": "6a"
+        },
+        {
+          "id": "c3c63ce6-31c2-4df6-9c13-85c496bb728d",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "audio_url": null,
+          "expected_answer": "ಏಕೆ",
+          "accepted_json": [
+            "eke",
+            "aeke",
+            "ēke"
+          ],
+          "phonetic": "ē-ke",
+          "sort_order": 5,
+          "section": "6a"
+        },
+        {
+          "id": "c2c0cb0e-4458-4d4f-8790-751bfec13e9b",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "audio_url": null,
+          "expected_answer": "ಹೇಗೆ",
+          "accepted_json": [
+            "hege",
+            "haege",
+            "hēge"
+          ],
+          "phonetic": "hē-ge",
+          "sort_order": 6,
+          "section": "6a"
+        },
+        {
+          "id": "13bc32c5-39d1-490e-809a-4d02d5b8fc7c",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "audio_url": null,
+          "expected_answer": "ಯಾವದು",
+          "accepted_json": [
+            "yavadu",
+            "yaavadu",
+            "yāvadu"
+          ],
+          "phonetic": "yā-va-du",
+          "sort_order": 7,
+          "section": "6a"
+        },
+        {
+          "id": "8566d5c9-b2e9-47e9-a498-8d5f67a1d052",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "audio_url": null,
+          "expected_answer": "ಗೊತ್ತಿಲ್ಲ",
+          "accepted_json": [
+            "gottilla",
+            "gotilla",
+            "gōttilla"
+          ],
+          "phonetic": "got-til-la",
+          "sort_order": 8,
+          "section": "6c"
+        }
+      ]
+    }
+  ],
+  "opposites": [
+    {
+      "lessonNo": 1,
+      "items": [
+        {
+          "id": "acde3060-fbb5-43a9-9aa7-c4a3067cb242",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "word": "ನೀವು",
+          "opposite": "ನೀನು",
+          "options_json": [
+            {
+              "en": "you (neutral)",
+              "kn": "ನೀನು",
+              "tr": "nīnu"
+            },
+            {
+              "en": "I",
+              "kn": "ನಾನು",
+              "tr": "nānu"
+            },
+            {
+              "en": "this person",
+              "kn": "ಇವರು",
+              "tr": "ivaru"
+            },
+            {
+              "en": "that person",
+              "kn": "ಅವರು",
+              "tr": "avaru"
+            }
+          ],
+          "transliteration": "nīvu",
+          "meaning": "you (respectful)",
+          "sort_order": 1,
+          "section": "1a"
+        },
+        {
+          "id": "cf515b79-8bd3-4b21-bce2-4a64891d31d6",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "word": "ಚೆನ್ನಾಗಿ",
+          "opposite": "ಕೆಟ್ಟದಾಗಿ",
+          "options_json": [
+            {
+              "en": "badly",
+              "kn": "ಕೆಟ್ಟದಾಗಿ",
+              "tr": "keṭṭadāgi"
+            },
+            {
+              "en": "fast",
+              "kn": "ಬೇಗ",
+              "tr": "bēga"
+            },
+            {
+              "en": "slow",
+              "kn": "ನಿಧಾನ",
+              "tr": "nidhāna"
+            },
+            {
+              "en": "a little",
+              "kn": "ಸ್ವಲ್ಪ",
+              "tr": "svalpa"
+            }
+          ],
+          "transliteration": "chennāgi",
+          "meaning": "well",
+          "sort_order": 2,
+          "section": "1b"
+        },
+        {
+          "id": "4839d1d4-aaa9-403c-836e-3a6ef298f20c",
+          "lesson_id": "e12dbb2d-c8ae-4764-bf4d-1afca5a45978",
+          "word": "ಹೌದು",
+          "opposite": "ಇಲ್ಲ",
+          "options_json": [
+            {
+              "en": "no",
+              "kn": "ಇಲ್ಲ",
+              "tr": "illa"
+            },
+            {
+              "en": "okay",
+              "kn": "ಸರಿ",
+              "tr": "sari"
+            },
+            {
+              "en": "want",
+              "kn": "ಬೇಕು",
+              "tr": "bēku"
+            },
+            {
+              "en": "how",
+              "kn": "ಹೇಗೆ",
+              "tr": "hēge"
+            }
+          ],
+          "transliteration": "haudu",
+          "meaning": "yes",
+          "sort_order": 3,
+          "section": "1b"
+        }
+      ]
+    },
+    {
+      "lessonNo": 2,
+      "items": [
+        {
+          "id": "e41dba0d-949d-418c-9da2-15294fbbf9e7",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "word": "ಇವರು",
+          "opposite": "ಅವರು",
+          "options_json": [
+            {
+              "en": "that person",
+              "kn": "ಅವರು",
+              "tr": "avaru"
+            },
+            {
+              "en": "I",
+              "kn": "ನಾನು",
+              "tr": "nānu"
+            },
+            {
+              "en": "you (respectful)",
+              "kn": "ನೀವು",
+              "tr": "nīvu"
+            },
+            {
+              "en": "your (respectful)",
+              "kn": "ನಿಮ್ಮ",
+              "tr": "nimma"
+            }
+          ],
+          "transliteration": "ivaru",
+          "meaning": "this person",
+          "sort_order": 1,
+          "section": "2b"
+        },
+        {
+          "id": "7f434f0a-5ee7-437a-b799-f59333f5092a",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "word": "ಇವನು",
+          "opposite": "ಅವನು",
+          "options_json": [
+            {
+              "en": "that person (he)",
+              "kn": "ಅವನು",
+              "tr": "avanu"
+            },
+            {
+              "en": "I",
+              "kn": "ನಾನು",
+              "tr": "nānu"
+            },
+            {
+              "en": "you (neutral)",
+              "kn": "ನೀನು",
+              "tr": "nīnu"
+            },
+            {
+              "en": "name",
+              "kn": "ಹೆಸರು",
+              "tr": "hesaru"
+            }
+          ],
+          "transliteration": "ivanu",
+          "meaning": "this person (he)",
+          "sort_order": 2,
+          "section": "2b"
+        },
+        {
+          "id": "a3e8c6e9-ce3e-4a70-a285-c89555a7148e",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "word": "ಇವಳು",
+          "opposite": "ಅವಳು",
+          "options_json": [
+            {
+              "en": "that person (she)",
+              "kn": "ಅವಳು",
+              "tr": "avaḷu"
+            },
+            {
+              "en": "your (respectful)",
+              "kn": "ನಿಮ್ಮ",
+              "tr": "nimma"
+            },
+            {
+              "en": "your (neutral)",
+              "kn": "ನಿನ್ನ",
+              "tr": "ninna"
+            },
+            {
+              "en": "house",
+              "kn": "ಮನೆ",
+              "tr": "mane"
+            }
+          ],
+          "transliteration": "ivaḷu",
+          "meaning": "this person (she)",
+          "sort_order": 3,
+          "section": "2b"
+        },
+        {
+          "id": "db0babc3-312c-4179-a820-930784d88d48",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "word": "ನಾನು",
+          "opposite": "ನೀವು",
+          "options_json": [
+            {
+              "en": "you (respectful)",
+              "kn": "ನೀವು",
+              "tr": "nīvu"
+            },
+            {
+              "en": "your (respectful)",
+              "kn": "ನಿಮ್ಮ",
+              "tr": "nimma"
+            },
+            {
+              "en": "this person",
+              "kn": "ಇವರು",
+              "tr": "ivaru"
+            },
+            {
+              "en": "name",
+              "kn": "ಹೆಸರು",
+              "tr": "hesaru"
+            }
+          ],
+          "transliteration": "nānu",
+          "meaning": "I",
+          "sort_order": 4,
+          "section": "2a"
+        },
+        {
+          "id": "1562c692-b68c-49ce-a4bb-e5eff9c8c8aa",
+          "lesson_id": "891e589e-3a22-4faa-a03d-c7ec26ae25b6",
+          "word": "ನಿನ್ನ",
+          "opposite": "ನಿಮ್ಮ",
+          "options_json": [
+            {
+              "en": "your (respectful)",
+              "kn": "ನಿಮ್ಮ",
+              "tr": "nimma"
+            },
+            {
+              "en": "I",
+              "kn": "ನಾನು",
+              "tr": "nānu"
+            },
+            {
+              "en": "this person (he)",
+              "kn": "ಇವನು",
+              "tr": "ivanu"
+            },
+            {
+              "en": "that person (she)",
+              "kn": "ಅವಳು",
+              "tr": "avaḷu"
+            }
+          ],
+          "transliteration": "ninna",
+          "meaning": "your (neutral)",
+          "sort_order": 5,
+          "section": "2a"
+        }
+      ]
+    },
+    {
+      "lessonNo": 3,
+      "items": [
+        {
+          "id": "9fe4cc29-1772-4a20-917a-1cb128808d0a",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "word": "ಬೇಕು",
+          "opposite": "ಬೇಡ",
+          "options_json": [
+            {
+              "en": "don't want",
+              "kn": "ಬೇಡ",
+              "tr": "bēḍa"
+            },
+            {
+              "en": "yes",
+              "kn": "ಹೌದು",
+              "tr": "haudu"
+            },
+            {
+              "en": "no",
+              "kn": "ಇಲ್ಲ",
+              "tr": "illa"
+            },
+            {
+              "en": "okay",
+              "kn": "ಸರಿ",
+              "tr": "sari"
+            }
+          ],
+          "transliteration": "bēku",
+          "meaning": "want / need",
+          "sort_order": 1,
+          "section": "3a"
+        },
+        {
+          "id": "5818f890-7144-4d24-9717-8880c7f76bf9",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "word": "ಕಡಿಮೆ",
+          "opposite": "ಜಾಸ್ತಿ",
+          "options_json": [
+            {
+              "en": "a lot / too much",
+              "kn": "ಜಾಸ್ತಿ",
+              "tr": "jāsti"
+            },
+            {
+              "en": "a little",
+              "kn": "ಸ್ವಲ್ಪ",
+              "tr": "svalpa"
+            },
+            {
+              "en": "here",
+              "kn": "ಇಲ್ಲಿ",
+              "tr": "illi"
+            },
+            {
+              "en": "this",
+              "kn": "ಇದು",
+              "tr": "idu"
+            }
+          ],
+          "transliteration": "kaḍime",
+          "meaning": "less",
+          "sort_order": 3,
+          "section": "3b"
+        },
+        {
+          "id": "023be329-9cd2-4b49-be98-54f078ad45b9",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "word": "ಮಾಡಿ",
+          "opposite": "ಮಾಡಬೇಡಿ",
+          "options_json": [
+            {
+              "en": "please don't do",
+              "kn": "ಮಾಡಬೇಡಿ",
+              "tr": "māḍabēḍi"
+            },
+            {
+              "en": "want",
+              "kn": "ಬೇಕು",
+              "tr": "bēku"
+            },
+            {
+              "en": "yes",
+              "kn": "ಹೌದು",
+              "tr": "haudu"
+            },
+            {
+              "en": "please",
+              "kn": "ದಯವಿಟ್ಟು",
+              "tr": "dayaviṭṭu"
+            }
+          ],
+          "transliteration": "māḍi",
+          "meaning": "please do",
+          "sort_order": 4,
+          "section": "3c"
+        },
+        {
+          "id": "d351648f-7b52-423a-ab6a-854f8cf0a424",
+          "lesson_id": "18806243-8aac-4fb8-9f34-eb21b2bf1c49",
+          "word": "ಹೊಸ",
+          "opposite": "ಹಳೆಯ",
+          "options_json": [
+            {
+              "en": "old",
+              "kn": "ಹಳೆಯ",
+              "tr": "haḷeya"
+            },
+            {
+              "en": "beautiful",
+              "kn": "ಚೆಂದ",
+              "tr": "ceṃda"
+            },
+            {
+              "en": "great",
+              "kn": "ಶ್ರೇಷ್ಠ",
+              "tr": "śrēṣṭha"
+            },
+            {
+              "en": "difficult",
+              "kn": "ಕಷ್ಟ",
+              "tr": "kaṣṭa"
+            }
+          ],
+          "transliteration": "hosa",
+          "meaning": "new",
+          "sort_order": 5,
+          "section": "3b"
+        }
+      ]
+    },
+    {
+      "lessonNo": 4,
+      "items": [
+        {
+          "id": "afd5744f-e8dd-441a-8520-f8a4aa09f1a7",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "word": "ಇಲ್ಲಿ",
+          "opposite": "ಅಲ್ಲಿ",
+          "options_json": [
+            {
+              "en": "there",
+              "kn": "ಅಲ್ಲಿ",
+              "tr": "alli"
+            },
+            {
+              "en": "this",
+              "kn": "ಇದು",
+              "tr": "idu"
+            },
+            {
+              "en": "that",
+              "kn": "ಅದು",
+              "tr": "adu"
+            },
+            {
+              "en": "where",
+              "kn": "ಎಲ್ಲಿ",
+              "tr": "elli"
+            }
+          ],
+          "transliteration": "illi",
+          "meaning": "here",
+          "sort_order": 1,
+          "section": "4"
+        },
+        {
+          "id": "4e6b719b-4814-46f4-aaf7-af33976115c4",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "word": "ಇದು",
+          "opposite": "ಅದು",
+          "options_json": [
+            {
+              "en": "that",
+              "kn": "ಅದು",
+              "tr": "adu"
+            },
+            {
+              "en": "here",
+              "kn": "ಇಲ್ಲಿ",
+              "tr": "illi"
+            },
+            {
+              "en": "there",
+              "kn": "ಅಲ್ಲಿ",
+              "tr": "alli"
+            },
+            {
+              "en": "where",
+              "kn": "ಎಲ್ಲಿ",
+              "tr": "elli"
+            }
+          ],
+          "transliteration": "idu",
+          "meaning": "this",
+          "sort_order": 2,
+          "section": "4"
+        },
+        {
+          "id": "d8a0d961-153f-4bd8-8bde-6caef5b4555d",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "word": "ಮೇಲೆ",
+          "opposite": "ಕೆಳಗೆ",
+          "options_json": [
+            {
+              "en": "below",
+              "kn": "ಕೆಳಗೆ",
+              "tr": "keḷage"
+            },
+            {
+              "en": "near",
+              "kn": "ಹತ್ತಿರ",
+              "tr": "hattira"
+            },
+            {
+              "en": "far",
+              "kn": "ದೂರ",
+              "tr": "dūra"
+            },
+            {
+              "en": "inside",
+              "kn": "ಒಳಗೆ",
+              "tr": "oḷage"
+            }
+          ],
+          "transliteration": "mēle",
+          "meaning": "above",
+          "sort_order": 3,
+          "section": "4"
+        },
+        {
+          "id": "4b49933e-237d-4f2b-8510-3cedc5eaec54",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "word": "ಮುಂದೆ",
+          "opposite": "ಹಿಂದೆ",
+          "options_json": [
+            {
+              "en": "behind",
+              "kn": "ಹಿಂದೆ",
+              "tr": "hinde"
+            },
+            {
+              "en": "beside",
+              "kn": "ಪಕ್ಕ",
+              "tr": "pakka"
+            },
+            {
+              "en": "middle",
+              "kn": "ಮಧ್ಯ",
+              "tr": "madhya"
+            },
+            {
+              "en": "end",
+              "kn": "ತುದಿ",
+              "tr": "tudi"
+            }
+          ],
+          "transliteration": "munde",
+          "meaning": "in front",
+          "sort_order": 4,
+          "section": "4"
+        },
+        {
+          "id": "b8f0fd55-99fb-4841-84ee-4e64162e8f61",
+          "lesson_id": "58c7a04f-7d69-4a57-a4dc-26b6d99b9e10",
+          "word": "ಹಗಲು",
+          "opposite": "ರಾತ್ರಿ",
+          "options_json": [
+            {
+              "en": "night",
+              "kn": "ರಾತ್ರಿ",
+              "tr": "rātri"
+            },
+            {
+              "en": "noon",
+              "kn": "ಮಧ್ಯಾಹ್ನ",
+              "tr": "madhyāhna"
+            },
+            {
+              "en": "evening",
+              "kn": "ಸಂಜೆ",
+              "tr": "saṃje"
+            },
+            {
+              "en": "morning",
+              "kn": "ಬೆಳಿಗ್ಗೆ",
+              "tr": "beḷigge"
+            }
+          ],
+          "transliteration": "hagalu",
+          "meaning": "daytime",
+          "sort_order": 5,
+          "section": "4"
+        }
+      ]
+    },
+    {
+      "lessonNo": 5,
+      "items": [
+        {
+          "id": "0d52f283-d7b3-4789-9ac6-33c4ade79d36",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "word": "ಬಾ",
+          "opposite": "ಹೋಗು",
+          "options_json": [
+            {
+              "en": "go",
+              "kn": "ಹೋಗು",
+              "tr": "hōgu"
+            },
+            {
+              "en": "eat",
+              "kn": "ತಿನ್ನು",
+              "tr": "thinnu"
+            },
+            {
+              "en": "drink",
+              "kn": "ಕುಡಿ",
+              "tr": "kuḍi"
+            },
+            {
+              "en": "see",
+              "kn": "ನೋಡು",
+              "tr": "nōḍu"
+            }
+          ],
+          "transliteration": "bā",
+          "meaning": "come",
+          "sort_order": 1,
+          "section": "5a"
+        },
+        {
+          "id": "414ff340-d629-4cca-9a42-ef11f22555e1",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "word": "ಕೊಡು",
+          "opposite": "ತೆಗೊ",
+          "options_json": [
+            {
+              "en": "take",
+              "kn": "ತೆಗೊ",
+              "tr": "tegeduko"
+            },
+            {
+              "en": "stand",
+              "kn": "ನಿಲ್ಲು",
+              "tr": "nillu"
+            },
+            {
+              "en": "walk",
+              "kn": "ನಡೆ",
+              "tr": "naḍe"
+            },
+            {
+              "en": "listen",
+              "kn": "ಕೇಳು",
+              "tr": "kēḷu"
+            }
+          ],
+          "transliteration": "koḍu",
+          "meaning": "give",
+          "sort_order": 2,
+          "section": "5b"
+        },
+        {
+          "id": "b183a0d1-c929-45bc-bd0b-8948ef212f4d",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "word": "ಮಲಗು",
+          "opposite": "ಎದ್ದು",
+          "options_json": [
+            {
+              "en": "get up",
+              "kn": "ಎದ್ದು",
+              "tr": "eddu"
+            },
+            {
+              "en": "stand",
+              "kn": "ನಿಲ್ಲು",
+              "tr": "nillu"
+            },
+            {
+              "en": "walk",
+              "kn": "ನಡೆ",
+              "tr": "naḍe"
+            },
+            {
+              "en": "sit",
+              "kn": "ಕುಳಿತುಕೋ",
+              "tr": "kuḷituko"
+            }
+          ],
+          "transliteration": "malagu",
+          "meaning": "sleep",
+          "sort_order": 3,
+          "section": "5c"
+        },
+        {
+          "id": "b965d45f-5a46-4a38-96bf-7927c087733d",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "word": "ಕುಳಿತುಕೋ",
+          "opposite": "ನಿಲ್ಲು",
+          "options_json": [
+            {
+              "en": "stand",
+              "kn": "ನಿಲ್ಲು",
+              "tr": "nillu"
+            },
+            {
+              "en": "run",
+              "kn": "ಓಡು",
+              "tr": "ōḍu"
+            },
+            {
+              "en": "walk",
+              "kn": "ನಡೆ",
+              "tr": "naḍe"
+            },
+            {
+              "en": "get up",
+              "kn": "ಎದ್ದು",
+              "tr": "eddu"
+            }
+          ],
+          "transliteration": "kuḷituko",
+          "meaning": "sit",
+          "sort_order": 4,
+          "section": "5c"
+        },
+        {
+          "id": "8ab47fbd-5ed3-40ff-ba79-b74ecb78cc10",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "word": "ಬೇಗ",
+          "opposite": "ನಿಧಾನ",
+          "options_json": [
+            {
+              "en": "slow",
+              "kn": "ನಿಧಾನ",
+              "tr": "nidhāna"
+            },
+            {
+              "en": "gently",
+              "kn": "ಮೆಲ್ಲ",
+              "tr": "mella"
+            },
+            {
+              "en": "instant",
+              "kn": "ತಕ್ಷಣ",
+              "tr": "takṣaṇa"
+            },
+            {
+              "en": "a little",
+              "kn": "ಸ್ವಲ್ಪ",
+              "tr": "svalpa"
+            }
+          ],
+          "transliteration": "bēga",
+          "meaning": "fast",
+          "sort_order": 5,
+          "section": "5c"
+        },
+        {
+          "id": "2bed8745-db1a-4757-9ef7-a284902f5b02",
+          "lesson_id": "e6f22705-9f4c-4c8d-874e-cc50a3068e81",
+          "word": "ಏಳು",
+          "opposite": "ಮಲಗು",
+          "options_json": [
+            {
+              "en": "Sleep (casual)",
+              "kn": "ಮಲಗು",
+              "tr": "malagu"
+            },
+            {
+              "en": "Stand / stop (casual)",
+              "kn": "ನಿಲ್ಲು",
+              "tr": "nillu"
+            },
+            {
+              "en": "Sit (casual)",
+              "kn": "ಕುಳಿತುಕೋ",
+              "tr": "kulituko"
+            },
+            {
+              "en": "See / watch (casual)",
+              "kn": "ನೋಡು",
+              "tr": "nodu"
+            }
+          ],
+          "transliteration": "elu",
+          "meaning": "Get up (casual)",
+          "sort_order": 9,
+          "section": "5c"
+        }
+      ]
+    },
+    {
+      "lessonNo": 6,
+      "items": [
+        {
+          "id": "6df052ae-bbf8-4d53-b55d-e3c232b3c986",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "word": "ಗೊತ್ತು",
+          "opposite": "ಗೊತ್ತಿಲ್ಲ",
+          "options_json": [
+            {
+              "en": "don't know",
+              "kn": "ಗೊತ್ತಿಲ್ಲ",
+              "tr": "gottilla"
+            },
+            {
+              "en": "what",
+              "kn": "ಏನು",
+              "tr": "ēnu"
+            },
+            {
+              "en": "who",
+              "kn": "ಯಾರು",
+              "tr": "yāru"
+            },
+            {
+              "en": "yes",
+              "kn": "ಹೌದು",
+              "tr": "haudu"
+            }
+          ],
+          "transliteration": "gottu",
+          "meaning": "know",
+          "sort_order": 1,
+          "section": "6c"
+        },
+        {
+          "id": "6397fd33-fe8c-4213-ab1f-203f0afedcd2",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "word": "ಸಂತೋಷ",
+          "opposite": "ದುಃಖ",
+          "options_json": [
+            {
+              "en": "sadness",
+              "kn": "ದುಃಖ",
+              "tr": "duḥkha"
+            },
+            {
+              "en": "laughter",
+              "kn": "ನಗು",
+              "tr": "nagu"
+            },
+            {
+              "en": "love",
+              "kn": "ಪ್ರೀತಿ",
+              "tr": "prīti"
+            },
+            {
+              "en": "fear",
+              "kn": "ಭಯ",
+              "tr": "bhaya"
+            }
+          ],
+          "transliteration": "santoṣa",
+          "meaning": "happiness",
+          "sort_order": 3,
+          "section": "6c"
+        },
+        {
+          "id": "70b6898d-5048-4311-ae18-cef6512663c6",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "word": "ಒಳ್ಳೆಯ",
+          "opposite": "ಕೆಟ್ಟ",
+          "options_json": [
+            {
+              "en": "bad",
+              "kn": "ಕೆಟ್ಟ",
+              "tr": "keṭṭa"
+            },
+            {
+              "en": "pretty",
+              "kn": "ಸುಂದರ",
+              "tr": "sundara"
+            },
+            {
+              "en": "correct",
+              "kn": "ಸರಿ",
+              "tr": "sari"
+            },
+            {
+              "en": "wrong",
+              "kn": "ತಪ್ಪು",
+              "tr": "tappu"
+            }
+          ],
+          "transliteration": "oḷḷeya",
+          "meaning": "good",
+          "sort_order": 4,
+          "section": "6c"
+        },
+        {
+          "id": "b655ae6e-1b62-44bd-92d9-631f91d3c791",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "word": "ತಂಪು",
+          "opposite": "ಬಿಸಿ",
+          "options_json": [
+            {
+              "en": "hot",
+              "kn": "ಬಿಸಿ",
+              "tr": "bisi"
+            },
+            {
+              "en": "rain",
+              "kn": "ಮಳೆ",
+              "tr": "maḷe"
+            },
+            {
+              "en": "wind",
+              "kn": "ಗಾಳಿ",
+              "tr": "gāḷi"
+            },
+            {
+              "en": "warm",
+              "kn": "ಬೆಚ್ಚ",
+              "tr": "becca"
+            }
+          ],
+          "transliteration": "tampu",
+          "meaning": "cold",
+          "sort_order": 5,
+          "section": "6c"
+        },
+        {
+          "id": "44d7a450-e705-46f7-9529-7cc6564bffd3",
+          "lesson_id": "e7e6f0a6-936a-4e48-b714-6222088b4178",
+          "word": "ಇಲ್ಲ",
+          "opposite": "ಹೌದು",
+          "options_json": [
+            {
+              "en": "Yes",
+              "kn": "ಹೌದು",
+              "tr": "haudu"
+            },
+            {
+              "en": "Okay",
+              "kn": "ಸರಿ",
+              "tr": "sari"
+            },
+            {
+              "en": "Do not know",
+              "kn": "ಗೊತ್ತಿಲ್ಲ",
+              "tr": "gottilla"
+            },
+            {
+              "en": "Now",
+              "kn": "ಈಗ",
+              "tr": "iiga"
+            }
+          ],
+          "transliteration": "illa",
+          "meaning": "No / not",
+          "sort_order": 6,
+          "section": "6b"
+        }
+      ]
+    },
+    {
+      "lessonNo": 7,
+      "items": [
+        {
+          "id": "7528c13e-2a3a-463c-be69-6f8770355915",
+          "lesson_id": "d5a0a365-73b5-4bf7-bd1d-5f2392e042d7",
+          "word": "ಶುರು ಮಾಡು",
+          "opposite": "ಮುಗಿಸು",
+          "options_json": [
+            {
+              "en": "Finish (casual)",
+              "kn": "ಮುಗಿಸು",
+              "tr": "mugisu"
+            },
+            {
+              "en": "Read / study (casual)",
+              "kn": "ಓದು",
+              "tr": "odu"
+            },
+            {
+              "en": "Write (casual)",
+              "kn": "ಬರೆ",
+              "tr": "bareyu"
+            },
+            {
+              "en": "Put (casual)",
+              "kn": "ಹಾಕು",
+              "tr": "haaku"
+            }
+          ],
+          "transliteration": "shuru maadu",
+          "meaning": "Start (casual)",
+          "sort_order": 1,
+          "section": "7c"
+        },
+        {
+          "id": "2c2ef523-3ea3-4669-8b00-52a90c92ad3c",
+          "lesson_id": "d5a0a365-73b5-4bf7-bd1d-5f2392e042d7",
+          "word": "ತೆಗೊ",
+          "opposite": "ಹಾಕು",
+          "options_json": [
+            {
+              "en": "Put (casual)",
+              "kn": "ಹಾಕು",
+              "tr": "haaku"
+            },
+            {
+              "en": "Keep (casual)",
+              "kn": "ಇಡು",
+              "tr": "idu"
+            },
+            {
+              "en": "Finish (casual)",
+              "kn": "ಮುಗಿಸು",
+              "tr": "mugisu"
+            },
+            {
+              "en": "Do / make (casual)",
+              "kn": "ಮಾಡು",
+              "tr": "maadu"
+            }
+          ],
+          "transliteration": "tego",
+          "meaning": "Take (casual)",
+          "sort_order": 2,
+          "section": "7b"
+        }
+      ]
+    }
+  ],
+  "conversations": [
+    {
+      "title": "Greeting a neighbour",
+      "section": "1c",
+      "turns": [
+        {
+          "id": "f7f06eea-cf01-4881-862b-108e5b3aa1d7",
+          "lesson_id": null,
+          "scenario": null,
+          "turns_json": null,
+          "scenario_id": "246d02fc-1430-451a-9e4a-f3f9578a2c5b",
+          "turn_index": 1,
+          "speaker_line_kn": "ನಮಸ್ಕಾರ!",
+          "speaker_line_en": "Hello!",
+          "options_json": [
+            {
+              "en": "Hello / greetings",
+              "id": "a",
+              "kn": "ನಮಸ್ಕಾರ",
+              "tr": "namaskāra"
+            },
+            {
+              "en": "house",
+              "id": "b",
+              "kn": "ಮನೆ",
+              "tr": "mane"
+            },
+            {
+              "en": "name",
+              "id": "c",
+              "kn": "ಹೆಸರು",
+              "tr": "hesaru"
+            }
+          ],
+          "correct_option_id": "a",
+          "created_at": "2026-06-02T16:00:42.113244+00:00"
+        },
+        {
+          "id": "e5c920e5-e725-4178-9ed9-f0029214cf54",
+          "lesson_id": null,
+          "scenario": null,
+          "turns_json": null,
+          "scenario_id": "246d02fc-1430-451a-9e4a-f3f9578a2c5b",
+          "turn_index": 2,
+          "speaker_line_kn": "ಹೇಗಿದ್ದೀರ?",
+          "speaker_line_en": "How are you? (respectful)",
+          "options_json": [
+            {
+              "en": "I am fine",
+              "id": "a",
+              "kn": "ಚೆನ್ನಾಗಿದ್ದೇನೆ",
+              "tr": "chennāgiddēne"
+            },
+            {
+              "en": "you (respectful)",
+              "id": "b",
+              "kn": "ನೀವು",
+              "tr": "nīvu"
+            },
+            {
+              "en": "you (neutral)",
+              "id": "c",
+              "kn": "ನೀನು",
+              "tr": "nīnu"
+            }
+          ],
+          "correct_option_id": "a",
+          "created_at": "2026-06-02T16:00:42.113244+00:00"
+        },
+        {
+          "id": "8496c5d1-9b16-4cc1-902f-f78c038c5650",
+          "lesson_id": null,
+          "scenario": null,
+          "turns_json": null,
+          "scenario_id": "246d02fc-1430-451a-9e4a-f3f9578a2c5b",
+          "turn_index": 3,
+          "speaker_line_kn": "ನೀವು ಚೆನ್ನಾಗಿದ್ದೀರಾ?",
+          "speaker_line_en": "Are you fine? (respectful)",
+          "options_json": [
+            {
+              "en": "Yes, I am fine",
+              "id": "a",
+              "kn": "ಹೌದು, ಚೆನ್ನಾಗಿದ್ದೇನೆ",
+              "tr": "haudu, chennāgiddēne"
+            },
+            {
+              "en": "name",
+              "id": "b",
+              "kn": "ಹೆಸರು",
+              "tr": "hesaru"
+            },
+            {
+              "en": "house",
+              "id": "c",
+              "kn": "ಮನೆ",
+              "tr": "mane"
+            }
+          ],
+          "correct_option_id": "a",
+          "created_at": "2026-06-02T16:00:42.113244+00:00"
+        }
+      ]
+    },
+    {
+      "title": "Introducing yourself",
+      "section": "2c",
+      "turns": [
+        {
+          "id": "0ae47150-6b33-486d-8077-016bdff02507",
+          "lesson_id": null,
+          "scenario": null,
+          "turns_json": null,
+          "scenario_id": "c78ccc04-6f26-425a-8079-5c1ec6d3be51",
+          "turn_index": 1,
+          "speaker_line_kn": "ನಿಮ್ಮ ಹೆಸರು ಏನು?",
+          "speaker_line_en": "What is your name? (respectful)",
+          "options_json": [
+            {
+              "en": "I am Priya",
+              "id": "a",
+              "kn": "ನಾನು ಪ್ರಿಯಾ",
+              "tr": "nānu priyā"
+            },
+            {
+              "en": "house",
+              "id": "b",
+              "kn": "ಮನೆ",
+              "tr": "mane"
+            },
+            {
+              "en": "that person",
+              "id": "c",
+              "kn": "ಅವರು",
+              "tr": "avaru"
+            }
+          ],
+          "correct_option_id": "a",
+          "created_at": "2026-06-02T16:00:42.113244+00:00"
+        },
+        {
+          "id": "e3073adf-623c-434c-9a11-c7ff1c9c3244",
+          "lesson_id": null,
+          "scenario": null,
+          "turns_json": null,
+          "scenario_id": "c78ccc04-6f26-425a-8079-5c1ec6d3be51",
+          "turn_index": 2,
+          "speaker_line_kn": "ನಿಮ್ಮ ಮನೆ ಎಲ್ಲಿ?",
+          "speaker_line_en": "Where is your house?",
+          "options_json": [
+            {
+              "en": "Here",
+              "id": "a",
+              "kn": "ಇಲ್ಲಿ",
+              "tr": "illi"
+            },
+            {
+              "en": "name",
+              "id": "b",
+              "kn": "ಹೆಸರು",
+              "tr": "hesaru"
+            },
+            {
+              "en": "you (respectful)",
+              "id": "c",
+              "kn": "ನೀವು",
+              "tr": "nīvu"
+            }
+          ],
+          "correct_option_id": "a",
+          "created_at": "2026-06-02T16:00:42.113244+00:00"
+        },
+        {
+          "id": "89d23ab6-9c75-4466-b543-ac9a1b9c37b9",
+          "lesson_id": null,
+          "scenario": null,
+          "turns_json": null,
+          "scenario_id": "c78ccc04-6f26-425a-8079-5c1ec6d3be51",
+          "turn_index": 3,
+          "speaker_line_kn": "ಸರಿ, ನಮಸ್ಕಾರ.",
+          "speaker_line_en": "Okay, goodbye.",
+          "options_json": [
+            {
+              "en": "Goodbye",
+              "id": "a",
+              "kn": "ನಮಸ್ಕಾರ",
+              "tr": "namaskāra"
+            },
+            {
+              "en": "I",
+              "id": "b",
+              "kn": "ನಾನು",
+              "tr": "nānu"
+            },
+            {
+              "en": "house",
+              "id": "c",
+              "kn": "ಮನೆ",
+              "tr": "mane"
+            }
+          ],
+          "correct_option_id": "a",
+          "created_at": "2026-06-02T16:00:42.113244+00:00"
+        }
+      ]
+    },
+    {
+      "title": "Meeting a friend",
+      "section": "1c",
+      "turns": [
+        {
+          "id": "374d4dc9-f558-4cae-b555-442c883f783b",
+          "lesson_id": null,
+          "scenario": null,
+          "turns_json": null,
+          "scenario_id": "a4461fb0-3d59-49f4-8c85-47d763795bdc",
+          "turn_index": 1,
+          "speaker_line_kn": "ನಮಸ್ತೆ!",
+          "speaker_line_en": "Hi!",
+          "options_json": [
+            {
+              "en": "Hi / hello",
+              "id": "a",
+              "kn": "ನಮಸ್ತೆ",
+              "tr": "namaste"
+            },
+            {
+              "en": "do not want",
+              "id": "b",
+              "kn": "ಬೇಡ",
+              "tr": "bēḍa"
+            },
+            {
+              "en": "that person",
+              "id": "c",
+              "kn": "ಅವರು",
+              "tr": "avaru"
+            }
+          ],
+          "correct_option_id": "a",
+          "created_at": "2026-06-02T16:00:42.113244+00:00"
+        },
+        {
+          "id": "1418e3d9-2d7b-4407-92f5-4cbc8250d68d",
+          "lesson_id": null,
+          "scenario": null,
+          "turns_json": null,
+          "scenario_id": "a4461fb0-3d59-49f4-8c85-47d763795bdc",
+          "turn_index": 2,
+          "speaker_line_kn": "ಹೇಗಿದ್ದೀಯ?",
+          "speaker_line_en": "How are you? (neutral)",
+          "options_json": [
+            {
+              "en": "I am fine",
+              "id": "a",
+              "kn": "ಚೆನ್ನಾಗಿದ್ದೇನೆ",
+              "tr": "chennāgiddēne"
+            },
+            {
+              "en": "your (respectful)",
+              "id": "b",
+              "kn": "ನಿಮ್ಮ",
+              "tr": "nimma"
+            },
+            {
+              "en": "where",
+              "id": "c",
+              "kn": "ಎಲ್ಲಿ",
+              "tr": "elli"
+            }
+          ],
+          "correct_option_id": "a",
+          "created_at": "2026-06-02T16:00:42.113244+00:00"
+        },
+        {
+          "id": "de0d2cd8-22e5-4506-97de-79ac70680910",
+          "lesson_id": null,
+          "scenario": null,
+          "turns_json": null,
+          "scenario_id": "a4461fb0-3d59-49f4-8c85-47d763795bdc",
+          "turn_index": 3,
+          "speaker_line_kn": "ಸರಿ, ನಮಸ್ಕಾರ.",
+          "speaker_line_en": "Okay, goodbye.",
+          "options_json": [
+            {
+              "en": "Goodbye",
+              "id": "a",
+              "kn": "ನಮಸ್ಕಾರ",
+              "tr": "namaskāra"
+            },
+            {
+              "en": "name",
+              "id": "b",
+              "kn": "ಹೆಸರು",
+              "tr": "hesaru"
+            },
+            {
+              "en": "house",
+              "id": "c",
+              "kn": "ಮನೆ",
+              "tr": "mane"
+            }
+          ],
+          "correct_option_id": "a",
+          "created_at": "2026-06-02T16:00:42.113244+00:00"
+        }
+      ]
+    },
+    {
+      "title": "Asking about people",
+      "section": "2c",
+      "turns": [
+        {
+          "id": "d6657364-ea20-4593-b848-7aaf91f8318f",
+          "lesson_id": null,
+          "scenario": null,
+          "turns_json": null,
+          "scenario_id": "d74ecb5f-88db-44ba-92ea-65183d5776c0",
+          "turn_index": 1,
+          "speaker_line_kn": "ನಿನ್ನ ಹೆಸರು ಏನು?",
+          "speaker_line_en": "What is your name? (neutral)",
+          "options_json": [
+            {
+              "en": "I am Ravi",
+              "id": "a",
+              "kn": "ನಾನು ರವಿ",
+              "tr": "nānu ravi"
+            },
+            {
+              "en": "your (respectful)",
+              "id": "b",
+              "kn": "ನಿಮ್ಮ",
+              "tr": "nimma"
+            },
+            {
+              "en": "house",
+              "id": "c",
+              "kn": "ಮನೆ",
+              "tr": "mane"
+            }
+          ],
+          "correct_option_id": "a",
+          "created_at": "2026-06-02T16:00:42.113244+00:00"
+        },
+        {
+          "id": "adb60759-3073-4c61-94df-c86ef5957bf0",
+          "lesson_id": null,
+          "scenario": null,
+          "turns_json": null,
+          "scenario_id": "d74ecb5f-88db-44ba-92ea-65183d5776c0",
+          "turn_index": 2,
+          "speaker_line_kn": "ಇವಳು ಯಾರು?",
+          "speaker_line_en": "Who is she?",
+          "options_json": [
+            {
+              "en": "She is Priya",
+              "id": "a",
+              "kn": "ಇವಳು ಪ್ರಿಯಾ",
+              "tr": "ivaḷu priyā"
+            },
+            {
+              "en": "that person (he)",
+              "id": "b",
+              "kn": "ಅವನು",
+              "tr": "avanu"
+            },
+            {
+              "en": "house",
+              "id": "c",
+              "kn": "ಮನೆ",
+              "tr": "mane"
+            }
+          ],
+          "correct_option_id": "a",
+          "created_at": "2026-06-02T16:00:42.113244+00:00"
+        },
+        {
+          "id": "3476a11e-5bde-40ea-8b52-df276933729b",
+          "lesson_id": null,
+          "scenario": null,
+          "turns_json": null,
+          "scenario_id": "d74ecb5f-88db-44ba-92ea-65183d5776c0",
+          "turn_index": 3,
+          "speaker_line_kn": "ಸರಿ!",
+          "speaker_line_en": "Okay!",
+          "options_json": [
+            {
+              "en": "Goodbye",
+              "id": "a",
+              "kn": "ನಮಸ್ಕಾರ",
+              "tr": "namaskāra"
+            },
+            {
+              "en": "name",
+              "id": "b",
+              "kn": "ಹೆಸರು",
+              "tr": "hesaru"
+            },
+            {
+              "en": "you (neutral)",
+              "id": "c",
+              "kn": "ನೀನು",
+              "tr": "nīnu"
+            }
+          ],
+          "correct_option_id": "a",
+          "created_at": "2026-06-02T16:00:42.113244+00:00"
+        }
+      ]
+    }
+  ],
+  "emergency": [
+    {
+      "id": "e1111111-0001-4001-8001-000000000001",
+      "category": "auto",
+      "kannada": "ಇಲ್ಲಿ ನಿಲ್ಲಿಸಿ",
+      "meaning": "Stop here",
+      "audio_url": null,
+      "sort_order": 1,
+      "transliteration": "Illi nillisi"
+    },
+    {
+      "id": "e1111111-0001-4001-8001-000000000002",
+      "category": "auto",
+      "kannada": "ಮೀಟರ್ ಹಾಕಿ",
+      "meaning": "Please put the meter on",
+      "audio_url": null,
+      "sort_order": 2,
+      "transliteration": "Meter haaki"
+    },
+    {
+      "id": "e1111111-0001-4001-8001-000000000003",
+      "category": "auto",
+      "kannada": "ಎಷ್ಟು?",
+      "meaning": "How much is it?",
+      "audio_url": null,
+      "sort_order": 3,
+      "transliteration": "Eshtu?"
+    },
+    {
+      "id": "e1111111-0003-4001-8001-000000000001",
+      "category": "basics",
+      "kannada": "ಎಲ್ಲಿ?",
+      "meaning": "Where?",
+      "audio_url": null,
+      "sort_order": 1,
+      "transliteration": "Elli?"
+    },
+    {
+      "id": "e1111111-0003-4001-8001-000000000002",
+      "category": "basics",
+      "kannada": "ಬೇಡ",
+      "meaning": "No, don't want",
+      "audio_url": null,
+      "sort_order": 2,
+      "transliteration": "Beda"
+    },
+    {
+      "id": "e1111111-0003-4001-8001-000000000003",
+      "category": "basics",
+      "kannada": "ಪರವಾಗಿಲ್ಲ",
+      "meaning": "It's okay",
+      "audio_url": null,
+      "sort_order": 3,
+      "transliteration": "Paravagilla"
+    },
+    {
+      "id": "e1111111-0002-4001-8001-000000000001",
+      "category": "trouble",
+      "kannada": "ದಯವಿಟ್ಟು ಸಹಾಯ ಮಾಡಿ",
+      "meaning": "Please help",
+      "audio_url": null,
+      "sort_order": 1,
+      "transliteration": "Dayavittu sahaaya maadi"
+    },
+    {
+      "id": "e1111111-0002-4001-8001-000000000002",
+      "category": "trouble",
+      "kannada": "ನನಗೆ ಕನ್ನಡ ಬರಲ್ಲ",
+      "meaning": "I don't know Kannada",
+      "audio_url": null,
+      "sort_order": 2,
+      "transliteration": "Nanage Kannada baralla"
+    },
+    {
+      "id": "e1111111-0002-4001-8001-000000000003",
+      "category": "trouble",
+      "kannada": "ಸ್ವಲ್ಪ ನಿಧಾನವಾಗಿ",
+      "meaning": "Slowly, please",
+      "audio_url": null,
+      "sort_order": 3,
+      "transliteration": "Swalpa nidhanavagi"
+    }
+  ]
+}

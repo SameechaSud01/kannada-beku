@@ -6,7 +6,7 @@
 // ════════════════════════════════════════════════════════════════════════
 
 // ── A "side of Bengaluru" card used in the Story visual ─────────────────────
-function SideCard({ accent, ink, label, name, role, note, glyph, kfont }) {
+function SideCard({ accent, ink, label, labelColor, name, trait, traitBg, note, glyph, kfont }) {
   return (
     <div style={{ position: 'relative', overflow: 'hidden', background: T.card, borderRadius: 16,
       padding: '20px 22px', border: `1px solid ${T.hairline}`, boxShadow: '0 4px 0 rgba(27,29,14,0.10)' }}>
@@ -17,9 +17,13 @@ function SideCard({ accent, ink, label, name, role, note, glyph, kfont }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: F.display, fontWeight: 800, fontSize: 24,
           boxShadow: '0 4px 0 rgba(27,29,14,0.22)' }}>{name[0]}</div>
         <div>
-          <div style={{ fontFamily: F.ui, fontSize: 11, fontWeight: 700, letterSpacing: 1.4, textTransform: 'uppercase', color: accent }}>{label}</div>
+          <div style={{ fontFamily: F.ui, fontSize: 11, fontWeight: 700, letterSpacing: 1.4, textTransform: 'uppercase', color: labelColor }}>{label}</div>
           <div style={{ fontFamily: F.display, fontWeight: 700, fontSize: 20, color: T.ink, letterSpacing: -0.3, marginTop: 2 }}>{name}</div>
         </div>
+      </div>
+      <div style={{ position: 'relative' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 999, padding: '4px 11px',
+          fontFamily: F.ui, fontSize: 11, fontWeight: 700, letterSpacing: 0.3, marginTop: 8, background: traitBg, color: labelColor }}>{trait}</span>
       </div>
       <div style={{ position: 'relative', fontFamily: F.ui, fontSize: 13.5, color: T.sub, lineHeight: 1.5, marginTop: 13 }}>{note}</div>
     </div>
@@ -39,21 +43,23 @@ function Story({ tw }) {
       )}
       <div className="kb-wrap" style={{ maxWidth: 1180, margin: '0 auto', padding: '92px 28px', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
-          <Eyebrow color={T.red} style={{ whiteSpace: 'nowrap' }}>Our story</Eyebrow>
+          <Eyebrow color={T.red} style={{ whiteSpace: 'nowrap' }}>Meet the founders</Eyebrow>
           <p style={{ fontFamily: F.display, fontWeight: 800, letterSpacing: -0.4,
             fontSize: 'clamp(24px, 3.2vw, 38px)', lineHeight: 1.18, color: T.ink, margin: '18px 0 0', textWrap: 'balance' }}>
-            The founding team is two sides of modern Bengaluru: one who grew up speaking it,
-            one who <span style={{ color: T.red }}>struggled to learn it</span>. So they built the app they wished had existed.
+            We're <span style={{ color: T.red }}>Sameecha and Aashmika</span> — two sides of modern Bengaluru.
+            One of us grew up speaking Kannada, one struggled to learn it. So we built the app we wished had existed.
           </p>
         </div>
 
         {/* the two founders */}
         <div className="kb-bridges" style={{ marginTop: 44 }}>
           <SideCard accent={T.red} ink="#fff" kfont={kf} glyph="ಕ"
-            label="Grew up speaking it" name="Sameecha"
+            label="Co-founder" labelColor={T.red} name="Sameecha"
+            trait="Grew up speaking it" traitBg="rgba(145,0,27,0.08)"
             note="A Kannadiga raised in the UK, learning Kannada from his parents. For him, the language is culture, identity and heritage." />
           <SideCard accent={T.gold} ink={T.goldInk} kfont={kf} glyph="ಬ"
-            label="Always wanted to learn it" name="Aashmika"
+            label="Co-founder" labelColor={T.goldInk} name="Aashmika"
+            trait="Always wanted to learn it" traitBg="rgba(253,192,3,0.18)"
             note="Bengaluru-born and Bangalorean at heart, she could never find an approachable way in. So she became the reason to build one." />
         </div>
       </div>

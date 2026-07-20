@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan — Audio Playback &amp; Auth Fixes (Kannada Beku)</title>
+<style>
+  body { margin: 0; background: #faf8f4; color: #2b2b2b;
+         font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         line-height: 1.6; }
+  main { max-width: 46rem; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  h1 { font-size: 1.8rem; line-height: 1.25; margin: 0 0 .25rem; color: #1e3a2f; }
+  .meta { color: #777; font-size: .9rem; margin-bottom: 2rem; }
+  h2 { font-size: 1.35rem; margin: 2.8rem 0 .6rem; color: #1e3a2f;
+       border-bottom: 2px solid #e3ddd0; padding-bottom: .3rem; }
+  h3 { font-size: 1.05rem; margin: 1.6rem 0 .4rem; color: #444; }
+  code { background: #efece4; padding: .1em .35em; border-radius: 4px;
+         font-size: .88em; font-family: "SF Mono", Menlo, Consolas, monospace; }
+  pre { background: #f0ede5; border: 1px solid #e0dacb; border-radius: 8px;
+        padding: .9rem 1rem; overflow-x: auto; font-size: .85rem; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .92rem; }
+  th, td { border: 1px solid #ddd6c6; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+  th { background: #efece4; }
+  .tag { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .04em;
+         padding: .15em .55em; border-radius: 99px; vertical-align: middle; }
+  .tag.bug   { background: #fde8e5; color: #a33b2e; }
+  .tag.owner { background: #fff3d6; color: #8a6d00; }
+  .tag.spec  { background: #e3eefc; color: #2456a0; }
+  .tag.done  { background: #e2f2e6; color: #22703c; }
+  .callout { border-left: 4px solid #c9a13b; background: #fdf6e3;
+             padding: .7rem 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+  .callout.green { border-color: #3a7d54; background: #edf6ef; }
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .3rem 0; }
+  .small { font-size: .85rem; color: #666; }
+</style>
+</head>
+<body>
+<main>
+<h1>Plan — Audio Playback &amp; Auth Fixes</h1>
+<p class="meta">Kannada Beku · drafted 2026-07-15 · status: <strong>awaiting owner approval</strong> — no code written yet</p>
+
+<p>Four reported issues, investigated in code. Two are app bugs, one is mostly
+Supabase-dashboard configuration plus a testing-environment limitation, and one is a
+product decision disguised as a bug. Proposed delivery: <strong>three phases, with a
+manual test hand-off after each phase</strong>.</p>
+
+<table>
+  <tr><th>#</th><th>Report</th><th>Verdict</th><th>Phase</th></tr>
+  <tr><td>1</td><td>Audio doesn't always play on word tap</td>
+      <td><span class="tag bug">APP BUG</span> race conditions in the audio service</td><td>1</td></tr>
+  <tr><td>2</td><td>Reset-password link → "Connection is unavailable"; email not branded</td>
+      <td><span class="tag owner">CONFIG + EXPO GO</span> works as coded, but only in a dev/prod build</td><td>2</td></tr>
+  <tr><td>3</td><td>"Email already in use" shown only in logs</td>
+      <td><span class="tag bug">APP BUG</span> error caught but mapped to a generic toast</td><td>3</td></tr>
+  <tr><td>4</td><td>Fake gmail accepted, error only in terminal</td>
+      <td><span class="tag owner">OWNER DECISION</span> real-mailbox checks require email confirmation, which is currently OFF by locked decision</td><td>3 + decision</td></tr>
+</table>
+
+<!-- ==================================================================== -->
+<h2>Issue 1 — Audio doesn't always play on word tap</h2>
+
+<h3>Root causes (in ranked order)</h3>
+<ol>
+  <li><strong>Shared singleton clobbered across screens.</strong> One module-level
+      <code>currentPlaybackSound</code> in <code>services/audio/deviceTtsAudioService.ts:18</code>
+      is shared by every screen. Many components call <code>stop()</code> in their effect
+      cleanups / unmounts (e.g. <code>TeachWordsPhase.tsx:61-64</code>,
+      <code>useGuideAudio.ts:24-28</code>), and plays are fire-and-forget (never awaited),
+      so one component's cleanup can silently kill the sound another component just started.</li>
+  <li><strong>Race window on rapid taps.</strong> In <code>play()</code>
+      (<code>deviceTtsAudioService.ts:53-69</code>) the "stop previous sound" check runs
+      <em>before</em> <code>Audio.Sound.createAsync</code> resolves and assigns the singleton.
+      Two quick taps → the second tap sees <code>null</code>, doesn't stop the first, both play
+      (or one is orphaned and leaks). There is no in-service mutex, and no screen except
+      dictation disables the button while playing.</li>
+  <li><strong>Failures resolve silently.</strong> A sound killed by another component's
+      cleanup does <em>not</em> reject, so the existing <code>Toasts.audioFailed()</code> never
+      fires — the orb animates, nothing is heard, no error. Exactly the reported symptom.</li>
+  <li><strong>Deterministic bug on Emergency:</strong> <code>app/emergency.tsx:287</code> passes
+      <code>item.audioUrl ?? item.kannada</code> into the service; when <code>audioUrl</code> is
+      set, the TTS engine literally tries to <em>speak the URL string</em>.</li>
+  <li><strong>No Kannada-voice guard.</strong> On a manifest miss the service falls back to
+      device TTS without checking a <code>kn</code> voice exists (only the dictation game checks).
+      Simulators usually have no Kannada voice → silence with no feedback.</li>
+</ol>
+
+<h3>Fix (Phase 1 — branch <code>fix/audio-playback-reliability</code>)</h3>
+<ol>
+  <li><strong>Serialize playback with a generation token</strong> inside
+      <code>deviceTtsAudioService.play()</code>: every call increments a token; after each
+      <code>await</code>, a superseded call stops/unloads its own sound and exits. This closes
+      both the double-tap race and the cross-screen clobber in one place — no per-component
+      changes needed.</li>
+  <li><strong>Make <code>stop()</code> supersede too</strong> (bump the token), so an unmount
+      cleanup can no longer kill a <em>newer</em> tap's sound, only whatever was current when
+      it ran.</li>
+  <li><strong>Emergency fix:</strong> pass <code>item.kannada</code> to <code>play()</code>
+      (drop the <code>audioUrl</code> fallback — no code path can fetch a remote clip anyway).</li>
+  <li><strong>Voice-availability guard:</strong> before the TTS branch speaks, check
+      <code>isKannadaVoiceAvailable()</code> (already exists at
+      <code>deviceTtsAudioService.ts:29</code>); if unavailable, reject so the existing
+      <code>Toasts.audioFailed()</code> retry toast surfaces instead of silence.</li>
+</ol>
+<p><strong>Explicitly not doing now</strong> (flagging, not fixing — outside this bug's scope):
+merging the dictation game's separate audio engine
+(<code>src/games/dictation/utils/audioPlayer.ts</code>) into the main service, and the latent
+iOS <code>allowsRecordingIOS</code> reset gap (recording currently has no call sites).</p>
+
+<h3>Verify</h3>
+<ul>
+  <li>Rapid-tap the same word 5× and alternate two words quickly — audio always plays, never doubles.</li>
+  <li>Tap a word, immediately navigate away and back, tap again — plays.</li>
+  <li>Every Emergency phrase plays spoken Kannada (not URL gibberish).</li>
+  <li>On the simulator (no Kannada voice) a manifest-missing word shows the retry toast instead of silence.</li>
+</ul>
+
+<!-- ==================================================================== -->
+<h2>Issue 2 — Reset-password link fails ("Connection is unavailable") + unbranded email</h2>
+
+<div class="callout green"><strong>The app code is complete and correct per
+<code>spec_password_reset.md</code>.</strong> The screens, PKCE exchange, and AppGate guard all
+exist. What's failing is the environment and dashboard config.</div>
+
+<h3>Why the link shows "Connection is unavailable"</h3>
+<p><code>requestPasswordReset</code> (<code>services/api/auth.ts:35</code>) builds the redirect with
+<code>Linking.createURL('reset-password')</code>. <strong>In Expo Go that resolves to an
+<code>exp://&lt;your-Mac's-LAN-IP&gt;:8081/--/reset-password</code> URL</strong> — a link that only works
+on a device that is on the same Wi-Fi as your running Metro server, with Expo Go installed and the
+project open. Tapped from a computer, or from a phone when Metro isn't running / on another network,
+it points at an unreachable address → "Connection is unavailable." Additionally, if that exact URL
+isn't allow-listed in Supabase, Supabase silently redirects to the project's Site URL (typically a
+localhost placeholder) — same symptom. The spec itself warns:
+<em>"deep links need a dev/prod build, not Expo Go"</em> (<code>spec_password_reset.md:212</code>).</p>
+
+<h3>Fix (Phase 2 — mostly owner/dashboard, small optional code hardening)</h3>
+<table>
+  <tr><th>Step</th><th>Who</th><th>What</th></tr>
+  <tr><td>1</td><td><span class="tag owner">OWNER</span></td>
+    <td>Supabase → Authentication → URL Configuration → <strong>Redirect URLs</strong>: add
+        <code>kannada-beku://reset-password</code> (for real builds). For continued Expo Go testing we can
+        also log and allow-list the exact <code>exp://…/--/reset-password</code> value, but it will
+        only work on the phone running Expo Go on your Wi-Fi — never on a computer.</td></tr>
+  <tr><td>2</td><td><span class="tag owner">OWNER</span></td>
+    <td>Supabase → Authentication → <strong>Email templates → Reset Password</strong>: set the
+        sender name and subject to "Kannada Beku" and brand the body copy. This lives entirely in
+        the dashboard — there is nothing in the repo to change. (I'll draft the subject/body text
+        for you to paste in.)</td></tr>
+  <tr><td>3</td><td>me</td>
+    <td>Build an <strong>expo-dev-client development build</strong> (or use the next preview build)
+        so the <code>kannada-beku://</code> scheme actually resolves on your phone. This is the only
+        way the end-to-end flow can genuinely work; Expo Go can never fully support it.</td></tr>
+  <tr><td>4</td><td>both</td>
+    <td>Run the spec's manual test plan (<code>spec_password_reset.md:211-229</code>) on the dev
+        build: happy path, expired link, unknown email, old password rejected.</td></tr>
+</table>
+
+<h3>Verify</h3>
+<ul><li>On a dev build: request reset → branded "Kannada Beku" email arrives → tapping the link opens
+the app on the reset screen → new password works, old one doesn't.</li></ul>
+
+<!-- ==================================================================== -->
+<h2>Issue 3 — "Email already in use" never shown to the user</h2>
+
+<h3>Root cause</h3>
+<p>In <code>app/(auth)/login.tsx:157-162</code>, <em>every</em> signup error lands in one generic
+catch: <code>logger.warn(...)</code> (→ your VS Code terminal) + <code>Toasts.signInFailed()</code>
+("Couldn't sign you in / Check your email and password") — misleading for a duplicate email. There
+is also no handling of Supabase's other duplicate-email signal
+(success-with-empty-<code>identities</code>, which appears if email confirmation is ever turned on).</p>
+
+<h3>Fix (Phase 3 — branch <code>fix/auth-error-surfacing</code>)</h3>
+<ol>
+  <li>Add <code>Toasts.emailAlreadyRegistered()</code> to
+      <code>components/modals/instances/toastCatalog.ts</code> — e.g. title "That email already has an
+      account", subtitle "Try logging in instead", with an <code>onPress</code> that flips the screen
+      to login mode.</li>
+  <li>In the signup path of <code>login.tsx</code>, map errors by Supabase error code:
+      <code>user_already_exists</code> / 422 → the new toast; weak password → its own message;
+      everything else → the existing generic toast.</li>
+  <li>Defensively handle <code>data.user.identities?.length === 0</code> (duplicate email under
+      confirm-email-ON) with the same toast, replacing the current misleading
+      <code>confirmEmailPending()</code> in that case.</li>
+</ol>
+
+<h3>Verify</h3>
+<ul><li>Sign up with an existing email → clear "already has an account" toast, tap → login mode.</li>
+<li>Sign up with a fresh email → unchanged happy path.</li></ul>
+
+<!-- ==================================================================== -->
+<h2>Issue 4 — Fake gmail accepted without checking it's real</h2>
+
+<div class="callout"><strong>Hard truth:</strong> no app can verify a mailbox actually exists from
+the client. The only real mechanism is <strong>email confirmation</strong> — send a link, and the
+account only becomes usable once it's clicked. Your project currently has "Confirm email"
+<strong>OFF</strong> as a locked decision in <code>spec_auth_onboarding.md</code>, so with a
+syntactically valid fake address Supabase happily creates the account and signs the user in — no
+error anywhere (the terminal errors you saw are Supabase rejecting a few addresses it can detect,
+swallowed by the same generic catch as Issue 3).</div>
+
+<h3>What I can do without reopening the locked decision (in Phase 3)</h3>
+<ul>
+  <li>Tighten the client email check — the current regex <code>/^\S+@\S+\.\S+$/</code>
+      (<code>login.tsx:44</code>, duplicated in <code>forgot-password.tsx:22</code>) accepts near-garbage.
+      Move one stricter shared validator into <code>services/api/auth.ts</code> (or <code>lib/</code>)
+      and use it in both screens, with a specific "That doesn't look like a valid email" toast.</li>
+  <li>Surface Supabase's <code>email_address_invalid</code> error as that same toast instead of the
+      generic one (folds into Issue 3's error mapping).</li>
+</ul>
+
+<h3>Owner decision needed <span class="tag owner">DECISION</span></h3>
+<p>If you want typo'd/fake addresses truly caught, the fix is turning <strong>Confirm email ON</strong>
+in Supabase. That is a product change with real consequences: every new signup must open their inbox
+before using the app (more onboarding friction, and it amends a <code>[LOCKED]</code> decision plus
+needs a confirm-email deep-link/UX flow — its own small spec). My recommendation: ship the Phase 3
+validation improvements now, and treat confirm-email as a separate decision for later — fake emails
+mainly hurt the fake-email user themselves (they can never reset their password).</p>
+
+<!-- ==================================================================== -->
+<h2>Execution order &amp; hand-offs</h2>
+<ol>
+  <li><strong>Phase 1</strong> — <code>fix/audio-playback-reliability</code>: audio service
+      serialization, Emergency fix, voice guard. → <em>you manually test audio.</em></li>
+  <li><strong>Phase 2</strong> — password reset: I draft the branded email template text + the exact
+      redirect URLs; <strong>you apply both in the Supabase dashboard</strong>; I produce a dev-client
+      build for real deep-link testing. → <em>you run the reset flow end-to-end.</em></li>
+  <li><strong>Phase 3</strong> — <code>fix/auth-error-surfacing</code>: duplicate-email toast, error-code
+      mapping, shared stricter email validator. → <em>you test signup error cases.</em></li>
+  <li><strong>Decision point</strong> — confirm-email ON/OFF (only if you want real mailbox
+      verification; would get its own spec).</li>
+</ol>
+
+<p class="small">Spec-doc note: Phases 1–3 are bug fixes / restoring spec'd behavior (the reset flow
+is already specified in <code>spec_password_reset.md</code>, which anticipated an
+<code>invalidEmail</code> toast), so no new feature spec is required. Only the confirm-email decision
+would need one. Two pre-existing issues flagged but deliberately not touched: the dictation game's
+duplicate audio engine, and the never-reset iOS recording mode.</p>
+
+</main>
+</body>
+</html>
